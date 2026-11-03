@@ -32,6 +32,32 @@ Não entra. O projeto fica onde está e aqui vai só a ficha com o link (seção
 - **Caminhos sempre relativos** (`assets/logo.svg`, nunca `/assets/logo.svg`): o site mora numa subpasta.
 - **Não mexa** em pasta de outro projeto, no `index.html` da raiz (é a vitrine) nem no `catalogo.js` (é gerado na publicação).
 
+### Builder e output
+
+Quando o projeto tem estudo por trás (pesquisa, benchmark, matriz de regras, pendências, anotações, versões antigas), separe na mesma pasta o que a pessoa precisa ver do que é bastidor:
+
+```
+<categoria>/<slug>/
+├── projeto.json          aponta só para o output
+├── _vitrine/             prints do output
+├── index.html            o output: só as telas finais, é o link que vai para as pessoas
+└── builder/              o construtor e o backup do estudo
+    ├── README.md         o que tem aqui, onde está cada coisa e como gerar o output
+    ├── index.html        o estudo completo
+    ├── gerar-output.mjs  gera o ../index.html a partir do estudo
+    ├── assets/           arquivos de origem
+    └── historico/        versões anteriores, como AAAA-MM-DD-nome.html
+```
+
+- **O output é o que se compartilha.** Só as telas finais: sem pesquisa, benchmark, matriz, regras, pendências, anotações nem botões de estudo.
+- **O builder não aparece na vitrine.** Ele não entra em `paginas` nem em `versoes`, e os prints de `_vitrine/` são do output.
+- **Uma fonte só.** O output é gerado a partir do estudo, nunca editado à mão. No estudo, o que é só de bastidor fica entre os marcadores `estudo:inicio` e `estudo:fim` (no HTML e no CSS) ou atrás de uma flag de modo no JS. O gerador tira os blocos marcados e liga o modo output.
+- **Versões antigas que só servem de registro** vão para `builder/historico/`. Ao mover, ajuste os caminhos relativos (`assets/` vira `../assets/`). Se alguém ainda precisa abrir a versão antiga pela vitrine, ela fica na raiz do projeto e entra em `versoes`, como no resto do hub.
+- **O README do builder diz onde está cada coisa**, com o link de cada item (estudo, benchmark, histórico). Quem navega pelo GitHub não vê o que está dentro de um HTML.
+- **Público mesmo assim.** O builder não aparece na vitrine, mas o repositório é público: quem tiver o endereço abre. Nada de dado real de cliente ou interno sensível no builder.
+
+Use builder e output quando o estudo for grande ou não puder ir para quem vai ver as telas. Projeto simples continua só com o `index.html`. Exemplo: `super-app/fatura-variacoes`.
+
 ## 3. projeto.json
 
 ```json
@@ -98,6 +124,7 @@ Olhe a capa antes de subir. Se pegou tela de carregamento ou animação de entra
 3. **Confira se o slug está livre**: `git ls-tree -d HEAD <categoria>/<slug>` não deve devolver nada. Se devolver, ou é o mesmo projeto (siga "Alterar") ou escolha outro slug.
 4. **Copie o projeto** para `<categoria>/<slug>/`. Deixe de fora `node_modules`, `.git`, `.env`, `.claude`, zips, arquivos-fonte pesados (psd, fig, mp4 bruto) e qualquer dado real de cliente.
    - Projeto com build (Vite, React...): gere o build com caminho relativo (`npx vite build --base=./`) e copie só o conteúdo do `dist`. Use rotas com hash (`HashRouter`). Registre em `repo` onde está o código.
+   - Projeto com estudo por trás: monte o `builder/` e gere o output (seção 2, "Builder e output").
 5. **Crie o `projeto.json`** (seção 3) e **os prints** (seção 4).
 6. **Valide**: `node scripts/gerar-catalogo.mjs --checar`. Corrija os avisos do seu projeto. Só pode sobrar o aviso de prints, e só se você não conseguiu capturar.
 7. **Publique**:
@@ -118,6 +145,8 @@ Mesmo clone esparso do passo 2, com a pasta do projeto. Substitua ou edite os ar
 
 Não crie pastas paralelas para versões. Se a versão anterior precisa continuar visível, ela fica na mesma pasta com o número no nome (`faturas-v1.html`), a nova assume a entrada principal e as duas entram em `versoes`, a mais nova primeiro, com a data. Se ninguém precisa ver a anterior, só substitua: o git guarda o histórico.
 
+Projeto com `builder/`: edite o estudo em `builder/index.html`, gere o output de novo com o gerador do builder e só então refaça os prints, valide e publique. Nunca edite o output à mão. A versão que sai do output e só serve de registro vai para `builder/historico/` e entra na tabela do README do builder.
+
 Um projeto é um assunto. Telas de assuntos diferentes, mesmo que nasçam no mesmo repositório, viram projetos separados, cada um com sua ficha.
 
 ### Mudar um projeto de categoria ou de nome
@@ -130,7 +159,7 @@ Para o que não entra aqui (seção 1), a pasta leva só o `projeto.json` e a `_
 
 ## 7. Limites e cuidados
 
-- O repositório é público: nada de `.env`, token, chave, senha ou dado real de cliente (CPF, telefone, fatura). Use dados fictícios.
+- O repositório é público: nada de `.env`, token, chave, senha ou dado real de cliente (CPF, telefone, fatura). Use dados fictícios. Vale também para o `builder/`, que fica fora da vitrine mas abre para quem tiver o endereço.
 - Arquivo até 50 MB (o GitHub recusa acima de 100 MB). Pasta de projeto, de preferência, até 20 MB.
 - O site inteiro no GitHub Pages tem limite de 1 GB: imagens otimizadas e vídeo só comprimido e curto.
 - A publicação é automática a cada push na `main` (`.github/workflows/publicar.yml`). Não precisa rodar nada além do push.
