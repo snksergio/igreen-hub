@@ -1,23 +1,20 @@
 {
   "nome": "Variações da fatura",
-  "descricao": "As variações da fatura iGreen para comparar: a fatura na web e na folha A4, com as notas de cada tela ao lado.",
+  "descricao": "A fatura iGreen nos 7 tipos de cobrança da API (boleto único, conta dupla, sem injeção, acordo e distribuidora), no layout da Fatura PDF V1 aprovada, e o Invoice Web.",
   "tipo": "proposta",
-  "atualizado": "2026-10-21",
+  "atualizado": "2026-11-03",
+  "paginas": [
+    { "nome": "Fatura PDF por tipo", "arquivo": "index.html#UNIQUE_DEFAULT_DISCOUNT" },
+    { "nome": "Invoice Web", "arquivo": "index.html#web-desktop" }
+  ],
   "tags": [
     "fatura",
     "pdf",
-    "invoice"
-  ],
-  "versoes": [
-    {
-      "nome": "v2 · menu lateral, web e mobile",
-      "arquivo": "index.html",
-      "data": "2026-10-21"
-    },
-    {
-      "nome": "v1 · abas no topo, com a Fatura PDF V4",
-      "arquivo": "v1.html",
-      "data": "2026-10-21"
-    }
+    "invoice",
+    "boleto",
+    "pix",
+    "cobranca",
+    "conta dupla",
+    "acordo"
   ]
 }
