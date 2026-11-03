@@ -1,0 +1,25 @@
+{
+  "nome": "DataGrid do backoffice",
+  "descricao": "Tabela de dados em React para o backoffice: ordenação, colunas fixas, redimensionar, seleção e renderização virtualizada para muitos registros.",
+  "tipo": "poc",
+  "atualizado": "2026-02-25",
+  "link": "https://backofficetable.vercel.app/",
+  "repo": "https://github.com/snksergio/backofficetable",
+  "versoes": [
+    {
+      "nome": "v2 · DataGrid do backoffice",
+      "arquivo": "",
+      "data": "2026-02-25"
+    },
+    {
+      "nome": "v1 · Smart Premium DataGrid",
+      "arquivo": "https://tableuidesign.vercel.app/",
+      "data": "2025-12-18"
+    }
+  ],
+  "tags": [
+    "tabela",
+    "datagrid",
+    "react"
+  ]
+}

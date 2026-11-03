@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="pt-BR" data-tema="escuro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iGreen Hub</title>
+<meta name="description" content="Protótipos, POCs, hotsites, landing pages e propostas iGreen num lugar só.">
+<script>try{const t=localStorage.getItem('hub-tema');if(t)document.documentElement.dataset.tema=t}catch{}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Vitrine do hub: lê window.CATALOGO (catalogo.js, gerado por scripts/gerar-catalogo.mjs).
+   Na página inicial cada categoria é um carrossel (arrasta com o mouse ou usa as setas);
+   filtro e busca mostram grade. Card abre a ficha do projeto: slider de telas à esquerda,
+   detalhes e ações na barra lateral. Uma fonte só, a do hotsite iGreen MOB (Instrument Sans);
+   números com algarismos tabulares. Tema escuro por padrão; a escolha no topo fica salva neste navegador. */
+:root{
+  color-scheme:light;
+  --paper:#EDF1EE;
+  --surface:#FFFFFF;
+  --surface-2:#F6F8F7;
+  --ink:#121A15;
+  --muted:#5E6B63;
+  --soft:#8A958E;
+  --line:#E0E6E2;
+  --green:#009222;
+  --green-ink:#FFFFFF;
+  --green-text:#0A7A20;
+  --leaf:#E4F3E7;
+  --hero:#DCEFE1;
+  --neutro:#EEF1EF;
+  --sombra:0 1px 2px rgba(16,40,24,.05),0 6px 20px rgba(16,40,24,.07);
+  --sombra-alta:0 2px 4px rgba(16,40,24,.06),0 16px 36px rgba(16,40,24,.13);
+  --scrim:rgba(14,20,17,.55);
+  --rolagem:rgba(18,26,21,.22);
+  --rolagem-forte:rgba(18,26,21,.4);
+
+  --f:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --r:18px;
+  --lado:28px;
+}
+/* Escuro: cinzas neutros de sistema (na linha de GitHub, Apple e Facebook), nada de preto puro. */
+:root[data-tema="escuro"]{
+  color-scheme:dark;
+  --paper:#1C1D20;
+  --surface:#26282C;
+  --surface-2:#2D3034;
+  --ink:#ECEDEF;
+  --muted:#A6ABB2;
+  --soft:#7E848C;
+  --line:#383B40;
+  --green:#30C55A;
+  --green-ink:#07230F;
+  --green-text:#5DD884;
+  --leaf:rgba(48,197,90,.15);
+  --hero:#212A24;
+  --neutro:rgba(255,255,255,.07);
+  --sombra:0 1px 2px rgba(0,0,0,.25),0 6px 18px rgba(0,0,0,.22);
+  --sombra-alta:0 2px 4px rgba(0,0,0,.3),0 16px 36px rgba(0,0,0,.38);
+  --scrim:rgba(10,11,12,.66);
+  --rolagem:rgba(255,255,255,.2);
+  --rolagem-forte:rgba(255,255,255,.38);
+}
+*{box-sizing:border-box}
+
+/* Barras de rolagem finas e arredondadas, no estilo do celular, em toda a página (engrossa ao passar o mouse) */
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track,::-webkit-scrollbar-corner{background:transparent}
+::-webkit-scrollbar-thumb{background-color:var(--rolagem);border:2px solid transparent;border-radius:999px;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background-color:var(--rolagem-forte);border-width:1px}
+@supports not selector(::-webkit-scrollbar){
+  *{scrollbar-width:thin;scrollbar-color:var(--rolagem) transparent}
+}
+html{scroll-padding-top:84px}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 var(--f);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+a{color:inherit}
+img{display:block;max-width:100%;-webkit-user-drag:none}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px;border-radius:8px}
+.discreto{font-size:12.5px;color:var(--soft)}
+.oculto{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.miolo{max-width:1240px;margin:0 auto;padding:0 var(--lado)}
+
+/* Contador neutro: categorias, filtros e seções */
+.num{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 7px;border-radius:999px;background:var(--neutro);font-size:11.5px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* Topo: barra de vidro flutuante, nos mesmos limites do conteúdo; a abertura passa por baixo dela */
+.topo{position:sticky;top:0;z-index:5;height:68px;margin-bottom:-68px;padding-top:12px;pointer-events:none}
+.topo-barra{pointer-events:auto;height:56px;display:flex;align-items:center;gap:8px;padding:0 10px 0 18px;background:color-mix(in srgb,var(--surface) 68%,transparent);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border:1px solid color-mix(in srgb,var(--line) 85%,transparent);border-radius:16px;box-shadow:0 1px 0 rgba(255,255,255,.04) inset,var(--sombra)}
+.marca{font-size:19px;font-weight:600;letter-spacing:-.035em;text-decoration:none;white-space:nowrap;margin-right:auto}
+.marca b{color:var(--green);font-weight:600}
+.topo-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:36px;padding:0 13px;border-radius:999px;border:0;background:none;font-size:13.5px;font-weight:500;letter-spacing:-.01em;color:var(--muted);text-decoration:none;cursor:pointer;white-space:nowrap}
+.topo-btn:hover{background:var(--neutro);color:var(--ink)}
+.topo-btn svg{color:currentColor}
+.divisor{width:1px;height:20px;background:var(--line);margin:0 4px}
+.tema{display:inline-flex;gap:2px;padding:3px;border-radius:999px;background:var(--neutro)}
+.tema button{width:32px;height:28px;padding:0;border:0;border-radius:999px;background:none;color:var(--soft);display:grid;place-items:center;cursor:pointer}
+.tema button:hover{color:var(--ink)}
+.tema button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+
+/* Abertura: título, busca e categorias */
+.abertura{background:radial-gradient(1100px 380px at 20% -10%,var(--hero),transparent 70%),linear-gradient(180deg,var(--hero),var(--paper) 92%);padding:104px 0 24px}
+.resumo{margin:0 0 10px;font-size:12.5px;font-weight:500;color:var(--green-text);font-variant-numeric:tabular-nums}
+.abertura h1{margin:0;font-size:clamp(28px,3.6vw,44px);font-weight:500;line-height:1.04;letter-spacing:-.04em;max-width:15em;text-wrap:balance}
+.abertura h1 span{color:var(--muted)}
+.busca{margin-top:22px;max-width:640px;display:flex;align-items:center;gap:10px;height:48px;padding:0 8px 0 16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--sombra);transition:box-shadow .2s,border-color .2s}
+.busca:focus-within{border-color:var(--green);box-shadow:var(--sombra-alta)}
+.busca svg{flex:none;color:var(--muted)}
+.busca input{flex:1;min-width:0;border:0;background:none;font:inherit;font-size:15px;color:var(--ink);outline:none;height:100%}
+.busca input::placeholder{color:var(--soft)}
+.busca input::-webkit-search-cancel-button{display:none}
+.busca kbd{font-family:inherit;font-size:11.5px;font-weight:500;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 7px}
+.limpar{display:none;width:30px;height:30px;border-radius:50%;border:0;background:var(--neutro);cursor:pointer;place-items:center}
+.busca.com-texto .limpar{display:grid}
+.busca.com-texto kbd{display:none}
+.filtros{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
+.chip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 5px 0 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:500;font-size:13px;letter-spacing:-.005em;white-space:nowrap}
+.chip .num{min-width:20px;height:20px;padding:0 6px;font-size:11px}
+.chip:hover{border-color:var(--soft)}
+.chip[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:var(--green-ink)}
+.chip[aria-pressed="true"] .num{background:#FFFFFF;color:#0B7A24}
+
+/* Lista e seções */
+.lista{padding-top:32px;padding-bottom:56px}
+.secao + .secao{margin-top:36px;padding-top:32px;border-top:1px solid var(--line)}
+.secao-topo{display:flex;align-items:center;gap:10px;margin-bottom:16px;min-height:38px}
+.secao-topo h2{margin:0;font-size:22px;font-weight:500;letter-spacing:-.03em;line-height:1.1}
+.secao-acoes{margin-left:auto;display:flex;align-items:center;gap:8px}
+.ver-todos{border:0;background:none;padding:0 6px;height:38px;font-size:13px;font-weight:400;color:var(--soft);cursor:pointer}
+.ver-todos:hover{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.seta{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface);box-shadow:0 1px 2px rgba(16,40,24,.05);display:grid;place-items:center;cursor:pointer;padding:0}
+.seta:hover:not(:disabled){border-color:var(--soft)}
+.seta:disabled{opacity:.35;cursor:default;box-shadow:none}
+.cabe .seta{display:none}
+
+/* Arrastar com o mouse: carrosséis das categorias e slider da ficha */
+[data-arrasta]{position:relative;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;cursor:grab;user-select:none}
+[data-arrasta]::-webkit-scrollbar{display:none}
+[data-arrasta] > *{scroll-snap-align:start}
+[data-arrasta].arrastando{scroll-snap-type:none;cursor:grabbing}
+[data-arrasta].arrastando > *{pointer-events:none}
+
+/* Carrossel: uma linha por categoria */
+.trilho{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 60px) / 4);gap:20px;scroll-padding-inline:var(--lado);margin:-8px calc(-1 * var(--lado)) -28px;padding:8px var(--lado) 28px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 var(--lado),#000 calc(100% - var(--lado)),transparent);mask-image:linear-gradient(90deg,transparent,#000 var(--lado),#000 calc(100% - var(--lado)),transparent)}
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+
+/* Card do projeto */
+.card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sombra);padding:12px;text-decoration:none;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s}
+.card:hover{transform:translateY(-3px);box-shadow:var(--sombra-alta)}
+.capa{position:relative;aspect-ratio:16/10;border-radius:11px;overflow:hidden;background:var(--leaf)}
+.capa img{width:100%;height:100%;object-fit:cover;object-position:top center}
+.capa.vazia{display:flex;align-items:center;justify-content:center}
+.capa.vazia b{font-size:40px;font-weight:500;letter-spacing:-.05em;color:var(--green)}
+.card-txt{flex:1;padding:16px 6px 6px;display:flex;flex-direction:column}
+.card-topo{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.pill{font-size:11.5px;font-weight:600;color:var(--green-text);background:var(--leaf);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.pill.neutra{color:var(--muted);background:var(--neutro)}
+.data{font-size:12px;color:var(--soft);white-space:nowrap;font-variant-numeric:tabular-nums}
+.card h3{margin:0;font-size:16px;font-weight:600;line-height:1.25;letter-spacing:-.02em}
+.card .cat{margin-top:3px;font-size:12px;color:var(--muted)}
+.card .desc{margin:6px 0 0;font-size:12px;line-height:1.5;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* Destaque: o projeto atualizado por último */
+.destaque{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:24px;box-shadow:var(--sombra);padding:12px;text-decoration:none;transition:box-shadow .2s}
+.destaque:hover{box-shadow:var(--sombra-alta)}
+.destaque .capa{border-radius:15px}
+.destaque-txt{padding:22px 28px;display:flex;flex-direction:column;gap:12px;justify-content:center}
+.rotulo{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--green-text)}
+.destaque h2{margin:0;font-size:clamp(28px,3vw,40px);font-weight:500;line-height:1.04;letter-spacing:-.04em}
+.destaque .meta{margin:0;font-size:13px;color:var(--muted)}
+.destaque .desc{margin:0;font-size:14px;line-height:1.55;color:var(--muted)}
+.destaque .acoes{margin-top:6px}
+
+.vazio{padding:56px 24px;text-align:center;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sombra)}
+.vazio strong{display:block;color:var(--ink);font-size:20px;font-weight:500;letter-spacing:-.025em;margin-bottom:6px}
+.vazio .btn{margin-top:16px}
+
+/* Botões */
+.acoes{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 22px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:500;font-size:14.5px;letter-spacing:-.01em;text-decoration:none;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--soft)}
+.btn.primario{background:var(--green);border-color:var(--green);color:var(--green-ink)}
+.btn.primario:hover{filter:brightness(1.08)}
+
+/* Rodapé: um card dentro dos limites da página */
+.rodape{padding-bottom:32px}
+.rodape-card{display:flex;align-items:center;flex-wrap:wrap;gap:12px 24px;padding:18px 22px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sombra);font-size:13px;line-height:1.5;color:var(--muted)}
+.rodape-marca{font-size:16px;font-weight:600;letter-spacing:-.03em;color:var(--ink);white-space:nowrap}
+.rodape-marca b{color:var(--green);font-weight:600}
+.rodape-card p{flex:1;min-width:260px;margin:0;padding-left:24px;border-left:1px solid var(--line)}
+.rodape-card a{color:var(--green-text);font-weight:500;text-decoration:none}
+.rodape-card a:hover{text-decoration:underline;text-underline-offset:2px}
+.rodape-data{color:var(--soft);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* Ficha do projeto */
+/* A janela nunca passa da altura da tela: o cabeçalho fica parado e só o conteúdo rola por dentro */
+.ficha{position:fixed;inset:0;z-index:20;display:flex;padding:32px 24px}
+.ficha[hidden]{display:none}
+.ficha-fundo{position:fixed;inset:0;background:var(--scrim)}
+.ficha-painel{position:relative;margin:auto;width:100%;max-width:1100px;max-height:100%;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.25);overflow:hidden;animation:sobe .24s cubic-bezier(.2,.8,.2,1)}
+.ficha-painel:focus{outline:none}
+#ficha-conteudo{flex:1;min-height:0;display:flex;flex-direction:column}
+.ficha-grade,.guia{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+@keyframes sobe{from{opacity:0;transform:translateY(16px)}}
+.fechar{position:absolute;top:18px;right:18px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface);cursor:pointer;display:grid;place-items:center;z-index:2}
+.fechar:hover{border-color:var(--soft)}
+.ficha-cab{flex:none;padding:26px 80px 22px 32px;border-bottom:1px solid var(--line)}
+.ficha-cab .discreto{margin:0 0 8px}
+.ficha-cab h2{margin:0;font-size:clamp(26px,3vw,36px);font-weight:500;line-height:1.05;letter-spacing:-.04em}
+.ficha-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
+.ficha-grade{display:grid;grid-template-columns:minmax(0,1fr) 320px}
+.ficha-principal{padding:24px 32px 32px;min-width:0}
+.ficha-lado{padding:22px 22px 24px;background:var(--surface-2);border-left:1px solid var(--line);display:flex;flex-direction:column;gap:22px;font-size:13px;font-weight:500}
+
+/* Slider de telas: uma por vez */
+.galeria{position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--neutro)}
+.slides{display:grid;grid-auto-flow:column;grid-auto-columns:100%}
+.slide{aspect-ratio:16/10;border:0;padding:0;margin:0;background:none;cursor:zoom-in;display:block}
+.slide img{width:100%;height:100%;object-fit:contain}
+.galeria .seta{position:absolute;top:50%;margin-top:-20px;width:40px;height:40px;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(8px);box-shadow:var(--sombra)}
+.galeria .seta:disabled{opacity:0;pointer-events:none}
+.galeria .ant{left:14px}
+.galeria .prox{right:14px}
+.galeria-vazia{aspect-ratio:16/10;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:13px}
+.galeria-vazia b{display:block;font-size:56px;font-weight:500;letter-spacing:-.05em;color:var(--green);margin-bottom:4px}
+.galeria-rodape{display:flex;justify-content:center;margin-top:14px}
+.pontos{display:flex;align-items:center;gap:6px}
+.ponto{width:8px;height:8px;padding:0;border:0;border-radius:999px;background:var(--line);cursor:pointer;transition:width .2s,background-color .2s}
+.ponto[aria-current="true"]{width:24px;background:var(--green)}
+.sobre{margin-top:28px}
+.rot-bloco{margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
+.sobre p{margin:0;font-size:14px;line-height:1.65;max-width:62ch}
+
+/* Barra lateral da ficha: tudo em 13px e peso médio; textos e links no mesmo tamanho; ações no fim */
+.paginas{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.paginas li + li{border-top:1px solid var(--line)}
+.paginas a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;text-decoration:none}
+.paginas a:hover{background:var(--neutro)}
+.paginas svg{flex:none;color:var(--soft)}
+.ficha-lado .rot-bloco{margin-bottom:4px;font-size:10px}
+/* Versões: linha do tempo, a mais nova primeiro */
+.versoes{position:relative;list-style:none;margin:0;padding:0 0 0 14px}
+.versoes::before{content:"";position:absolute;left:4px;top:12px;bottom:12px;width:1px;background:var(--line)}
+.versoes li{position:relative}
+.versoes li::before{content:"";position:absolute;left:-14px;top:12px;width:9px;height:9px;border-radius:50%;border:2px solid var(--soft);background:var(--surface-2)}
+.versoes li:first-child::before{border-color:var(--green);background:var(--green)}
+.versoes a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 8px;border-radius:8px;text-decoration:none}
+.versoes a:hover{background:var(--neutro)}
+.versoes em{margin-left:6px;padding:1px 7px;border-radius:999px;background:var(--leaf);color:var(--green-text);font-size:10.5px;font-style:normal;font-weight:600}
+.versao-data{flex:none;color:var(--soft);font-weight:400;font-variant-numeric:tabular-nums}
+.dados{margin:0;display:grid;gap:14px}
+.dados dd{margin:0;line-height:1.45;overflow-wrap:anywhere}
+.dados a{color:var(--green-text);text-decoration:none}
+.dados a:hover{text-decoration:underline;text-underline-offset:2px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags span{font-size:12px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:2px 10px}
+.lado-acoes{display:grid;gap:8px;margin-top:auto;padding-top:6px}
+.lado-acoes .btn{width:100%;height:42px;font-size:14px}
+
+/* Guia "Como subir um projeto" (abre na mesma janela da ficha, mais estreita) */
+.ficha-painel.estreito{max-width:820px}
+.guia-intro{margin:10px 0 0;font-size:14px;line-height:1.55;color:var(--muted);max-width:60ch}
+.guia{padding:24px 32px 32px}
+.pedido{padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2)}
+.pedido .rot-bloco{font-size:10px;margin-bottom:6px}
+.pedido-texto{margin:0 0 14px;font-size:15px;font-weight:500;line-height:1.5}
+.pedido .btn{height:38px;padding:0 16px;font-size:13.5px}
+.md{margin-top:28px;font-size:14px;line-height:1.65;color:var(--muted)}
+.md > :first-child{margin-top:0}
+.md h2{margin:28px 0 8px;font-size:18px;font-weight:600;letter-spacing:-.02em;color:var(--ink)}
+.md h3{margin:20px 0 6px;font-size:15px;font-weight:600;color:var(--ink)}
+.md p{margin:0 0 10px}
+.md ul,.md ol{margin:0 0 12px;padding-left:20px}
+.md li{margin:4px 0}
+.md strong{font-weight:600;color:var(--ink)}
+.md a{color:var(--green-text)}
+.md code{font-family:ui-monospace,Consolas,Menlo,monospace;font-size:12.5px;color:var(--ink);background:var(--neutro);border-radius:5px;padding:1px 5px}
+.md pre{margin:8px 0 14px;padding:14px 16px;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;overflow-x:auto}
+.md pre code{padding:0;background:none;line-height:1.6}
+.md table{width:100%;border-collapse:collapse;margin:8px 0 14px;font-size:13px}
+.md th,.md td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+.md th{font-weight:600;color:var(--ink)}
+
+/* Tela ampliada */
+.zoom{position:fixed;inset:0;z-index:30;background:var(--scrim);display:flex;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
+.zoom[hidden]{display:none}
+.zoom img{max-height:100%;max-width:100%;border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+
+@media (max-width:1100px){
+  .trilho{grid-auto-columns:calc((100% - 40px) / 3)}
+}
+@media (max-width:900px){
+  .ficha-grade{grid-template-columns:1fr}
+  .ficha-lado{border-left:0;border-top:1px solid var(--line)}
+}
+@media (max-width:760px){
+  :root{--lado:16px}
+  .topo{height:62px;margin-bottom:-62px;padding-top:10px}
+  .topo-barra{height:52px;padding:0 6px 0 14px;gap:2px}
+  .divisor{display:none}
+  .topo-btn .rot{display:none}
+  .topo-btn{padding:0 10px}
+  .abertura{padding:84px 0 18px}
+  .busca{height:46px;margin-top:18px;padding-left:14px}
+  .busca kbd{display:none}
+  .filtros{flex-wrap:nowrap;overflow-x:auto;margin:16px calc(-1 * var(--lado)) 0;padding:2px var(--lado) 6px;scrollbar-width:none}
+  .trilho{grid-auto-columns:80%;gap:14px}
+  .secao .seta{display:none}
+  .grade{gap:14px}
+  .destaque{grid-template-columns:1fr;padding:10px}
+  .destaque-txt{padding:14px 8px 8px}
+  .secao + .secao{margin-top:28px;padding-top:26px}
+  .ficha{padding:0}
+  .ficha-painel{margin:0;border-radius:0;border:0;height:100%}
+  .ficha-cab{padding:20px 64px 18px 16px}
+  .fechar{top:14px;right:14px}
+  .ficha-principal{padding:16px}
+  .galeria .seta{display:none}
+  .ficha-lado{padding:20px 16px 32px}
+  .guia{padding:16px 16px 32px}
+  .rodape-card{padding:16px 18px}
+  .rodape-card p{flex-basis:100%;padding-left:0;border-left:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<header class="topo">
+  <div class="miolo"><div class="topo-barra">
+    <a class="marca" href="./">i<b>Green</b> Hub</a>
+    <button class="topo-btn" type="button" data-ir-busca aria-label="Buscar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <span class="rot">Buscar</span>
+    </button>
+    <a class="topo-btn" href="#como-subir">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+      <span class="rot">Como subir um projeto</span>
+    </a>
+    <span class="divisor" aria-hidden="true"></span>
+    <div class="tema" role="group" aria-label="Tema">
+      <button type="button" data-tema-escolha="claro" aria-label="Tema claro" title="Tema claro">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button type="button" data-tema-escolha="escuro" aria-label="Tema escuro" title="Tema escuro">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </div>
+  </div></div>
+</header>
+
+<section class="abertura">
+  <div class="miolo">
+    <p class="resumo" id="resumo"></p>
+    <h1>Protótipos, POCs e hotsites <span>iGreen num lugar só</span></h1>
+    <label class="busca" id="caixa-busca">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <span class="oculto">Buscar projetos</span>
+      <input id="busca" type="search" placeholder="Buscar por nome, tela, tipo ou tag" autocomplete="off">
+      <kbd>/</kbd>
+      <button class="limpar" type="button" data-limpar aria-label="Limpar a busca">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </label>
+    <nav class="filtros" id="filtros" aria-label="Categorias"></nav>
+  </div>
+</section>
+
+<main class="miolo lista" id="lista"></main>
+
+<footer class="miolo rodape">
+  <div class="rodape-card">
+    <span class="rodape-marca">i<b>Green</b> Hub</span>
+    <p>Para subir ou alterar um projeto, peça à IA para seguir o <a href="#como-subir">ORQUESTRADOR.md</a>.</p>
+    <span class="rodape-data" id="gerado"></span>
+  </div>
+</footer>
+
+<div class="ficha" id="ficha" hidden>
+  <div class="ficha-fundo" data-fechar></div>
+  <article class="ficha-painel" role="dialog" aria-modal="true" aria-labelledby="ficha-nome" tabindex="-1">
+    <button class="fechar" type="button" data-fechar aria-label="Fechar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <div id="ficha-conteudo"></div>
+  </article>
+</div>
+
+<div class="zoom" id="zoom" hidden><img alt=""></div>
+
+<script src="catalogo.js"></script>
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const suave = () => (matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth');
+
+  // Tema: escuro por padrão; a escolha fica salva neste navegador.
+
+  const raizHtml = document.documentElement;
+  const escuro = () => raizHtml.dataset.tema !== 'claro';
+  const desenharTema = () => {
+    for (const b of document.querySelectorAll('[data-tema-escolha]')) {
+      b.setAttribute('aria-pressed', String((b.dataset.temaEscolha === 'escuro') === escuro()));
+    }
+  };
+  document.querySelector('.tema').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-tema-escolha]');
+    if (!b) return;
+    raizHtml.dataset.tema = b.dataset.temaEscolha;
+    try {
+      localStorage.setItem('hub-tema', raizHtml.dataset.tema);
+    } catch {}
+    desenharTema();
+  });
+  desenharTema();
+
+  const C = window.CATALOGO;
+  const lista = $('#lista');
+  if (!C) {
+    lista.innerHTML = '<div class="vazio"><strong>O catálogo ainda não foi gerado.</strong>Rode <code>node scripts/gerar-catalogo.mjs</code> na raiz do repositório e recarregue a página.</div>';
+    return;
+  }
+
+  const categorias = new Map(C.categorias.map((c) => [c.id, c]));
+  const porId = new Map(C.projetos.map((p) => [p.id, p]));
+  const estado = { categoria: 'todos', busca: '', arquivados: false };
+
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const norm = (s) => String(s ?? '').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+  const fmt = new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' });
+  const data = (s) => (s ? fmt.format(new Date(`${s}T12:00:00`)).replace(/\./g, '').replace(/ de /g, ' ') : '');
+  const tipo = (p) => C.tipos[p.tipo] ?? p.tipo;
+  const iniciais = (nome) => nome.split(/\s+/).filter((w) => w.length > 2).slice(0, 2).map((w) => w[0]).join('').toUpperCase() || nome[0];
+  const absoluto = (url) => new URL(url, location.href).href;
+  const icone = (d, tam = 16) => `<svg width="${tam}" height="${tam}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+  const ESQ = 'M15 18l-6-6 6-6';
+  const DIR = 'M9 18l6-6-6-6';
+  const FORA = 'M7 17 17 7M8 7h9v9';
+
+  const ativos = C.projetos.filter((p) => p.status !== 'arquivado');
+  const arquivados = C.projetos.filter((p) => p.status === 'arquivado');
+
+  $('#resumo').textContent = `${ativos.length} projetos · ${new Set(ativos.map((p) => p.categoria)).size} categorias` +
+    (ativos[0] ? ` · atualizado em ${data(ativos[0].atualizado)}` : '');
+  $('#gerado').textContent = `Catálogo gerado em ${data(C.gerado.slice(0, 10))}`;
+
+  // Filtros
+
+  function filtros() {
+    const contar = (id) => ativos.filter((p) => p.categoria === id).length;
+    const chip = (id, nome, n) =>
+      `<button class="chip" type="button" data-categoria="${id}" aria-pressed="${estado.categoria === id && !estado.arquivados}">${esc(nome)} <span class="num">${n}</span></button>`;
+    // Categoria sem projeto não aparece; ganha o filtro quando o primeiro projeto dela for publicado.
+    $('#filtros').innerHTML =
+      chip('todos', 'Todos', ativos.length) +
+      C.categorias.filter((c) => contar(c.id)).map((c) => chip(c.id, c.nome, contar(c.id))).join('') +
+      (arquivados.length ? `<button class="chip" type="button" data-arquivados aria-pressed="${estado.arquivados}">Arquivados <span class="num">${arquivados.length}</span></button>` : '');
+  }
+
+  function filtrar(categoria, arquivadosOn = false) {
+    estado.arquivados = arquivadosOn;
+    estado.categoria = categoria;
+    history.replaceState(null, '', categoria === 'todos' ? location.pathname + location.search : `#${categoria}`);
+    render();
+  }
+
+  $('#filtros').addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    if ('arquivados' in b.dataset) filtrar('todos', !estado.arquivados);
+    else filtrar(b.dataset.categoria);
+  });
+
+  // Lista
+
+  function visiveis() {
+    const palavras = norm(estado.busca).split(/\s+/).filter(Boolean);
+    return (estado.arquivados ? arquivados : ativos).filter((p) => {
+      if (estado.categoria !== 'todos' && p.categoria !== estado.categoria) return false;
+      if (!palavras.length) return true;
+      const texto = norm([p.nome, p.descricao, tipo(p), categorias.get(p.categoria)?.nome, p.id, ...p.tags, ...p.paginas.map((pg) => pg.nome), ...p.versoes.map((v) => v.nome)].join(' '));
+      return palavras.every((w) => texto.includes(w));
+    });
+  }
+
+  const capa = (p, grande) =>
+    p.telas.length
+      ? `<div class="capa"><img src="${esc(p.telas[0])}" alt="" width="1440" height="900" draggable="false" ${grande ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async"></div>`
+      : `<div class="capa vazia"><b>${esc(iniciais(p.nome))}</b></div>`;
+
+  const card = (p, comCategoria) => `
+    <a class="card" href="#${esc(p.id)}" draggable="false">
+      ${capa(p)}
+      <div class="card-txt">
+        <div class="card-topo"><span class="pill">${esc(tipo(p))}</span><span class="data">${p.versoes.length > 1 ? `${p.versoes.length} versões · ` : ''}${data(p.atualizado)}</span></div>
+        <h3>${esc(p.nome)}</h3>
+        ${comCategoria ? `<span class="cat">${esc(categorias.get(p.categoria)?.nome)}</span>` : ''}
+        <p class="desc">${esc(p.descricao)}</p>
+      </div>
+    </a>`;
+
+  const seta = (dir, rotulo, classe = '') =>
+    `<button class="seta ${classe}" type="button" data-rolar="${dir}" aria-label="${rotulo}">${icone(dir < 0 ? ESQ : DIR)}</button>`;
+
+  function render() {
+    filtros();
+    const itens = visiveis();
+
+    if (!itens.length) {
+      lista.innerHTML = estado.busca
+        ? `<div class="vazio"><strong>Nenhum projeto com “${esc(estado.busca)}”.</strong>Tente outra palavra ou limpe a busca para ver tudo.<br><button class="btn" type="button" data-limpar>Limpar a busca</button></div>`
+        : '<div class="vazio"><strong>Nenhum projeto aqui ainda.</strong>Quando um projeto for publicado nesta categoria, ele aparece aqui.</div>';
+      return;
+    }
+
+    if (estado.categoria === 'todos' && !estado.busca && !estado.arquivados) {
+      const d = itens[0];
+      lista.innerHTML = `
+        <section class="secao">
+          <a class="destaque" href="#${esc(d.id)}">
+            ${capa(d, true)}
+            <div class="destaque-txt">
+              <span class="rotulo">Atualizado por último · ${data(d.atualizado)}</span>
+              <h2>${esc(d.nome)}</h2>
+              <p class="meta">${esc(categorias.get(d.categoria)?.nome)} · ${esc(tipo(d))}</p>
+              <p class="desc">${esc(d.descricao)}</p>
+              <div class="acoes"><span class="btn primario">Ver projeto</span></div>
+            </div>
+          </a>
+        </section>` +
+        C.categorias
+          .map((c) => {
+            const dela = itens.filter((p) => p.categoria === c.id);
+            if (!dela.length) return '';
+            return `<section class="secao" data-carrossel>
+              <div class="secao-topo">
+                <h2>${esc(c.nome)}</h2><span class="num">${dela.length}</span>
+                <div class="secao-acoes">
+                  <button class="ver-todos" type="button" data-ver="${c.id}">Ver todos</button>
+                  ${seta(-1, `${esc(c.nome)}: anteriores`)}
+                  ${seta(1, `${esc(c.nome)}: próximos`)}
+                </div>
+              </div>
+              <div class="trilho" data-arrasta>${dela.map((p) => card(p)).join('')}</div>
+            </section>`;
+          })
+          .join('');
+      for (const secao of lista.querySelectorAll('[data-carrossel]')) ligarSetas(secao, secao.querySelector('.trilho'));
+      return;
+    }
+
+    const titulo = estado.busca
+      ? `${itens.length} ${itens.length === 1 ? 'resultado' : 'resultados'} para “${esc(estado.busca)}”`
+      : estado.arquivados ? 'Arquivados' : esc(categorias.get(estado.categoria)?.nome);
+    lista.innerHTML = `<section class="secao">
+      <div class="secao-topo"><h2>${titulo}</h2>${estado.busca ? '' : `<span class="num">${itens.length}</span>`}</div>
+      <div class="grade">${itens.map((p) => card(p, estado.categoria === 'todos')).join('')}</div>
+    </section>`;
+  }
+
+  // Rolagem lateral (carrosséis e slider): setas, arrastar com o mouse e encaixe no item mais próximo
+
+  const passo = (faixa) => {
+    const [a, b] = faixa.children;
+    return b ? b.offsetLeft - a.offsetLeft : faixa.clientWidth;
+  };
+
+  function ligarSetas(caixa, faixa, aoMudar) {
+    const [anterior, proximo] = caixa.querySelectorAll('[data-rolar]');
+    const atualizar = () => {
+      const max = faixa.scrollWidth - faixa.clientWidth;
+      caixa.classList.toggle('cabe', max <= 2);
+      if (anterior) anterior.disabled = faixa.scrollLeft <= 2;
+      if (proximo) proximo.disabled = faixa.scrollLeft >= max - 2;
+      aoMudar?.(Math.round(faixa.scrollLeft / passo(faixa)));
+    };
+    faixa.addEventListener('scroll', atualizar, { passive: true });
+    new ResizeObserver(atualizar).observe(faixa);
+    atualizar();
+  }
+
+  function rolar(faixa, direcao) {
+    const p = passo(faixa);
+    const porVez = Math.max(1, Math.floor((faixa.clientWidth + 20) / p));
+    faixa.scrollBy({ left: direcao * porVez * p, behavior: suave() });
+  }
+
+  let arraste = null;
+  let bloquearClique = false;
+  document.addEventListener('pointerdown', (e) => {
+    const faixa = e.target.closest('[data-arrasta]');
+    if (!faixa || e.pointerType !== 'mouse' || e.button !== 0) return;
+    arraste = { faixa, x: e.clientX, inicio: faixa.scrollLeft, moveu: false };
+  });
+  window.addEventListener('pointermove', (e) => {
+    if (!arraste) return;
+    const dx = e.clientX - arraste.x;
+    if (!arraste.moveu) {
+      if (Math.abs(dx) < 6) return;
+      arraste.moveu = true;
+      arraste.faixa.classList.add('arrastando');
+    }
+    arraste.faixa.scrollLeft = arraste.inicio - dx;
+  });
+  window.addEventListener('pointerup', () => {
+    if (!arraste) return;
+    const { faixa, moveu } = arraste;
+    arraste = null;
+    if (!moveu) return;
+    bloquearClique = true;
+    setTimeout(() => (bloquearClique = false), 0);
+    const p = passo(faixa);
+    faixa.scrollTo({ left: Math.round(faixa.scrollLeft / p) * p, behavior: suave() });
+    setTimeout(() => faixa.classList.remove('arrastando'), 420);
+  });
+  document.addEventListener('click', (e) => {
+    if (bloquearClique) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+
+  lista.addEventListener('click', (e) => {
+    const botao = e.target.closest('[data-rolar]');
+    if (botao) rolar(botao.closest('[data-carrossel]').querySelector('.trilho'), Number(botao.dataset.rolar));
+    const ver = e.target.closest('[data-ver]');
+    if (ver) {
+      filtrar(ver.dataset.ver);
+      $('#filtros').scrollIntoView({ block: 'start', behavior: suave() });
+    }
+  });
+
+  // Busca
+
+  const busca = $('#busca');
+  const caixaBusca = $('#caixa-busca');
+  const buscar = (texto) => {
+    busca.value = texto;
+    estado.busca = texto.trim();
+    caixaBusca.classList.toggle('com-texto', Boolean(texto));
+    render();
+  };
+  const irParaBusca = () => {
+    caixaBusca.scrollIntoView({ block: 'center', behavior: suave() });
+    busca.focus({ preventScroll: true });
+  };
+  busca.addEventListener('input', () => buscar(busca.value));
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-limpar]')) {
+      e.preventDefault();
+      buscar('');
+      busca.focus();
+    }
+    if (e.target.closest('[data-ir-busca]')) irParaBusca();
+  });
+
+  // Ficha do projeto: cabeçalho, slider de telas e sobre à esquerda; ações e detalhes na lateral
+
+  const ficha = $('#ficha');
+  const painel = ficha.querySelector('.ficha-painel');
+  let aberto = null;
+  let slides = null;
+  let abertoNaPagina = false;
+  let voltarFoco = null;
+
+  function galeria(p) {
+    const n = p.telas.length;
+    if (!n) return `<div class="galeria"><div class="galeria-vazia"><div><b>${esc(iniciais(p.nome))}</b>Este projeto ainda não tem prints.</div></div></div>`;
+    return `
+      <div class="galeria">
+        <div class="slides" data-arrasta>
+          ${p.telas.map((t, i) => `<button class="slide" type="button" data-tela="${i}" aria-label="Ampliar tela ${i + 1} de ${n}"><img src="${esc(t)}" alt="" draggable="false" ${i ? 'loading="lazy"' : ''} decoding="async"></button>`).join('')}
+        </div>
+        ${n > 1 ? seta(-1, 'Tela anterior', 'ant') + seta(1, 'Próxima tela', 'prox') : ''}
+      </div>
+      ${n > 1 ? `<div class="galeria-rodape">
+        <div class="pontos">${p.telas.map((_, i) => `<button class="ponto" type="button" data-ponto="${i}" aria-label="Ir para a tela ${i + 1} de ${n}"></button>`).join('')}</div>
+      </div>` : ''}`;
+  }
+
+  function abrir(p) {
+    aberto = p;
+    const principal = p.paginas[0];
+    const endereco = absoluto(principal.url);
+    const fora = p.externo ? new URL(endereco).host : null;
+    $('#ficha-conteudo').innerHTML = `
+      <header class="ficha-cab">
+        <p class="discreto">${esc(p.id)}</p>
+        <h2 id="ficha-nome">${esc(p.nome)}</h2>
+        <div class="ficha-meta">
+          <span class="pill">${esc(tipo(p))}</span>
+          <span class="pill neutra">${esc(categorias.get(p.categoria)?.nome)}</span>
+          ${p.status === 'rascunho' ? '<span class="pill neutra">Rascunho</span>' : ''}
+          ${p.status === 'arquivado' ? '<span class="pill neutra">Arquivado</span>' : ''}
+          <span class="data">atualizado em ${data(p.atualizado)}</span>
+        </div>
+      </header>
+      <div class="ficha-grade">
+        <div class="ficha-principal">
+          ${galeria(p)}
+          <section class="sobre">
+            <h3 class="rot-bloco">Sobre</h3>
+            <p>${esc(p.descricao)}</p>
+          </section>
+        </div>
+        <aside class="ficha-lado">
+          ${p.paginas.length > 1 ? `<section>
+            <h3 class="rot-bloco">Páginas · ${p.paginas.length}</h3>
+            <ul class="paginas">${p.paginas.map((pg) => `<li><a href="${esc(pg.url)}" target="_blank" rel="noopener">${esc(pg.nome)} ${icone(FORA, 14)}</a></li>`).join('')}</ul>
+          </section>` : ''}
+          ${p.versoes.length ? `<section>
+            <h3 class="rot-bloco">Versões · ${p.versoes.length}</h3>
+            <ol class="versoes">${p.versoes.map((v, i) => `<li><a href="${esc(v.url)}" target="_blank" rel="noopener"><span>${esc(v.nome)}${i === 0 ? '<em>atual</em>' : ''}</span>${v.data ? `<span class="versao-data">${data(v.data)}</span>` : ''}</a></li>`).join('')}</ol>
+          </section>` : ''}
+          <dl class="dados">
+            <div><dt class="rot-bloco">Endereço</dt><dd><a href="${esc(endereco)}" target="_blank" rel="noopener">${esc(endereco.replace(/^https?:\/\//, ''))}</a></dd></div>
+            ${fora ? `<div><dt class="rot-bloco">Onde mora</dt><dd>Fora do hub, em ${esc(fora)}</dd></div>` : ''}
+            ${p.repo ? `<div><dt class="rot-bloco">Código</dt><dd><a href="${esc(p.repo)}" target="_blank" rel="noopener">${esc(p.repo.replace(/^https?:\/\/(www\.)?/, ''))}</a></dd></div>` : ''}
+            ${p.tags.length ? `<div><dt class="rot-bloco">Tags</dt><dd class="tags">${p.tags.map((t) => `<span>${esc(t)}</span>`).join('')}</dd></div>` : ''}
+          </dl>
+          <div class="lado-acoes">
+            <a class="btn primario" href="${esc(principal.url)}" target="_blank" rel="noopener">Abrir projeto ${icone(FORA, 15)}</a>
+            <button class="btn" type="button" data-copiar>Copiar link</button>
+          </div>
+        </aside>
+      </div>`;
+    slides = ficha.querySelector('.slides');
+    if (slides) {
+      const pontos = ficha.querySelectorAll('[data-ponto]');
+      ligarSetas(ficha.querySelector('.galeria'), slides, (i) => {
+        pontos.forEach((pt, j) => pt.setAttribute('aria-current', String(i === j)));
+      });
+    }
+    mostrarFicha(false);
+  }
+
+  function mostrarFicha(estreita) {
+    painel.classList.toggle('estreito', estreita);
+    ficha.hidden = false;
+    document.body.style.overflow = 'hidden';
+    painel.focus();
+  }
+
+  // Guia "Como subir um projeto": o pedido pronto para a IA e o ORQUESTRADOR.md do próprio repositório
+
+  const GUIA = { id: 'como-subir', telas: [], paginas: [] };
+  const PEDIDO = 'Sobe esse projeto no igreen-hub. Antes, leia o ORQUESTRADOR.md de snksergio/igreen-hub e siga o pipeline dele.';
+  const ORQUESTRADOR_GITHUB = 'https://github.com/snksergio/igreen-hub/blob/main/ORQUESTRADOR.md';
+  const carregarScript = (src) =>
+    new Promise((ok, falha) => {
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = ok;
+      s.onerror = falha;
+      document.head.append(s);
+    });
+
+  async function abrirGuia() {
+    aberto = GUIA;
+    slides = null;
+    $('#ficha-conteudo').innerHTML = `
+      <header class="ficha-cab">
+        <p class="discreto">ORQUESTRADOR.md</p>
+        <h2 id="ficha-nome">Como subir um projeto</h2>
+        <p class="guia-intro">A IA lê as regras abaixo, sobe só a pasta do projeto, sem baixar o repositório inteiro, e a vitrine se atualiza sozinha em cerca de 1 minuto.</p>
+      </header>
+      <div class="guia">
+        <section class="pedido">
+          <h3 class="rot-bloco">Peça assim para a IA, de dentro da pasta do projeto</h3>
+          <p class="pedido-texto">${esc(PEDIDO)}</p>
+          <div class="acoes">
+            <button class="btn primario" type="button" data-copiar="pedido">Copiar pedido</button>
+            <a class="btn" href="${ORQUESTRADOR_GITHUB}" target="_blank" rel="noopener">Ver no GitHub ${icone(FORA, 15)}</a>
+          </div>
+        </section>
+        <section class="md" id="orquestrador"><p class="discreto">Carregando as regras…</p></section>
+      </div>`;
+    mostrarFicha(true);
+    try {
+      const resposta = await fetch('ORQUESTRADOR.md', { cache: 'no-cache' });
+      if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
+      const texto = await resposta.text();
+      if (!window.marked) await carregarScript('https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js');
+      if (aberto !== GUIA) return;
+      const md = $('#orquestrador');
+      md.innerHTML = window.marked.parse(texto.replace(/^# .*\n/, ''));
+      for (const a of md.querySelectorAll('a[href^="http"]')) Object.assign(a, { target: '_blank', rel: 'noopener' });
+    } catch {
+      if (aberto === GUIA) $('#orquestrador').innerHTML = `<p>As regras não carregaram aqui. <a href="${ORQUESTRADOR_GITHUB}" target="_blank" rel="noopener">Abra o ORQUESTRADOR.md no GitHub</a>.</p>`;
+    }
+  }
+
+  function fechar() {
+    if (!aberto) return;
+    aberto = null;
+    slides = null;
+    ficha.hidden = true;
+    document.body.style.overflow = '';
+    if (voltarFoco) voltarFoco.focus({ preventScroll: true });
+    voltarFoco = null;
+  }
+
+  function pedirFechar() {
+    if (abertoNaPagina) history.back();
+    else {
+      history.replaceState(null, '', estado.categoria === 'todos' ? location.pathname + location.search : `#${estado.categoria}`);
+      fechar();
+    }
+  }
+
+  ficha.addEventListener('click', async (e) => {
+    if (e.target.closest('[data-fechar]')) return pedirFechar();
+    const botao = e.target.closest('[data-rolar]');
+    if (botao && slides) return rolar(slides, Number(botao.dataset.rolar));
+    const ponto = e.target.closest('[data-ponto]');
+    if (ponto && slides) return slides.scrollTo({ left: Number(ponto.dataset.ponto) * passo(slides), behavior: suave() });
+    const copiar = e.target.closest('[data-copiar]');
+    if (copiar) {
+      const pedido = copiar.dataset.copiar === 'pedido';
+      copiar.dataset.rotulo ??= copiar.textContent;
+      try {
+        await navigator.clipboard.writeText(pedido ? PEDIDO : absoluto(aberto.paginas[0].url));
+        copiar.textContent = pedido ? 'Pedido copiado' : 'Link copiado';
+      } catch {
+        copiar.textContent = 'Não deu para copiar';
+      }
+      setTimeout(() => (copiar.textContent = copiar.dataset.rotulo), 1800);
+      return;
+    }
+    const tela = e.target.closest('[data-tela]');
+    if (tela) ampliar(Number(tela.dataset.tela));
+  });
+
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    const alvo = link && decodeURIComponent(link.hash.slice(1));
+    if (link && (porId.has(alvo) || alvo === GUIA.id)) {
+      abertoNaPagina = true;
+      voltarFoco = link;
+    }
+  });
+
+  // Tela ampliada
+
+  const zoom = $('#zoom');
+  let zoomIndice = 0;
+  function ampliar(i) {
+    zoomIndice = (i + aberto.telas.length) % aberto.telas.length;
+    zoom.querySelector('img').src = aberto.telas[zoomIndice];
+    zoom.hidden = false;
+  }
+  zoom.addEventListener('click', () => (zoom.hidden = true));
+
+  document.addEventListener('keydown', (e) => {
+    if (!zoom.hidden) {
+      if (e.key === 'Escape') zoom.hidden = true;
+      if (e.key === 'ArrowRight') ampliar(zoomIndice + 1);
+      if (e.key === 'ArrowLeft') ampliar(zoomIndice - 1);
+      return;
+    }
+    if (aberto) {
+      if (e.key === 'Escape') return pedirFechar();
+      if (slides && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) return rolar(slides, e.key === 'ArrowRight' ? 1 : -1);
+      return;
+    }
+    if (e.key === 'Escape' && document.activeElement === busca && busca.value) return buscar('');
+    if (e.key === '/' && document.activeElement !== busca) {
+      e.preventDefault();
+      irParaBusca();
+    }
+  });
+
+  // Endereço: #categoria filtra, #categoria/slug abre a ficha, #como-subir abre o guia
+
+  function lerEndereco() {
+    const alvo = decodeURIComponent(location.hash.slice(1));
+    if (porId.has(alvo)) return abrir(porId.get(alvo));
+    if (alvo === GUIA.id) return abrirGuia();
+    fechar();
+    abertoNaPagina = false;
+    if (categorias.has(alvo) && alvo !== estado.categoria) {
+      estado.categoria = alvo;
+      render();
+    }
+  }
+  window.addEventListener('hashchange', lerEndereco);
+
+  render();
+  lerEndereco();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "nome": "Cashback",
+  "descricao": "Proposta de UX para pagar com cashback no app do cliente: a apresentação, do problema à solução, e um protótipo navegável com 32 fluxos.",
+  "tipo": "proposta",
+  "atualizado": "2026-10-26",
+  "link": "https://snksergio.github.io/igreen-cashback-prototipo/",
+  "repo": "https://github.com/snksergio/igreen-cashback-prototipo",
+  "paginas": [
+    {
+      "nome": "Apresentação",
+      "arquivo": ""
+    },
+    {
+      "nome": "Protótipo",
+      "arquivo": "prototipo/prototipo-cashback.html"
+    }
+  ],
+  "tags": [
+    "cashback",
+    "pagamento"
+  ]
+}

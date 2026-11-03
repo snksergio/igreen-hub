@@ -1,0 +1,14 @@
+{
+  "nome": "Economia Garantida",
+  "descricao": "Simulador de economia na conta de luz: escolhe o valor da conta, vê a economia estimada em 1, 3 ou 6 anos e o impacto ambiental, com a chamada para garantir o desconto.",
+  "tipo": "landing",
+  "atualizado": "2025-12-17",
+  "link": "https://igreenpocregister.vercel.app/",
+  "repo": "https://github.com/snksergio/igreenpocregister",
+  "tags": [
+    "simulador",
+    "energia solar",
+    "economia",
+    "lead"
+  ]
+}

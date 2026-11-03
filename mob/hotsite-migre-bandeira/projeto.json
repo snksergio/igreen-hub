@@ -1,0 +1,27 @@
+{
+  "nome": "Migre sua bandeira",
+  "descricao": "Hotsite que o licenciado envia a donos de eletroposto: proposta de migração de bandeira com simulador de receita e o eletroposto iGreen em 3D.",
+  "tipo": "hotsite",
+  "atualizado": "2026-10-10",
+  "link": "https://mob-hotsite.vercel.app/",
+  "repo": "https://github.com/snksergio/mob-hotsite",
+  "paginas": [
+    {
+      "nome": "Proposta",
+      "arquivo": ""
+    },
+    {
+      "nome": "Eletroposto em 3D",
+      "arquivo": "eletroposto.html"
+    },
+    {
+      "nome": "Contagem regressiva",
+      "arquivo": "contador.html"
+    }
+  ],
+  "tags": [
+    "eletroposto",
+    "simulador",
+    "3d"
+  ]
+}

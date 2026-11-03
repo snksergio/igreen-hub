@@ -1,0 +1,13 @@
+{
+  "nome": "Cadastro de investidor",
+  "descricao": "O fluxo completo de cadastro do investidor Green Mob, feito em React a partir do Figma e do design system Novo Link Cadastro.",
+  "tipo": "prototipo",
+  "atualizado": "2026-10-22",
+  "link": "https://igreen-mob-link.vercel.app/",
+  "repo": "https://github.com/snksergio/igreen-mob-link",
+  "tags": [
+    "cadastro",
+    "investidor",
+    "react"
+  ]
+}

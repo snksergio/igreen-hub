@@ -1,0 +1,15 @@
+{
+  "nome": "Cadastro iGreen Pay",
+  "descricao": "A abertura da conta iGreen Pay no app, no CPF e no CNPJ: vantagens, selfie, dados, endereço e perfil até a análise, a situação do cadastro e os casos de empresa.",
+  "tipo": "prototipo",
+  "atualizado": "2026-10-13",
+  "link": "https://snksergio.github.io/remote-claude/",
+  "repo": "https://github.com/snksergio/remote-claude",
+  "tags": [
+    "pay",
+    "conta digital",
+    "cadastro",
+    "cnpj",
+    "selfie"
+  ]
+}

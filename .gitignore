@@ -1,0 +1,8 @@
+# Gerado por scripts/gerar-catalogo.mjs
+catalogo.js
+
+.claude/launch.json
+node_modules/
+.env*
+.DS_Store
+Thumbs.db

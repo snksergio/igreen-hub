@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sólis iGreen — Design System Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#00753f; --primary-hover:#006133; --primary-subtle:#e8fbef;
+    --secondary:#f2f3f5; --secondary-fg:#434851;
+    --surface:#ffffff; --canvas:#f8f8fa;
+    --text:#060b14; --muted:#72767d; --border:#e6e8ea;
+    --error:#cb2f45; --error-subtle:#fff1f1;
+    --success:#007a3a; --warning:#e27300; --info:#0065b4;
+    --ring:#009c5c; --radius:10px; --radius-card:14px; --radius-badge:8px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--canvas);color:var(--text);
+    font-family:Inter,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+    letter-spacing:-0.01em;line-height:1.5}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 24px 96px}
+  header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--surface) 95%,transparent);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:20px 24px;margin-bottom:40px}
+  header .inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  h1{font-size:24px;font-weight:700;letter-spacing:-0.025em;margin:0}
+  .sub{font-size:13px;color:var(--muted);font-weight:500;margin-top:2px}
+  .badges-top{display:flex;gap:8px;flex-wrap:wrap}
+  section{margin-bottom:56px}
+  h2{font-size:20px;font-weight:700;letter-spacing:-0.025em;margin:0 0 4px}
+  .sec-sub{font-size:13px;color:var(--muted);margin:0 0 20px;font-weight:500}
+  h3{font-size:14px;font-weight:600;letter-spacing:-0.025em;margin:0 0 10px;color:var(--muted);text-transform:uppercase;font-size:11px;letter-spacing:0.04em}
+  /* color scales */
+  .scale{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+  .sw{display:flex;flex-direction:column;align-items:center;gap:4px;width:62px}
+  .chip{width:62px;height:46px;border-radius:var(--radius);border:1px solid var(--border)}
+  .sw small{font-family:'Geist Mono',monospace;font-size:10px;color:var(--muted)}
+  .sw b{font-family:'Geist Mono',monospace;font-size:9px;color:var(--text);font-weight:400}
+  /* roles grid */
+  .roles{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+  .role{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);
+    border:1px solid var(--border);border-radius:var(--radius)}
+  .role .dot{width:34px;height:34px;border-radius:8px;flex:none;border:1px solid rgba(0,0,0,.06)}
+  .role .meta{min-width:0}
+  .role .meta p{margin:0;font-size:13px;font-weight:600}
+  .role .meta small{font-family:'Geist Mono',monospace;font-size:11px;color:var(--muted)}
+  /* type specimen */
+  .type-row{display:flex;align-items:baseline;gap:16px;padding:10px 0;border-bottom:1px solid var(--border)}
+  .type-row .label{font-family:'Geist Mono',monospace;font-size:11px;color:var(--muted);width:130px;flex:none}
+  /* components */
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-card);padding:24px;margin-bottom:16px}
+  .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 14px;
+    border-radius:var(--radius);font-size:14px;font-weight:600;letter-spacing:-0.025em;border:1px solid transparent;
+    cursor:pointer;transition:all .15s;font-family:inherit}
+  .btn-default{background:var(--primary);color:#fff;box-shadow:inset 0 1px 0 0 rgba(255,255,255,.2),0 1px 2px 0 rgba(0,0,0,.05)}
+  .btn-default:hover{background:var(--primary-hover)}
+  .btn-outline{background:var(--surface);color:var(--text);border-color:var(--border);box-shadow:0 1px 2px 0 rgba(0,0,0,.05)}
+  .btn-secondary{background:var(--secondary);color:var(--secondary-fg)}
+  .btn-ghost{background:transparent;color:var(--text)}
+  .btn-ghost:hover{background:var(--secondary)}
+  .btn-destructive{background:var(--error);color:#fff;box-shadow:inset 0 1px 0 0 rgba(255,255,255,.2),0 1px 2px 0 rgba(0,0,0,.05)}
+  .btn-link{background:transparent;color:var(--primary);text-decoration:underline;text-underline-offset:4px}
+  .badge{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:var(--radius-badge);
+    font-size:12px;font-weight:600;letter-spacing:-0.025em}
+  .b-default{background:var(--primary-subtle);color:var(--primary-hover)}
+  .b-secondary{background:var(--secondary);color:var(--muted)}
+  .b-destructive{background:var(--error-subtle);color:var(--error)}
+  .b-success{background:#e9faee;color:#006630}
+  .b-warning{background:#fff8ea;color:#b95e00}
+  .b-info{background:#ebf7ff;color:#005496}
+  .input{height:44px;width:100%;max-width:320px;padding:0 14px;border-radius:var(--radius);
+    border:1px solid var(--border);font-size:14px;font-weight:500;font-family:inherit;outline:none;
+    box-shadow:0 1px 2px 0 rgba(0,0,0,.05);color:var(--text)}
+  .input::placeholder{color:color-mix(in srgb,var(--muted) 60%,transparent)}
+  .input:focus{border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 20%,transparent)}
+  .tabs{display:inline-flex;gap:2px;background:var(--secondary);padding:4px;border-radius:var(--radius);height:40px}
+  .tab{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 16px;border-radius:8px;
+    font-size:14px;font-weight:500;letter-spacing:-0.025em;color:var(--muted);cursor:pointer;border:none;background:transparent;font-family:inherit}
+  .tab.active{background:var(--surface);color:var(--text);font-weight:600;box-shadow:0 1px 2px 0 rgba(0,0,0,.05)}
+  .tab .count{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:9999px;
+    background:#cb2f45;color:#fff;font-size:10px;font-weight:700}
+  .card-demo{max-width:300px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-card);
+    padding:20px;transition:all .15s}
+  .card-demo:hover{border-color:color-mix(in srgb,var(--primary) 30%,var(--border));box-shadow:0 1px 2px 0 rgba(0,0,0,.05)}
+  .note{font-size:12px;color:var(--muted);margin:14px 0 0;padding-left:12px;border-left:2px solid var(--border)}
+  code{font-family:'Geist Mono',monospace;font-size:12px;background:var(--secondary);padding:1px 5px;border-radius:4px}
+  .pill{font-family:'Geist Mono',monospace;font-size:11px;padding:3px 8px;border-radius:9999px;background:var(--secondary);color:var(--secondary-fg)}
+</style>
+</head>
+<body>
+<header>
+  <div class="inner">
+    <div>
+      <h1>Sólis iGreen — Design System</h1>
+      <div class="sub">Next.js 16 · React 19 · Tailwind v4 · shadcn/ui base-nova · Base UI · OKLCH tokens</div>
+    </div>
+    <div class="badges-top">
+      <span class="pill">extract-code</span>
+      <span class="pill">lint 0/0</span>
+      <span class="pill">DTCG ✓</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- COLOR SCALES -->
+  <section>
+    <h2>Escalas de Cor</h2>
+    <p class="sec-sub">OKLCH renderizado em sRGB, hue constante por escala. Primitivas → nunca usadas direto.</p>
+
+    <h3>Brand · hue 160</h3>
+    <div class="scale" id="brand"></div>
+    <h3>Neutral · hue 260 (cool gray)</h3>
+    <div class="scale" id="neutral"></div>
+    <h3>Critical · hue 19</h3>
+    <div class="scale" id="critical"></div>
+    <h3>Success · hue 155</h3>
+    <div class="scale" id="success"></div>
+    <h3>Warning · hue 55–85</h3>
+    <div class="scale" id="warning"></div>
+    <h3>Info · hue 250</h3>
+    <div class="scale" id="info"></div>
+    <h3>Sidebar · hue 263</h3>
+    <div class="scale" id="sidebar"></div>
+  </section>
+
+  <!-- ROLES -->
+  <section>
+    <h2>Papéis Semânticos</h2>
+    <p class="sec-sub">Slots consumidos por componente (light · tema canônico).</p>
+    <div class="roles" id="roles"></div>
+  </section>
+
+  <!-- TYPOGRAPHY -->
+  <section>
+    <h2>Tipografia</h2>
+    <p class="sec-sub">Inter (500/600/700) · tracking-tight em títulos, botões e badges · Geist Mono para código.</p>
+    <div class="panel">
+      <div class="type-row"><span class="label">display · 24/700</span><span style="font-size:24px;font-weight:700;letter-spacing:-0.025em">Título de página</span></div>
+      <div class="type-row"><span class="label">heading-1 · 20/700</span><span style="font-size:20px;font-weight:700;letter-spacing:-0.025em">Seção</span></div>
+      <div class="type-row"><span class="label">heading-3 · 16/600</span><span style="font-size:16px;font-weight:600">Título de card</span></div>
+      <div class="type-row"><span class="label">body · 14/500</span><span style="font-size:14px;font-weight:500">Corpo padrão e inputs do sistema.</span></div>
+      <div class="type-row"><span class="label">body-strong · 14/600</span><span style="font-size:14px;font-weight:600;letter-spacing:-0.025em">Botões e ações</span></div>
+      <div class="type-row"><span class="label">caption · 12/600</span><span style="font-size:12px;font-weight:600;letter-spacing:-0.025em">Badges e captions</span></div>
+      <div class="type-row" style="border:none"><span class="label">mono · 12/400</span><span style="font-family:'Geist Mono',monospace;font-size:12px">--brand-600: #00753f</span></div>
+    </div>
+  </section>
+
+  <!-- COMPONENTS -->
+  <section>
+    <h2>Componentes</h2>
+    <p class="sec-sub">Átomos com tokens reais. Verde = ação; resto neutro.</p>
+
+    <div class="panel">
+      <h3>Button — 6 variantes</h3>
+      <div class="row">
+        <button class="btn btn-default">Primary</button>
+        <button class="btn btn-outline">Outline</button>
+        <button class="btn btn-secondary">Secondary</button>
+        <button class="btn btn-ghost">Ghost</button>
+        <button class="btn btn-destructive">Destructive</button>
+        <button class="btn btn-link">Link</button>
+      </div>
+      <p class="note">h-40 · px-14 · <code>rounded-lg</code> 10px · 14/600 · realce glass inset só em sólidos.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Badge — semânticos</h3>
+      <div class="row">
+        <span class="badge b-default">Ativado</span>
+        <span class="badge b-secondary">Neutro</span>
+        <span class="badge b-destructive">Erro</span>
+        <span class="badge b-success">Concluído</span>
+        <span class="badge b-warning">Pendente</span>
+        <span class="badge b-info">Informação</span>
+      </div>
+      <p class="note">h-24 · <code>rounded-md</code> · 12/600 · par subtle-bg + text-forte por hue.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Input — foco anel verde (assinatura)</h3>
+      <div class="row">
+        <input class="input" placeholder="Digite seu e-mail…">
+        <input class="input" value="josee@exemplo.com.br">
+      </div>
+      <p class="note">h-44 · px-14 · <code>rounded-lg</code> · foco <code>border-primary</code> + ring verde 3px.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Tabs — pill + TabBadge</h3>
+      <div class="tabs">
+        <button class="tab active">Visão geral</button>
+        <button class="tab">Relatórios</button>
+        <button class="tab">Pendências <span class="count">3</span></button>
+      </div>
+      <p class="note">Container <code>bg-neutral-100</code> · aba ativa = pílula branca + <code>shadow-sm</code> + semibold.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Card</h3>
+      <div class="card-demo">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <strong style="font-size:16px;font-weight:600">Consumo mensal</strong>
+          <span class="badge b-default">Ativo</span>
+        </div>
+        <p style="margin:0;font-size:13px;color:var(--muted)">Borda + 14px de raio. Hover acende borda verde-30% + sombra de 1px. Sem sombra pesada.</p>
+      </div>
+      <p class="note"><code>rounded-xl</code> 14px · elevação por borda + contraste, nunca sombra média.</p>
+    </div>
+  </section>
+
+  <!-- ELEVATION -->
+  <section>
+    <h2>Profundidade</h2>
+    <p class="sec-sub">Sistema intencionalmente quase plano — só 1px.</p>
+    <div class="panel">
+      <div class="row" style="gap:24px">
+        <div style="padding:16px 20px;border:1px solid var(--border);border-radius:10px;background:var(--surface)">Level 0 — flat (borda)</div>
+        <div style="padding:16px 20px;border-radius:10px;background:var(--primary);color:#fff;box-shadow:inset 0 1px 0 0 rgba(255,255,255,.2),0 1px 2px 0 rgba(0,0,0,.05)">Level 1 — glass inset (botão)</div>
+        <div style="padding:16px 20px;border:1px solid var(--border);border-radius:10px;background:var(--surface);box-shadow:0 1px 2px 0 rgba(0,0,0,.05)">Level 1 — hairline (input/card hover)</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const scales = {
+  brand:    {50:"#e8fbef",100:"#d2f5e1",200:"#a9e8c6",300:"#71d6a3",400:"#14bb7c",500:"#009c5c",600:"#00753f",700:"#006133",800:"#004a26",900:"#00341a",950:"#001d0d"},
+  neutral:  {0:"#ffffff",50:"#f8f8fa",100:"#f2f3f5",200:"#e6e8ea",300:"#d2d4d8",400:"#aeb1b6",500:"#72767d",600:"#595e66",700:"#434851",800:"#292e37",900:"#151b24",950:"#060b14"},
+  critical: {50:"#fff1f1",100:"#ffe4e3",200:"#ffc7c7",300:"#faa2a3",400:"#ef7177",500:"#da4051",600:"#cb2f45",700:"#a62436",800:"#7f1f2a",900:"#5b161e",950:"#310c0f"},
+  success:  {50:"#e9faee",100:"#d5f5de",200:"#aee8c1",300:"#7ad59c",400:"#34ba72",500:"#009b51",600:"#007a3a",700:"#006630",800:"#004c23",900:"#003416",950:"#001d0a"},
+  warning:  {50:"#fff8ea",100:"#fbe9ca",200:"#fed7a3",300:"#ffbb65",400:"#ffa640",500:"#f29520",600:"#e27300",700:"#b95e00",800:"#8c4a11",900:"#603616",950:"#3c220f"},
+  info:     {50:"#ebf7ff",100:"#d8eeff",200:"#b2dcff",300:"#80c3ff",400:"#47a3fa",500:"#0d7dd4",600:"#0065b4",700:"#005496",800:"#023f6f",900:"#032a4c",950:"#061c31"},
+  sidebar:  {50:"#f5f6f7",100:"#ecedef",200:"#e0e1e4",300:"#ccced1",400:"#b7b9bc",500:"#96989d",600:"#787c82",700:"#585a5f",800:"#393b3e",900:"#202225",950:"#0a0b0d"},
+};
+for(const [name,steps] of Object.entries(scales)){
+  const el=document.getElementById(name); if(!el)continue;
+  for(const [k,v] of Object.entries(steps)){
+    el.insertAdjacentHTML("beforeend",
+      `<div class="sw"><div class="chip" style="background:${v}"></div><small>${k}</small><b>${v}</b></div>`);
+  }
+}
+const roles=[
+  ["primary","#00753f","Ação / marca"],["secondary","#f2f3f5","Superfície sutil"],
+  ["surface","#ffffff","Card / fundo"],["canvas","#f8f8fa","Tela"],
+  ["text","#060b14","Texto"],["text-muted","#72767d","Texto secundário"],
+  ["border","#e6e8ea","Bordas"],["ring","#009c5c","Foco"],
+  ["error","#cb2f45","Erro / destructive"],["success","#007a3a","Sucesso"],
+  ["warning","#e27300","Alerta"],["info","#0065b4","Informação"],
+];
+const rg=document.getElementById("roles");
+for(const [n,v,d] of roles){
+  rg.insertAdjacentHTML("beforeend",
+    `<div class="role"><div class="dot" style="background:${v}"></div><div class="meta"><p>${n}</p><small>${v}</small><br><small style="color:#aeb1b6">${d}</small></div></div>`);
+}
+</script>
+</body>
+</html>

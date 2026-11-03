@@ -1,0 +1,136 @@
+# Orquestrador do iGreen Hub
+
+Regras para subir ou alterar um projeto neste repositório. Valem para qualquer IA e para quem mexer à mão. Leia inteiro antes de começar: é curto de propósito.
+
+- Repositório: https://github.com/snksergio/igreen-hub
+- Vitrine: https://snksergio.github.io/igreen-hub/
+- Endereço de um projeto: `https://snksergio.github.io/igreen-hub/<categoria>/<slug>/`
+
+## 1. O que entra aqui
+
+Projetos simples e estáticos, que abrem no navegador sem servidor: protótipos navegáveis, POCs, hotsites, landing pages, propostas, apresentações e documentações de jornada.
+
+Não entra. O projeto fica onde está e aqui vai só a ficha com o link (seção 6):
+
+- precisa de servidor, banco, API própria ou chave secreta;
+- passa de 50 MB ou tem vídeo pesado;
+- é um app que continua sendo desenvolvido em outro repositório (no Vercel, por exemplo).
+
+## 2. Estrutura
+
+```
+<categoria>/<slug>/
+├── projeto.json   obrigatório: a ficha que a vitrine lê
+├── _vitrine/      os prints da vitrine: capa.webp, 01.webp, 02.webp...
+├── index.html     a entrada principal
+└── ...            o resto do projeto, organizado como ele quiser
+```
+
+- **Categoria**: uma das listadas em `categorias.json`. A categoria é o produto ou a frente (Mob, Green Telecom); o formato vai em `tipo`. Se nenhuma servir ou houver dúvida, pergunte ao usuário. Não crie categoria por conta própria.
+- **Slug**: o nome da pasta. Minúsculas, sem acento, palavras separadas por hífen, curto e descritivo: `pagar-fatura`, `hotsite-eletroposto`. Não comece com `igreen-`, o repositório inteiro já é iGreen.
+- **Um projeto, uma pasta.** Várias telas do mesmo assunto ficam na mesma pasta, listadas em `paginas`. Versões do mesmo assunto (`faturas-v1.html`, `faturas-v2.html`) também, listadas em `versoes`.
+- **Caminhos sempre relativos** (`assets/logo.svg`, nunca `/assets/logo.svg`): o site mora numa subpasta.
+- **Não mexa** em pasta de outro projeto, no `index.html` da raiz (é a vitrine) nem no `catalogo.js` (é gerado na publicação).
+
+## 3. projeto.json
+
+```json
+{
+  "nome": "Pagar fatura",
+  "descricao": "Protótipo navegável do pagar fatura: Pix, cartão, boleto, saldo, cashback e comprovante.",
+  "tipo": "prototipo",
+  "atualizado": "2026-10-29",
+  "paginas": [
+    { "nome": "Fluxo completo", "arquivo": "index.html" },
+    { "nome": "Faturas de energia", "arquivo": "faturas-energia.html" }
+  ],
+  "tags": ["fatura", "pix"]
+}
+```
+
+| Campo | Obrigatório | O que é |
+|---|---|---|
+| `nome` | sim | Nome curto, como aparece no card |
+| `descricao` | sim | Uma ou duas frases: o que é e para que serve (até uns 200 caracteres) |
+| `tipo` | sim | Um dos tipos de `categorias.json`: `prototipo`, `poc`, `hotsite`, `landing`, `proposta`, `apresentacao`, `dashboard`, `documentacao` |
+| `atualizado` | sim | Data da última mudança, `AAAA-MM-DD`. Atualize a cada alteração |
+| `paginas` | não | As entradas do projeto, cada uma vira um botão. Sem o campo, a entrada é `index.html`. `arquivo` aceita `#ancora` e `?parametro` |
+| `versoes` | não | O histórico de versões, da mais nova para a mais antiga: `{ "nome": "v2 · com cashback", "arquivo": "faturas-v2.html", "data": "2026-10-29" }`. A primeira aparece como atual. `arquivo` segue a mesma regra das páginas e também aceita uma URL completa |
+| `link` | não | Só quando o projeto mora fora daqui: a URL dele. Aí o `arquivo` de cada página é relativo a esse link |
+| `repo` | não | Onde está o código-fonte, se for outro repositório |
+| `status` | não | `ativo` (padrão), `rascunho` ou `arquivado` (sai da lista principal e fica no filtro Arquivados) |
+| `tags` | não | Palavras extras para a busca |
+
+A categoria e o slug saem do caminho da pasta, não repita no arquivo.
+
+## 4. Prints da vitrine (`_vitrine/`)
+
+- `capa.webp`: a imagem do card, paisagem 1440×900.
+- `01.webp`, `02.webp`...: a galeria do projeto, até 8 imagens, em qualquer proporção. Telas de celular em pé funcionam bem.
+- Cada imagem com até uns 300 KB. Prefira `.webp`.
+
+Para tirar os prints, rode na raiz do clone:
+
+```bash
+node scripts/capturar-telas.mjs <categoria>/<slug>
+```
+
+```bash
+node scripts/capturar-telas.mjs <categoria>/<slug> index.html "index.html#pix" "index.html#boleto" --celular
+```
+
+O primeiro alvo vira a capa e os outros viram a galeria. Sem alvo, usa a primeira página do projeto. `--celular` captura a galeria em 390×844. O script usa o Chrome ou o Edge instalados; sem nenhum dos dois, use a ferramenta de navegador que você tiver ou siga sem prints e avise o usuário (a vitrine mostra uma capa provisória).
+
+Olhe a capa antes de subir. Se pegou tela de carregamento ou animação de entrada pela metade, rode de novo com `--espera=8`. Se pegou um modal aberto, capture outro alvo.
+
+## 5. Pipeline
+
+### Subir um projeto novo
+
+1. **Decida categoria, slug, nome e tipo** olhando o projeto, e mostre ao usuário numa linha antes de subir. Se a categoria não for óbvia, pergunte.
+2. **Clone esparso** numa pasta temporária fora do projeto atual. Ele baixa só os arquivos da raiz, `scripts/` e a pasta do projeto, nunca o repositório inteiro:
+   ```bash
+   git clone --depth 1 --filter=blob:none --sparse https://github.com/snksergio/igreen-hub.git <tmp>/igreen-hub
+   cd <tmp>/igreen-hub
+   git sparse-checkout set scripts <categoria>/<slug>
+   ```
+   Se a pasta temporária já existir de outra vez, apague e clone de novo.
+3. **Confira se o slug está livre**: `git ls-tree -d HEAD <categoria>/<slug>` não deve devolver nada. Se devolver, ou é o mesmo projeto (siga "Alterar") ou escolha outro slug.
+4. **Copie o projeto** para `<categoria>/<slug>/`. Deixe de fora `node_modules`, `.git`, `.env`, `.claude`, zips, arquivos-fonte pesados (psd, fig, mp4 bruto) e qualquer dado real de cliente.
+   - Projeto com build (Vite, React...): gere o build com caminho relativo (`npx vite build --base=./`) e copie só o conteúdo do `dist`. Use rotas com hash (`HashRouter`). Registre em `repo` onde está o código.
+5. **Crie o `projeto.json`** (seção 3) e **os prints** (seção 4).
+6. **Valide**: `node scripts/gerar-catalogo.mjs --checar`. Corrija os avisos do seu projeto. Só pode sobrar o aviso de prints, e só se você não conseguiu capturar.
+7. **Publique**:
+   ```bash
+   git add <categoria>/<slug>
+   git commit -m "<categoria>/<slug>: adiciona <nome>"
+   git push
+   ```
+   Se o push for recusado, rode `git pull --rebase` e faça o push de novo.
+8. **Responda ao usuário** com os dois links e avise que a publicação leva cerca de 1 minuto:
+   - o projeto: `https://snksergio.github.io/igreen-hub/<categoria>/<slug>/`
+   - na vitrine: `https://snksergio.github.io/igreen-hub/#<categoria>/<slug>`
+9. Apague a pasta temporária.
+
+### Alterar um projeto que já está aqui
+
+Mesmo clone esparso do passo 2, com a pasta do projeto. Substitua ou edite os arquivos, atualize `atualizado` (e `descricao` ou `paginas`, se mudaram), refaça os prints se a tela mudou, valide e publique com a mensagem `<categoria>/<slug>: <o que mudou>`.
+
+Não crie pastas paralelas para versões. Se a versão anterior precisa continuar visível, ela fica na mesma pasta com o número no nome (`faturas-v1.html`), a nova assume a entrada principal e as duas entram em `versoes`, a mais nova primeiro, com a data. Se ninguém precisa ver a anterior, só substitua: o git guarda o histórico.
+
+Um projeto é um assunto. Telas de assuntos diferentes, mesmo que nasçam no mesmo repositório, viram projetos separados, cada um com sua ficha.
+
+### Mudar um projeto de categoria ou de nome
+
+Inclua as duas pastas no `git sparse-checkout set`, rode `git mv <antiga> <nova>` e publique. Avise o usuário que o link antigo deixa de funcionar.
+
+## 6. Projeto que mora fora
+
+Para o que não entra aqui (seção 1), a pasta leva só o `projeto.json` e a `_vitrine/`, com `link` apontando para onde o projeto está. Assim a vitrine lista tudo, até o que não mora aqui. Para trazer um desses para cá depois, copie os arquivos para a pasta e apague o `link`.
+
+## 7. Limites e cuidados
+
+- O repositório é público: nada de `.env`, token, chave, senha ou dado real de cliente (CPF, telefone, fatura). Use dados fictícios.
+- Arquivo até 50 MB (o GitHub recusa acima de 100 MB). Pasta de projeto, de preferência, até 20 MB.
+- O site inteiro no GitHub Pages tem limite de 1 GB: imagens otimizadas e vídeo só comprimido e curto.
+- A publicação é automática a cada push na `main` (`.github/workflows/publicar.yml`). Não precisa rodar nada além do push.

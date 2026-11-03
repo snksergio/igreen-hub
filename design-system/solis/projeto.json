@@ -1,0 +1,12 @@
+{
+  "nome": "Sólis · Design System",
+  "descricao": "A prévia do design system Sólis iGreen: as escalas de cor (marca, neutros, estados e sidebar) e o papel de cada cor na interface.",
+  "tipo": "documentacao",
+  "atualizado": "2026-06-03",
+  "repo": "https://github.com/snksergio/solis-desing",
+  "tags": [
+    "tokens",
+    "cores",
+    "design system"
+  ]
+}

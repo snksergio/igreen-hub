@@ -1,0 +1,39 @@
+{
+  "nome": "Dashboard com MCP",
+  "descricao": "Dashboard com design system próprio e um servidor MCP para agentes de IA gerarem páginas consistentes.",
+  "tipo": "dashboard",
+  "atualizado": "2026-03-19",
+  "link": "https://igreen-dashboard.vercel.app/",
+  "repo": "https://github.com/snksergio/igreen-dashboard",
+  "paginas": [
+    {
+      "nome": "Dashboard",
+      "arquivo": "dashboard.html"
+    },
+    {
+      "nome": "Analytics",
+      "arquivo": "analytics.html"
+    },
+    {
+      "nome": "Tendências de mercado",
+      "arquivo": "market-trends.html"
+    },
+    {
+      "nome": "Produtos",
+      "arquivo": "products.html"
+    },
+    {
+      "nome": "Editar pedido",
+      "arquivo": "order.html"
+    },
+    {
+      "nome": "Detalhe do pedido",
+      "arquivo": "order-detail.html"
+    }
+  ],
+  "tags": [
+    "mcp",
+    "ia",
+    "dashboard"
+  ]
+}

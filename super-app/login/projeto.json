@@ -1,0 +1,13 @@
+{
+  "nome": "Login do Super App",
+  "descricao": "O fluxo completo de login: biometria, boas-vindas, CPF, primeiro acesso, cadastro do Eletroposto, aparelho novo e ajuda de segurança.",
+  "tipo": "prototipo",
+  "atualizado": "2026-10-09",
+  "link": "https://snksergio.github.io/login-superapp/",
+  "repo": "https://github.com/snksergio/login-superapp",
+  "tags": [
+    "login",
+    "biometria",
+    "onboarding"
+  ]
+}

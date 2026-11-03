@@ -1,0 +1,14 @@
+{
+  "nome": "Radar de leads",
+  "descricao": "Mini CRM de captura e gestão de leads para o licenciado, com mapa territorial analítico. Tudo simulado, sem backend.",
+  "tipo": "poc",
+  "atualizado": "2026-07-13",
+  "link": "https://leads-igreen.vercel.app/",
+  "repo": "https://github.com/snksergio/leads-igreen",
+  "tags": [
+    "crm",
+    "leads",
+    "mapa",
+    "licenciado"
+  ]
+}

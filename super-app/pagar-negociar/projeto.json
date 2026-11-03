@@ -1,0 +1,20 @@
+{
+  "nome": "Pagar e negociar faturas",
+  "descricao": "As faturas em aberto da Casa no padrão do app: pagar com o Pix da energia ou com desconto, saldo iGreen, boleto e cartão, além de parcelar, agrupar num boleto único e desmembrar.",
+  "tipo": "prototipo",
+  "atualizado": "2026-10-29",
+  "link": "https://snksergio.github.io/pagar-fatura-igreen/",
+  "repo": "https://github.com/snksergio/pagar-fatura-igreen",
+  "paginas": [
+    {
+      "nome": "Pagar e negociar",
+      "arquivo": "faturas-negociar.html"
+    }
+  ],
+  "tags": [
+    "fatura",
+    "parcelar",
+    "agrupar",
+    "desconto"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "nome": "Pagar fatura",
+  "descricao": "O fluxo completo do pagar fatura no app: Home iGreen, Telecom e o pagamento com Pix, cartão salvo em 3x, cartão novo, boleto, saldo iGreen e cashback, até o comprovante.",
+  "tipo": "prototipo",
+  "atualizado": "2026-10-21",
+  "link": "https://snksergio.github.io/pagar-fatura-igreen/",
+  "repo": "https://github.com/snksergio/pagar-fatura-igreen",
+  "tags": [
+    "fatura",
+    "pix",
+    "boleto",
+    "cartão",
+    "cashback"
+  ]
+}

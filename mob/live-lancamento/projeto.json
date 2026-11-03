@@ -1,0 +1,23 @@
+{
+  "nome": "Live de lançamento",
+  "descricao": "As páginas da live de lançamento do iGreen MOB: o pré-cadastro (convite para a live) e o lançamento, com a escolha da licença e o pedido.",
+  "tipo": "landing",
+  "atualizado": "2026-10-14",
+  "link": "https://snksergio.github.io/mobi-precadastro/",
+  "repo": "https://github.com/snksergio/mobi-precadastro",
+  "paginas": [
+    {
+      "nome": "Pré-cadastro",
+      "arquivo": "pre-cadastro.html"
+    },
+    {
+      "nome": "Lançamento",
+      "arquivo": "lancamento.html"
+    }
+  ],
+  "tags": [
+    "lançamento",
+    "live",
+    "licença"
+  ]
+}

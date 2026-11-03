@@ -1,0 +1,23 @@
+{
+  "categorias": [
+    { "id": "super-app", "nome": "Super App" },
+    { "id": "app-club", "nome": "App Club" },
+    { "id": "app-licenciado", "nome": "App do Licenciado" },
+    { "id": "mob", "nome": "Mob" },
+    { "id": "green-telecom", "nome": "Green Telecom" },
+    { "id": "institucional", "nome": "Institucional e eventos" },
+    { "id": "backoffice", "nome": "Backoffice" },
+    { "id": "design-system", "nome": "Design System" },
+    { "id": "outros", "nome": "Outros" }
+  ],
+  "tipos": {
+    "prototipo": "Protótipo",
+    "poc": "POC",
+    "hotsite": "Hotsite",
+    "landing": "Landing page",
+    "proposta": "Proposta",
+    "apresentacao": "Apresentação",
+    "dashboard": "Dashboard",
+    "documentacao": "Documentação"
+  }
+}

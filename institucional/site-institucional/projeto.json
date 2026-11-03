@@ -1,0 +1,47 @@
+{
+  "nome": "Site institucional",
+  "descricao": "Landing institucional da iGreen Energy com as páginas de cada conexão e um modo apresentação que substitui o PowerPoint ao vivo.",
+  "tipo": "apresentacao",
+  "atualizado": "2026-07-28",
+  "link": "https://snksergio.github.io/igreen-apresentacao/",
+  "repo": "https://github.com/snksergio/igreen-apresentacao",
+  "paginas": [
+    {
+      "nome": "Página inicial",
+      "arquivo": ""
+    },
+    {
+      "nome": "Conexão Green",
+      "arquivo": "produtos/conexaogreen.html"
+    },
+    {
+      "nome": "Conexão Livre",
+      "arquivo": "produtos/conexaolivre.html"
+    },
+    {
+      "nome": "Conexão Solar",
+      "arquivo": "produtos/conexaosolar.html"
+    },
+    {
+      "nome": "Conexão Placas",
+      "arquivo": "produtos/conexaoplacas.html"
+    },
+    {
+      "nome": "Conexão Telecom",
+      "arquivo": "produtos/conexaotelecom.html"
+    },
+    {
+      "nome": "Conexão Seguros",
+      "arquivo": "produtos/conexaoseguros.html"
+    },
+    {
+      "nome": "Conexão Expansão",
+      "arquivo": "produtos/conexaoexpansao.html"
+    }
+  ],
+  "tags": [
+    "landing",
+    "produtos",
+    "conexões"
+  ]
+}

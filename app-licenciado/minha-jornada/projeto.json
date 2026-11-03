@@ -1,0 +1,22 @@
+{
+  "nome": "Minha jornada",
+  "descricao": "A tela Minha jornada do app do licenciado: a documentação e a proposta navegável.",
+  "tipo": "proposta",
+  "atualizado": "2026-10-20",
+  "link": "https://snksergio.github.io/app-licenciado-card/",
+  "repo": "https://github.com/snksergio/app-licenciado-card",
+  "paginas": [
+    {
+      "nome": "Documentação",
+      "arquivo": "documentacao-jornada.html"
+    },
+    {
+      "nome": "Protótipo",
+      "arquivo": "prototipo-jornada.html"
+    }
+  ],
+  "tags": [
+    "licenciado",
+    "jornada"
+  ]
+}

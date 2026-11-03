@@ -1,0 +1,13 @@
+{
+  "nome": "Design System shadcn",
+  "descricao": "Sistema de design modular em React, com temas CSS personalizáveis e publicação no NPM.",
+  "tipo": "documentacao",
+  "atualizado": "2026-01-21",
+  "link": "https://igreenshadcn.vercel.app/",
+  "repo": "https://github.com/snksergio/igreenshadcn",
+  "tags": [
+    "react",
+    "componentes",
+    "tokens"
+  ]
+}

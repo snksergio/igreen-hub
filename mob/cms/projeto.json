@@ -1,0 +1,9 @@
+{
+  "nome": "MOB CMS",
+  "descricao": "O painel de gestão da rede de recarga do iGreen MOB: carregadores, gestão de carga, transações, preços, repasses, cupons e usuários.",
+  "tipo": "prototipo",
+  "atualizado": "2026-09-30",
+  "link": "https://mob-csm.vercel.app/",
+  "repo": "https://github.com/snksergio/igreen-mob-csm",
+  "tags": ["cms", "backoffice", "carregadores", "react"]
+}

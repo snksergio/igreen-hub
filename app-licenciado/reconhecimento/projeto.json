@@ -1,0 +1,31 @@
+{
+  "nome": "Card de Reconhecimento",
+  "descricao": "O card de Reconhecimento na home do app do licenciado, em duas versões, com a documentação das decisões de desenho. Os números são de exemplo.",
+  "tipo": "documentacao",
+  "atualizado": "2026-10-20",
+  "link": "https://snksergio.github.io/app-licenciado-card/",
+  "repo": "https://github.com/snksergio/app-licenciado-card",
+  "paginas": [
+    {
+      "nome": "Documentação (V1 e V2)",
+      "arquivo": "documentacao.html"
+    }
+  ],
+  "versoes": [
+    {
+      "nome": "V2",
+      "arquivo": "prototipo-v2.html",
+      "data": "2026-10-20"
+    },
+    {
+      "nome": "V1 · com prévia",
+      "arquivo": "prototipo.html",
+      "data": "2026-10-20"
+    }
+  ],
+  "tags": [
+    "licenciado",
+    "home",
+    "reconhecimento"
+  ]
+}

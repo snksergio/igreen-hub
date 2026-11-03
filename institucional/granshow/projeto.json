@@ -1,0 +1,47 @@
+{
+  "nome": "GranShow",
+  "descricao": "A landing iGreen preparada para o GranShow: reconhecimento por graduação, slides por conexão do ecossistema, Destaques e o TOP 10 Green Points.",
+  "tipo": "apresentacao",
+  "atualizado": "2026-08-15",
+  "link": "https://apnapresentacao.vercel.app/",
+  "repo": "https://github.com/snksergio/apnapresentacao",
+  "paginas": [
+    {
+      "nome": "Página inicial",
+      "arquivo": ""
+    },
+    {
+      "nome": "Conexão Green",
+      "arquivo": "produtos/conexaogreen.html"
+    },
+    {
+      "nome": "Conexão Livre",
+      "arquivo": "produtos/conexaolivre.html"
+    },
+    {
+      "nome": "Conexão Solar",
+      "arquivo": "produtos/conexaosolar.html"
+    },
+    {
+      "nome": "Conexão Placas",
+      "arquivo": "produtos/conexaoplacas.html"
+    },
+    {
+      "nome": "Conexão Telecom",
+      "arquivo": "produtos/conexaotelecom.html"
+    },
+    {
+      "nome": "Conexão Seguros",
+      "arquivo": "produtos/conexaoseguros.html"
+    },
+    {
+      "nome": "Conexão Expansão",
+      "arquivo": "produtos/conexaoexpansao.html"
+    }
+  ],
+  "tags": [
+    "evento",
+    "reconhecimento",
+    "conexões"
+  ]
+}
