@@ -1,0 +1,1526 @@
+<title>Variações da Fatura iGreen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: cabeçalho simples, barra de opções, palco com a tela (Invoice Web no fundo cinza da produção ou folha A4) e, ao lado, as notas da tela. Tema claro único. */
+:root{
+  color-scheme:light;
+  --bg:#F5F6F6;
+  --surface:#FFFFFF;
+  --ink:#1E2420;
+  --muted:#66706A;
+  --line:#E3E7E4;
+  --line-2:#CFD6D1;
+  --track:#ECEFED;
+  --hover:#F2F5F3;
+  --accent:#009222;
+  --accent-ink:#FFFFFF;
+  --removed:#C2410C;
+  --data:#2A57BF;
+  --warn:#8A5800;
+  --spot:#E39A00;
+  --shadow:rgba(20,32,24,.14);
+  --pdf-desk:#E9ECEA;
+
+  --f-ui:"Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --f-ig:"Montserrat", "Segoe UI", Arial, sans-serif;
+  --f-code:ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace;
+
+  /* Produto iGreen, igual à produção */
+  --ig-green:#009222;
+  --ig-green-2:#00B22A;
+  --ig-bg:#F2F5F7;
+  --ig-ink:#181D11;
+  --ig-black:#000000;
+  --ig-muted:#6A7570;
+  --ig-divider:#E9ECEE;
+  --ig-tear:#D3D8DC;
+  --ig-chip:#F1F2F2;
+  --ig-white:#FFFFFF;
+  --ig-toast:#4FA94D;
+  --ig-shadow:rgba(0,66,110,.10);
+  --ig-shadow-1:rgba(0,66,110,.06);
+  --ig-green-glow:rgba(0,146,34,.40);
+  --a-removed:#C2410C;
+  --a-removed-wash:rgba(194,65,12,.07);
+  --a-data:#2A57BF;
+  --a-data-wash:#E7EDFB;
+  --a-warn:#8A5800;
+  --a-warn-wash:#FDF1D6;
+
+  /* Folha PDF */
+  --pdf-paper:#FFFFFF;
+  --pdf-ink:#1B2420;
+  --pdf-muted:#5E6B63;
+  --pdf-line:#D3DAD5;
+  --pdf-soft:#EDF7EE;
+  --pdf-bar:#CFE9D2;
+  --pdf-mark:rgba(27,36,32,.045);
+  --pdf-line-2:#C2CCC6;
+  --pdf-faint:#F5F7F6;
+  --v2-tint:#F1F7F2;
+  --v2-glow:rgba(255,255,255,.10);
+  --v2-white-line:rgba(255,255,255,.35);
+  --fc-ink:#000000;
+  /* V3: tons da fatura atual */
+  --v3-frame-1:#52B154;
+  --v3-frame-2:#1F8538;
+  --v3-box:#3E9F45;
+  --v3-ink:#2B7A33;
+  --v3-tag:#1E6B2C;
+  --v3-outline:#A8D2AA;
+  --v3-gray:#EEF1EF;
+  --v3-glow:rgba(255,255,255,.14);
+  --v3-pig-shadow:rgba(0,60,20,.35);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none !important}
+body{background:var(--bg); color:var(--ink); font:14px/1.55 var(--f-ui); -webkit-font-smoothing:antialiased}
+button{font:inherit; color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+.app{--gut:16px; max-width:1440px; margin-inline:auto; padding-inline:var(--gut); padding-block:0 56px}
+@media (min-width:720px){ .app{--gut:28px} }
+
+/* ---------- Cabeçalho ---------- */
+.top{display:flex; align-items:center; gap:16px 20px; flex-wrap:wrap; padding-block:24px 20px}
+.top-logo{display:block; width:92px; height:28px}
+.top-sep{width:1px; height:32px; background:var(--line-2)}
+.top-text{min-width:0; flex:1 1 320px}
+h1{margin:0; font:700 20px/1.25 var(--f-ig); letter-spacing:-.01em; color:var(--ink)}
+.top-text p{margin:2px 0 0; color:var(--muted); font-size:14px}
+
+/* ---------- Barra de opções ---------- */
+.toolbar{position:sticky; top:env(safe-area-inset-top,0px); z-index:20; display:flex; flex-wrap:wrap; align-items:center; gap:10px 24px;
+  margin-inline:calc(var(--gut) * -1); padding:10px var(--gut); background:var(--surface); border-block:1px solid var(--line)}
+.tb{display:flex; align-items:center; gap:8px; min-width:0; flex-wrap:wrap}
+.tb-label{font-size:13px; color:var(--muted)}
+.seg{display:inline-flex; gap:2px; padding:2px; background:var(--track); border-radius:8px}
+.seg button{border:0; background:transparent; color:var(--muted); font:500 13px/1 var(--f-ui); padding:7px 12px; border-radius:6px; cursor:pointer}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--surface); color:var(--ink); font-weight:600; box-shadow:0 1px 2px var(--shadow)}
+.tb input[type="range"]{accent-color:var(--accent); width:140px}
+.tb output{font-size:13px; font-weight:600; min-width:3.2ch; font-variant-numeric:tabular-nums}
+.tb-note{font-size:12.5px; color:var(--muted)}
+.tb-checks{gap:16px; margin-left:auto}
+.tb-checks label{display:inline-flex; align-items:center; gap:6px; font-size:13px; cursor:pointer}
+.tb-checks input{accent-color:var(--accent); margin:0; width:15px; height:15px}
+
+/* ---------- Layout principal ---------- */
+.layout{display:grid; grid-template-columns:minmax(0,1fr); gap:20px; margin-top:20px}
+@media (min-width:1100px){
+  body:not([data-surface="bench"]) .layout{grid-template-columns:minmax(0,1fr) 360px; align-items:start}
+  .notes{position:sticky; top:76px; max-height:calc(100dvh - 92px); overflow-y:auto}
+}
+.stage-wrap{background:var(--surface); border:1px solid var(--line); border-radius:12px; overflow:hidden; min-width:0; scroll-margin-top:76px}
+.stage-head{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:4px 16px; padding:11px 16px; border-bottom:1px solid var(--line); font-size:13px; color:var(--muted)}
+.stage-head b{color:var(--ink); font-weight:600}
+.legend{display:flex; flex-wrap:wrap; gap:4px 14px}
+.legend span{display:inline-flex; align-items:center; gap:6px}
+.legend i{width:10px; height:10px; border-radius:2px; display:inline-block}
+.legend .r{border:1.5px dashed var(--removed)} .legend .d{background:var(--a-data-wash); border:1px solid var(--data)}
+
+/* ---------- Invoice Web no fundo cinza da produção ---------- */
+.webview{background:var(--ig-bg)}
+.vp{position:relative; width:375px; max-width:100%; margin-inline:auto; border-inline:1px dashed var(--line-2)}
+.vp-tag{position:absolute; top:10px; left:10px; z-index:2; font:500 11px/1 var(--f-ui); color:var(--ig-muted)}
+@media (max-width:520px){ .vp{border-inline:0} .vp-tag{display:none} }
+
+.ig-screen{background:var(--ig-bg); color:var(--ig-ink); font-family:var(--f-ig); display:flex; flex-direction:column; align-items:center; min-height:820px; padding-block:0 56px}
+.ig-col{width:min(360px, calc(100% - 32px)); display:flex; flex-direction:column}
+.ig-logo{height:112px; display:grid; place-items:center}
+.ig-logo img{display:block; width:92px; height:28px}
+
+/* Ticket: fundo e brilho verde originais + recorte lateral na linha antes do total */
+.ig-card-wrap{filter:drop-shadow(0 1px 1px var(--ig-shadow-1)) drop-shadow(0 16px 30px var(--ig-shadow))}
+.ig-card{
+  --ny:calc(100% - 80px);
+  position:relative; isolation:isolate; text-align:center;
+  -webkit-mask:radial-gradient(circle 11px at 0 var(--ny), transparent 96%, #000 100%), radial-gradient(circle 11px at 100% var(--ny), transparent 96%, #000 100%);
+  -webkit-mask-composite:source-in;
+  mask:radial-gradient(circle 11px at 0 var(--ny), transparent 96%, #000 100%), radial-gradient(circle 11px at 100% var(--ny), transparent 96%, #000 100%);
+  mask-composite:intersect}
+.ig-card::before{content:""; position:absolute; inset:0; z-index:0; border-style:solid; border-width:24px 14px; border-image:url("assets/invoice-bg.png") 24 14 fill / 24px 14px stretch}
+.ig-overlay{position:absolute; top:0; left:0; z-index:0; width:100%; height:auto; pointer-events:none}
+.ig-card-in{position:relative; z-index:1; padding:32px 24px 24px}
+.ig-pig{display:block; width:80px; height:80px; margin:0 auto 18px}
+.ig-badge{display:inline-flex; align-items:center; gap:10px; padding:5px 18px 5px 5px; border-radius:999px; background:var(--ig-green); color:var(--ig-white); font:700 13px/1.2 var(--f-ig); box-shadow:0 8px 16px -8px var(--ig-green-glow)}
+.ig-badge-ico{display:grid; place-items:center; width:26px; height:26px; border-radius:50%; background:var(--ig-white); flex:none}
+.ig-badge-ico img{display:block; width:15px; height:15px}
+.ig-title{position:relative; font:700 16px/1.3 var(--f-ig); color:var(--ig-black); margin:18px -10px 0; padding:10px}
+.ig-rows{margin-top:20px; text-align:left}
+.ig-row{position:relative; display:flex; justify-content:space-between; align-items:center; gap:16px; padding:16px 0; border-bottom:1px solid var(--ig-divider); font-size:13px; line-height:1.35}
+.ig-row.nodiv{border-bottom:0}
+.ig-l{font-weight:700; color:var(--ig-black); min-width:0}
+.ig-v{display:flex; flex-direction:column; align-items:flex-end; text-align:right; color:var(--ig-ink); white-space:nowrap}
+.ig-cb{display:inline-flex; align-items:center; gap:6px; color:var(--ig-green); font-weight:600}
+.ig-cb img{display:block; width:12px; height:12px}
+.ig-tear{height:1px; margin:8px -10px 0; background:repeating-linear-gradient(90deg, var(--ig-tear) 0 6px, transparent 6px 12px)}
+.ig-stub{display:flex; justify-content:space-between; align-items:center; gap:16px; padding:22px 0 4px; text-align:left}
+.ig-stub .ig-v strong{font:800 20px/1.1 var(--f-ig); color:var(--ig-ink); letter-spacing:-.01em; font-variant-numeric:tabular-nums}
+
+.ig-pay{display:flex; flex-direction:column; gap:12px; margin-top:36px}
+.ig-pay h3{margin:0 0 4px; font:800 16px/1.3 var(--f-ig); color:var(--ig-ink)}
+.ig-opt{background:var(--ig-white); border-radius:20px; box-shadow:0 1px 2px var(--ig-shadow)}
+.ig-btn{display:flex; align-items:center; gap:14px; width:100%; min-height:76px; padding:18px 20px; border:0; background:transparent; border-radius:20px; cursor:pointer; text-align:left; font:700 14px/1.3 var(--f-ig); color:var(--ig-black)}
+.ig-btn:hover{background:var(--ig-bg)}
+.ig-btn:focus-visible{outline:2px solid var(--ig-green); outline-offset:-2px}
+.ig-btn .ico{flex:none; width:40px; height:40px; border-radius:50%; background:var(--ig-chip); display:grid; place-items:center}
+.ig-btn .ico img{display:block; width:16px; height:16px}
+.ig-btn .t{flex:1; min-width:0}
+.ig-btn .chev{flex:none; display:grid; transition:transform .2s}
+.ig-btn .chev img{display:block}
+.ig-opt.open .chev{transform:rotate(90deg)}
+.ig-pixpanel{display:flex; flex-direction:column; align-items:center; gap:14px; padding:0 20px 22px; text-align:center}
+.ig-pixpanel .qr{width:136px; height:136px; color:var(--ig-ink)}
+.ig-pixpanel p{margin:0; font:500 12px/1.5 var(--f-ig); color:var(--ig-ink)}
+.ig-cta{width:100%; border:0; border-radius:999px; background:var(--ig-green); color:var(--ig-white); font:700 14px/1 var(--f-ig); padding:15px 16px; cursor:pointer}
+.ig-app{display:flex; flex-direction:column; align-items:center; gap:18px; padding:44px 8px 0; text-align:center}
+.ig-app h2{margin:0; max-width:300px; font:800 16px/1.45 var(--f-ig); color:var(--ig-ink)}
+.ig-app h2 b{color:var(--ig-green-2)}
+.stores{display:flex; flex-direction:column; gap:14px; align-items:center}
+.stores img{display:block; width:163px; height:48px}
+
+.ig-toast{position:fixed; left:50%; bottom:calc(24px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); z-index:50; display:flex; align-items:center; gap:8px; width:max-content; max-width:calc(100vw - 32px);
+  background:var(--ig-toast); color:var(--ig-white); border-radius:8px; padding:8px 16px; font:500 12.5px/1.35 var(--f-ig); box-shadow:0 10px 30px -10px var(--shadow)}
+.ig-toast img{display:block; width:24px; height:24px; flex:none}
+
+/* ---------- Anotações sobre a tela ---------- */
+.ghost{position:relative; border:1.5px dashed var(--a-removed); border-radius:8px; background:repeating-linear-gradient(-45deg, transparent 0 6px, var(--a-removed-wash) 6px 12px)}
+.ig-row.ghost{margin:12px -10px; padding:14px 10px; border:1.5px dashed var(--a-removed)}
+.ghost .s{text-decoration:line-through; text-decoration-color:var(--a-removed); text-decoration-thickness:1.5px; opacity:.6}
+.ghost-tag{position:absolute; top:-9px; right:10px; background:var(--a-removed); color:var(--ig-white); font:600 10px/1.7 var(--f-ui); padding:0 7px; border-radius:4px; white-space:nowrap}
+.dtag{display:inline-block; margin-top:4px; font:500 9.5px/1.6 var(--f-code); color:var(--a-data); background:var(--a-data-wash); padding:0 5px; border-radius:4px; white-space:nowrap}
+.dtag.warn{color:var(--a-warn); background:var(--a-warn-wash); font-family:var(--f-ui); font-weight:600}
+.spot{outline:2.5px solid var(--spot) !important; outline-offset:5px; border-radius:12px; animation:pulse 1.1s ease-in-out 2}
+@keyframes pulse{50%{outline-offset:9px}}
+
+/* ---------- Fatura PDF (folha A4) ---------- */
+.pdf-area{background:var(--pdf-desk); padding:28px 20px}
+.pdf-wrap{overflow-x:auto; padding-block:2px 8px}
+.sheet{position:relative; container-type:inline-size; display:flex; flex-direction:column; width:100%; min-width:600px; max-width:840px; margin-inline:auto; aspect-ratio:210/297;
+  background:var(--pdf-paper); color:var(--pdf-ink); overflow:visible; box-shadow:0 1px 2px var(--shadow), 0 22px 44px -22px var(--shadow)}
+.p-in{flex:1; display:flex; flex-direction:column; gap:2.3cqi; padding:4.6cqi 5cqi; font:500 1.25cqi/1.4 var(--f-ig)}
+.p-mark{position:absolute; inset:0; z-index:2; display:grid; place-items:center; overflow:hidden; pointer-events:none; font:800 6.4cqi/1 var(--f-ig); color:var(--pdf-mark); white-space:nowrap}
+.p-mark span{transform:rotate(-30deg)}
+.p-head{display:flex; justify-content:space-between; align-items:flex-end; gap:2cqi; padding-bottom:1.8cqi; border-bottom:.35cqi solid var(--ig-green)}
+.p-logo{display:block; height:4.6cqi; width:auto}
+.p-title{display:flex; flex-direction:column; align-items:flex-end; gap:.4cqi; text-align:right}
+.p-title strong{font:800 2.1cqi/1 var(--f-ig); letter-spacing:.05em}
+.p-title span{font-size:1.15cqi; color:var(--pdf-muted)}
+.p-title b{color:var(--pdf-ink)}
+.p-client{display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:1.3cqi 2.4cqi; padding:1.8cqi 2.2cqi; background:var(--pdf-soft); border-radius:1.1cqi}
+.kv{min-width:0}
+.kv span{display:block; font:700 .92cqi/1.3 var(--f-ig); letter-spacing:.06em; text-transform:uppercase; color:var(--pdf-muted)}
+.kv b{font-weight:600; font-size:1.28cqi}
+.p-sec-h{margin:0 0 1.1cqi; font:800 1.1cqi/1.2 var(--f-ig); letter-spacing:.08em; text-transform:uppercase; color:var(--pdf-ink)}
+.p-sum{display:flex; gap:1.3cqi}
+.p-box{position:relative; flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:.6cqi; padding:1.6cqi 1.5cqi; border:.15cqi solid var(--pdf-line); border-radius:1.2cqi}
+.p-box.energy{flex-grow:.85}
+.p-box.wide{flex-grow:1.9}
+.p-lbl{display:flex; align-items:center; gap:.6cqi; font:800 .98cqi/1.25 var(--f-ig); letter-spacing:.06em; text-transform:uppercase; color:var(--pdf-muted)}
+.p-lbl img{width:1.5cqi; height:1.5cqi; flex:none}
+.p-val{font:800 2.25cqi/1.1 var(--f-ig); color:var(--pdf-ink); white-space:nowrap; font-variant-numeric:tabular-nums}
+.p-val small{font-size:1.3cqi; font-weight:700}
+.p-box.wide .p-val{font-size:2.9cqi}
+.p-sub{font-size:1.02cqi; line-height:1.3; color:var(--pdf-muted)}
+.p-box.benefit{background:var(--ig-green); border-color:var(--ig-green)}
+.p-box.benefit .p-lbl{font-size:1.12cqi; color:var(--ig-white)}
+.p-box.benefit .p-val, .p-box.benefit .p-sub{color:var(--ig-white)}
+.p-box.due{border:.3cqi solid var(--ig-green)}
+.p-box.due .p-val{color:var(--ig-green)}
+.p-box.ghost{border:.2cqi dashed var(--a-removed)}
+.sheet .ghost-tag{top:-1cqi; right:1.2cqi; font-size:.92cqi; padding:0 .6cqi; border-radius:.5cqi}
+.sheet .dtag{font-size:.88cqi; margin-top:.2cqi; align-self:flex-start; padding:0 .5cqi}
+.p-mid{display:grid; grid-template-columns:1.35fr 1fr; gap:2.2cqi}
+.p-panel{border:.15cqi solid var(--pdf-line); border-radius:1.2cqi; padding:1.7cqi 1.8cqi; min-width:0}
+.chart{display:block; width:100%; height:auto}
+.chart .gl{stroke:var(--pdf-line); stroke-width:.5}
+.chart .ax{font:600 6.5px var(--f-ig); fill:var(--pdf-muted)}
+.chart .ax.b{fill:var(--pdf-ink); font-weight:800}
+.chart .bar{fill:var(--pdf-bar)} .chart .bar.now{fill:var(--ig-green)}
+.p-dl{display:grid; grid-template-columns:1fr 1fr; gap:.9cqi 1.6cqi; margin:0 0 1.8cqi}
+.p-dl dt{font:700 .9cqi/1.3 var(--f-ig); letter-spacing:.05em; text-transform:uppercase; color:var(--pdf-muted)}
+.p-dl dd{margin:0; font-weight:600}
+.p-msg{margin:0; font-size:1.18cqi; line-height:1.45}
+.p-msg b{font-weight:800}
+.p-cut{margin-top:auto; display:flex; align-items:center; gap:1.2cqi; font:700 .88cqi/1 var(--f-ig); letter-spacing:.12em; text-transform:uppercase; color:var(--pdf-muted)}
+.p-cut::before,.p-cut::after{content:""; flex:1; border-top:.15cqi dashed var(--pdf-muted)}
+.p-bol{display:flex; flex-direction:column; gap:1cqi}
+.b-top{display:flex; align-items:flex-end; gap:2cqi; padding-bottom:.8cqi; border-bottom:.3cqi solid var(--pdf-ink)}
+.b-bank{font:800 2cqi/1 var(--f-ig); white-space:nowrap}
+.b-bank i{font-style:normal; color:var(--pdf-line); margin-inline:.6cqi}
+.b-line{margin-left:auto; font:600 1.5cqi/1 var(--f-code); letter-spacing:.02em; white-space:nowrap}
+.b-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:.12cqi; background:var(--pdf-ink); border:.12cqi solid var(--pdf-ink)}
+.b-f{display:flex; flex-direction:column; gap:.25cqi; min-width:0; padding:.75cqi 1cqi; background:var(--pdf-paper)}
+.b-f span{font:600 .84cqi/1.2 var(--f-ig); letter-spacing:.04em; text-transform:uppercase; color:var(--pdf-muted)}
+.b-f b{font-size:1.2cqi; font-weight:700}
+.b-f b.n{font-weight:500; line-height:1.4}
+.b-f.span2{grid-column:span 2}
+.b-f.hl b{font-size:1.5cqi; font-weight:800}
+.b-foot{display:flex; align-items:center; gap:3cqi; margin-top:.6cqi}
+.b-bars{flex:1; min-width:0; height:6.4cqi}
+.b-bars svg{display:block; width:100%; height:100%; fill:var(--pdf-ink)}
+.b-pix{display:flex; align-items:center; gap:1.2cqi; font:800 1.1cqi/1.3 var(--f-ig)}
+.b-pix .qr{width:9.5cqi; height:9.5cqi; color:var(--pdf-ink)}
+.b-pix small{display:block; font-weight:500; color:var(--pdf-muted); font-size:.95cqi}
+.qr .bgq{fill:var(--pdf-paper)}
+
+/* ---------- Fatura PDF V2: topo responde quanto, até quando e quanto você ganhou; ficha de compensação no padrão ---------- */
+.v2{flex:1; display:flex; flex-direction:column; gap:1.8cqi; padding:4cqi 5cqi 3cqi; font:500 1.18cqi/1.42 var(--f-ig); color:var(--pdf-ink)}
+.v2 p{margin:0}
+.v2-head{display:flex; justify-content:space-between; align-items:flex-start; gap:2cqi}
+.v2-head .p-logo{height:4.4cqi}
+.v2-ref{display:flex; flex-direction:column; align-items:flex-end; gap:.35cqi; text-align:right}
+.v2-ref strong{font:800 1.95cqi/1.15 var(--f-ig)}
+.v2-ref span{font-size:1.02cqi; color:var(--pdf-muted)}
+.v2-issuer{margin-top:-.6cqi; padding-bottom:1.5cqi; border-bottom:.15cqi solid var(--pdf-line); font-size:.9cqi; color:var(--pdf-muted)}
+.v2-ghost{display:flex; justify-content:space-between; align-items:center; padding:1cqi 1.6cqi; border-radius:1cqi; font-size:1.1cqi}
+.v2-hero{display:grid; grid-template-columns:1.22fr 1fr .98fr; gap:1.3cqi; align-items:stretch}
+.v2-pay{position:relative; display:flex; flex-direction:column; gap:.5cqi; padding:2.1cqi 2.2cqi; border-radius:1.6cqi; background:var(--v2-tint)}
+.v2-hello{font-size:1.18cqi}
+.v2-hello b{font-weight:700}
+.v2-lbl{margin-top:1cqi; font:700 1.05cqi/1.3 var(--f-ig); color:var(--pdf-muted)}
+.v2-amount{font:800 5.2cqi/1 var(--f-ig); letter-spacing:-.03em; color:var(--pdf-ink); font-variant-numeric:tabular-nums; white-space:nowrap}
+.v2-after{display:flex; justify-content:space-between; align-items:baseline; gap:1cqi; margin-top:auto; padding-top:1.1cqi; border-top:.15cqi dashed var(--pdf-line-2); font-size:1.08cqi}
+.v2-after b{font-weight:800; font-size:1.5cqi; white-space:nowrap; font-variant-numeric:tabular-nums}
+.v2-note{font-size:1.02cqi; color:var(--pdf-muted)}
+.v2-note.end{margin-top:auto; padding-top:1.1cqi}
+.v2-benefit{position:relative; display:flex; flex-direction:column; gap:.45cqi; padding:2.1cqi 2.2cqi; border-radius:1.6cqi; background:var(--ig-green); color:var(--ig-white); overflow:hidden}
+.v2-benefit::after{content:""; position:absolute; right:-6cqi; top:-6cqi; width:16cqi; height:16cqi; border-radius:50%; background:var(--v2-glow)}
+.v2-b-top{display:flex; align-items:center; gap:.9cqi}
+.v2-chip{display:grid; place-items:center; width:3cqi; height:3cqi; border-radius:50%; background:var(--ig-white); flex:none}
+.v2-chip img{width:1.75cqi; height:1.75cqi}
+.v2-b-lbl{font:800 1.12cqi/1.2 var(--f-ig); letter-spacing:.07em}
+.v2-b-val{margin-top:1cqi; font:800 3.7cqi/1 var(--f-ig); letter-spacing:-.02em; white-space:nowrap; font-variant-numeric:tabular-nums}
+.v2-b-sub{font-size:1.05cqi; opacity:.92}
+.v2-b-acc{margin-top:auto; padding-top:1.1cqi; border-top:.15cqi solid var(--v2-white-line); display:flex; flex-direction:column; gap:.15cqi}
+.v2-b-acc b{font:800 1.6cqi/1.15 var(--f-ig); font-variant-numeric:tabular-nums}
+.v2-b-acc span{font-size:.98cqi; opacity:.92}
+.v2-benefit .dtag{align-self:flex-start}
+.v2-pix{display:flex; flex-direction:column; gap:.9cqi; padding:1.9cqi 2cqi; border:.15cqi solid var(--pdf-line); border-radius:1.6cqi}
+.v2-pix-top{display:flex; align-items:center; gap:1.2cqi}
+.v2-pix .qr{width:9.6cqi; height:9.6cqi; flex:none; color:var(--pdf-ink)}
+.v2-pix strong{display:block; font:800 1.45cqi/1.2 var(--f-ig)}
+.v2-pix-top span{display:block; margin-top:.3cqi; font-size:.95cqi; color:var(--pdf-muted); line-height:1.35}
+.v2-pix p{font-size:1cqi; line-height:1.4}
+.v2-check{display:flex; align-items:flex-start; gap:.6cqi; font-weight:700}
+.v2-check img{width:1.5cqi; height:1.5cqi; flex:none}
+.v2-two{display:grid; grid-template-columns:1.05fr 1fr 1fr; gap:1.4cqi; align-items:start; padding:1.6cqi 2cqi; border-radius:1.2cqi; background:var(--pdf-faint)}
+.v2-two h4{margin:0; font:800 1.25cqi/1.25 var(--f-ig)}
+.v2-two p{font-size:1cqi; color:var(--pdf-muted); margin-top:.3cqi}
+.v2-bill{display:flex; gap:.9cqi; align-items:flex-start}
+.v2-n{display:grid; place-items:center; width:2.2cqi; height:2.2cqi; flex:none; border-radius:50%; background:var(--pdf-ink); color:var(--ig-white); font:800 1cqi/1 var(--f-ig)}
+.v2-bill b{display:block; font-weight:800; font-size:1.1cqi}
+.v2-bill > div > span{display:block; font-size:1cqi; color:var(--pdf-muted); line-height:1.35}
+.v2-mid{display:grid; grid-template-columns:1.5fr 1fr; gap:1.4cqi}
+.v2-panel{min-width:0; padding:1.7cqi 1.9cqi; border:.15cqi solid var(--pdf-line); border-radius:1.2cqi}
+.v2-panel h4{margin:0 0 .9cqi; font:800 1.2cqi/1.25 var(--f-ig)}
+.v2-insight{margin-top:.8cqi !important; font-size:1.02cqi}
+.v2-insight b{font-weight:800}
+.v2-dl{display:grid; gap:.75cqi; margin:0}
+.v2-dl div{display:flex; justify-content:space-between; gap:1.2cqi; padding-bottom:.75cqi; border-bottom:.12cqi solid var(--pdf-line)}
+.v2-dl div:last-child{padding-bottom:0; border-bottom:0}
+.v2-dl dt{color:var(--pdf-muted); font-size:1cqi}
+.v2-dl dd{margin:0; font-weight:700; font-size:1.02cqi; text-align:right}
+.v2-cta{display:flex; align-items:center; justify-content:space-between; gap:2cqi; padding:1.4cqi 1.9cqi; border:.15cqi solid var(--pdf-line); border-radius:1.2cqi}
+.v2-cta b{display:block; font-weight:800; font-size:1.22cqi}
+.v2-cta span{font-size:1cqi; color:var(--pdf-muted)}
+.v2-stores{display:flex; gap:1cqi; flex:none}
+.v2-stores img{display:block; height:3.4cqi; width:auto}
+.v2-cut{margin-top:auto; display:flex; align-items:center; gap:1.2cqi; font:600 .85cqi/1 var(--f-ig); letter-spacing:.06em; color:var(--pdf-muted)}
+.v2-cut::before,.v2-cut::after{content:""; flex:1; border-top:.15cqi dashed var(--pdf-line-2)}
+/* Ficha de compensação: fundo branco, impressão preta, posições fixas */
+.fc{display:flex; flex-direction:column; gap:.6cqi; color:var(--fc-ink); font-family:Arial, "Helvetica Neue", sans-serif}
+.fc-top{display:flex; align-items:flex-end; border-bottom:.3cqi solid var(--fc-ink); padding-bottom:.5cqi}
+.fc-bank{display:flex; align-items:flex-end; gap:1.2cqi; font:700 1.6cqi/1 Arial, sans-serif; white-space:nowrap}
+.fc-bank i{font-style:normal; padding-inline:1.2cqi; border-inline:.25cqi solid var(--fc-ink); font-size:1.9cqi}
+.fc-line{margin-left:auto; font:700 1.62cqi/1 var(--f-code); letter-spacing:.01em; white-space:nowrap}
+.fc-grid{display:grid; grid-template-columns:repeat(6, minmax(0,1fr)) minmax(0,1.55fr); gap:.12cqi; background:var(--fc-ink); border:.12cqi solid var(--fc-ink)}
+.fc-f{display:flex; flex-direction:column; gap:.2cqi; min-width:0; padding:.45cqi .8cqi .55cqi; background:var(--pdf-paper)}
+.fc-f span{font-size:.78cqi; line-height:1.2}
+.fc-f b{font-size:1.08cqi; font-weight:700; line-height:1.3; overflow-wrap:anywhere}
+.fc-f b.n{font-weight:400}
+.fc-f.r b{text-align:right}
+.s2{grid-column:span 2} .s3{grid-column:span 3} .s6{grid-column:span 6} .s7{grid-column:span 7}
+.fc-ins{grid-row:span 4}
+.fc-bottom{display:flex; justify-content:space-between; align-items:flex-start; gap:2cqi}
+.fc-bars{width:49cqi; height:6.2cqi; margin-left:.4cqi}
+.fc-bars svg{display:block; width:100%; height:100%; fill:var(--fc-ink)}
+.fc-auth{font-size:.8cqi; text-align:right}
+
+/* ---------- Fatura PDF V3: estrutura e moldura da fatura atual + cards e hierarquia da V2 ---------- */
+.v3-frame{flex:1; display:flex; flex-direction:column; padding:2.2cqi 2.2cqi 0; background:linear-gradient(165deg, var(--v3-frame-1), var(--v3-frame-2))}
+.v3-page{flex:1; display:flex; flex-direction:column; gap:2.5cqi; padding:3.4cqi 3.6cqi 3cqi; border-radius:2cqi; background:var(--pdf-paper); color:var(--pdf-ink); font:500 1.3cqi/1.42 var(--f-ig)}
+.v3-page p{margin:0}
+.v3-slogan{padding:1.8cqi 0 1.9cqi; text-align:center; color:var(--ig-white); font:800 1.65cqi/1 var(--f-ig); letter-spacing:.32em}
+.v3-head{display:grid; grid-template-columns:1fr 1.25fr; gap:2.6cqi; align-items:start; padding-bottom:1.9cqi; border-bottom:.2cqi solid var(--v3-box)}
+.v3-logo{display:block; height:4.8cqi; width:auto}
+.v3-issuer{margin-top:1.4cqi; padding:1.1cqi 1.4cqi; border-radius:1cqi; background:var(--v3-gray); font-size:1cqi; line-height:1.5; color:var(--pdf-muted)}
+.v3-issuer b{color:var(--pdf-ink); font-weight:700}
+.v3-alert, .v3-fraud{position:relative; margin-top:1.2cqi; padding:2.4cqi 2cqi 1.6cqi; border-radius:1.6cqi; background:var(--v3-box); color:var(--ig-white)}
+.v3-alert p, .v3-fraud p{font-size:1.14cqi; line-height:1.45}
+.v3-alert b, .v3-fraud b{font-weight:800}
+.v3-tag{position:absolute; top:-1.2cqi; left:1.6cqi; padding:.65cqi 1.3cqi; border-radius:99cqi; background:var(--v3-tag); color:var(--ig-white); font:800 1cqi/1 var(--f-ig); letter-spacing:.05em}
+
+/* Topo: valor, benefício e Pix no formato de card da V2 */
+.v3-hero{display:grid; grid-template-columns:1.1fr 1.12fr .88fr; gap:1.4cqi}
+.v3-total{display:flex; flex-direction:column; gap:.45cqi; padding:2.2cqi 2.4cqi; border-radius:1.8cqi; background:var(--v2-tint)}
+.v3-lbl{font:800 1cqi/1.25 var(--f-ig); letter-spacing:.05em; color:var(--pdf-muted)}
+.v3-amount{margin-top:.4cqi; font:800 5.1cqi/1 var(--f-ig); letter-spacing:-.025em; white-space:nowrap; font-variant-numeric:tabular-nums}
+.v3-due{margin-top:.2cqi; font-size:1.35cqi; font-weight:700}
+.v3-note{font-size:1.06cqi; line-height:1.4; color:var(--pdf-muted)}
+.v3-mini{display:grid; grid-template-columns:1fr 1fr; gap:1.2cqi; margin-top:auto; padding-top:1.3cqi; border-top:.15cqi solid var(--pdf-line-2)}
+.v3-mini span{display:block; margin-bottom:.25cqi; font:800 .86cqi/1.25 var(--f-ig); letter-spacing:.04em; color:var(--pdf-muted)}
+.v3-mini b{font-size:1.35cqi; font-weight:800; font-variant-numeric:tabular-nums}
+.v3-cash{position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:.4cqi; padding:2.2cqi 2.4cqi 2cqi; border-radius:1.8cqi; background:var(--ig-green); color:var(--ig-white); overflow:hidden; isolation:isolate}
+.v3-cash::before{content:""; position:absolute; right:-4cqi; bottom:-4cqi; z-index:-1; width:17cqi; height:17cqi; border-radius:50%; background:var(--v3-glow)}
+.v3-cash::after{content:""; position:absolute; right:-7cqi; top:-7cqi; z-index:-1; width:15cqi; height:15cqi; border-radius:50%; background:var(--v2-glow)}
+.v3-pill{display:inline-flex; align-items:center; gap:.7cqi; padding:.55cqi 1.5cqi .55cqi .55cqi; border-radius:99cqi; background:var(--ig-white); color:var(--ig-green); font:800 1.05cqi/1 var(--f-ig); letter-spacing:.05em}
+.v3-pill-ico{display:grid; place-items:center; width:2.4cqi; height:2.4cqi; border-radius:50%; background:var(--v2-tint)}
+.v3-pill img{width:1.45cqi; height:1.45cqi}
+.v3-cash-val{margin-top:1.1cqi; font:800 4.4cqi/1 var(--f-ig); letter-spacing:-.02em; white-space:nowrap; font-variant-numeric:tabular-nums}
+.v3-cash-sub{max-width:62%; font:700 1.15cqi/1.3 var(--f-ig)}
+.v3-cash-after{margin-top:.9cqi; padding-top:.9cqi; border-top:.15cqi solid var(--v2-white-line); font-size:1.1cqi; line-height:1.35}
+.v3-cash-after b{display:block; font-size:1.5cqi; font-weight:800; font-variant-numeric:tabular-nums}
+.v3-cash-foot{margin-top:auto; padding-top:1.1cqi; padding-right:9cqi; font-size:1.05cqi; font-weight:600; line-height:1.35}
+.v3-pig{position:absolute; right:1.2cqi; bottom:1.1cqi; width:9.6cqi; height:9.6cqi; filter:drop-shadow(0 .5cqi .8cqi var(--v3-pig-shadow))}
+.v3-cash .dtag{margin-top:.3cqi}
+.v3-pix{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.8cqi; padding:1.8cqi 1.7cqi; border:.15cqi solid var(--pdf-line-2); border-radius:1.8cqi; text-align:center}
+.v3-pix .qr{width:11.4cqi; height:11.4cqi; color:var(--pdf-ink)}
+.v3-pix strong{font:800 1.5cqi/1.2 var(--f-ig)}
+.v3-pix p{font-size:1.04cqi; line-height:1.4}
+.v3-pix p b{font-weight:800}
+
+/* Dados do cliente, no formato da fatura atual */
+.v3-client{display:grid; grid-template-columns:2fr 1fr 1fr; gap:1.3cqi}
+.v3-field{display:flex; flex-direction:column; gap:.6cqi; min-width:0}
+.v3-field > span{font:800 .95cqi/1 var(--f-ig); letter-spacing:.04em; text-align:center}
+.v3-field > div{display:flex; flex-direction:column; justify-content:center; min-height:6.2cqi; padding:1.1cqi 1.6cqi; border:.15cqi solid var(--v3-outline); border-radius:1.2cqi; font-size:1.12cqi; line-height:1.4}
+.v3-field > div b{font-size:1.32cqi; font-weight:700}
+.v3-field.c > div{align-items:center; font-size:1.4cqi; font-weight:700}
+
+/* Banner iGreen Club */
+.v3-club{display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:2.4cqi; padding:1.8cqi 2.4cqi; border-radius:1.6cqi; background:linear-gradient(90deg, var(--v3-frame-2), var(--v3-box)); color:var(--ig-white)}
+.v3-club-logo{display:flex; flex-direction:column; align-items:flex-end; line-height:1}
+.v3-club-logo img{display:block; height:4.6cqi; width:auto; filter:brightness(0) invert(1)}
+.v3-club-logo span{margin-top:-.1cqi; font:600 1.4cqi/1 var(--f-ig)}
+.v3-club b{display:block; font:800 1.38cqi/1.25 var(--f-ig); letter-spacing:.02em}
+.v3-club p{margin-top:.35cqi !important; font-size:1.1cqi}
+.v3-stores{display:flex; gap:.9cqi}
+.v3-stores img{display:block; height:3.5cqi; width:auto}
+
+/* Histórico e blocos laterais */
+.v3-cols{display:grid; grid-template-columns:1.28fr 1fr; gap:1.5cqi; align-items:stretch}
+.v3-hist, .v3-info{min-width:0; padding:1.8cqi 2cqi; border:.15cqi solid var(--v3-outline); border-radius:1.6cqi}
+.v3-h{display:block; margin-bottom:1.1cqi; font:800 1.12cqi/1.2 var(--f-ig); letter-spacing:.04em; color:var(--v3-ink)}
+.v3-t{width:100%; border-collapse:collapse; font-size:1.22cqi; font-variant-numeric:tabular-nums}
+.v3-t th{padding:0 .6cqi .8cqi; text-align:left; vertical-align:bottom; font:800 .84cqi/1.25 var(--f-ig); letter-spacing:.03em; color:var(--pdf-muted)}
+.v3-t td{padding:1.32cqi .6cqi; border-top:.12cqi solid var(--pdf-line); vertical-align:middle}
+.v3-t th:last-child, .v3-t td:last-child{text-align:right}
+.v3-t tr.now td{background:var(--v2-tint); font-weight:800}
+.v3-t tr.now td:first-child{border-radius:.8cqi 0 0 .8cqi}
+.v3-t tr.now td:last-child{border-radius:0 .8cqi .8cqi 0}
+.v3-t small{display:block; font-size:.82cqi; font-weight:600; color:var(--pdf-muted)}
+.v3-cred{display:flex; align-items:center; gap:.9cqi}
+.v3-cred > span:first-child{min-width:3ch}
+.v3-bar{flex:1; height:.7cqi; border-radius:1cqi; background:var(--pdf-faint); overflow:hidden}
+.v3-bar i{display:block; height:100%; border-radius:1cqi; background:var(--pdf-bar)}
+.v3-t tr.now .v3-bar i{background:var(--ig-green)}
+.v3-late{color:var(--warn)}
+.v3-foot{margin-top:.9cqi !important; font-size:.9cqi; color:var(--pdf-muted)}
+.v3-side{display:flex; flex-direction:column; gap:1.5cqi; min-width:0}
+.v3-info{flex:1}
+.v3-info p{font-size:1.15cqi; line-height:1.5}
+.v3-info b{font-weight:800}
+
+/* Boleto: preto e branco, dados mínimos + código de barras */
+.v3-bol{margin-top:auto; display:flex; flex-direction:column; gap:1cqi; padding:1.4cqi 1.7cqi; border-radius:1.4cqi; background:var(--v3-gray)}
+.v3-bol-f{display:grid; grid-template-columns:1.5fr 1.7fr 1fr 1fr; gap:.12cqi; background:var(--fc-ink); border:.12cqi solid var(--fc-ink); font-family:Arial, "Helvetica Neue", sans-serif; color:var(--fc-ink)}
+.v3-bol-f div{display:flex; flex-direction:column; gap:.2cqi; min-width:0; padding:.6cqi .9cqi; background:var(--pdf-paper)}
+.v3-bol-f span{font-size:.82cqi}
+.v3-bol-f b{font-size:1.12cqi; overflow-wrap:anywhere}
+.v3-bol-f .r b{text-align:right}
+.v3-bars-row{display:flex; flex-direction:column; gap:.7cqi; padding:1.1cqi 1.5cqi; border-radius:.8cqi; background:var(--pdf-paper)}
+.v3-bars{width:49cqi; height:6.2cqi}
+.v3-bars svg{display:block; width:100%; height:100%; fill:var(--fc-ink)}
+.v3-line{font:700 1.45cqi/1 var(--f-code); color:var(--fc-ink); letter-spacing:.01em; white-space:nowrap}
+
+/* ---------- Fatura PDF V4: modo geral da V3 + gráfico, passos e ficha da V2 ---------- */
+.v3-page.v4{gap:1.5cqi; padding:3.2cqi 3.4cqi 2.8cqi}
+.v4-head{display:flex; justify-content:space-between; align-items:flex-start; gap:2.4cqi; padding-bottom:1.1cqi; border-bottom:.2cqi solid var(--v3-box)}
+.v4-ref{display:flex; flex-direction:column; align-items:flex-end; gap:.45cqi; padding-top:.5cqi; text-align:right}
+.v4-ref strong{margin-bottom:.2cqi; font:800 2.2cqi/1.15 var(--f-ig)}
+.v4-ref span{font-size:1.08cqi; color:var(--pdf-muted)}
+.v4 .v3-total, .v4 .v3-cash{padding:1.7cqi 2.1cqi}
+.v4-two{grid-template-columns:1.1fr 1fr 1fr; padding:1.2cqi 2cqi; border-radius:1.6cqi; background:var(--v2-tint)}
+.v4-two h4{font-size:1.35cqi}
+.v4-two p{font-size:1.04cqi}
+.v4-two .v2-n{width:2.6cqi; height:2.6cqi; background:var(--v3-box); font-size:1.15cqi}
+.v4-two .v2-bill b{font-size:1.2cqi}
+.v4-two .v2-bill > div > span{font-size:1.04cqi}
+.v4 .v3-field > div{min-height:5.4cqi}
+.v4-mid{display:grid; grid-template-columns:1.3fr 1fr; gap:1.5cqi; align-items:stretch}
+.v4-panel{padding:1.7cqi 2cqi; border-color:var(--v3-outline); border-radius:1.6cqi}
+.v4-panel h4{margin-bottom:1cqi; font-size:1.25cqi}
+.v4-panel .v2-insight{font-size:1.08cqi}
+.v4 .v3-side{gap:1.3cqi}
+.v4 .v3-fraud{margin-top:1.1cqi; padding:2.1cqi 1.8cqi 1.3cqi}
+.v4 .v3-fraud p, .v4 .v3-info p{font-size:1.06cqi}
+.v4 .v3-info{padding:1.5cqi 1.8cqi}
+.v4 .v3-club{padding:.9cqi 2cqi}
+/* V4 compacta para caber no A4 com a ficha no padrão (95 a 108 mm) */
+.v3-frame:has(> .v4){padding:1.8cqi 1.8cqi 0}
+.v3-frame:has(> .v4) .v3-slogan{padding:1.4cqi 0 1.5cqi; font-size:1.5cqi}
+.v3-page.v4{gap:1.15cqi; padding:2.8cqi 3.2cqi 2.4cqi}
+.v4 .v3-logo{height:4.2cqi}
+.v4 .v3-issuer{margin-top:1cqi; padding:.8cqi 1.2cqi}
+.v4 .v3-amount{font-size:4.5cqi}
+.v4 .v3-pix{padding:1.5cqi}
+.v4 .v3-pix .qr{width:10cqi; height:10cqi}
+.v4 .v3-cash-val{margin-top:.9cqi; font-size:4cqi}
+.v4 .v3-cash-after{max-width:62%}
+.v4 .v3-mini{padding-top:1cqi}
+.v4 .v3-field > div{min-height:4.6cqi; padding:.8cqi 1.4cqi}
+.v4 .v3-fraud{padding:1.9cqi 1.7cqi 1.1cqi}
+.v4 .v3-info{padding:1.3cqi 1.7cqi}
+.v4 .v3-club-logo img{height:3.4cqi}
+.v4 .v3-club-logo span{font-size:1.15cqi}
+.v4 .v3-club b{font-size:1.25cqi}
+.v4 .v3-stores img{height:3cqi}
+.v4 .fc-f{padding:.5cqi .8cqi .6cqi}
+.v4 .fc-f span{font-size:.9cqi}
+.v4 .v3-club-logo img{height:4cqi}
+.v4 .v2-cut{margin-top:auto}
+
+/* ---------- Benchmark ---------- */
+.bench{max-width:920px; margin-inline:auto; padding:32px 24px 48px; font-size:15px; line-height:1.6}
+.bench h2{margin:40px 0 10px; font:700 21px/1.3 var(--f-ig); letter-spacing:-.01em; text-wrap:balance}
+.bench h2:first-child{margin-top:0}
+.bench h3{margin:22px 0 6px; font:700 15.5px/1.35 var(--f-ig)}
+.bench p, .bench li{max-width:72ch}
+.bench p{margin:0 0 10px}
+.bench ul, .bench ol{margin:0 0 12px; padding-left:22px}
+.bench li{margin-bottom:5px}
+.bench .lead{font-size:16.5px; color:var(--ink)}
+.bench .meta{color:var(--muted); font-size:13.5px}
+.bench q{quotes:"“" "”"}
+.bench sup{font-size:11px; color:var(--data); font-weight:600}
+.tw{overflow-x:auto; margin:8px 0 16px; border:1px solid var(--line); border-radius:8px}
+.bt{width:100%; border-collapse:collapse; font-size:13px; line-height:1.45}
+.bt th{position:sticky; top:0; background:var(--hover); text-align:left; font-weight:600; padding:9px 10px; border-bottom:1px solid var(--line); white-space:nowrap}
+.bt td{padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; min-width:150px}
+.bt td:first-child{min-width:170px; font-weight:600}
+.bt tr:last-child td{border-bottom:0}
+.bt .nv{color:var(--muted); font-style:italic}
+.mat{display:inline-block; font-size:12px; font-weight:600; white-space:nowrap}
+.mat.c{color:var(--accent)} .mat.e{color:var(--warn)} .mat.x{color:var(--removed)}
+.prio{display:inline-block; min-width:28px; font-weight:700}
+.p0{color:var(--removed)} .p1{color:var(--warn)} .p2{color:var(--data)} .p3{color:var(--muted)}
+.csd{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:14px; margin:8px 0 16px}
+.csd > div{border:1px solid var(--line); border-radius:8px; padding:14px 16px}
+.csd h3{margin-top:0}
+.csd ul{margin:0}
+.csd li{font-size:14px}
+.src-list{font-size:13px; color:var(--muted); padding-left:28px}
+.src-list li{max-width:none; overflow-wrap:anywhere}
+.src-list a{color:var(--data)}
+.callout{border-left:3px solid var(--accent); background:var(--hover); padding:12px 16px; border-radius:0 8px 8px 0; margin:12px 0 16px}
+.callout p:last-child{margin-bottom:0}
+
+/* ---------- Notas da tela ---------- */
+.notes{background:var(--surface); border:1px solid var(--line); border-radius:12px; min-width:0}
+.note{padding:18px 20px; border-bottom:1px solid var(--line)}
+.note:last-child{border-bottom:0}
+.note h2{margin:0 0 8px; font:700 15px/1.3 var(--f-ig); color:var(--ink)}
+.note h3{margin:14px 0 4px; font:600 13px/1.3 var(--f-ui); color:var(--muted)}
+.note p{margin:0 0 8px; font-size:13.5px}
+.note .hint{color:var(--muted); font-size:13px}
+.st{font-size:14px} .st b{font-weight:600}
+.io{display:grid; grid-template-columns:1fr 1fr; gap:4px 16px}
+.io h3{margin-top:6px}
+.io ul{margin:0; padding-left:18px; font-size:13.5px; display:flex; flex-direction:column; gap:2px}
+.io ul.out li{color:var(--muted); text-decoration:line-through; text-decoration-color:var(--removed)}
+.picks{margin:0 -8px; padding:0; list-style:none; display:flex; flex-direction:column}
+.pick{appearance:none; width:100%; border:0; background:transparent; text-align:left; cursor:pointer; display:flex; gap:10px; align-items:flex-start; padding:7px 8px; border-radius:6px; font-size:13.5px; line-height:1.45}
+.pick:hover, .pick:focus-visible{background:var(--hover)}
+.pick q{quotes:"“" "”"}
+.dot{flex:none; width:16px; height:16px; margin-top:2px; border-radius:50%; border:1.5px solid var(--line-2); display:grid; place-items:center}
+.pick.on .dot{background:var(--accent); border-color:var(--accent)}
+.pick.on .dot::after{content:""; width:7px; height:4px; border:solid var(--accent-ink); border-width:0 0 1.6px 1.6px; transform:translateY(-1px) rotate(-45deg)}
+.src{width:100%; border-collapse:collapse; font-size:13px}
+.src td{padding:7px 10px 7px 0; border-bottom:1px solid var(--line); vertical-align:top}
+.src tr:last-child td{border-bottom:0}
+.src td:last-child{padding-right:0}
+.src code{font:12px/1.4 var(--f-code); color:var(--data); word-break:break-all}
+.src .w{color:var(--warn)}
+.qs{margin:0; padding-left:20px; display:flex; flex-direction:column; gap:8px; font-size:13.5px}
+.qs q{quotes:"“" "”"}
+.foot{color:var(--muted); font-size:12.5px; margin:0}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important; transition:none !important; scroll-behavior:auto !important}
+}
+</style>
+
+<div class="app">
+  <header class="top">
+    <img class="top-logo" src="assets/logo.svg" alt="iGreen Energy" width="92" height="28">
+    <span class="top-sep" aria-hidden="true"></span>
+    <div class="top-text">
+      <h1>Variações da Fatura</h1>
+      <p>PIX da Energia e Cashback no Invoice Web e na Fatura PDF. Protótipo para alinhar UI/UX e PO.</p>
+    </div>
+  </header>
+
+  <div class="toolbar" id="toolbar">
+    <div class="tb">
+      <span class="tb-label" id="l-surf">Tela</span>
+      <div class="seg" role="group" aria-labelledby="l-surf">
+        <button type="button" data-set="surface:web">Invoice Web</button>
+        <button type="button" data-set="surface:pdf">Fatura PDF</button>
+        <button type="button" data-set="surface:pdf2">Fatura PDF V2</button>
+        <button type="button" data-set="surface:pdf3">Fatura PDF V3</button>
+        <button type="button" data-set="surface:pdf4">Fatura PDF V4</button>
+        <button type="button" data-set="surface:bench">Benchmark</button>
+      </div>
+    </div>
+    <div class="tb" id="g-var">
+      <span class="tb-label" id="l-var">Variação</span>
+      <div class="seg" role="group" aria-labelledby="l-var">
+        <button type="button" data-set="variant:pix">PIX da Energia</button>
+        <button type="button" data-set="variant:cash">Cashback</button>
+      </div>
+    </div>
+    <div class="tb" id="g-device">
+      <span class="tb-label" id="l-dev">Largura</span>
+      <div class="seg" role="group" aria-labelledby="l-dev">
+        <button type="button" data-set="device:desktop">Desktop</button>
+        <button type="button" data-set="device:mobile">Mobile</button>
+      </div>
+    </div>
+    <div class="tb" id="g-disc">
+      <label class="tb-label" for="disc">Desconto do cliente</label>
+      <input type="range" id="disc" min="1" max="30" step="1" value="16">
+      <output id="disc-out" for="disc">16%</output>
+      <span class="tb-note" id="disc-rule"></span>
+    </div>
+    <div class="tb tb-checks" id="g-checks">
+      <label for="t-removed"><input type="checkbox" id="t-removed">Mostrar o que saiu</label>
+      <label for="t-data"><input type="checkbox" id="t-data">Mostrar origem dos dados</label>
+    </div>
+  </div>
+
+  <main class="layout">
+    <section class="stage-wrap" id="stage-wrap" aria-label="Protótipo">
+      <div class="stage-head">
+        <span id="cap"></span>
+        <span class="legend" id="legend"></span>
+      </div>
+      <div class="stage" id="stage"></div>
+    </section>
+
+    <aside class="notes" id="notes" aria-label="Notas da tela">
+      <section class="note">
+        <h2>Nesta tela</h2>
+        <div id="summary"></div>
+      </section>
+
+      <section class="note">
+        <h2>Regras</h2>
+        <p class="hint">Passe o mouse para ver onde cada regra aparece. Clique para ir até ela.</p>
+        <h3>Invoice Web</h3>
+        <ul class="picks">
+          <li><button type="button" class="pick" data-rule="RN01"><span>Badge no topo: <q>PIX da Energia</q> na variação 1 e <q>Cashback</q> na variação 2.</span></button></li>
+          <li><button type="button" class="pick" data-rule="RN02"><span>O card mostra só o badge, Data de vencimento, Energia verde compensada, Cashback e Total a pagar com desconto.</span></button></li>
+          <li><button type="button" class="pick" data-rule="RN03"><span>Saem <q>Sua fatura veio mais barata!</q>, <q>Quanto pagaria sem iGreen</q> e <q>Desconto iGreen</q>.</span></button></li>
+          <li><button type="button" class="pick" data-rule="RN04"><span>Ficam os botões Pagar no Pix, Copiar código de barras, Abrir boleto, Baixar boleto e Cartão de crédito.</span></button></li>
+        </ul>
+        <h3>Fatura PDF</h3>
+        <ul class="picks">
+          <li><button type="button" class="pick" data-rule="RN05"><span>Quadro de benefício com o rótulo <q>PIX DA ENERGIA</q> na variação 1 e <q>CASHBACK</q> na variação 2.</span></button></li>
+          <li><button type="button" class="pick" data-rule="RN06"><span>O quadro <q>QUANTO PAGARIA SEM IGREEN</q> não aparece.</span></button></li>
+          <li><button type="button" class="pick" data-rule="RN07"><span>Desconto acima de 10%: quadros <q>VALOR ATÉ</q> e <q>VALOR APÓS</q>. Até 10%: um único quadro com o valor total.</span></button></li>
+        </ul>
+      </section>
+
+      <section class="note">
+        <h2>Cenários para validar</h2>
+        <p class="hint">Clique para montar o cenário. O círculo marcado indica o que a tela atual já mostra.</p>
+        <ul class="picks">
+          <li><button type="button" class="pick" data-case="1"><span class="dot"></span><span>Invoice Web, variação 1: badge PIX da Energia e só os 4 campos aprovados.</span></button></li>
+          <li><button type="button" class="pick" data-case="2"><span class="dot"></span><span>Invoice Web, variação 2: badge Cashback e só os 4 campos aprovados.</span></button></li>
+          <li><button type="button" class="pick" data-case="3"><span class="dot"></span><span>Invoice Web sem <q>Sua fatura veio mais barata!</q>, <q>Quanto pagaria sem iGreen</q> e <q>Desconto iGreen</q>.</span></button></li>
+          <li><button type="button" class="pick" data-case="4"><span class="dot"></span><span>Botões de Pix, código de barras, boleto e cartão alinhados.</span></button></li>
+          <li><button type="button" class="pick" data-case="5"><span class="dot"></span><span>Fatura PDF, variação 1: quadro PIX DA ENERGIA, sem QUANTO PAGARIA.</span></button></li>
+          <li><button type="button" class="pick" data-case="6"><span class="dot"></span><span>Fatura PDF, variação 2: quadro CASHBACK, sem QUANTO PAGARIA.</span></button></li>
+          <li><button type="button" class="pick" data-case="7"><span class="dot"></span><span>Fatura PDF com desconto acima de 10%: VALOR ATÉ e VALOR APÓS.</span></button></li>
+          <li><button type="button" class="pick" data-case="8"><span class="dot"></span><span>Fatura PDF com desconto até 10%: um único valor total.</span></button></li>
+          <li><button type="button" class="pick" data-case="9"><span class="dot"></span><span>Invoice Web no mobile: card e botões sem quebra ou sobreposição.</span></button></li>
+        </ul>
+      </section>
+
+      <section class="note">
+        <h2>De onde vêm os dados</h2>
+        <table class="src">
+          <tbody>
+            <tr><td>Data de vencimento</td><td><code>RCB_CLIENTES.dtvencimento</code></td></tr>
+            <tr><td>Energia verde compensada</td><td><code>RCB_CLIENTES.energiacompensada</code></td></tr>
+            <tr><td>Total a pagar com desconto</td><td><code>RCB_CLIENTES.valorapagar</code></td></tr>
+            <tr><td>Cashback / PIX da Energia</td><td><span class="w">Não informado no card</span></td></tr>
+            <tr><td>Valor após o vencimento (PDF)</td><td><span class="w">Regra da SKILL_RCB_SEC3</span></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="note">
+        <h2>Perguntas em aberto</h2>
+        <ol class="qs">
+          <li>O badge mostra só o nome (<q>PIX da Energia</q>) ou também o valor, como o badge atual <q>Desconto iGreen: R$ 12,49</q>? O protótipo mostra só o nome.</li>
+          <li>Na variação PIX da Energia, a linha do valor continua se chamando <q>Cashback</q>, como diz o card, ou passa a se chamar <q>PIX da Energia</q>?</li>
+          <li>De qual coluna vem o valor do Cashback / PIX da Energia? O card só cita vencimento, energia e valor a pagar.</li>
+          <li><b>Respondida pela fatura da equipe:</b> na fatura Pix, o boleto vem pelo valor cheio e o benefício volta como cashback no iGreen Club. Com isso, o rótulo <q>Total a pagar com desconto</q> do Invoice Web deixa de fazer sentido. Trocar para <q>Total a pagar</q>?</li>
+          <li><b>Respondida pela fatura da equipe:</b> com pontualidade, o cashback cai de 16% para 10% depois do vencimento (R$ 48 e R$ 30 no exemplo). A V3 segue isso; a V1 e a V2 ainda tratam os 10% como valor do boleto.</li>
+          <li>Na fatura da equipe, o quadro diz <q>CASHBACK</q> nas duas versões Pix, mas o card pede <q>PIX DA ENERGIA</q> na variação 1. Qual rótulo vale?</li>
+          <li>A regra dos 10% (valor até e valor após) vale também no Invoice Web, ou só no PDF?</li>
+          <li>Hoje a produção mostra 3 opções (Pix, Boleto, Copiar código de barras). Abrir boleto, Baixar boleto e Cartão de crédito são novas ou ficam dentro de <q>Boleto</q>?</li>
+          <li>O porquinho continua nas duas variações? O protótipo usa o original nas duas e diferencia a variação pelo ícone do badge.</li>
+          <li>Desconto de exatamente 10% fica com o quadro único, já que a regra diz <q>até 10%</q>?</li>
+          <li>O Banco Central pede a grafia <q>Pix</q>, e <q>PIX</q> só vale em texto todo em maiúsculas. O nome passa a ser <q>Pix da Energia</q>? A V2 já usa essa grafia, e o uso da marca Pix no nome do produto precisa de checagem jurídica.</li>
+        </ol>
+      </section>
+
+      <section class="note">
+        <p class="foot">Logo, fundo do ticket, brilho verde, porquinho, selos das lojas e ícones vêm da tela em produção (fatura.igreenenergy.com.br), coletados em 21/10/2026. Os ícones do badge (Pix e Cashback), de Baixar boleto e de Cartão de crédito foram desenhados no mesmo traço. A linha tracejada com recorte antes do total é uma proposta nova. O PDF foi desenhado sem o arquivo da fatura padrão, então medidas e posições precisam ser conferidas com ele. Nomes, endereço e valores são fictícios.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<div class="ig-toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<template id="bench-tpl">
+  <h2>A fatura como peça de marketing</h2>
+  <p class="meta">Benchmark para a V2 da Fatura PDF da iGreen · pesquisa em páginas públicas feita em 21/10/2026 · escopo: a peça fatura + boleto · 13 players, 55 fontes</p>
+  <p class="lead">Quem faz bem responde três perguntas logo no topo: quanto pagar, até quando, e quanto o cliente ganhou. O consumo e a tarifa vêm depois. A maior dor do cliente da iGreen hoje não é visual: é entender por que recebe duas contas e onde está o desconto.</p>
+
+  <h3>Resumo</h3>
+  <ul>
+    <li>Valor e vencimento no topo é o piso do mercado. Nubank, Octopus, Cemig, Enel e Bulbe fazem assim <sup>[22][36][40][42][47]</sup>. Numa pesquisa da PG&amp;E com clientes, 77% procuram primeiro o valor a pagar <sup>[55]</sup>, e a pesquisa da Ofgem chegou ao mesmo ponto: o cliente procura primeiro a cobrança e o pagamento <sup>[52]</sup>.</li>
+    <li>O benefício funciona melhor como um valor com nome próprio dentro da conta, com o acumulado ao lado. A Octopus faz isso com créditos e o PicPay mostra a parte do saldo que veio de cashback <sup>[46][47]</sup>. Entre os concorrentes, só a Lemon põe a economia do mês na própria fatura. Os outros mandam para o app <sup>[12][14][25]</sup>.</li>
+    <li>O Pix já sobe para perto do valor nas distribuidoras <sup>[36][40]</sup>. O Inter acrescenta uma dica para conferir o recebedor <sup>[44]</sup>.</li>
+    <li>"Quantas contas eu pago?" é a dúvida principal em todos os players de energia por assinatura, e "cobrança indevida" é a reclamação nº 1 em todos eles <sup>[5][15][19][23][26]</sup>. Nenhum explica isso na própria fatura. É a oportunidade mais clara.</li>
+    <li>A ficha de compensação é rígida: fundo branco, impressão azul ou preta, posições fixas <sup>[32]</sup>. O resto da página é livre. O boleto precisa trazer as condições de desconto por pagamento em dia <sup>[31]</sup>, o que encaixa a regra dos 10%.</li>
+    <li>O Banco Central pede a grafia "Pix". "PIX" só vale em texto todo em maiúsculas <sup>[33]</sup>, e isso afeta o nome "PIX da Energia".</li>
+    <li>Maior risco: o card tira o "Quanto pagaria sem iGreen", que é como a iGreen explica a economia hoje <sup>[7]</sup>. Sem essa âncora, o benefício precisa de outra prova na página.</li>
+  </ul>
+
+  <h3>Players analisados</h3>
+  <div class="tw"><table class="bt">
+    <thead><tr><th>Player</th><th>Por que está aqui</th><th>O que foi analisado</th><th>Mercado</th></tr></thead>
+    <tbody>
+      <tr><td>iGreen (hoje)</td><td>Ponto de partida</td><td>FAQ oficial, Reclame Aqui, fatura web</td><td>Brasil</td></tr>
+      <tr><td>Lemon Energia</td><td>Concorrente direto; única que põe a economia do mês na fatura</td><td>Site, imagem de fatura (peça de marketing), central de ajuda</td><td>Brasil</td></tr>
+      <tr><td>Cemig SIM</td><td>Concorrente direto em MG, onde a iGreen nasceu</td><td>FAQ, site, programa de indicação</td><td>Brasil</td></tr>
+      <tr><td>Bulbe Energia</td><td>Concorrente em MG com fatura única</td><td>FAQ, frame de vídeo da fatura</td><td>Brasil</td></tr>
+      <tr><td>Órigo Energia</td><td>Concorrente com clube de pontos que resgata em Pix</td><td>FAQ, Clube Órigo</td><td>Brasil</td></tr>
+      <tr><td>Cemig, CPFL, Enel SP, Neoenergia</td><td>Distribuidoras que redesenharam a conta entre 2024 e 2026</td><td>Imagens oficiais e páginas "entenda sua conta"</td><td>Brasil</td></tr>
+      <tr><td>Nubank, Inter, PicPay</td><td>Referência de clareza, Pix na fatura e cashback visível</td><td>Blogs oficiais e terceiros</td><td>Brasil</td></tr>
+      <tr><td>Octopus Energy</td><td>Conta de energia com créditos nomeados e tom acolhedor</td><td>Conta anotada oficial (amostra de jun/2023)</td><td>Reino Unido</td></tr>
+      <tr><td>Opower</td><td>Relatórios de consumo com comparação social, com estudos publicados</td><td>Estudos acadêmicos (NBER, J-PAL)</td><td>EUA</td></tr>
+    </tbody>
+  </table></div>
+  <p class="meta">Sun Mobi foi descartada por não ter material público sobre a cobrança <sup>[27]</sup>. Mercado Pago, Raízen e EDP ficaram de fora por falta de fonte aberta.</p>
+
+  <h3>Como funciona a cobrança da iGreen hoje</h3>
+  <ul>
+    <li><b>Duas contas na maioria dos casos.</b> A distribuidora cobra a taxa mínima, a iluminação pública, os impostos e o consumo que passa da energia injetada. A iGreen cobra a energia injetada com desconto <sup>[2][6]</sup>. Na Cemig existe um boleto unificado opcional <sup>[4]</sup>.</li>
+    <li><b>O boleto atual</b>, pela descrição oficial, mostra o consumo, o valor com desconto, o "valor que você pagaria" e o histórico de economia <sup>[6][7]</sup>. Não achamos imagem pública do PDF.</li>
+    <li><b>Desconto:</b> até 20% <sup>[1]</sup>. Um contrato analisado pelo Procon-MPMG prevê 16% com pagamento em dia e 10% depois do vencimento <sup>[9]</sup>, que é a base provável da regra dos 10%.</li>
+    <li><b>Cashback já existe:</b> vem de indicação e abate o próximo boleto <sup>[3]</sup>. "Pix da Energia" não aparece em nenhum material público. É um produto novo.</li>
+    <li><b>Reclame Aqui (abr a set/2026):</b> 3.284 reclamações e reputação "Ótima". Os problemas mais citados são cobrança indevida, cancelamento e propaganda enganosa. Títulos recorrentes: "recebo duas contas", "o desconto não aparece" e boleto de uma empresa que o cliente não reconhece, já que a venda passa por licenciados <sup>[5][10]</sup>. O Procon-MG cita falta de clareza sobre as duas contas mensais <sup>[9]</sup>. A própria iGreen explica que a distribuidora leva de 2 a 3 ciclos para incluir o cliente no rateio <sup>[8]</sup>.</li>
+  </ul>
+
+  <h3>Matriz comparativa</h3>
+  <div class="tw"><table class="bt">
+    <thead><tr><th>Critério</th><th>iGreen hoje</th><th>Energia por assinatura</th><th>Distribuidoras</th><th>Fintechs</th><th>Octopus / Opower</th><th>Maturidade</th></tr></thead>
+    <tbody>
+      <tr><td>O que aparece primeiro</td><td class="nv">Layout do PDF não visto</td><td>Total e vencimento em caixa com seta (Bulbe) ou como manchete: "sua conta fechou em R$…" (Lemon) <sup>[12][22]</sup></td><td>Valor, vencimento e QR Pix no topo (Cemig, Enel). A CPFL usa uma faixa verde no meio <sup>[36][38][40]</sup></td><td>Cabeçalho com total, mínimo e vencimento (Nubank) <sup>[42]</sup></td><td>Saldo contado em frases curtas na página 1 (Octopus) <sup>[47]</sup></td><td><span class="mat c">Consolidado</span></td></tr>
+      <tr><td>Como mostram o benefício</td><td>Valor com desconto e "valor que você pagaria" <sup>[7]</sup></td><td>Economia do mês em R$ na fatura só na Lemon, com âncora "de/por". Os outros levam ao app, com acumulado <sup>[12][14][18][25]</sup></td><td>Não se aplica</td><td>Cashback como parte visível do saldo, com histórico (PicPay); pontos viram desconto na fatura (Inter) <sup>[45][46]</sup></td><td>Créditos em seção própria; subsídio como linha negativa ao lado do consumo (Octopus) <sup>[47]</sup></td><td><span class="mat e">Emergente</span></td></tr>
+      <tr><td>Pagamento em dia</td><td>16% em dia, 10% depois, em um contrato <sup>[9]</sup></td><td>Lemon: multa de 5% e juros de 1% ao mês <sup>[13]</sup>. Desconto ligado à pontualidade não verificado</td><td class="nv">Não verificado</td><td>Não se aplica</td><td>Não se aplica (débito automático)</td><td><span class="mat x">Experimental</span> na apresentação</td></tr>
+      <tr><td>Pix e meios de pagamento</td><td>Pix, cartão, débito automático e "Pagar com Cashback" no app <sup>[2]</sup></td><td>QR Pix na fatura: "receba a confirmação em poucos minutos" (Lemon); Pix Copia e Cola (Órigo) <sup>[12][25]</sup></td><td>QR grande no topo (Cemig), ao lado do valor (Enel), no rodapé (CPFL) e ao lado da ficha de compensação (Neoenergia). Cemig e CPFL escrevem "PIX" em texto misto <sup>[36][38][40][41]</sup></td><td>QR no PDF com dica para conferir o recebedor (Inter) <sup>[44]</sup></td><td>Sem QR: o padrão lá é débito automático <sup>[47]</sup></td><td><span class="mat c">Consolidado</span>; dica de conferência <span class="mat e">emergente</span></td></tr>
+      <tr><td>Histórico de consumo</td><td>Histórico de economia dos meses anteriores <sup>[6]</sup></td><td>No app (Lemon, Bulbe, Órigo) <sup>[14][21][25]</sup></td><td>12 a 13 meses em barras (CPFL, Cemig, Enel) <sup>[36][38][40]</sup></td><td>Não se aplica</td><td>Comparação de 12 meses e com o próprio histórico (Opower) <sup>[49]</sup></td><td><span class="mat c">Consolidado</span></td></tr>
+      <tr><td>Impacto ambiental</td><td class="nv">Não verificado na fatura</td><td>Só a Lemon mede CO₂, no site e no app. Na fatura vira uma frase <sup>[12][14]</sup></td><td class="nv">Não verificado</td><td>Não se aplica</td><td class="nv">Não verificado</td><td><span class="mat x">Experimental</span></td></tr>
+      <tr><td>App e indicação</td><td>App iGreen Club; cashback por indicação abate o boleto <sup>[3][11]</sup></td><td>Indicação vira crédito na fatura: R$ 50 (Cemig SIM, Bulbe) ou pontos com resgate em Pix em até 30 dias úteis (Órigo) <sup>[19][21][24]</sup></td><td>Chamadas ficam no site, não na conta (CPFL) <sup>[38]</sup></td><td>Um card com atalho direto para pagar (Nubank) <sup>[43]</sup></td><td>Créditos de indicação dentro da conta (Octopus) <sup>[47]</sup></td><td><span class="mat e">Emergente</span></td></tr>
+      <tr><td>Explicação das duas contas</td><td>FAQ e post no Reclame Aqui <sup>[6]</sup></td><td>Todos têm FAQ só para isso. A Bulbe circula a linha "Energia compensada GD" na conta da Cemig; a Lemon oferece conta unificada <sup>[16][17][22][25]</sup></td><td>GD aparece em linhas técnicas, como "Energia SCEE" e "Energia injetada" <sup>[37][39]</sup></td><td>Não se aplica</td><td>Não se aplica</td><td><span class="mat x">Lacuna</span>: ninguém explica na fatura</td></tr>
+      <tr><td>Tom e visual</td><td>Aspiracional no site; fatura web clara, em Montserrat <sup>[1]</sup></td><td>Celebratório (Lemon), didático (Cemig SIM, Órigo), informal com emojis (Bulbe) <sup>[12][17][21][25]</sup></td><td>Cor por tipo de informação (CPFL); avisos sobem e ganham cor <sup>[36][38]</sup></td><td>Informal, falando com "você" (Nubank) <sup>[42]</sup></td><td>Acolhedor, em primeira pessoa do plural (Octopus) <sup>[48]</sup></td><td><span class="mat c">Consolidado</span> (linguagem simples)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="meta">Consolidado: a maioria faz e há norma ou guia que sustenta. Emergente: players de ponta fazem. Experimental: um ou dois fazem. Não verificado: sem evidência.</p>
+
+  <h3>O que é obrigatório e o que é livre</h3>
+  <div class="tw"><table class="bt">
+    <thead><tr><th>Norma</th><th>O que diz</th><th>Efeito no desenho</th></tr></thead>
+    <tbody>
+      <tr><td>REN ANEEL 1.000/2021</td><td>Lista o conteúdo mínimo da fatura da distribuidora (art. 327) e permite publicidade que não atrapalhe o obrigatório (art. 332) <sup>[28]</sup></td><td>Não vincula o boleto da iGreen, que não é emitido pela distribuidora (interpretação). Serve de referência de boa prática</td></tr>
+      <tr><td>Lei 14.300/2022</td><td>Créditos em kWh, válidos por 60 meses; os mais antigos são usados primeiro (art. 13) <sup>[29]</sup></td><td>Energia em kWh; valor em R$ só como estimativa</td></tr>
+      <tr><td>Resolução BCB 443/2024</td><td>O boleto segue o modelo da convenção interbancária. Conteúdo mínimo inclui pagador, beneficiário com CNPJ, valor, vencimento e condições de desconto por pagamento antecipado (art. 7º) <sup>[31]</sup></td><td>A regra dos 10% precisa aparecer na ficha como desconto até o vencimento</td></tr>
+      <tr><td>Carta-Circular BCB 2.926/2000</td><td>Ficha na parte de baixo da folha, fundo branco, impressão azul ou preta, código de barras de 103 × 13 mm <sup>[32]</sup></td><td>Nada de cor de marca dentro da ficha</td></tr>
+      <tr><td>Manual da marca Pix v1.6</td><td>Grafia "Pix"; "PIX" só em texto todo em maiúsculas. Marca com tamanho mínimo de 20 mm e cores sem alteração <sup>[33]</sup></td><td>"PIX da Energia" em texto misto foge da grafia oficial</td></tr>
+      <tr><td>Manual de Iniciação do Pix</td><td>QR estático, dinâmico ou com vencimento; recomenda oferecer o Pix Copia e Cola <sup>[34]</sup></td><td>QR com valor e vencimento, e cópia do código na fatura online</td></tr>
+      <tr><td>Código de Defesa do Consumidor</td><td>Informação clara (arts. 6º e 31). Documento de cobrança com nome, endereço e CNPJ do fornecedor (art. 42-A). Oferta vincula (art. 30); quem anuncia economia precisa comprovar (art. 38) <sup>[30]</sup></td><td>Identificação da iGreen na fatura; o benefício exibido precisa de base que se possa demonstrar</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Porém e riscos</h3>
+  <ul>
+    <li><b>Âncora removida.</b> Sem o "Quanto pagaria sem iGreen" <sup>[7]</sup>, o cliente pode não ver o benefício, o que alimenta o "desconto não aparece" <sup>[5]</sup>. Concorrentes que tiram a âncora da fatura levam a prova para o app <sup>[14][25]</sup>, e mesmo assim clientes da Cemig SIM relatam não conseguir conferir a economia prometida <sup>[20]</sup>.</li>
+    <li><b>Marca Pix no nome do produto.</b> A grafia já foge do manual <sup>[33]</sup>. Usar a marca Pix no nome de um produto de terceiro precisa de checagem jurídica.</li>
+    <li><b>Comparação com vizinhos.</b> Reduz o consumo em cerca de 2% em média, com efeito bumerangue em quem já consome pouco <sup>[50]</sup>. Em Nova York, mais de um terço dos domicílios preferia não receber o relatório <sup>[51]</sup>.</li>
+    <li><b>QR demais.</b> A conta da CPFL tem três QR Codes <sup>[38]</sup>. Interpretação: aumenta a chance de o cliente escanear o errado.</li>
+    <li><b>Mensagem de economia é publicidade.</b> Precisa ser comprovável <sup>[30]</sup>. "Propaganda enganosa" já tem 350 reclamações na iGreen <sup>[5]</sup>.</li>
+    <li><b>Fatura única com repasse</b> (Bulbe, Lemon) resolve as duas contas, mas gera queixa de valor pago e não repassado <sup>[23]</sup>.</li>
+  </ul>
+
+  <h3>Síntese</h3>
+  <p><b>Convergências.</b> Valor e vencimento no topo. Pix na fatura. Histórico de 12 a 13 meses em barras. Linguagem simples, falando com "você".</p>
+  <p><b>Divergências.</b> Onde fica a prova de economia: na fatura (Lemon, iGreen hoje) ou no app (Cemig SIM, Órigo). Uma ou duas contas: a fatura única depende de acordo com a distribuidora, o que explica a diferença entre os players.</p>
+  <p><b>Lacunas.</b> Ninguém explica as duas contas dentro da própria fatura. Ninguém mostra na fatura o benefício acumulado desde a adesão. Ninguém mostra claramente os dois valores, até e depois do vencimento.</p>
+  <p><b>Anti-padrões.</b> Grafia "PIX" em texto misto (Cemig, CPFL) <sup>[33]</sup>. Três QR Codes na mesma página (CPFL) <sup>[38]</sup>. Chamadas para o app que ficam fora da conta, onde o cliente não vê (CPFL) <sup>[38]</sup>.</p>
+
+  <h3>O que a pesquisa produziu</h3>
+  <div class="csd">
+    <div><h3>Certezas</h3><ul>
+      <li>O cliente iGreen recebe duas cobranças por mês na maioria dos casos <sup>[2][6]</sup>.</li>
+      <li>"Cobrança indevida" é a reclamação nº 1 na iGreen e nos quatro concorrentes <sup>[5][15][19][23][26]</sup>.</li>
+      <li>A ficha de compensação precisa de fundo branco e impressão azul ou preta <sup>[32]</sup>.</li>
+      <li>O boleto deve trazer as condições de desconto por pagamento antecipado <sup>[31]</sup>.</li>
+      <li>A grafia oficial é "Pix" <sup>[33]</sup>.</li>
+      <li>A iGreen já tem cashback que abate o boleto <sup>[3]</sup>.</li>
+    </ul></div>
+    <div><h3>Suposições</h3><ul>
+      <li>Benefício do mês e acumulado no topo reduzem o "desconto não aparece", porque hoje a prova é a âncora que o card remove. Validar com teste de 5 segundos e acompanhando o Reclame Aqui por 3 ciclos. Prioridade alta.</li>
+      <li>Um bloco sobre as duas contas reduz a sensação de cobrança em dobro. Validar com teste de compreensão e com o volume de "cobrança duplicada". Prioridade alta.</li>
+      <li>Pix ao lado do valor aumenta o pagamento por Pix. Validar comparando a participação do Pix antes e depois. Prioridade média.</li>
+      <li>Mostrar os dois valores (até e após) incentiva pagar em dia sem confundir, desde que o valor até o vencimento seja o maior número da página. Validar com teste de compreensão. Prioridade média.</li>
+    </ul></div>
+    <div><h3>Dúvidas</h3><ul>
+      <li>Um produto de terceiro pode usar a marca Pix no nome? Como descobrir: jurídico, a partir do manual da marca <sup>[33]</sup>.</li>
+      <li>Como o Pix da Energia funciona: o valor volta por Pix, quando e para qual chave? Como descobrir: regra de negócio com o PO.</li>
+      <li>De onde vem o valor do benefício e o acumulado? Como descobrir: dados e DataScience.</li>
+      <li>Como se calcula o valor após o vencimento? Como descobrir: SKILL_RCB_SEC3.</li>
+      <li>O banco emissor aceita boleto com QR Pix (híbrido)? Como descobrir: financeiro com o banco <sup>[35]</sup>.</li>
+      <li>O CDC vale para membros de consórcio ou cooperativa? Como descobrir: parecer jurídico.</li>
+    </ul></div>
+  </div>
+
+  <h3>Oportunidades priorizadas</h3>
+  <div class="tw"><table class="bt">
+    <thead><tr><th>Prioridade</th><th>Oportunidade</th><th>Evidência</th><th>Esforço</th><th>Confiança</th></tr></thead>
+    <tbody>
+      <tr><td><span class="prio p0">P0</span></td><td>Ficha de compensação no padrão, sem cor, e com o desconto por pagamento em dia escrito na própria ficha</td><td><sup>[31][32]</sup></td><td>Baixo</td><td>Alta</td></tr>
+      <tr><td><span class="prio p0">P0</span></td><td>Identificar a iGreen com nome, endereço e CNPJ no documento</td><td><sup>[30]</sup></td><td>Baixo</td><td>Alta</td></tr>
+      <tr><td><span class="prio p1">P1</span></td><td>Topo com valor, vencimento e situação, e o benefício do mês com o mesmo peso visual</td><td><sup>[42][47][55]</sup></td><td>Baixo</td><td>Alta</td></tr>
+      <tr><td><span class="prio p1">P1</span></td><td>Bloco que explica as duas contas: o que cada uma cobra e quem recebe</td><td><sup>[5][6][9]</sup></td><td>Médio</td><td>Alta</td></tr>
+      <tr><td><span class="prio p1">P1</span></td><td>Grafia "Pix da Energia" em texto misto</td><td><sup>[33]</sup></td><td>Baixo</td><td>Alta, depende do jurídico</td></tr>
+      <tr><td><span class="prio p2">P2</span></td><td>Benefício acumulado desde a adesão</td><td><sup>[46][47]</sup></td><td>Médio (precisa do dado)</td><td>Média</td></tr>
+      <tr><td><span class="prio p2">P2</span></td><td>Pix ao lado do valor, com dica para conferir o recebedor</td><td><sup>[36][40][44]</sup></td><td>Baixo</td><td>Alta</td></tr>
+      <tr><td><span class="prio p2">P2</span></td><td>Histórico de 13 meses com comparação com o mesmo mês do ano anterior</td><td><sup>[38][55]</sup></td><td>Baixo</td><td>Média</td></tr>
+      <tr><td><span class="prio p3">P3</span></td><td>Uma chamada para o app, com uma tarefa clara</td><td><sup>[43]</sup></td><td>Baixo</td><td>Média</td></tr>
+      <tr><td><span class="prio p3">P3</span></td><td>Comparação com clientes parecidos, sem ranking, só depois de teste</td><td><sup>[49][50]</sup></td><td>Médio</td><td>Média</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Recomendação para a iGreen</h3>
+  <p><b>Adotar.</b> Valor, vencimento e situação no topo. Pix perto do valor, com cópia do código na fatura online. Histórico de 13 meses. Ficha de compensação no padrão, com o desconto por pontualidade. Identificação do fornecedor. Linguagem simples.</p>
+  <p><b>Considerar, com risco explícito.</b> Benefício acumulado: depende de dado confiável, porque o número vira promessa. Bloco das duas contas: precisa de texto validado com atendimento. Dica de conferência do recebedor junto ao QR.</p>
+  <p><b>Evitar.</b> Ranking com vizinhos. Mais de um QR Code na página. Âncora "de/por" ou economia sem base demonstrável. "PIX" em texto misto. Cor de marca dentro da ficha de compensação.</p>
+
+  <h3>Como isso entrou na V2</h3>
+  <div class="tw"><table class="bt">
+    <thead><tr><th>Na V2</th><th>Por quê</th><th>Fonte</th></tr></thead>
+    <tbody>
+      <tr><td>Topo em três blocos: valor, benefício e Pix</td><td>Responde quanto, até quando e quanto ganhou antes de qualquer detalhe</td><td><sup>[36][42][47][55]</sup></td></tr>
+      <tr><td>Valor até o vencimento como maior número, com o valor após logo abaixo</td><td>Regra dos 10% visível sem competir com o valor principal</td><td><sup>[9][31]</sup></td></tr>
+      <tr><td>Quadro PIX DA ENERGIA ou CASHBACK com o mês e o acumulado</td><td>Benefício com nome próprio, substituindo a âncora removida</td><td><sup>[46][47]</sup></td></tr>
+      <tr><td>Um único QR Pix, com dica para conferir o recebedor</td><td>Pix perto do valor, sem a confusão de vários QR Codes</td><td><sup>[38][44]</sup></td></tr>
+      <tr><td>Bloco "Você recebe duas contas por mês"</td><td>Ataca a dúvida e a reclamação mais frequentes</td><td><sup>[5][6][9]</sup></td></tr>
+      <tr><td>Histórico de 13 meses com comparação ano a ano</td><td>O cliente olha o consumo comparado ao ano anterior</td><td><sup>[38][55]</sup></td></tr>
+      <tr><td>Uma chamada para o app iGreen Club</td><td>Uma tarefa por chamada, dentro da própria fatura</td><td><sup>[43][55]</sup></td></tr>
+      <tr><td>Ficha em branco e preto, com desconto por pontualidade e CNPJ do beneficiário</td><td>Exigência do Banco Central e do CDC</td><td><sup>[30][31][32]</sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Limitações</h3>
+  <ul>
+    <li>Não achamos imagem pública do PDF atual da iGreen nem de Cemig SIM e Órigo. A imagem da Lemon é peça de marketing.</li>
+    <li>O portal da ANEEL bloqueia acesso automatizado. A REN 1.000 foi lida numa cópia hospedada pela Cemig, e o PRODIST Módulo 11 não foi lido.</li>
+    <li>A convenção de cobrança da Febraban não é pública. A Carta-Circular 2.926 tem vigência incerta.</li>
+    <li>Os números do Reclame Aqui são da página pública no dia da pesquisa. Os estudos da Opower são dos EUA.</li>
+  </ul>
+
+  <h3>Próximos passos</h3>
+  <ol>
+    <li>O PO decide o nome (grafia Pix) e a mecânica do benefício.</li>
+    <li>Teste de 5 segundos com 5 a 8 clientes, comparando V1 e V2: o que pagar, até quando e quanto ganhou. SSE e British Gas testaram suas contas novas com clientes antes de lançar <sup>[53][54]</sup>.</li>
+    <li>Validar a ficha e o QR Pix com o banco emissor.</li>
+    <li>Registrar as decisões no CONTEXT.md do produto.</li>
+  </ol>
+
+  <h3>Fontes</h3>
+  <p class="meta">Todas acessadas em 21/10/2026. Tipo: fato (fonte oficial), observação (tela ou imagem real), terceiro, voz do usuário.</p>
+  <ol class="src-list">
+    <li>iGreen, site oficial: portfólio, até 20% de desconto, contadores. Fato e observação. <a href="https://igreenenergy.com.br/">igreenenergy.com.br</a></li>
+    <li>iGreen, FAQ da Conexão Green (arquivo de 11/03/2026): duas contas, fidelidade, pagamento. Fato. <a href="https://web.archive.org/web/20260311042159/https://www.igreenenergy.com.br/informacoes-igreen">web.archive.org/…/informacoes-igreen</a></li>
+    <li>iGreen, Cashback da Conexão Green (arquivo de 11/03/2026). Fato. <a href="https://web.archive.org/web/20260311045614/https://www.igreenenergy.com.br/cashback-sustentavel">web.archive.org/…/cashback-sustentavel</a></li>
+    <li>iGreen, regras da Cemig MG e boleto unificado (arquivo de 05/08/2025). Fato. <a href="https://web.archive.org/web/20250805022237/https://www.igreenenergy.com.br/cemig-minasgerais">web.archive.org/…/cemig-minasgerais</a></li>
+    <li>iGreen, Reclame Aqui: indicadores e problemas. Voz do usuário. <a href="https://www.reclameaqui.com.br/empresa/igreen-energy/">reclameaqui.com.br/empresa/igreen-energy</a></li>
+    <li>iGreen, post "Por que recebo 2 boletos". Fato. <a href="https://www.reclameaqui.com.br/empresa/igreen-energy/conteudos/por-que-recebo-2-boletos-ao-aderir-a-conexao-green_Nd6jBALMcnNM1IJo/">reclameaqui.com.br/…/por-que-recebo-2-boletos</a></li>
+    <li>iGreen, FAQ "Não estou entendendo o desconto". Fato. <a href="https://www.reclameaqui.com.br/empresa/igreen-energy/faq/nao-estou-entendendo-o-desconto_a0BKV1GYUpE3Jec5">reclameaqui.com.br/…/nao-estou-entendendo-o-desconto</a></li>
+    <li>iGreen, reclamação de Fortaleza e resposta sobre os ciclos de rateio. Voz do usuário e fato. <a href="https://www.reclameaqui.com.br/igreen-energy/falta-ee-respeito-com-cliente_ZUjGlCtsiIrIur4I/">reclameaqui.com.br/…/falta-ee-respeito-com-cliente</a></li>
+    <li>Procon-MPMG, manifestação de 29/06/2026 sobre cobranças da iGreen. Terceiro. <a href="https://www.mpmg.mp.br/data/files/F1/33/4D/04/1EA8F910E5A178F9B9A8F9C2/Manifestacao_CDC_reclamacoes%20sobre%20cobrancas%20adicionais%20alem%20da%20fatura%20regular_%20iGreen%20Energy_Procon-MPMG_29%20jun%202026.pdf">mpmg.mp.br (PDF)</a></li>
+    <li>InvestNews, reportagem de 20/01/2026 sobre a iGreen. Terceiro. <a href="https://investnews.com.br/negocios/herbalife-da-energia-solar-fe-e-marketing-multinivel-impulsionam-a-igreen/amp/">investnews.com.br</a></li>
+    <li>iGreen Club, Google Play. Observação. <a href="https://play.google.com/store/apps/details?id=com.embarcadero.iGreenConnect&amp;hl=pt_BR">play.google.com</a></li>
+    <li>Lemon, site e imagem de fatura (peça de marketing). Observação. <a href="https://energialemon.com.br/">energialemon.com.br</a></li>
+    <li>Lemon, juros e multas. Fato. <a href="https://energialemon.com.br/ajuda/pagamento-a9513d923fad4e978ca8e48259d45dee/como-funciona-a-cobranca-de-juros-e-multas-pela-lemon-e-pela-distribuidora-021263c4b0d6419bb22ad77d9306b47a">energialemon.com.br/ajuda/…/juros-e-multas</a></li>
+    <li>Lemon, blog sobre a conta e o app: economia, CO₂, Pix. Fato. <a href="https://energialemon.com.br/blog/como-fica-minha-conta-de-luz-com-a-lemon">energialemon.com.br/blog</a></li>
+    <li>Lemon, Reclame Aqui. Terceiro. <a href="https://www.reclameaqui.com.br/empresa/lemon-energias-renovaveis/lista-reclamacoes/">reclameaqui.com.br/empresa/lemon-energias-renovaveis</a></li>
+    <li>Lemon, Conta Unificada e Conta Dupla. Fato. <a href="https://energialemon.com.br/ajuda/pagamento-a9513d923fad4e978ca8e48259d45dee/preciso-pagar-a-conta-da-distribuidora-separadamente-805d0587f8a34d4ba288a789cd15c7f8">energialemon.com.br/ajuda/…/conta-da-distribuidora</a></li>
+    <li>Cemig SIM, FAQ sobre as duas contas. Fato. <a href="https://cemigsim.com.br/como-funciona-a-energia-solar-por-assinatura">cemigsim.com.br/como-funciona</a></li>
+    <li>Cemig SIM, site: descontos, app, débito automático. Fato. <a href="https://cemigsim.com.br/">cemigsim.com.br</a></li>
+    <li>Cemig SIM, Indique SIM, e Reclame Aqui. Fato e terceiro. <a href="https://cemigsim.com.br/queroindicar">cemigsim.com.br/queroindicar</a> · <a href="https://www.reclameaqui.com.br/empresa/cemig-sim/lista-reclamacoes/">reclameaqui.com.br/empresa/cemig-sim</a></li>
+    <li>Cemig SIM, relato "Não consigo entender minha conta" (30/09/2026). Voz do usuário. <a href="https://www.reclameaqui.com.br/cemig-sim/nao-consigo-entender-minha-conta-cemig-sim_SLfvhVi9JNzRwVkV">reclameaqui.com.br/cemig-sim/…</a></li>
+    <li>Bulbe, site e FAQ: fatura única, desconto, indicação, app. Fato. <a href="https://bulbeenergia.com.br/">bulbeenergia.com.br</a></li>
+    <li>Bulbe, frame do vídeo "Fatura Bulbe Energia" e FAQ sobre a conta da Cemig. Observação. <a href="https://www.youtube.com/watch?v=7Cor41LA0mw">youtube.com</a> · <a href="https://www.reclameaqui.com.br/empresa/bulbe-energia/faq/recebi-uma-fatura-cemig-devo-pagar_FpyuuW2qYHBxDx7w">reclameaqui.com.br/…/recebi-uma-fatura-cemig</a></li>
+    <li>Bulbe, Reclame Aqui. Terceiro. <a href="https://www.reclameaqui.com.br/empresa/bulbe-energia/lista-reclamacoes/">reclameaqui.com.br/empresa/bulbe-energia</a></li>
+    <li>Órigo, Clube Órigo: pontos, resgate em Pix, cashback. Fato. <a href="https://origoenergia.com.br/clube-origo/">origoenergia.com.br/clube-origo</a></li>
+    <li>Órigo, FAQ oficial: fatura, Pix Copia e Cola, aba Economia, duas faturas. Fato. <a href="https://origoenergia.com.br/faq/">origoenergia.com.br/faq</a></li>
+    <li>Órigo, Reclame Aqui. Terceiro. <a href="https://www.reclameaqui.com.br/empresa/origo-energia/lista-reclamacoes/">reclameaqui.com.br/empresa/origo-energia</a></li>
+    <li>Sun Mobi, site sem detalhe de cobrança (descartada). Fato. <a href="https://www.sunmobi.com.br">sunmobi.com.br</a></li>
+    <li>ANEEL, REN 1.000/2021 compilada (cópia hospedada pela Cemig). Fato. <a href="https://www.cemig.com.br/wp-content/uploads/2025/08/ren20211000.pdf">cemig.com.br (PDF)</a></li>
+    <li>Planalto, Lei 14.300/2022. Fato. <a href="https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/lei/l14300.htm">planalto.gov.br</a></li>
+    <li>Planalto, Código de Defesa do Consumidor compilado. Fato. <a href="https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm">planalto.gov.br</a></li>
+    <li>Banco Central, Resolução BCB 443/2024. Fato. <a href="https://www.bcb.gov.br/api/conteudo/app/normativos/exibenormativo?p1=Resolu%C3%A7%C3%A3o%20BCB&amp;p2=443">bcb.gov.br</a></li>
+    <li>Banco Central, Carta-Circular 2.926/2000: especificações da ficha de compensação. Fato, vigência incerta. <a href="https://www.bcb.gov.br/pre/normativos/c_circ/2000/pdf/c_circ_2926_v1_O.pdf">bcb.gov.br (PDF)</a></li>
+    <li>Banco Central, Manual de Uso da Marca Pix v1.6. Fato. <a href="https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Regulamento_Pix/I_manual_uso_marca_pix.pdf">bcb.gov.br (PDF)</a></li>
+    <li>Banco Central, Manual de Padrões para Iniciação do Pix v2.10.0. Fato. <a href="https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Regulamento_Pix/II_ManualdePadroesparaIniciacaodoPix.pdf">bcb.gov.br (PDF)</a></li>
+    <li>Sicredi, contrato de cobrança com a definição de boleto híbrido. Terceiro. <a href="https://www.sicredi.com.br/media/produtos/filer_public/2024/03/15/contrato-de-cobranca.pdf">sicredi.com.br (PDF)</a></li>
+    <li>Cemig, novo modelo de fatura (Agência Minas, 22/12/2025). Observação. <a href="https://www.agenciaminas.mg.gov.br/noticia/cemig-apresenta-novo-modelo-de-fatura-para-melhorar-a-experiencia-do-cliente-128596">agenciaminas.mg.gov.br</a></li>
+    <li>Cemig, cartilha de faturamento GD. Observação. <a href="https://www.cemig.com.br/wp-content/uploads/2025/08/cartilha-faturamento-gd.pdf">cemig.com.br (PDF)</a></li>
+    <li>CPFL, Nova Conta: cores e três QR Codes. Observação. <a href="https://www.cpfl.com.br/novaconta">cpfl.com.br/novaconta</a></li>
+    <li>CPFL, Entenda sua conta e conta com energia solar. Observação. <a href="https://www.cpfl.com.br/entenda-sua-conta">cpfl.com.br/entenda-sua-conta</a> · <a href="https://www.cpfl.com.br/entenda-sua-conta-com-energia-solar">…com-energia-solar</a></li>
+    <li>Enel SP, novo layout de fatura (Cenário Energia, 10/09/2024). Terceiro. <a href="https://cenarioenergia.com.br/2024/09/10/enel-sao-paulo-inova-com-novo-layout-de-fatura-para-facilitar-o-acesso-as-informacoes/">cenarioenergia.com.br</a></li>
+    <li>Neoenergia, Pix na fatura (20/07/2023). Observação. <a href="https://www.neoenergia.com/en/w/pix-payment-bills-with-qr-code">neoenergia.com</a></li>
+    <li>Nubank, como ler a fatura do cartão. Fato. <a href="https://blog.nubank.com.br/fatura-do-cartao-de-credito-como-ler-a-sua/">blog.nubank.com.br</a></li>
+    <li>Nubank, Building Nu: card de fatura com atalho para pagar (2017). Fato. <a href="https://building.nu.com/building-the-new-mobile-app-header/">building.nu.com</a></li>
+    <li>Inter, Pix na fatura do cartão. Fato. <a href="https://blog.inter.co/pagar-a-fatura-do-cartao-com-o-pix">blog.inter.co</a></li>
+    <li>Inter, Inter Loop. Fato. <a href="https://blog.inter.co/inter-loop-programa-de-pontos">blog.inter.co</a></li>
+    <li>PicPay, cashback na carteira (Passageiro de Primeira, 2024). Terceiro. <a href="https://passageirodeprimeira.com/?p=364215">passageirodeprimeira.com</a></li>
+    <li>Octopus Energy, conta anotada oficial (amostra de jun/2023). Fato e observação. <a href="https://octopus.energy/documents/2634/Annotated_Statement_rebranded.pdf">octopus.energy (PDF)</a></li>
+    <li>Octopus Energy, central de ajuda sobre a conta. Fato. <a href="https://octopus.energy/help-and-faqs/articles/i-need-help-with-my-energy-bill/">octopus.energy</a></li>
+    <li>Ayres, Raseman e Shih, NBER WP 15386 (2009), relatórios Opower. Fato. <a href="https://www.nber.org/system/files/working_papers/w15386/w15386.pdf">nber.org (PDF)</a></li>
+    <li>Allcott (2011), Journal of Public Economics: efeito médio de 2%. Fato. <a href="https://econpapers.repec.org/RePEc:eee:pubeco:v:95:y:2011:i:9-10:p:1082-1095">econpapers.repec.org</a></li>
+    <li>J-PAL, avaliação da Opower (Allcott e Rogers, 2014). Terceiro. <a href="https://www.povertyactionlab.org/node/1949">povertyactionlab.org</a></li>
+    <li>Ofgem, pesquisa sobre informação na conta (18/07/2012). Fato. <a href="https://www.ofgem.gov.uk/sites/default/files/docs/2012/10/rmr-domestic-information-remedies-summary-18-07-2012_0.pdf">ofgem.gov.uk (PDF)</a></li>
+    <li>Ofgem, exceção para o teste de conta simplificada da British Gas (2016). Fato. <a href="https://www.ofgem.gov.uk/system/files/docs/2017/05/bg_billing_trial_derogation_decision_redacted_version.pdf">ofgem.gov.uk (PDF)</a></li>
+    <li>SSE, conta redesenhada com Citizens Advice e Design Council (15/02/2016). Fato autodeclarado. <a href="https://www.sse.com/news-and-views/2016/02/new-sse-bill-design-aims-to-end-energy-bill-confusion/">sse.com</a></li>
+    <li>PG&amp;E e Prinova, teste de conta com clientes (documento entregue à CPUC). Fato. <a href="https://files.cpuc.ca.gov/PG&amp;E20150130ResponseToA1312012Ruling/2012/08/SB_GT&amp;S_0656368.pdf">files.cpuc.ca.gov (PDF)</a></li>
+  </ol>
+</template>
+
+<script>
+(function(){
+  const S = {surface:'pdf4', variant:'pix', device:'desktop', disc:16, removed:false, data:false, pixOpen:false};
+  const BASE = 213.72, KWH = 186, VENC = '10/11/2026';
+  const V = {
+    pix:{n:1, web:'PIX da Energia', pdf:'PIX DA ENERGIA'},
+    cash:{n:2, web:'Cashback', pdf:'CASHBACK'}
+  };
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const r2 = v => Math.round(v*100)/100;
+  const brl = v => v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+  function calc(){
+    const benef = r2(BASE * S.disc/100);
+    return {benef, ate:r2(BASE - benef), apos:r2(BASE * 0.9), split:S.disc > 10};
+  }
+
+  /* Ícones e imagens originais da produção, na pasta assets/ */
+  const img = (f, w, h) => '<img src="assets/' + f + '" alt="" width="' + w + '" height="' + (h || w) + '">';
+  const I = {
+    pix:img('icon-pix.svg', 16),
+    barcode:img('icon-barcode.svg', 16),
+    open:img('icon-boleto.svg', 16),
+    download:img('icon-baixar-boleto.svg', 16),
+    card:img('icon-cartao.svg', 16),
+    chev:img('chevron.svg', 16),
+    copy:img('icon-copy.svg', 20),
+    tagGreen:img('desconto-tag.svg', 12)
+  };
+  const badgeIco = v => v === 'pix' ? img('icon-pix-green.svg', 15) : img('icon-cashback-green.svg', 15);
+  const pdfIco = v => v === 'pix' ? img('icon-pix-white.svg', 16) : img('icon-cashback-white.svg', 16);
+
+  function prng(seed){
+    return function(){
+      seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+      let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  function qr(seed){
+    const n = 25, r = prng(seed);
+    let d = '';
+    for(let y = 0; y < n; y++) for(let x = 0; x < n; x++){
+      const inF = (x < 8 && y < 8) || (x > n - 9 && y < 8) || (x < 8 && y > n - 9);
+      if(!inF && r() < .48) d += 'M' + x + ' ' + y + 'h1v1h-1z';
+    }
+    [[0,0],[n-7,0],[0,n-7]].forEach(([x,y]) => {
+      d += 'M'+x+' '+y+'h7v7h-7z M'+(x+1)+' '+(y+1)+'v5h5v-5z M'+(x+2)+' '+(y+2)+'h3v3h-3z';
+    });
+    return '<svg class="qr" viewBox="-2 -2 ' + (n+4) + ' ' + (n+4) + '" role="img" aria-label="QR Code Pix ilustrativo"><rect class="bgq" x="-2" y="-2" width="' + (n+4) + '" height="' + (n+4) + '"/><path d="' + d + '" fill="currentColor" fill-rule="evenodd"/></svg>';
+  }
+  function barcode(seed){
+    const r = prng(seed);
+    let x = 0, d = '';
+    for(let i = 0; i < 78; i++){
+      const w = 1 + Math.floor(r() * 3);
+      d += 'M' + x + ' 0h' + w + 'v40h-' + w + 'z';
+      x += w + 1 + Math.floor(r() * 2.4);
+    }
+    return '<svg viewBox="0 0 ' + x + ' 40" preserveAspectRatio="none" role="img" aria-label="Código de barras ilustrativo"><path d="' + d + '"/></svg>';
+  }
+  function chart(){
+    const vals = [172,165,190,201,188,176,169,181,194,203,179,KWH];
+    const m = ['NOV','DEZ','JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT'];
+    const x0 = 30, slot = 24, bw = 14, base = 96, k = 80/220;
+    let s = '';
+    [0,50,100,150].forEach(g => {
+      const y = base - g*k;
+      s += '<line class="gl" x1="' + (x0-4) + '" x2="' + (x0+slot*12) + '" y1="' + y + '" y2="' + y + '"/>';
+      s += '<text class="ax" x="' + (x0-8) + '" y="' + (y+2.4) + '" text-anchor="end">' + g + '</text>';
+    });
+    vals.forEach((v,i) => {
+      const h = v*k, x = x0 + i*slot + (slot-bw)/2, last = i === 11;
+      s += '<rect class="bar' + (last ? ' now' : '') + '" x="' + x + '" y="' + (base-h) + '" width="' + bw + '" height="' + h + '" rx="2"/>';
+      s += '<text class="ax' + (last ? ' b' : '') + '" x="' + (x+bw/2) + '" y="' + (base+11) + '" text-anchor="middle">' + m[i] + '</text>';
+      if(last) s += '<text class="ax b" x="' + (x+bw/2) + '" y="' + (base-h-4) + '" text-anchor="middle">' + v + '</text>';
+    });
+    return '<svg class="chart" viewBox="0 0 ' + (x0+slot*12+4) + ' 112" role="img" aria-label="Energia compensada nos últimos 12 meses, em kWh">' + s + '</svg>';
+  }
+  const linha = () => '00090.00009 01842.552703 01200.104252 7 1051' + String(Math.round(calc().ate*100)).padStart(10,'0');
+  const logo = cls => '<img class="' + cls + '" src="assets/logo.svg" alt="iGreen Energy" width="92" height="28">';
+
+  /* ---------- Invoice Web ---------- */
+  function webScreen(){
+    const v = V[S.variant], c = calc(), R = S.removed, D = S.data;
+    const tag = (t, warn) => D ? '<span class="dtag' + (warn ? ' warn' : '') + '">' + t + '</span>' : '';
+    const row = (l, val, t, nodiv) => '<div class="ig-row' + (nodiv ? ' nodiv' : '') + '"><span class="ig-l">' + l + '</span><span class="ig-v"><span>' + val + '</span>' + (t || '') + '</span></div>';
+    const ghostRow = (l, val) => '<div class="ig-row ghost" data-rn="RN03"><span class="ig-l s">' + l + '</span><span class="ig-v s">' + val + '</span><span class="ghost-tag">Removido</span></div>';
+    const opt = (id, label, icon, right) => '<div class="ig-opt"><button type="button" class="ig-btn" data-act="' + id + '"><span class="ico">' + icon + '</span><span class="t">' + label + '</span><span class="chev">' + (right || I.chev) + '</span></button></div>';
+    const pixOpt = '<div class="ig-opt' + (S.pixOpen ? ' open' : '') + '"><button type="button" class="ig-btn" data-act="pix" aria-expanded="' + S.pixOpen + '"><span class="ico">' + I.pix + '</span><span class="t">Pagar no Pix</span><span class="chev">' + I.chev + '</span></button>' +
+      (S.pixOpen ? '<div class="ig-pixpanel">' + qr(42) + '<p>Escaneie o QR Code no app do seu banco ou copie o código Pix.</p><button type="button" class="ig-cta" data-act="pixcopy">Copiar código Pix</button></div>' : '') + '</div>';
+
+    return '<div class="ig-screen">' +
+      '<div class="ig-logo">' + logo('') + '</div>' +
+      '<div class="ig-col">' +
+        '<div class="ig-card-wrap"><div class="ig-card">' +
+          '<img class="ig-overlay" src="assets/invoice-overlay-bg.png" alt="" width="948" height="870">' +
+          '<div class="ig-card-in">' +
+            '<img class="ig-pig" src="assets/pig-bank.png" alt="" width="80" height="80">' +
+            '<div class="ig-badge" data-rn="RN01 RN02"><span class="ig-badge-ico">' + badgeIco(S.variant) + '</span><span>' + v.web + '</span></div>' +
+            (R ? '<div class="ig-title ghost" data-rn="RN03"><span class="s">Sua fatura veio mais barata!</span><span class="ghost-tag">Removido</span></div>' : '') +
+            '<div class="ig-rows" data-rn="RN02">' +
+              row('Data de vencimento:', VENC, tag('RCB_CLIENTES.dtvencimento')) +
+              row('Energia verde compensada:', KWH + ' kWh', tag('RCB_CLIENTES.energiacompensada')) +
+              (R ? ghostRow('Quanto pagaria sem iGreen:', brl(BASE)) + ghostRow('Desconto iGreen:', '-' + brl(c.benef)) : '') +
+              row('Cashback:', '<span class="ig-cb">' + I.tagGreen + brl(c.benef) + '</span>', tag('origem a definir', true), true) +
+              '<div class="ig-tear" aria-hidden="true"></div>' +
+              '<div class="ig-stub"><span class="ig-l">Total a pagar com desconto:</span><span class="ig-v"><strong>' + brl(c.ate) + '</strong>' + tag('RCB_CLIENTES.valorapagar') + '</span></div>' +
+            '</div>' +
+          '</div>' +
+        '</div></div>' +
+        '<section class="ig-pay" data-rn="RN04">' +
+          '<h3>Opções de pagamento</h3>' +
+          pixOpt +
+          opt('barcode', 'Copiar código de barras', I.barcode, I.copy) +
+          opt('open', 'Abrir boleto', I.open) +
+          opt('download', 'Baixar boleto', I.download) +
+          opt('card', 'Cartão de crédito', I.card) +
+        '</section>' +
+        '<section class="ig-app"><h2>Baixe o App <b>iGreen Club</b> e tenha acesso a todos os seus benefícios e faturas em um só lugar!</h2>' +
+          '<div class="stores"><img src="assets/google-play.png" alt="Disponível no Google Play" width="163" height="48"><img src="assets/app-store.png" alt="Baixar na App Store" width="163" height="48"></div></section>' +
+      '</div>' +
+    '</div>';
+  }
+  function webStage(){
+    if(S.device === 'mobile') return '<div class="webview"><div class="vp"><span class="vp-tag">375 px</span>' + webScreen() + '</div></div>';
+    return '<div class="webview">' + webScreen() + '</div>';
+  }
+
+  /* ---------- Fatura PDF ---------- */
+  function pdfStage(){
+    const v = V[S.variant], c = calc(), R = S.removed, D = S.data;
+    const tag = (t, warn) => D ? '<span class="dtag' + (warn ? ' warn' : '') + '">' + t + '</span>' : '';
+    let boxes = '';
+    if(R) boxes += '<div class="p-box ghost" data-rn="RN06"><span class="p-lbl s">Quanto pagaria sem iGreen</span><span class="p-val s">' + brl(BASE) + '</span><span class="p-sub s">Valor sem o benefício</span><span class="ghost-tag">Removido</span></div>';
+    boxes += '<div class="p-box energy"><span class="p-lbl">Energia compensada</span><span class="p-val">' + KWH + ' <small>kWh</small></span><span class="p-sub">Energia verde no mês</span>' + tag('energiacompensada') + '</div>';
+    boxes += '<div class="p-box benefit" data-rn="RN05"><span class="p-lbl">' + pdfIco(S.variant) + v.pdf + '</span><span class="p-val">' + brl(c.benef) + '</span><span class="p-sub">Seu benefício deste mês</span>' + tag('origem a definir', true) + '</div>';
+    if(c.split){
+      boxes += '<div class="p-box due" data-rn="RN07"><span class="p-lbl">Valor até ' + VENC + '</span><span class="p-val">' + brl(c.ate) + '</span><span class="p-sub">Pagando até o vencimento</span>' + tag('valorapagar') + '</div>';
+      boxes += '<div class="p-box" data-rn="RN07"><span class="p-lbl">Valor após ' + VENC + '</span><span class="p-val">' + brl(c.apos) + '</span><span class="p-sub">Pagando após o vencimento</span>' + tag('SKILL_RCB_SEC3', true) + '</div>';
+    } else {
+      boxes += '<div class="p-box due wide" data-rn="RN07"><span class="p-lbl">Total a pagar</span><span class="p-val">' + brl(c.ate) + '</span><span class="p-sub">Vencimento em ' + VENC + '</span>' + tag('valorapagar') + '</div>';
+    }
+    const msg = c.split
+      ? 'Pagando até <b>' + VENC + '</b>, o valor é <b>' + brl(c.ate) + '</b>. Depois dessa data, o valor passa a ser <b>' + brl(c.apos) + '</b>.'
+      : 'Pague até <b>' + VENC + '</b> e evite multa e juros por atraso.';
+    const instr = c.split
+      ? 'Até ' + VENC + ': ' + brl(c.ate) + '.<br>Após ' + VENC + ': cobrar ' + brl(c.apos) + '.'
+      : 'Pagável até o vencimento.<br>Após o vencimento, sujeito a multa e juros.';
+
+    return '<div class="pdf-area"><div class="pdf-wrap"><article class="sheet" aria-label="Fatura PDF, folha A4">' +
+      '<div class="p-mark" aria-hidden="true"><span>PROTÓTIPO · SEM VALOR</span></div>' +
+      '<div class="p-in">' +
+        '<header class="p-head">' + logo('p-logo') + '<div class="p-title"><strong>FATURA DE ENERGIA</strong><span>Referência <b>OUT/2026</b> · Emissão 21/10/2026 · Nº 000.184.552</span></div></header>' +
+        '<section class="p-client">' +
+          '<div class="kv"><span>Cliente</span><b>Maria Aparecida Souza</b></div>' +
+          '<div class="kv"><span>Instalação</span><b>3012345678</b></div>' +
+          '<div class="kv"><span>Distribuidora</span><b>CEMIG</b></div>' +
+          '<div class="kv"><span>Endereço</span><b>Rua das Palmeiras, 214 · Uberlândia/MG</b></div>' +
+          '<div class="kv"><span>Período de leitura</span><b>17/09 a 17/10/2026</b></div>' +
+          '<div class="kv"><span>Vencimento</span><b>' + VENC + '</b>' + tag('dtvencimento') + '</div>' +
+        '</section>' +
+        '<section><h3 class="p-sec-h">Resumo da fatura</h3><div class="p-sum">' + boxes + '</div></section>' +
+        '<section class="p-mid">' +
+          '<div class="p-panel"><h3 class="p-sec-h">Histórico de energia compensada (kWh)</h3>' + chart() + '</div>' +
+          '<div class="p-panel"><h3 class="p-sec-h">Dados da leitura</h3>' +
+            '<dl class="p-dl"><div><dt>Leitura anterior</dt><dd>17/09/2026</dd></div><div><dt>Leitura atual</dt><dd>17/10/2026</dd></div><div><dt>Dias faturados</dt><dd>30</dd></div><div><dt>Próxima leitura</dt><dd>17/11/2026</dd></div></dl>' +
+            '<h3 class="p-sec-h">Mensagens</h3><p class="p-msg">' + msg + '</p>' +
+          '</div>' +
+        '</section>' +
+        '<div class="p-cut">Destaque aqui</div>' +
+        '<section class="p-bol">' +
+          '<div class="b-top"><span class="b-bank">iGreen<i>|</i>000-0</span><span class="b-line">' + linha() + '</span></div>' +
+          '<div class="b-grid">' +
+            '<div class="b-f span2"><span>Local de pagamento</span><b>Pagável em qualquer banco ou pelo Pix</b></div>' +
+            '<div class="b-f hl"><span>Vencimento</span><b>' + VENC + '</b></div>' +
+            '<div class="b-f span2"><span>Beneficiário</span><b>iGreen Energy</b></div>' +
+            '<div class="b-f"><span>Nosso número</span><b>000184552-7</b></div>' +
+            '<div class="b-f"><span>Data do documento</span><b>21/10/2026</b></div>' +
+            '<div class="b-f"><span>Nº do documento</span><b>000.184.552</b></div>' +
+            '<div class="b-f hl" data-rn="RN07"><span>(=) Valor do documento</span><b>' + brl(c.ate) + '</b></div>' +
+            '<div class="b-f span2"><span>Instruções</span><b class="n">' + instr + '</b></div>' +
+            '<div class="b-f"><span>Pagador</span><b class="n">Maria Aparecida Souza<br>Instalação 3012345678</b></div>' +
+          '</div>' +
+          '<div class="b-foot"><div class="b-bars">' + barcode(7) + '</div><div class="b-pix">' + qr(42) + '<span>Pague com Pix<small>Aponte a câmera do app do banco</small></span></div></div>' +
+        '</section>' +
+      '</div>' +
+    '</article></div></div>';
+  }
+
+  /* ---------- Peças compartilhadas pelos PDFs V2, V3 e V4 ---------- */
+  function barChart(o){
+    const n = o.vals.length, H = o.h || 112, x0 = 26, slot = 22.4, bw = 13, base = H - 20, k = (H - 36)/o.max;
+    let s = '';
+    o.grid.forEach(g => {
+      const y = base - g*k;
+      s += '<line class="gl" x1="' + (x0-4) + '" x2="' + (x0+slot*n) + '" y1="' + y + '" y2="' + y + '"/>';
+      s += '<text class="ax" x="' + (x0-7) + '" y="' + (y+2.4) + '" text-anchor="end">' + g + '</text>';
+    });
+    o.vals.forEach((v,i) => {
+      const h = v*k, x = x0 + i*slot + (slot-bw)/2, last = i === n-1, first = i === 0;
+      s += '<rect class="bar' + (last ? ' now' : '') + '" x="' + x.toFixed(1) + '" y="' + (base-h).toFixed(1) + '" width="' + bw + '" height="' + h.toFixed(1) + '" rx="2"/>';
+      s += '<text class="ax' + (last ? ' b' : '') + '" x="' + (x+bw/2).toFixed(1) + '" y="' + (base+10) + '" text-anchor="middle">' + o.months[i] + '</text>';
+      if(first || last){
+        s += '<text class="ax' + (last ? ' b' : '') + '" x="' + (x+bw/2).toFixed(1) + '" y="' + (base+17.5) + '" text-anchor="middle">' + (first ? o.years[0] : o.years[1]) + '</text>';
+        s += '<text class="ax b" x="' + (x+bw/2).toFixed(1) + '" y="' + (base-h-3.5).toFixed(1) + '" text-anchor="middle">' + v + '</text>';
+      }
+    });
+    return '<svg class="chart" viewBox="0 0 ' + (x0+slot*n+4) + ' ' + H + '" role="img" aria-label="' + o.label + '">' + s + '</svg>';
+  }
+  const chart13 = () => barChart({
+    vals:[179,172,165,190,201,188,176,169,181,194,203,179,KWH],
+    months:['OUT','NOV','DEZ','JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT'],
+    years:['2025','2026'], grid:[0,100,200], max:220,
+    label:'Energia verde compensada nos últimos 13 meses, em kWh'
+  });
+
+  /* Ficha de compensação no padrão: fundo branco, impressão preta, campos fixos */
+  function fichaHTML(o){
+    return '<section class="fc" aria-label="Ficha de compensação">' +
+      '<div class="fc-top"><span class="fc-bank">Banco Exemplo<i>000-0</i></span><span class="fc-line">00090.00009 01842.552703 01200.104252 7 ' + o.factor + String(Math.round(o.value*100)).padStart(10,'0') + '</span></div>' +
+      '<div class="fc-grid">' +
+        '<div class="fc-f s6"><span>Local de pagamento</span><b>Pagável em qualquer banco até o vencimento</b></div>' +
+        '<div class="fc-f r"><span>Vencimento</span><b>' + o.venc + '</b></div>' +
+        '<div class="fc-f s6"><span>Beneficiário</span><b>iGreen Energy · CNPJ 00.000.000/0001-00 · Uberlândia/MG</b></div>' +
+        '<div class="fc-f r"><span>Agência / Código do beneficiário</span><b>0000 / 0000000-0</b></div>' +
+        '<div class="fc-f"><span>Data do documento</span><b>' + o.date + '</b></div>' +
+        '<div class="fc-f s2"><span>Nº do documento</span><b>000.184.552</b></div>' +
+        '<div class="fc-f"><span>Espécie doc.</span><b>DM</b></div>' +
+        '<div class="fc-f"><span>Aceite</span><b>N</b></div>' +
+        '<div class="fc-f"><span>Data processamento</span><b>' + o.date + '</b></div>' +
+        '<div class="fc-f r"><span>Nosso número</span><b>000184552-7</b></div>' +
+        '<div class="fc-f"><span>Uso do banco</span><b>&nbsp;</b></div>' +
+        '<div class="fc-f"><span>Carteira</span><b>17</b></div>' +
+        '<div class="fc-f"><span>Espécie</span><b>R$</b></div>' +
+        '<div class="fc-f"><span>Quantidade</span><b>&nbsp;</b></div>' +
+        '<div class="fc-f s2"><span>Valor</span><b>&nbsp;</b></div>' +
+        '<div class="fc-f r"><span>(=) Valor do documento</span><b>' + brl(o.value) + '</b></div>' +
+        '<div class="fc-f s6 fc-ins" data-rn="RN07"><span>Instruções (texto de responsabilidade do beneficiário)</span><b class="n">' + o.instr + '</b></div>' +
+        '<div class="fc-f r"><span>(−) Desconto / Abatimento</span><b>' + (o.desc ? brl(o.desc) : '&nbsp;') + '</b></div>' +
+        '<div class="fc-f r"><span>(−) Outras deduções</span><b>&nbsp;</b></div>' +
+        '<div class="fc-f r"><span>(+) Mora / Multa</span><b>&nbsp;</b></div>' +
+        '<div class="fc-f r"><span>(=) Valor cobrado</span><b>&nbsp;</b></div>' +
+        '<div class="fc-f s7"><span>Pagador</span><b class="n">' + o.payer + '</b></div>' +
+      '</div>' +
+      '<div class="fc-bottom"><div class="fc-bars">' + barcode(o.seed || 7) + '</div><span class="fc-auth">Autenticação mecânica · Ficha de Compensação</span></div>' +
+    '</section>';
+  }
+  const pdfSheet = (label, inner) => '<div class="pdf-area"><div class="pdf-wrap"><article class="sheet" aria-label="' + label + '">' +
+    '<div class="p-mark" aria-hidden="true"><span>PROTÓTIPO · SEM VALOR</span></div>' + inner + '</article></div></div>';
+
+  /* ---------- Fatura PDF V2 ---------- */
+  function pdf2Stage(){
+    const v = V[S.variant], c = calc(), R = S.removed, D = S.data;
+    const tag = (t, warn) => D ? '<span class="dtag' + (warn ? ' warn' : '') + '">' + t + '</span>' : '';
+    const name = S.variant === 'pix' ? 'Pix da Energia' : 'Cashback';
+    const desc = r2(c.apos - c.ate);
+    const docValue = c.split ? c.apos : c.ate;
+    const ghost = R ? '<div class="v2-ghost ghost" data-rn="RN06"><span class="s">Quanto pagaria sem iGreen: ' + brl(BASE) + '</span><span class="ghost-tag">Removido</span></div>' : '';
+
+    const pay = '<div class="v2-pay" data-rn="RN07">' +
+        '<p class="v2-hello">Olá, <b>Maria</b>. Sua fatura de outubro está em aberto.</p>' +
+        '<span class="v2-lbl">' + (c.split ? 'Valor até ' + VENC : 'Total a pagar · vence em ' + VENC) + '</span>' +
+        '<span class="v2-amount">' + brl(c.ate) + '</span>' + tag('RCB_CLIENTES.valorapagar') +
+        (c.split
+          ? '<div class="v2-after"><span>Valor após ' + VENC + '</span><b>' + brl(c.apos) + '</b></div><p class="v2-note">Pagando até o vencimento, você mantém o benefício de ' + S.disc + '%.</p>'
+          : '<p class="v2-note end">Pague pelo Pix ao lado ou pelo boleto no fim da página.</p>') +
+      '</div>';
+    const benefit = '<div class="v2-benefit" data-rn="RN05">' +
+        '<div class="v2-b-top"><span class="v2-chip">' + badgeIco(S.variant) + '</span><span class="v2-b-lbl">' + v.pdf + '</span></div>' +
+        '<span class="v2-b-val">' + brl(c.benef) + '</span><span class="v2-b-sub">seu benefício neste mês</span>' + tag('origem a definir', true) +
+        '<div class="v2-b-acc"><b>' + brl(287.40) + '</b><span>de ' + name + ' desde a adesão, em mar/2026</span></div>' +
+      '</div>';
+    const pix = '<div class="v2-pix">' +
+        '<div class="v2-pix-top">' + qr(42) + '<div><strong>Pague com Pix</strong><span>O QR Code já traz o valor e o vencimento desta fatura.</span></div></div>' +
+        '<p>Abra o app do seu banco e aponte a câmera. No celular, copie o código Pix na fatura online.</p>' +
+        '<p class="v2-check">' + img('icon-check.svg', 16) + 'Antes de confirmar, veja se o recebedor é iGreen Energy.</p>' +
+      '</div>';
+    const two = '<section class="v2-two">' +
+        '<div><h4>Você recebe duas contas por mês</h4><p>Não é cobrança em dobro. Cada conta cobra uma parte diferente da sua energia.</p></div>' +
+        '<div class="v2-bill"><span class="v2-n">1</span><div><b>Esta fatura, da iGreen</b><span>Energia verde compensada: ' + KWH + ' kWh, no valor de ' + brl(c.ate) + '.</span></div></div>' +
+        '<div class="v2-bill"><span class="v2-n">2</span><div><b>Conta da CEMIG</b><span>Taxa mínima, iluminação pública e impostos. Chega separada e é paga à CEMIG.</span></div></div>' +
+      '</section>';
+    const mid = '<section class="v2-mid">' +
+        '<div class="v2-panel"><h4>Sua energia verde nos últimos 13 meses (kWh)</h4>' + chart13() +
+          '<p class="v2-insight">Em outubro, <b>' + KWH + ' kWh</b> de energia verde compensada, 4% a mais que em outubro de 2025.</p>' + tag('RCB_CLIENTES.energiacompensada') + '</div>' +
+        '<div class="v2-panel"><h4>Dados da conta</h4><dl class="v2-dl">' +
+          '<div><dt>Cliente</dt><dd>Maria Aparecida Souza</dd></div>' +
+          '<div><dt>Instalação</dt><dd>3012345678</dd></div>' +
+          '<div><dt>Distribuidora</dt><dd>CEMIG</dd></div>' +
+          '<div><dt>Endereço</dt><dd>Rua das Palmeiras, 214<br>Uberlândia/MG</dd></div>' +
+          '<div><dt>Leitura</dt><dd>17/09 a 17/10/2026 (30 dias)</dd></div>' +
+          '<div><dt>Próxima leitura</dt><dd>17/11/2026</dd></div>' +
+        '</dl></div>' +
+      '</section>';
+    const cta = '<section class="v2-cta"><div><b>Acompanhe tudo no app iGreen Club</b><span>Faturas, histórico de economia e o seu ' + name + ' em um só lugar.</span></div>' +
+        '<div class="v2-stores"><img src="assets/google-play.png" alt="Disponível no Google Play" width="163" height="48"><img src="assets/app-store.png" alt="Baixar na App Store" width="163" height="48"></div></section>';
+    const instr = c.split
+      ? 'Até ' + VENC + ', conceder desconto de ' + brl(desc) + ' por pagamento em dia. Valor com desconto: ' + brl(c.ate) + '.<br>Após ' + VENC + ', cobrar o valor do documento.'
+      : 'Após o vencimento, cobrar multa e juros conforme o contrato.';
+
+    return pdfSheet('Fatura PDF V2, folha A4', '<div class="v2">' +
+        '<header class="v2-head">' + logo('p-logo') + '<div class="v2-ref"><strong>Fatura de outubro de 2026</strong><span>Nº 000.184.552 · Emissão 21/10/2026</span></div></header>' +
+        '<p class="v2-issuer">iGreen Energy · CNPJ 00.000.000/0001-00 · Uberlândia/MG</p>' +
+        ghost +
+        '<section class="v2-hero">' + pay + benefit + pix + '</section>' +
+        two + mid + cta +
+        '<div class="v2-cut">Ficha de compensação</div>' +
+        fichaHTML({value:docValue, desc:c.split ? desc : 0, instr, venc:VENC, date:'21/10/2026', factor:'1051',
+          payer:'Maria Aparecida Souza · CPF ***.482.***-** · Rua das Palmeiras, 214, Uberlândia/MG'}) +
+      '</div>');
+  }
+
+  /* ---------- Fatura PDF V3 e V4: fatura atual (conta dupla, só fatura Pix) ---------- */
+  const B3 = {base:300, kwh:350, venc:'30/11/2026', ref:'NOV/26'};
+  function calc3(){
+    return {ate:r2(B3.base * S.disc/100), apos:r2(B3.base * 0.10), split:S.disc > 10};
+  }
+  /* Peças da V3 que a V4 também usa */
+  function v3Bits(opt){
+    opt = opt || {};
+    const v = V[S.variant], c = calc3(), D = S.data;
+    const tag = (t, warn) => D ? '<span class="dtag' + (warn ? ' warn' : '') + '">' + t + '</span>' : '';
+    const info = c.split
+      ? '<b>' + v.pdf + ':</b> esta fatura é cobrada pelo valor cheio. Pagando até ' + B3.venc + ', você recebe ' + brl(c.ate) + ' de cashback no iGreen Club. Depois do vencimento, ' + brl(c.apos) + '.'
+      : '<b>' + v.pdf + ':</b> esta fatura é cobrada pelo valor cheio. Depois do pagamento, você recebe ' + brl(c.ate) + ' de cashback no iGreen Club.';
+    return {
+      v, c, tag,
+      issuer: '<div>' + logo('v3-logo') + '<p class="v3-issuer"><b>IGREEN ENERGY</b> · CNPJ 00.000.000/0001-00<br>Av. Exemplo, 1000 · Uberlândia - MG</p></div>',
+      ghost: S.removed ? '<div class="v2-ghost ghost" data-rn="RN06"><span class="s">Quanto pagaria sem iGreen: ' + brl(B3.base) + ' · Desconto iGreen: ' + brl(r2(B3.base * 0.10)) + '</span><span class="ghost-tag">Removido</span></div>' : '',
+      hero: '<section class="v3-hero">' +
+          '<div class="v3-total"><span class="v3-lbl">VALOR TOTAL A PAGAR IGREEN</span><span class="v3-amount">' + brl(B3.base) + '</span>' + tag('RCB_CLIENTES.valorapagar') +
+            '<span class="v3-due">Vence em ' + B3.venc + '</span>' + tag('RCB_CLIENTES.dtvencimento') +
+            '<p class="v3-note">' + (opt.noFoot ? 'Valor cheio. O cashback cai no iGreen Club.' : 'Valor cheio. O benefício volta como cashback no iGreen Club.') + '</p>' +
+            '<div class="v3-mini"><div><span>ENERGIA VERDE COMPENSADA</span><b>' + B3.kwh + ' kWh</b>' + tag('energiacompensada') + '</div><div><span>MULTAS/JUROS (MÊS ANTERIOR)</span><b>' + brl(0) + '</b></div></div>' +
+          '</div>' +
+          '<div class="v3-cash" data-rn="RN05 RN07"><span class="v3-pill"><span class="v3-pill-ico">' + badgeIco(S.variant) + '</span>' + v.pdf + '</span>' +
+            '<span class="v3-cash-val">' + brl(c.ate) + '</span><span class="v3-cash-sub">' + (c.split ? 'pagando até o vencimento' : 'de cashback após o pagamento') + '</span>' + tag('origem a definir', true) +
+            (c.split ? '<div class="v3-cash-after">Pagando depois de ' + B3.venc + '<b>' + brl(c.apos) + '</b></div>' : '') +
+            (opt.noFoot ? '' : '<p class="v3-cash-foot">Cai no seu iGreen Club após a confirmação do pagamento.</p>') +
+            '<img class="v3-pig" src="assets/pig-bank.png" alt="" width="80" height="80">' +
+          '</div>' +
+          '<div class="v3-pix">' + qr(42) + '<strong>Pague com Pix</strong><p>Aponte a câmera do app do seu banco. Antes de confirmar, veja se o recebedor é <b>iGreen Energy</b>.</p></div>' +
+        '</section>',
+      club: '<section class="v3-club"><div class="v3-club-logo">' + logo('') + '<span>Club</span></div>' +
+          '<div><b>SEU CASHBACK CAI NO APP IGREEN CLUB</b><p>Você também tem acesso grátis a mais de 30 mil estabelecimentos com descontos.</p></div>' +
+          '<div class="v3-stores"><img src="assets/google-play.png" alt="Disponível no Google Play" width="163" height="48"><img src="assets/app-store.png" alt="Baixar na App Store" width="163" height="48"></div>' +
+        '</section>',
+      fraud: '<div class="v3-fraud"><span class="v3-tag">EVITE FRAUDES!</span><p>Pague só boletos enviados pelos canais oficiais da iGreen. No Pix, confira se o recebedor é <b>iGreen Energy</b>. Não nos responsabilizamos por pagamentos a terceiros.</p></div>',
+      info: '<div class="v3-info" data-rn="RN07"><span class="v3-h">INFORMAÇÕES ADICIONAIS</span><p>' + info + '</p></div>'
+    };
+  }
+  const v3Frame = (cls, inner) => '<div class="v3-frame"><div class="v3-page' + (cls ? ' ' + cls : '') + '">' + inner + '</div><div class="v3-slogan">JUNTOS VAMOS TRANSFORMAR O MUNDO!</div></div>';
+
+  function pdf3Stage(){
+    const b = v3Bits(), c = b.c;
+    const pct = S.disc/100;
+    const months = ['JUN/26','JUL/26','AGO/26','SET/26','OUT/26','NOV/26'];
+    const cred = [338, 352, 347, 361, 344, B3.kwh];
+    const rows = months.map((m, i) => {
+      const now = i === months.length - 1, late = c.split && i === 2;
+      const cb = now ? c.ate : r2(cred[i] / B3.kwh * B3.base * (late ? 0.10 : pct));
+      return '<tr' + (now ? ' class="now"' : '') + '><td>' + m + '</td><td>' + B3.kwh + '</td><td><span class="v3-cred"><span>' + cred[i] + '</span><span class="v3-bar"><i style="width:' + Math.round(cred[i] / 380 * 100) + '%"></i></span></span></td><td' + (late ? ' class="v3-late"' : '') + '>' + brl(cb) + (late ? '*' : '') + (now ? ' <small>previsto</small>' : '') + '</td></tr>';
+    }).join('');
+
+    return pdfSheet('Fatura PDF V3, folha A4', v3Frame('',
+      '<header class="v3-head">' + b.issuer +
+        '<div class="v3-alert"><span class="v3-tag">ATENÇÃO</span><p><b>Você recebe duas contas por mês.</b> Esta, da iGreen Energy, cobra a energia verde injetada. A da distribuidora cobra a taxa mínima, a iluminação pública e os impostos. Pague as duas.</p></div>' +
+      '</header>' +
+      b.ghost + b.hero +
+      '<section class="v3-client">' +
+        '<div class="v3-field"><span>DADOS DO CLIENTE</span><div><b>Cliente Exemplo da Silva</b>000.000.000-00 · Rua Exemplo, 100 · Centro · Uberlândia - MG</div></div>' +
+        '<div class="v3-field c"><span>MÊS DE REFERÊNCIA</span><div>' + B3.ref + '</div></div>' +
+        '<div class="v3-field c"><span>NÚMERO DE INSTALAÇÃO</span><div>3000000000</div></div>' +
+      '</section>' +
+      b.club +
+      '<section class="v3-cols">' +
+        '<div class="v3-hist"><span class="v3-h">HISTÓRICO DE CONSUMO/CASHBACK</span>' +
+          '<table class="v3-t"><thead><tr><th>MÊS/ANO</th><th>ENERGIA ALOCADA (kWh)</th><th>CRÉDITOS NO PERÍODO (kWh)</th><th>CASHBACK NO MÊS (R$)</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+          (c.split ? '<p class="v3-foot">* Pago depois do vencimento: cashback de 10%.</p>' : '') +
+        '</div>' +
+        '<div class="v3-side">' + b.fraud + b.info + '</div>' +
+      '</section>' +
+      '<section class="v3-bol">' +
+        '<div class="v3-bol-f"><div><span>Beneficiário</span><b>iGreen Energy · CNPJ 00.000.000/0001-00</b></div><div><span>Pagador</span><b>Cliente Exemplo da Silva · 000.000.000-00</b></div><div class="r"><span>Vencimento</span><b>' + B3.venc + '</b></div><div class="r"><span>Valor do documento</span><b>' + brl(B3.base) + '</b></div></div>' +
+        '<div class="v3-bars-row"><div class="v3-bars">' + barcode(11) + '</div><span class="v3-line">00090.00009 01842.552703 01200.104252 7 1071' + String(Math.round(B3.base*100)).padStart(10,'0') + '</span></div>' +
+      '</section>'));
+  }
+
+  /* ---------- Fatura PDF V4: modo geral da V3 + gráfico, passos e ficha da V2 ---------- */
+  function pdf4Stage(){
+    const b = v3Bits({noFoot:true}), c = b.c;
+    const chart = barChart({
+      vals:[341,329,318,352,366,349,337,338,352,347,361,344,B3.kwh],
+      months:['NOV','DEZ','JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV'],
+      years:['2025','2026'], grid:[0,100,200,300], max:400, h:88,
+      label:'Energia verde compensada nos últimos 13 meses, em kWh'
+    });
+    const instr = (c.split
+      ? 'Fatura cobrada pelo valor cheio. O cashback de ' + brl(c.ate) + ' (pagando até ' + B3.venc + ') ou de ' + brl(c.apos) + ' (depois) é creditado no iGreen Club e não é abatido deste boleto.'
+      : 'Fatura cobrada pelo valor cheio. O cashback de ' + brl(c.ate) + ' é creditado no iGreen Club após o pagamento e não é abatido deste boleto.') +
+      '<br>Após o vencimento, cobrar multa e juros conforme o contrato.';
+
+    return pdfSheet('Fatura PDF V4, folha A4', v3Frame('v4',
+      '<header class="v4-head">' + b.issuer +
+        '<div class="v4-ref"><strong>Fatura de novembro de 2026</strong><span>Mês de referência ' + B3.ref + '</span><span>Nº 000.184.552 · Emissão 20/11/2026</span></div>' +
+      '</header>' +
+      b.ghost + b.hero +
+      '<section class="v2-two v4-two">' +
+        '<div><h4>Você recebe duas contas por mês</h4><p>Não é cobrança em dobro. Cada conta cobra uma parte diferente da sua energia. Pague as duas.</p></div>' +
+        '<div class="v2-bill"><span class="v2-n">1</span><div><b>Esta fatura, da iGreen</b><span>Energia verde injetada: ' + B3.kwh + ' kWh, no valor de ' + brl(B3.base) + '.</span></div></div>' +
+        '<div class="v2-bill"><span class="v2-n">2</span><div><b>Conta da CEMIG</b><span>Taxa mínima, iluminação pública e impostos. Chega separada e é paga à CEMIG.</span></div></div>' +
+      '</section>' +
+      '<section class="v3-client">' +
+        '<div class="v3-field"><span>DADOS DO CLIENTE</span><div><b>Cliente Exemplo da Silva</b>000.000.000-00 · Rua Exemplo, 100 · Centro · Uberlândia - MG</div></div>' +
+        '<div class="v3-field c"><span>NÚMERO DE INSTALAÇÃO</span><div>3000000000</div></div>' +
+        '<div class="v3-field c"><span>DISTRIBUIDORA</span><div>CEMIG</div></div>' +
+      '</section>' +
+      '<section class="v4-mid">' +
+        '<div class="v2-panel v4-panel"><h4>Sua energia verde nos últimos 13 meses (kWh)</h4>' + chart +
+          '<p class="v2-insight">Novembro: <b>' + B3.kwh + ' kWh</b>, 3% a mais que em novembro de 2025.</p>' + b.tag('RCB_CLIENTES.energiacompensada') + '</div>' +
+        '<div class="v3-side">' + b.fraud + b.info + '</div>' +
+      '</section>' +
+      b.club +
+      '<div class="v2-cut">Ficha de compensação</div>' +
+      fichaHTML({value:B3.base, desc:0, instr, venc:B3.venc, date:'20/11/2026', factor:'1071', seed:11,
+        payer:'Cliente Exemplo da Silva · CPF 000.000.000-00 · Rua Exemplo, 100, Centro, Uberlândia - MG'})));
+  }
+
+  /* ---------- Benchmark ---------- */
+  function benchStage(){
+    return '<article class="bench">' + document.getElementById('bench-tpl').innerHTML + '</article>';
+  }
+
+  /* ---------- Notas ---------- */
+  function summary(){
+    const v = V[S.variant], c = calc();
+    if(S.surface === 'web'){
+      return '<p class="st"><b>Invoice Web</b>, variação ' + v.n + ' (' + v.web + '), ' + (S.device === 'mobile' ? 'mobile' : 'desktop') + '.</p>' +
+        '<div class="io"><div><h3>Aparece</h3><ul><li>Badge ' + v.web + '</li><li>Data de vencimento</li><li>Energia verde compensada</li><li>Cashback</li><li>Total a pagar com desconto</li><li>5 opções de pagamento</li></ul></div>' +
+        '<div><h3>Não aparece</h3><ul class="out"><li>Sua fatura veio mais barata!</li><li>Quanto pagaria sem iGreen</li><li>Desconto iGreen</li></ul></div></div>';
+    }
+    if(S.surface === 'pdf3' || S.surface === 'pdf4'){
+      const c3 = calc3(), v4 = S.surface === 'pdf4';
+      return '<p class="st"><b>Fatura PDF ' + (v4 ? 'V4' : 'V3') + '</b>, variação ' + v.n + ' (' + v.pdf + '), ' + (c3.split ? 'cashback com pontualidade' : 'cashback valor único') + '.</p>' +
+        '<div class="io"><div><h3>Aparece</h3><ul><li>Valor total cheio, ' + brl(B3.base) + '</li><li>Quadro ' + v.pdf + ' com ' + (c3.split ? brl(c3.ate) + ' até o vencimento e ' + brl(c3.apos) + ' depois' : brl(c3.ate) + ' após o pagamento') + '</li><li>Um QR Pix</li><li>' + (v4 ? 'Passos das duas contas' : 'Aviso das duas contas') + '</li><li>' + (v4 ? 'Gráfico de 13 meses' : 'Histórico de consumo e cashback') + '</li>' + (v4 ? '<li>Ficha de compensação completa</li>' : '') + '<li>Evite fraudes e informações adicionais</li></ul></div>' +
+        '<div><h3>Não aparece</h3><ul class="out"><li>Quanto pagaria sem iGreen</li><li>Desconto iGreen</li><li>QR Code do app</li></ul></div></div>' +
+        '<p class="hint" style="margin-top:10px">O QR do app saiu do banner para a página ter um QR só, o do Pix. As lojas continuam no banner.</p>';
+    }
+    return '<p class="st"><b>' + (S.surface === 'pdf2' ? 'Fatura PDF V2' : 'Fatura PDF') + '</b>, variação ' + v.n + ' (' + v.pdf + '), desconto de ' + S.disc + '%.</p>' +
+      '<div class="io"><div><h3>Aparece</h3><ul><li>Quadro ' + v.pdf + '</li><li>Energia compensada</li>' + (c.split ? '<li>Valor até e valor após</li>' : '<li>Total a pagar, em quadro único</li>') + '<li>Boleto com Pix</li></ul></div>' +
+      '<div><h3>Não aparece</h3><ul class="out"><li>Quanto pagaria sem iGreen</li></ul></div></div>';
+  }
+  const RULE_SURF = {RN01:'web', RN02:'web', RN03:'web', RN04:'web', RN05:'pdf', RN06:'pdf', RN07:'pdf'};
+  const isPdf = s => ['pdf','pdf2','pdf3','pdf4'].includes(s.surface);
+  const pdfSurf = () => isPdf(S) ? S.surface : 'pdf';
+  const MATCH = {
+    1:s => s.surface === 'web' && s.variant === 'pix',
+    2:s => s.surface === 'web' && s.variant === 'cash',
+    3:s => s.surface === 'web',
+    4:s => s.surface === 'web',
+    5:s => isPdf(s) && s.variant === 'pix',
+    6:s => isPdf(s) && s.variant === 'cash',
+    7:s => isPdf(s) && s.disc > 10,
+    8:s => isPdf(s) && s.disc <= 10,
+    9:s => s.surface === 'web' && s.device === 'mobile'
+  };
+  const CASES = {
+    1:() => { S.surface = 'web'; S.variant = 'pix'; return 'RN01 RN02'; },
+    2:() => { S.surface = 'web'; S.variant = 'cash'; return 'RN01 RN02'; },
+    3:() => { S.surface = 'web'; S.removed = true; return 'RN03'; },
+    4:() => { S.surface = 'web'; return 'RN04'; },
+    5:() => { S.surface = pdfSurf(); S.variant = 'pix'; S.removed = true; return 'RN05 RN06'; },
+    6:() => { S.surface = pdfSurf(); S.variant = 'cash'; S.removed = true; return 'RN05 RN06'; },
+    7:() => { S.surface = pdfSurf(); S.disc = 16; return 'RN07'; },
+    8:() => { S.surface = pdfSurf(); S.disc = 8; return 'RN07'; },
+    9:() => { S.surface = 'web'; S.device = 'mobile'; return 'RN02 RN04'; }
+  };
+
+  /* ---------- Render ---------- */
+  const $ = id => document.getElementById(id);
+  const stage = $('stage');
+  function render(){
+    document.querySelectorAll('[data-set]').forEach(b => {
+      const [k, val] = b.dataset.set.split(':');
+      b.setAttribute('aria-pressed', String(S[k] === val));
+    });
+    const web = S.surface === 'web', bench = S.surface === 'bench', c = calc(), v = V[S.variant];
+    document.body.dataset.surface = S.surface;
+    $('g-device').hidden = !web;
+    $('g-disc').hidden = web || bench;
+    $('g-var').hidden = bench;
+    $('g-checks').hidden = bench;
+    $('notes').hidden = bench;
+    $('disc').value = S.disc;
+    $('disc-out').textContent = S.disc + '%';
+    $('disc-rule').textContent = c.split ? 'Acima de 10%: valor até e valor após' : 'Até 10%: valor único';
+    $('t-removed').checked = S.removed;
+    $('t-data').checked = S.data;
+
+    $('cap').innerHTML = {
+      web:'<b>Invoice Web</b> · ' + v.web + ' · ' + (S.device === 'mobile' ? 'Mobile, 375 px' : 'Desktop'),
+      pdf:'<b>Fatura PDF</b> · ' + v.pdf + ' · A4 · desconto de ' + S.disc + '%',
+      pdf2:'<b>Fatura PDF V2</b> · ' + v.pdf + ' · A4 · desconto de ' + S.disc + '% · proposta a partir do benchmark',
+      pdf4:'<b>Fatura PDF V4</b> · ' + v.pdf + ' · A4 · ' + (S.disc > 10 ? 'cashback com pontualidade' : 'cashback valor único') + ' · modo geral da V3 com gráfico, passos e ficha da V2',
+      pdf3:'<b>Fatura PDF V3</b> · ' + v.pdf + ' · A4 · ' + (S.disc > 10 ? 'cashback com pontualidade' : 'cashback valor único') + ' · fatura atual + V2',
+      bench:'<b>Benchmark</b> · a fatura como peça de marketing · pesquisa de 21/10/2026'
+    }[S.surface];
+    $('legend').innerHTML = bench ? '' : '<span>Valores ilustrativos</span>' +
+      (S.removed ? '<span><i class="r"></i>Removido</span>' : '') +
+      (S.data ? '<span><i class="d"></i>Coluna do banco</span>' : '');
+
+    if(S.surface === 'pdf3' || S.surface === 'pdf4') $('disc-rule').textContent = c.split ? 'Acima de 10%: cashback até e após o vencimento' : 'Até 10%: cashback único';
+    stage.innerHTML = {web:webStage, pdf:pdfStage, pdf2:pdf2Stage, pdf3:pdf3Stage, pdf4:pdf4Stage, bench:benchStage}[S.surface]();
+    placeNotch();
+    $('summary').innerHTML = summary();
+    document.querySelectorAll('[data-case]').forEach(b => b.classList.toggle('on', MATCH[b.dataset.case](S)));
+  }
+
+  /* Alinha o recorte lateral do ticket com a linha tracejada antes do total */
+  function placeNotch(){
+    const card = stage.querySelector('.ig-card'), tear = card && card.querySelector('.ig-tear');
+    if(!tear) return;
+    const y = tear.getBoundingClientRect().top - card.getBoundingClientRect().top + tear.offsetHeight/2;
+    card.style.setProperty('--ny', y.toFixed(1) + 'px');
+  }
+  window.addEventListener('resize', placeNotch);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(placeNotch);
+  window.addEventListener('load', placeNotch);
+  stage.addEventListener('load', placeNotch, true);
+
+  function spot(ids){
+    stage.querySelectorAll('.spot').forEach(n => n.classList.remove('spot'));
+    if(!ids) return;
+    ids.split(' ').forEach(id => stage.querySelectorAll('[data-rn~="' + id + '"]').forEach(n => n.classList.add('spot')));
+  }
+  let flashT;
+  function flash(ids){
+    spot(ids);
+    const first = stage.querySelector('[data-rn~="' + ids.split(' ')[0] + '"]');
+    if(first) first.scrollIntoView({block:'center', behavior: reduce ? 'auto' : 'smooth'});
+    clearTimeout(flashT);
+    flashT = setTimeout(() => spot(null), 2600);
+  }
+
+  let toastT;
+  function toast(msg){
+    const t = $('toast');
+    t.innerHTML = img('icon-check.svg', 24) + '<span></span>';
+    t.lastChild.textContent = msg;
+    t.hidden = false;
+    clearTimeout(toastT);
+    toastT = setTimeout(() => { t.hidden = true; }, 2600);
+  }
+  function copy(text){
+    try { navigator.clipboard.writeText(text).catch(() => {}); } catch(e) {}
+  }
+
+  const actions = {
+    pix(){ S.pixOpen = !S.pixOpen; render(); },
+    pixcopy(){ copy('PIX-ILUSTRATIVO-000184552'); toast('Código Pix copiado'); },
+    barcode(){ copy(linha()); toast('Código de barras copiado para a área de transferência'); },
+    open(){ S.surface = 'pdf'; render(); $('stage-wrap').scrollIntoView({block:'start', behavior: reduce ? 'auto' : 'smooth'}); toast('Abrir boleto leva para a fatura em PDF'); },
+    download(){ toast('No produto, este botão baixa o PDF do boleto'); },
+    card(){ toast('No produto, este botão abre o pagamento com cartão de crédito'); }
+  };
+
+  document.addEventListener('click', e => {
+    const set = e.target.closest('[data-set]');
+    if(set){ const [k, val] = set.dataset.set.split(':'); S[k] = val; render(); return; }
+    const act = e.target.closest('[data-act]');
+    if(act && actions[act.dataset.act]){ actions[act.dataset.act](); return; }
+    const rule = e.target.closest('[data-rule]');
+    if(rule){
+      const id = rule.dataset.rule;
+      S.surface = RULE_SURF[id] === 'pdf' ? pdfSurf() : 'web';
+      if(id === 'RN03' || id === 'RN06') S.removed = true;
+      render(); flash(id); return;
+    }
+    const tc = e.target.closest('[data-case]');
+    if(tc){ const ids = CASES[tc.dataset.case](); render(); flash(ids); }
+  });
+  document.querySelectorAll('[data-rule]').forEach(b => {
+    const on = () => spot(b.dataset.rule), off = () => spot(null);
+    b.addEventListener('mouseenter', on); b.addEventListener('focus', on);
+    b.addEventListener('mouseleave', off); b.addEventListener('blur', off);
+  });
+  $('disc').addEventListener('input', e => { S.disc = +e.target.value; render(); });
+  $('t-removed').addEventListener('change', e => { S.removed = e.target.checked; render(); });
+  $('t-data').addEventListener('change', e => { S.data = e.target.checked; render(); });
+
+  render();
+})();
+</script>

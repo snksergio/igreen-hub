@@ -9,5 +9,15 @@
     "cadastro",
     "investidor",
     "react"
+  ],
+  "paginas": [
+    {
+      "nome": "Início",
+      "arquivo": ""
+    },
+    {
+      "nome": "Simulador por CPF",
+      "arquivo": "#simulador"
+    }
   ]
 }

@@ -11,5 +11,35 @@
     "boleto",
     "cartão",
     "cashback"
+  ],
+  "paginas": [
+    {
+      "nome": "Fluxo completo",
+      "arquivo": ""
+    },
+    {
+      "nome": "Pix",
+      "arquivo": "#pix"
+    },
+    {
+      "nome": "Cartão salvo em 3x",
+      "arquivo": "#cartao"
+    },
+    {
+      "nome": "Boleto",
+      "arquivo": "#boleto"
+    },
+    {
+      "nome": "Cashback + Pix",
+      "arquivo": "#cb-pix"
+    },
+    {
+      "nome": "Escanear o código",
+      "arquivo": "#escanear"
+    },
+    {
+      "nome": "Comprovante com status",
+      "arquivo": "#seguro"
+    }
   ]
 }

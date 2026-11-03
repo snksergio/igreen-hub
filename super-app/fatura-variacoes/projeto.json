@@ -7,5 +7,17 @@
     "fatura",
     "pdf",
     "invoice"
+  ],
+  "versoes": [
+    {
+      "nome": "v2 · menu lateral, web e mobile",
+      "arquivo": "index.html",
+      "data": "2026-10-21"
+    },
+    {
+      "nome": "v1 · abas no topo, com a Fatura PDF V4",
+      "arquivo": "v1.html",
+      "data": "2026-10-21"
+    }
   ]
 }

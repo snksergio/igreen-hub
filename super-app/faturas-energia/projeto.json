@@ -9,6 +9,26 @@
     {
       "nome": "Faturas de energia v2",
       "arquivo": "faturas-energia-v2.html"
+    },
+    {
+      "nome": "Vencida no Pix",
+      "arquivo": "faturas-energia-v2.html#vencida-pix"
+    },
+    {
+      "nome": "Aberta no boleto",
+      "arquivo": "faturas-energia-v2.html#aberta-boleto"
+    },
+    {
+      "nome": "Boleto em emissão",
+      "arquivo": "faturas-energia-v2.html#emissao"
+    },
+    {
+      "nome": "Já paguei",
+      "arquivo": "faturas-energia-v2.html#ja-paguei"
+    },
+    {
+      "nome": "Cashback com saldo",
+      "arquivo": "faturas-energia-v2.html#cashback-saldo"
     }
   ],
   "versoes": [

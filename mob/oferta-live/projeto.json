@@ -1,0 +1,20 @@
+{
+  "nome": "Oferta da live",
+  "descricao": "O link que a licenciada manda durante a live do Green Mob: escolher o eletroposto e pagar a entrada no cartão ou no Pix numa tela só.",
+  "tipo": "prototipo",
+  "atualizado": "2026-10-13",
+  "link": "https://igreen-mob-link.vercel.app/",
+  "repo": "https://github.com/snksergio/igreen-mob-link",
+  "paginas": [
+    {
+      "nome": "Abrir",
+      "arquivo": "?responsavel=Juliana%20Martins#cadastro-simplificado"
+    }
+  ],
+  "tags": [
+    "live",
+    "oferta",
+    "pagamento",
+    "eletroposto"
+  ]
+}

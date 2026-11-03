@@ -1,0 +1,60 @@
+{
+  "nome": "Proposta do investidor",
+  "descricao": "A página que o investidor recebe com a proposta gerada: o próximo passo e o andamento de proposta a entrega, com contrato, pagamento, vistoria e carregadores em pontos.",
+  "tipo": "prototipo",
+  "atualizado": "2026-10-21",
+  "link": "https://igreen-mob-link.vercel.app/",
+  "repo": "https://github.com/snksergio/igreen-mob-link",
+  "paginas": [
+    {
+      "nome": "Proposta enviada",
+      "arquivo": "#proposta-v3/9E89C902?cenario=nova"
+    },
+    {
+      "nome": "Contrato para assinar",
+      "arquivo": "#proposta-v3/9E89C902?cenario=contrato"
+    },
+    {
+      "nome": "Entrada em aberto",
+      "arquivo": "#proposta-v3/9E89C902?cenario=pagamento"
+    },
+    {
+      "nome": "Distribuir carregadores",
+      "arquivo": "#proposta-v3/9E89C902?cenario=distribuir"
+    },
+    {
+      "nome": "Vistoria com aditivo",
+      "arquivo": "#proposta-v3/9E89C902?cenario=vistoria"
+    },
+    {
+      "nome": "Instalação, parcela vencida",
+      "arquivo": "#proposta-v3/9E89C902?cenario=instalacao"
+    },
+    {
+      "nome": "Entrega para aceite",
+      "arquivo": "#proposta-v3/9E89C902?cenario=entrega"
+    },
+    {
+      "nome": "Proposta recusada",
+      "arquivo": "#proposta-v3/9E89C902?cenario=recusada"
+    }
+  ],
+  "versoes": [
+    {
+      "nome": "v2 · visual da proposta final",
+      "arquivo": "#proposta-v3/9E89C902",
+      "data": "2026-10-21"
+    },
+    {
+      "nome": "v1 · modelo novo com trilho",
+      "arquivo": "#proposta-v2/9E89C902",
+      "data": "2026-10-13"
+    }
+  ],
+  "tags": [
+    "proposta",
+    "investidor",
+    "contrato",
+    "vistoria"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "nome": "Componentes iGreenMCP",
+  "descricao": "A documentação dos componentes do design system do Dashboard com MCP: cada componente com as variações, os tamanhos, os estados e as classes para usar.",
+  "tipo": "documentacao",
+  "atualizado": "2026-03-18",
+  "link": "https://igreen-dashboard.vercel.app/",
+  "repo": "https://github.com/snksergio/igreen-dashboard",
+  "paginas": [
+    {
+      "nome": "Badge",
+      "arquivo": "components/badge/"
+    },
+    {
+      "nome": "Button",
+      "arquivo": "components/button/"
+    },
+    {
+      "nome": "Card",
+      "arquivo": "components/card/"
+    },
+    {
+      "nome": "Drawer",
+      "arquivo": "components/drawer/"
+    },
+    {
+      "nome": "Filter bar",
+      "arquivo": "components/filter-bar/"
+    },
+    {
+      "nome": "KPI card",
+      "arquivo": "components/kpi-card/"
+    },
+    {
+      "nome": "Pagination",
+      "arquivo": "components/pagination/"
+    },
+    {
+      "nome": "Table",
+      "arquivo": "components/table/"
+    }
+  ],
+  "tags": [
+    "componentes",
+    "mcp",
+    "dashboard"
+  ]
+}

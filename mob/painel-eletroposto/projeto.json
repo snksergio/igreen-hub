@@ -21,6 +21,18 @@
     {
       "nome": "Visão 2D",
       "arquivo": "?visao=2d"
+    },
+    {
+      "nome": "Dia sem recargas",
+      "arquivo": "?estado=vazio"
+    },
+    {
+      "nome": "Primeiro dia do posto",
+      "arquivo": "?estado=primeiro-dia"
+    },
+    {
+      "nome": "Dia de chuva",
+      "arquivo": "?chuva=1"
     }
   ],
   "tags": [
