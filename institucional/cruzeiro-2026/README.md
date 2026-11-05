@@ -17,6 +17,8 @@ Cópias de dois projetos locais, sem repositório: `Área de Trabalho/teste` (si
 
 ## Estrutura
 
+- `builder/` — o código-fonte dos dois projetos e as pendências anotadas, para revisitar o projeto ([README do builder](builder/README.md)). Não aparece na vitrine.
+
 - `index.html` — o site (React + Three.js), com a abertura em filme (`videos/voyage-complete-v3.mp4`, 37 s, 720p), o modal "Assistir à viagem completa" e o roteiro. O 3D carrega quando o mapa se aproxima da tela; em dispositivos sem WebGL a lista de ambientes mantém a navegação.
 - `imagens.html` — a variação com abertura em fotografia (era o `index.html` do original).
 - `prototipo.html` — o protótipo do filme por scroll (`hero/film.mp4`, 54 s, 720p, keyframe a cada 6 quadros para o scrub).
