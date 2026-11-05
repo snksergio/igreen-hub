@@ -1,6 +1,6 @@
 /* =========================================================
    iGreen MOB · motor do simulador "Monte seu eletroposto"
-   Cópia fiel das regras do simulador completo (igreen-mob-link.vercel.app/#investir/simulador, versão "investir"):
+   Cópia fiel das regras do simulador completo (Mob Link, #investir/simulador, versão "investir"):
    modelos, capacidade, preços, tributos (Lucro Real 2026), sociedade, carteira iGreen e projeção de 36 meses.
    Sem preço de equipamento e sem payback na tela (a versão "investir" também não mostra).
    Funciona no navegador (window.IGSim) e no Node (module.exports) para os testes.
