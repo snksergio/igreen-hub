@@ -1,20 +1,36 @@
 # Let's Go Cruzeiro 2026
 
-Hotsite da viagem de premiação Let's Go Cruzeiro iGreen 2026 (29/11 a 02/12/2026). A página é um dia a bordo em um único plano contínuo de 54 s, gerado por IA e controlado pelo scroll: chegada ao navio, deck da piscina, promenade, restaurante, teatro da convenção, festa noturna e o navio iluminado, fechando com "Você fez por merecer. Agora, viva." e as datas e regras da campanha.
+Site da viagem de premiação Let's Go Cruzeiro iGreen 2026 (29/11 a 02/12/2026). A versão atual tem a abertura solar, as quatro experiências a bordo (Sol & mar, Seu refúgio, À mesa, Celebre), o navio em 3D usado como mapa dos ambientes e o roteiro Santos–Búzios dia a dia. A página "Abertura em filme" troca a imagem de abertura por um filme e acrescenta o roteiro ilustrado.
 
-Cópia do projeto local `Cuzeiro/site` (sem repositório; build do Vite com base relativa, feito em 2026-11-05). A fonte continua lá: ajustes são feitos nela e copiados de novo para esta pasta.
+Como versão anterior fica o protótipo do filme por scroll: um dia a bordo em um único plano contínuo de 54 s, da chegada ao navio até a festa noturna, com relógio de bordo e capítulos.
+
+Cópias de dois projetos locais, sem repositório: `Área de Trabalho/teste` (site, feito no Codex; build do Vite com base relativa em 2026-11-05) e `Cuzeiro/site` (protótipo; build do Vite com base relativa). Os originais continuam lá e são a fonte: ajustes são feitos neles e copiados de novo para esta pasta.
 
 | Página | Endereço no hub |
 |---|---|
-| Abrir a viagem | https://snksergio.github.io/igreen-hub/institucional/cruzeiro-2026/ |
-| Datas e regras | https://snksergio.github.io/igreen-hub/institucional/cruzeiro-2026/#trip |
+| Site | https://snksergio.github.io/igreen-hub/institucional/cruzeiro-2026/ |
+| Abertura em filme + roteiro | https://snksergio.github.io/igreen-hub/institucional/cruzeiro-2026/filme.html |
+| Protótipo: filme por scroll | https://snksergio.github.io/igreen-hub/institucional/cruzeiro-2026/prototipo.html |
+| Protótipo: datas e regras | https://snksergio.github.io/igreen-hub/institucional/cruzeiro-2026/prototipo.html#trip |
 
 ## Estrutura
 
-- `index.html` — a página (portão de entrada com escolha de som, filme, relógio de bordo, capítulos e seção "Minha viagem").
-- `assets/` — JS e CSS gerados pelo build (Lenis para o scroll suave; áudio sintetizado em WebAudio, só se a pessoa escolher "Embarcar com som").
-- `hero/film.mp4` — o filme (720p, 54 s, codificado com keyframe a cada 6 quadros para o scrub por scroll) e `hero/poster-start.jpg`.
+- `index.html` — o site (React + Three.js). O 3D carrega quando o mapa se aproxima da tela; em dispositivos sem WebGL a lista de ambientes mantém a navegação.
+- `filme.html` — a mesma estrutura com a abertura em filme (`videos/voyage-complete-v3.mp4`, 37 s, 720p) e o roteiro Santos–Búzios.
+- `prototipo.html` — o protótipo do filme por scroll (`hero/film.mp4`, 54 s, 720p, keyframe a cada 6 quadros para o scrub).
+- `assets/` — JS, CSS e fontes (Barlow Condensed, Damion e DM Sans via Fontsource) dos dois builds.
+- `images/` — as cenas conceituais do site (JPEG) e as fotos do roteiro (Santos e Búzios, Wikimedia Commons, CC BY / CC BY-SA, créditos no código).
 
-## Como foi feito
+## Interação do site
 
-Filme: Seedance 2.5 via Higgsfield, um take de 30 s a partir de um keyframe do navio mais uma extensão de 24 s do mesmo plano, com o roteiro segundo a segundo no prompt. Keyframes dos ambientes gerados no ChatGPT e no Higgsfield a partir dos vídeos das edições anteriores. Fontes: Barlow Condensed, Damion e DM Sans (Google Fonts). Dados e pessoas são fictícios.
+- Role ou use a navegação para visitar a abertura, as experiências e o mapa. As abas das experiências aceitam setas, Home e End.
+- Arraste o navio no mapa para girá-lo; escolha um ponto ou um item da lista para destacar um ambiente. "Viver esse momento" abre a cena.
+- O som (base ambiente sintetizada) começa desligado; o movimento das imagens pode ser pausado na abertura e respeita a preferência de movimento reduzido do sistema.
+
+## O que mudou nas cópias
+
+- Caminhos absolutos (`/images/…`, `/videos/…`, `/hero/…`) trocados por relativos.
+- Só os arquivos referenciados foram copiados: os PNGs de origem das cenas, os cortes v1 e v2 do filme e o build anterior ficaram no original. A foto de Búzios foi reduzida de 6,5 MB para 0,7 MB.
+- O protótipo usa só o filme em 720p (o 1080p do original era o mesmo take ampliado).
+
+Imagens e filmes são conceituais, gerados por IA; não representam a embarcação, o itinerário ou a programação confirmados. Dados fictícios.

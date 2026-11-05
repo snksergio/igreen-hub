@@ -1,11 +1,31 @@
 {
   "nome": "Let's Go Cruzeiro 2026",
-  "descricao": "Hotsite da viagem de premiação Let's Go Cruzeiro iGreen 2026: um dia a bordo em um plano contínuo controlado pelo scroll, da chegada ao navio até a festa noturna, com relógio de bordo, capítulos e as datas e regras da campanha.",
+  "descricao": "Site da viagem de premiação Let's Go Cruzeiro iGreen 2026: abertura, as quatro experiências a bordo, o navio em 3D como mapa e o roteiro Santos–Búzios. Inclui a abertura em filme e, como versão anterior, o protótipo do filme controlado pelo scroll.",
   "tipo": "hotsite",
   "atualizado": "2026-11-05",
   "paginas": [
-    { "nome": "Abrir a viagem", "arquivo": "index.html" },
-    { "nome": "Datas e regras", "arquivo": "index.html#trip" }
+    { "nome": "Site", "arquivo": "index.html" },
+    { "nome": "Abertura em filme + roteiro", "arquivo": "filme.html" },
+    { "nome": "Protótipo: filme por scroll", "arquivo": "prototipo.html" }
   ],
-  "tags": ["cruzeiro", "premiação", "evento", "vídeo", "scroll", "storytelling", "2026"]
+  "versoes": [
+    { "nome": "v2 · site completo (experiências, navio 3D, roteiro)", "arquivo": "index.html", "data": "2026-10-06" },
+    { "nome": "v1 · protótipo do filme por scroll", "arquivo": "prototipo.html", "data": "2026-09-25" }
+  ],
+  "acervo": {
+    "nome": "Versões",
+    "grupos": [
+      {
+        "nome": "Protótipo do filme por scroll",
+        "arquivo": "prototipo.html",
+        "rotulo": "Abrir o protótipo",
+        "prints": "prototipo",
+        "paginas": [
+          { "nome": "Um dia a bordo (54 s)", "arquivo": "prototipo.html" },
+          { "nome": "Datas e regras", "arquivo": "prototipo.html#trip" }
+        ]
+      }
+    ]
+  },
+  "tags": ["cruzeiro", "premiação", "evento", "3d", "three.js", "react", "vídeo", "scroll", "storytelling", "2026"]
 }
