@@ -1,0 +1,17 @@
+{
+  "nome": "Painel do eletroposto · versão final",
+  "descricao": "Versão final (V3) do painel do dono de eletroposto: maquete 3D e planta 2D ao vivo, construtor do posto e primeiro acesso, com a maquete montada no navegador.",
+  "tipo": "prototipo",
+  "atualizado": "2026-11-05",
+  "link": "https://snksergio.github.io/mob-dashboard-interativo/final/online/",
+  "repo": "https://github.com/snksergio/mob-dashboard-interativo/tree/main/final",
+  "paginas": [
+    { "nome": "Início", "arquivo": "" },
+    { "nome": "Painel 3D", "arquivo": "painel.html?posto=shopping-norte&visao=3d" },
+    { "nome": "Planta 2D", "arquivo": "painel.html?posto=shopping-norte&visao=2d" },
+    { "nome": "Construtor do posto", "arquivo": "construtor.html?posto=shopping-norte" },
+    { "nome": "Primeiro acesso", "arquivo": "primeiro-acesso/" },
+    { "nome": "Meus postos", "arquivo": "meu-posto.html" }
+  ],
+  "tags": ["eletroposto", "3d", "dashboard", "construtor", "maquete", "three.js", "ocpp", "v3"]
+}
