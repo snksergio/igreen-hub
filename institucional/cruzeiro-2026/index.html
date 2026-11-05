@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>iGreen Voyage — Você fez por merecer</title>
+  <meta name="description" content="Let's Go Cruzeiro iGreen 2026, de 29/11 a 02/12. Um dia inteiro a bordo, do mar aberto à noite. Você fez por merecer. Agora, viva." />
+  <meta name="theme-color" content="#06140d" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Damion&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <script type="module" crossorigin src="./assets/index-CNyJG9PQ.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DnygS8gm.css">
+</head>
+<body class="is-gate">
+  <!-- the film: one continuous camera move through the ship (7 anchored segments), scrubbed by scroll -->
+  <div class="film" aria-hidden="true">
+    <video class="plate" poster="hero/poster-start.jpg" muted playsinline preload="auto"></video>
+    <div class="grain"></div>
+    <div class="scrim"></div>
+    <div class="foot"></div>
+    <div class="dawn"></div>
+  </div>
+
+  <!-- gate: the story starts in the dark, and sound is a choice -->
+  <div class="gate" role="dialog" aria-modal="true" aria-labelledby="gate-line">
+    <svg class="gate-wave" viewBox="0 0 800 120" aria-hidden="true"><path class="w" d="M0 70 C 120 20, 220 120, 340 70 S 560 20, 680 70 S 800 100, 800 70" /></svg>
+    <p class="gate-kicker">Let's Go Cruzeiro 2026</p>
+    <p id="gate-line" class="gate-line">A iGreen está preparando<br /><span class="script">algo especial</span> para você.</p>
+    <div class="gate-choice">
+      <button type="button" class="btn btn-green" data-sound="on">Embarcar com som</button>
+      <button type="button" class="btn btn-ghost" data-sound="off">Embarcar sem som</button>
+    </div>
+    <p class="gate-tiny"><span class="gate-load">Preparando o navio…</span><a href="#trip">Pular a apresentação</a></p>
+  </div>
+
+  <header class="hud">
+    <a class="brand" href="#"><strong>iGreen</strong><span>Voyage</span></a>
+    <!-- the ship's clock: the whole scroll is one day aboard, from open sea to the party -->
+    <div class="clock" aria-live="off">
+      <svg class="clock-arc" viewBox="0 0 200 60" aria-hidden="true">
+        <path class="arc" d="M6 54 A 94 94 0 0 1 194 54" />
+        <path class="arc arc--done" d="M6 54 A 94 94 0 0 1 194 54" />
+        <g class="sun"><circle r="6" /></g>
+        <g class="moon"><circle r="6" /><circle class="moon-bite" r="6" /></g>
+      </svg>
+      <span class="clock-time"><b>09:00</b><i>a bordo</i></span>
+    </div>
+    <div class="hud-right">
+      <button class="sound" type="button" aria-pressed="false" aria-label="Ligar som"><i></i><i></i><i></i><i></i><span>Som</span></button>
+      <a class="skip" href="#trip">Pular</a>
+    </div>
+  </header>
+
+  <main class="story" aria-label="Um dia a bordo">
+    <!-- chapter cards ride the bottom-left; the two title beats and the hero ride the left column -->
+    <p class="line line--a" data-r="0.03 0.07 0.12 0.15"><span class="eyebrow">✳ Existem destinos que você visita.</span></p>
+    <h1 class="title title--a" data-r="0.05 0.10 0.15 0.19">E existem destinos<br />que você <span class="script">conquista.</span></h1>
+    <p class="cue" data-r="0.02 0.06 0.10 0.13">Role para embarcar ↓</p>
+
+    <ol class="chapters" aria-hidden="true">
+      <li class="chapter" data-r="0.135 0.165 0.225 0.25"><small>01 · Chegada</small><span>O horizonte inteiro, e um lugar reservado nele.</span></li>
+      <li class="chapter" data-r="0.26 0.29 0.35 0.375"><small>02 · Deck da piscina</small><span>Um dia inteiro para desacelerar.</span></li>
+      <li class="chapter" data-r="0.385 0.415 0.475 0.50"><small>03 · Promenade</small><span>Cada passagem leva a uma nova história.</span></li>
+      <li class="chapter" data-r="0.51 0.54 0.60 0.625"><small>04 · Restaurante</small><span>Gastronomia à altura da sua conquista.</span></li>
+      <li class="chapter" data-r="0.635 0.665 0.725 0.75"><small>05 · Teatro</small><span>O palco onde a iGreen reconhece quem faz acontecer.</span></li>
+      <li class="chapter" data-r="0.76 0.79 0.85 0.87"><small>06 · Festa</small><span>E a noite? A noite é sua.</span></li>
+    </ol>
+
+    <div class="hero-copy" data-r="0.9 0.96">
+      <p class="eyebrow">✳ Let's Go Cruzeiro 2026 · 29 nov – 02 dez</p>
+      <h2 class="title title--hero">Você fez<br />por merecer<span class="dot">.</span></h2>
+      <p class="script script--hero">Agora, viva.</p>
+      <p class="lead">Troque a rotina pelo horizonte.<br />A sua próxima grande história começa a bordo.</p>
+      <a class="btn btn-green" href="#trip">Ver minha viagem ↗</a>
+    </div>
+  </main>
+
+  <section id="trip" class="trip">
+    <p class="eyebrow eyebrow--dark">Minha viagem</p>
+    <h2 class="title title--dark">29 de novembro<br /><span class="script">a 2 de dezembro.</span></h2>
+    <p class="lead lead--dark">1 cabine + 1 acompanhante. Primeira viagem: 90 dias como Executivo ou Pré-Executivo durante a campanha. Já embarcou antes: 12.000 Green Points até o encerramento. Apuração de 01/09/2025 a 31/08/2026.</p>
+  </section>
+
+</body>
+</html>

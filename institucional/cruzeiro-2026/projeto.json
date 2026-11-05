@@ -1,0 +1,11 @@
+{
+  "nome": "Let's Go Cruzeiro 2026",
+  "descricao": "Hotsite da viagem de premiação Let's Go Cruzeiro iGreen 2026: um dia a bordo em um plano contínuo controlado pelo scroll, da chegada ao navio até a festa noturna, com relógio de bordo, capítulos e as datas e regras da campanha.",
+  "tipo": "hotsite",
+  "atualizado": "2026-11-05",
+  "paginas": [
+    { "nome": "Abrir a viagem", "arquivo": "index.html" },
+    { "nome": "Datas e regras", "arquivo": "index.html#trip" }
+  ],
+  "tags": ["cruzeiro", "premiação", "evento", "vídeo", "scroll", "storytelling", "2026"]
+}
