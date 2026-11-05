@@ -1,16 +1,18 @@
 # iGreen MOB · páginas da live de lançamento
 
-Duas páginas estáticas (HTML, CSS e JavaScript puros, sem build e sem dependências):
+Duas páginas estáticas (HTML, CSS e JavaScript puros, sem build e sem dependências).
 
-| Página | Arquivo | Prévia |
+Cópia de [snksergio/mobi-precadastro](https://github.com/snksergio/mobi-precadastro) (commit 6c71c44). O original continua lá e é a fonte: ajustes são feitos nele e copiados de novo para esta pasta.
+
+| Página | Arquivo | No hub |
 | --- | --- | --- |
-| Pré-cadastro (convite para a live) | `pre-cadastro.html` | https://snksergio.github.io/mobi-precadastro/pre-cadastro.html |
-| Lançamento (escolha da licença e pedido) | `lancamento.html` | https://snksergio.github.io/mobi-precadastro/lancamento.html |
+| Pré-cadastro (convite para a live) | `pre-cadastro.html` | https://snksergio.github.io/igreen-hub/mob/live-lancamento/pre-cadastro.html |
+| Lançamento (escolha da licença e pedido) | `lancamento.html` | https://snksergio.github.io/igreen-hub/mob/live-lancamento/lancamento.html |
 
 ## Estrutura
 
 ```
-index.html            página inicial com os links das duas prévias
+index.html            página inicial com os links das duas páginas
 pre-cadastro.html
 lancamento.html
 live-igreen.ics       arquivo de agenda da live (cópia; o pré-cadastro também gera o .ics no próprio JS)
