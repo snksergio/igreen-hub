@@ -36,7 +36,11 @@
   --scrim:rgba(14,20,17,.55);
   --rolagem:rgba(18,26,21,.22);
   --rolagem-forte:rgba(18,26,21,.4);
+  --abas-fundo:var(--neutro);
+  --abas-borda:transparent;
   --aba:#FFFFFF;
+  --aba-borda:#DCE3DE;
+  --aba-sombra:rgba(0,0,0,.1);
 
   --f:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
   --r:18px;
@@ -63,7 +67,12 @@
   --scrim:rgba(10,11,12,.66);
   --rolagem:rgba(255,255,255,.2);
   --rolagem-forte:rgba(255,255,255,.38);
-  --aba:#43464C;
+  /* abas como no claro: o trilho afunda (mesmo fundo e borda do campo de busca) e a aba escolhida sobe */
+  --abas-fundo:var(--surface);
+  --abas-borda:var(--line);
+  --aba:#3A3D42;
+  --aba-borda:rgba(255,255,255,.07);
+  --aba-sombra:rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
 
@@ -222,13 +231,13 @@ button{font:inherit;color:inherit}
 .painel-aba[hidden]{display:none}
 
 /* Abas da lateral: Projeto e o acervo (as variações do projeto em grupos) */
-.abas{flex:none;display:flex;gap:2px;margin:18px 22px 0;padding:3px;border-radius:12px;background:var(--neutro)}
+.abas{flex:none;display:flex;gap:2px;margin:18px 22px 0;padding:3px;border-radius:12px;background:var(--abas-fundo);box-shadow:inset 0 0 0 1px var(--abas-borda)}
 .aba{flex:1 1 auto;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:7px;height:34px;padding:0 12px;border:0;border-radius:9px;background:none;color:var(--muted);font-size:13px;font-weight:500;letter-spacing:-.01em;cursor:pointer;white-space:nowrap}
 .aba:hover{color:var(--ink)}
-.aba[aria-selected="true"]{background:var(--aba);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.aba[aria-selected="true"]{background:var(--aba);color:var(--ink);box-shadow:0 0 0 1px var(--aba-borda),0 1px 2px var(--aba-sombra)}
 .aba-nome{overflow:hidden;text-overflow:ellipsis}
 .aba .num{min-width:20px;height:20px;padding:0 6px;font-size:11px}
-.aba[aria-selected="true"] .num{background:var(--leaf);color:var(--green-text)}
+.aba[aria-selected="true"] .num{color:var(--ink)}
 .filtro-acervo{flex:none;display:flex;align-items:center;gap:8px;height:38px;margin:12px 22px 0;padding:0 4px 0 12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;color:var(--soft)}
 .filtro-acervo[hidden]{display:none}
 .filtro-acervo:focus-within{border-color:var(--green)}
