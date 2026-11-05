@@ -1,0 +1,78 @@
+{
+  "nome": "iGreen Live · Footer",
+  "descricao": "Os 13 footers propostos para o site do iGreen Live, cada um navegável, até o G4 \"Seu nome no crachá\": o nome digitado é impresso na credencial do evento, que foi para o site.",
+  "tipo": "proposta",
+  "atualizado": "2026-11-05",
+  "link": "https://snksergio.github.io/igreen-eventos-v2/",
+  "repo": "https://github.com/snksergio/igreen-eventos-v2",
+  "paginas": [
+    {
+      "nome": "Todas lado a lado",
+      "arquivo": "opcoes/index.html#footer"
+    },
+    {
+      "nome": "No site",
+      "arquivo": "#ft-footer"
+    },
+    {
+      "nome": "G4 · seu nome no crachá · no site",
+      "arquivo": "opcoes/footer-g4.html"
+    },
+    {
+      "nome": "G1 · crachá na aurora",
+      "arquivo": "opcoes/footer-g1.html"
+    },
+    {
+      "nome": "G2 · crachá no bloco lima",
+      "arquivo": "opcoes/footer-g2.html"
+    },
+    {
+      "nome": "G3 · holofote",
+      "arquivo": "opcoes/footer-g3.html"
+    },
+    {
+      "nome": "G5 · crachá no centro",
+      "arquivo": "opcoes/footer-g5.html"
+    },
+    {
+      "nome": "A · bloco lima",
+      "arquivo": "opcoes/footer-a.html"
+    },
+    {
+      "nome": "B · logo gigante",
+      "arquivo": "opcoes/footer-b.html"
+    },
+    {
+      "nome": "C · palavra perfurada",
+      "arquivo": "opcoes/footer-c.html"
+    },
+    {
+      "nome": "D · aurora viva",
+      "arquivo": "opcoes/footer-d.html"
+    },
+    {
+      "nome": "E · gaveta",
+      "arquivo": "opcoes/footer-e.html"
+    },
+    {
+      "nome": "F · letreiro",
+      "arquivo": "opcoes/footer-f.html"
+    },
+    {
+      "nome": "G · crachá",
+      "arquivo": "opcoes/footer-g.html"
+    },
+    {
+      "nome": "H · telão de LED",
+      "arquivo": "opcoes/footer-h.html"
+    }
+  ],
+  "tags": [
+    "evento",
+    "live",
+    "footer",
+    "rodapé",
+    "crachá",
+    "gsap"
+  ]
+}
