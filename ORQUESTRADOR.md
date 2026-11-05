@@ -21,7 +21,7 @@ Não entra. O projeto fica onde está e aqui vai só a ficha com o link (seção
 ```
 <categoria>/<slug>/
 ├── projeto.json   obrigatório: a ficha que a vitrine lê
-├── _vitrine/      os prints da vitrine: capa.webp, 01.webp, 02.webp...
+├── _vitrine/      os prints da vitrine: capa.webp, 01.webp, 02.webp... (e uma subpasta por grupo do acervo)
 ├── index.html     a entrada principal
 └── ...            o resto do projeto, organizado como ele quiser
 ```
@@ -29,6 +29,7 @@ Não entra. O projeto fica onde está e aqui vai só a ficha com o link (seção
 - **Categoria**: uma das listadas em `categorias.json`. A categoria é o produto ou a frente (Mob, Green Telecom); o formato vai em `tipo`. Se nenhuma servir ou houver dúvida, pergunte ao usuário. Não crie categoria por conta própria.
 - **Slug**: o nome da pasta. Minúsculas, sem acento, palavras separadas por hífen, curto e descritivo: `pagar-fatura`, `hotsite-eletroposto`. Não comece com `igreen-`, o repositório inteiro já é iGreen.
 - **Um projeto, uma pasta.** Várias telas do mesmo assunto ficam na mesma pasta, listadas em `paginas`. Versões do mesmo assunto (`faturas-v1.html`, `faturas-v2.html`) também, listadas em `versoes`.
+- **Variações vão no acervo, não em projetos novos.** Opções de design de partes do mesmo projeto (heros, rodapés, selos, explorações de um componente) entram no `acervo` da mesma ficha, em grupos (seção 3). Assim a vitrine mostra um card só, e as variações ficam numa aba da ficha.
 - **Caminhos sempre relativos** (`assets/logo.svg`, nunca `/assets/logo.svg`): o site mora numa subpasta.
 - **Não mexa** em pasta de outro projeto, no `index.html` da raiz (é a vitrine) nem no `catalogo.js` (é gerado na publicação).
 
@@ -81,6 +82,7 @@ Use builder e output quando o estudo for grande ou não puder ir para quem vai v
 | `tipo` | sim | Um dos tipos de `categorias.json`: `prototipo`, `poc`, `hotsite`, `landing`, `proposta`, `apresentacao`, `dashboard`, `documentacao` |
 | `atualizado` | sim | Data da última mudança, `AAAA-MM-DD`. Atualize a cada alteração |
 | `paginas` | não | As entradas do projeto, cada uma vira um botão. Sem o campo, a entrada é `index.html`. `arquivo` aceita `#ancora` e `?parametro` |
+| `acervo` | não | As variações do projeto em grupos, numa aba própria da ficha. Veja "Acervo" logo abaixo |
 | `versoes` | não | O histórico de versões, da mais nova para a mais antiga: `{ "nome": "v2 · com cashback", "arquivo": "faturas-v2.html", "data": "2026-10-29" }`. A primeira aparece como atual. `arquivo` segue a mesma regra das páginas e também aceita uma URL completa |
 | `link` | não | Só quando o projeto mora fora daqui: a URL dele. Aí o `arquivo` de cada página é relativo a esse link |
 | `repo` | não | Onde está o código-fonte, se for outro repositório |
@@ -89,11 +91,48 @@ Use builder e output quando o estudo for grande ou não puder ir para quem vai v
 
 A categoria e o slug saem do caminho da pasta, não repita no arquivo.
 
+### Acervo: as variações em grupos
+
+Use quando o projeto tem muitas variações que se dividem em grupos: as propostas de cada seção de um site, as explorações de um componente, as telas de cada fluxo. Regra prática: mais de 8 entradas, ou entradas que caem em grupos naturais. `paginas` continua com as entradas principais (o projeto em si); o acervo guarda as variações.
+
+Na ficha, o acervo vira uma aba ao lado de "Projeto", com um índice de grupos colapsáveis, a contagem de cada um e um filtro por nome. Com um grupo aberto, a galeria mostra os prints daquele grupo.
+
+```json
+"acervo": {
+  "nome": "Opções de design",
+  "grupos": [
+    {
+      "nome": "Hero",
+      "arquivo": "opcoes/index.html#hero",
+      "rotulo": "Todas lado a lado",
+      "prints": "hero",
+      "paginas": [
+        { "nome": "C radial", "arquivo": "opcoes/hero-c-radial.html", "marca": "no site" },
+        { "nome": "D · retrato", "arquivo": "opcoes/hero-d.html" }
+      ]
+    }
+  ]
+}
+```
+
+| Campo | Obrigatório | O que é |
+|---|---|---|
+| `acervo.nome` | não | O nome da aba: "Opções de design", "Variações", "Telas". Padrão: "Acervo" |
+| `grupos[].nome` | sim | O nome do grupo, curto: "Hero", "Footer", "Pagar com Pix" |
+| `grupos[].paginas` | sim | As variações do grupo, na mesma regra de `paginas` (`nome` e `arquivo`). A escolhida primeiro |
+| `paginas[].marca` | não | Um selo curto ao lado do nome, para destacar uma variação: "no site", "escolhida", "nova" |
+| `grupos[].arquivo` | não | Uma página que mostra o grupo inteiro (lado a lado, por exemplo). Vira a primeira linha do grupo |
+| `grupos[].rotulo` | não | O texto dessa linha. Padrão: "Ver todas juntas" |
+| `grupos[].prints` | não | A subpasta de `_vitrine/` com os prints do grupo (seção 4) |
+
+Não repita a variação escolhida em `paginas` só para destacá-la: use `marca`.
+
 ## 4. Prints da vitrine (`_vitrine/`)
 
 - `capa.webp`: a imagem do card, paisagem 1440×900.
 - `01.webp`, `02.webp`...: a galeria do projeto, até 8 imagens, em qualquer proporção. Telas de celular em pé funcionam bem.
 - Cada imagem com até uns 300 KB. Prefira `.webp`.
+- Prints de um grupo do acervo: `_vitrine/<prints>/01.webp`, `02.webp`..., até 8 por grupo, sem capa. A galeria troca para eles quando o grupo está aberto na ficha.
 
 Para tirar os prints, rode na raiz do clone:
 
@@ -106,6 +145,12 @@ node scripts/capturar-telas.mjs <categoria>/<slug> index.html "index.html#pix" "
 ```
 
 O primeiro alvo vira a capa e os outros viram a galeria. Sem alvo, usa a primeira página do projeto. `--celular` captura a galeria em 390×844. O script usa o Chrome ou o Edge instalados; sem nenhum dos dois, use a ferramenta de navegador que você tiver ou siga sem prints e avise o usuário (a vitrine mostra uma capa provisória).
+
+Para os prints de um grupo do acervo, use `--grupo` com o nome da subpasta. Os prints vão para `_vitrine/<grupo>/`, sem capa. Sem alvo, ele captura as 8 primeiras páginas do grupo:
+
+```bash
+node scripts/capturar-telas.mjs <categoria>/<slug> --grupo=hero
+```
 
 Olhe a capa antes de subir. Se pegou tela de carregamento ou animação de entrada pela metade, rode de novo com `--espera=8`. Se pegou um modal aberto, capture outro alvo.
 
@@ -147,7 +192,7 @@ Não crie pastas paralelas para versões. Se a versão anterior precisa continua
 
 Projeto com `builder/`: edite o estudo em `builder/index.html`, gere o output de novo com o gerador do builder e só então refaça os prints, valide e publique. Nunca edite o output à mão. A versão que sai do output e só serve de registro vai para `builder/historico/` e entra na tabela do README do builder.
 
-Um projeto é um assunto. Telas de assuntos diferentes, mesmo que nasçam no mesmo repositório, viram projetos separados, cada um com sua ficha.
+Um projeto é um assunto. Telas de assuntos diferentes, mesmo que nasçam no mesmo repositório, viram projetos separados, cada um com sua ficha. Já as variações de partes do mesmo projeto (as opções de hero, de rodapé, de um componente) ficam no `acervo` da mesma ficha: um card na vitrine, os grupos na aba da ficha.
 
 ### Mudar um projeto de categoria ou de nome
 

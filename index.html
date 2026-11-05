@@ -13,7 +13,8 @@
 /* Vitrine do hub: lê window.CATALOGO (catalogo.js, gerado por scripts/gerar-catalogo.mjs).
    Na página inicial cada categoria é um carrossel (arrasta com o mouse ou usa as setas);
    filtro e busca mostram grade. Card abre a ficha do projeto: slider de telas à esquerda,
-   detalhes e ações na barra lateral. Uma fonte só, a do hotsite iGreen MOB (Instrument Sans);
+   detalhes e ações na barra lateral, que rola por conta própria. Projeto com acervo (variações em grupos)
+   ganha abas na lateral: Projeto e o acervo, com grupos colapsáveis que trocam os prints da galeria. Uma fonte só, a do hotsite iGreen MOB (Instrument Sans);
    números com algarismos tabulares. Tema escuro por padrão; a escolha no topo fica salva neste navegador. */
 :root{
   color-scheme:light;
@@ -35,6 +36,7 @@
   --scrim:rgba(14,20,17,.55);
   --rolagem:rgba(18,26,21,.22);
   --rolagem-forte:rgba(18,26,21,.4);
+  --aba:#FFFFFF;
 
   --f:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
   --r:18px;
@@ -61,6 +63,7 @@
   --scrim:rgba(10,11,12,.66);
   --rolagem:rgba(255,255,255,.2);
   --rolagem-forte:rgba(255,255,255,.38);
+  --aba:#43464C;
 }
 *{box-sizing:border-box}
 
@@ -209,9 +212,50 @@ button{font:inherit;color:inherit}
 .ficha-cab .discreto{margin:0 0 8px}
 .ficha-cab h2{margin:0;font-size:clamp(26px,3vw,36px);font-weight:500;line-height:1.05;letter-spacing:-.04em}
 .ficha-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
-.ficha-grade{display:grid;grid-template-columns:minmax(0,1fr) 320px}
-.ficha-principal{padding:24px 32px 32px;min-width:0}
-.ficha-lado{padding:22px 22px 24px;background:var(--surface-2);border-left:1px solid var(--line);display:flex;flex-direction:column;gap:22px;font-size:13px;font-weight:500}
+/* As duas colunas rolam cada uma por si. A lateral não dita a altura da janela (contain:size):
+   ela acompanha a coluna das telas e rola por dentro quando cresce (abas, acervo, muitas páginas). */
+.ficha-grade{display:grid;grid-template-columns:minmax(0,1fr) 320px;grid-template-rows:minmax(0,1fr);overflow:hidden}
+.ficha-principal{padding:24px 32px 32px;min-width:0;overflow-y:auto;overscroll-behavior:contain}
+.ficha-lado{contain:size;min-height:min(540px,calc(100dvh - 230px));background:var(--surface-2);border-left:1px solid var(--line);display:flex;flex-direction:column;font-size:13px;font-weight:500}
+.lado-corpo{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable both-edges;padding:20px 14px 22px}
+.painel-aba{display:flex;flex-direction:column;gap:22px}
+.painel-aba[hidden]{display:none}
+
+/* Abas da lateral: Projeto e o acervo (as variações do projeto em grupos) */
+.abas{flex:none;display:flex;gap:2px;margin:18px 22px 0;padding:3px;border-radius:12px;background:var(--neutro)}
+.aba{flex:1 1 auto;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:7px;height:34px;padding:0 12px;border:0;border-radius:9px;background:none;color:var(--muted);font-size:13px;font-weight:500;letter-spacing:-.01em;cursor:pointer;white-space:nowrap}
+.aba:hover{color:var(--ink)}
+.aba[aria-selected="true"]{background:var(--aba);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.aba-nome{overflow:hidden;text-overflow:ellipsis}
+.aba .num{min-width:20px;height:20px;padding:0 6px;font-size:11px}
+.aba[aria-selected="true"] .num{background:var(--leaf);color:var(--green-text)}
+.filtro-acervo{flex:none;display:flex;align-items:center;gap:8px;height:38px;margin:12px 22px 0;padding:0 4px 0 12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;color:var(--soft)}
+.filtro-acervo[hidden]{display:none}
+.filtro-acervo:focus-within{border-color:var(--green)}
+.filtro-acervo input{flex:1;min-width:0;height:100%;border:0;background:none;font:inherit;font-size:13px;color:var(--ink);outline:none}
+.filtro-acervo input::placeholder{color:var(--soft)}
+.filtro-acervo input::-webkit-search-cancel-button{display:none}
+.filtro-acervo .limpar{width:28px;height:28px}
+.filtro-acervo.com-texto .limpar{display:grid}
+
+/* Acervo: índice de grupos colapsáveis; o cabeçalho do grupo aberto fica preso no topo ao rolar */
+.acervo{margin:-8px -8px 0}
+.grupo[hidden]{display:none}
+.grupo-cab{position:sticky;top:-20px;z-index:1;margin:0;padding:2px 0;background:var(--surface-2)}
+.grupo-btn{width:100%;display:flex;align-items:center;gap:8px;height:40px;padding:0 8px;border:0;border-radius:10px;background:none;font-size:13.5px;font-weight:600;letter-spacing:-.01em;text-align:left;color:var(--ink);cursor:pointer}
+.grupo-btn:hover{background:var(--neutro)}
+.grupo-btn svg{flex:none;color:var(--soft);transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+.grupo.aberto .grupo-btn svg{transform:rotate(90deg)}
+.grupo-nome{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grupo.aberto .grupo-btn .num{background:var(--leaf);color:var(--green-text)}
+.grupo-corpo{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .26s cubic-bezier(.2,.8,.2,1),visibility 0s .26s}
+.grupo.aberto .grupo-corpo{grid-template-rows:1fr;visibility:visible;transition:grid-template-rows .26s cubic-bezier(.2,.8,.2,1),visibility 0s}
+.grupo-dentro{min-height:0;overflow:hidden;padding:0 8px}
+.grupo-dentro .paginas{margin:4px 0 12px}
+.paginas li.todas a{color:var(--green-text)}
+.paginas li.todas svg{color:currentColor}
+.paginas em,.versoes em{margin-left:6px;padding:1px 7px;border-radius:999px;background:var(--leaf);color:var(--green-text);font-size:10.5px;font-style:normal;font-weight:600;white-space:nowrap}
+.acervo-vazio{margin:8px;color:var(--muted);font-weight:400;line-height:1.5}
 
 /* Slider de telas: uma por vez */
 .galeria{position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--neutro)}
@@ -222,6 +266,10 @@ button{font:inherit;color:inherit}
 .galeria .seta:disabled{opacity:0;pointer-events:none}
 .galeria .ant{left:14px}
 .galeria .prox{right:14px}
+.galeria-selo{position:absolute;top:14px;left:14px;z-index:1;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:999px;background:color-mix(in srgb,var(--surface) 90%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:var(--sombra);font-size:12.5px;font-weight:600;letter-spacing:-.01em;pointer-events:none}
+.galeria-selo span{font-weight:500;color:var(--muted)}
+.galeria-caixa.troca .galeria{animation:aparece .28s ease}
+@keyframes aparece{from{opacity:.25}}
 .galeria-vazia{aspect-ratio:16/10;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:13px}
 .galeria-vazia b{display:block;font-size:56px;font-weight:500;letter-spacing:-.05em;color:var(--green);margin-bottom:4px}
 .galeria-rodape{display:flex;justify-content:center;margin-top:14px}
@@ -247,7 +295,6 @@ button{font:inherit;color:inherit}
 .versoes li:first-child::before{border-color:var(--green);background:var(--green)}
 .versoes a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 8px;border-radius:8px;text-decoration:none}
 .versoes a:hover{background:var(--neutro)}
-.versoes em{margin-left:6px;padding:1px 7px;border-radius:999px;background:var(--leaf);color:var(--green-text);font-size:10.5px;font-style:normal;font-weight:600}
 .versao-data{flex:none;color:var(--soft);font-weight:400;font-variant-numeric:tabular-nums}
 .dados{margin:0;display:grid;gap:14px}
 .dados dd{margin:0;line-height:1.45;overflow-wrap:anywhere}
@@ -255,7 +302,7 @@ button{font:inherit;color:inherit}
 .dados a:hover{text-decoration:underline;text-underline-offset:2px}
 .tags{display:flex;flex-wrap:wrap;gap:6px}
 .tags span{font-size:12px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:2px 10px}
-.lado-acoes{display:grid;gap:8px;margin-top:auto;padding-top:6px}
+.lado-acoes{flex:none;display:grid;gap:8px;padding:14px 22px 22px;border-top:1px solid var(--line)}
 .lado-acoes .btn{width:100%;height:42px;font-size:14px}
 
 /* Guia "Como subir um projeto" (abre na mesma janela da ficha, mais estreita) */
@@ -290,9 +337,17 @@ button{font:inherit;color:inherit}
 @media (max-width:1100px){
   .trilho{grid-auto-columns:calc((100% - 40px) / 3)}
 }
+@media (min-width:901px) and (max-height:720px){
+  /* Tela baixa: as duas ações lado a lado, para sobrar altura para a lista */
+  .lado-acoes{grid-template-columns:1fr 1fr;padding-top:12px;padding-bottom:16px}
+  .lado-acoes .btn{padding:0 10px}
+}
 @media (max-width:900px){
-  .ficha-grade{grid-template-columns:1fr}
-  .ficha-lado{border-left:0;border-top:1px solid var(--line)}
+  /* Uma coluna: a ficha inteira rola, como antes */
+  .ficha-grade{grid-template-columns:1fr;grid-template-rows:none;overflow-y:auto}
+  .ficha-principal,.lado-corpo{overflow:visible}
+  .ficha-lado{contain:none;min-height:0;border-left:0;border-top:1px solid var(--line)}
+  .grupo-cab{top:0}
 }
 @media (max-width:760px){
   :root{--lado:16px}
@@ -317,7 +372,9 @@ button{font:inherit;color:inherit}
   .fechar{top:14px;right:14px}
   .ficha-principal{padding:16px}
   .galeria .seta{display:none}
-  .ficha-lado{padding:20px 16px 32px}
+  .lado-corpo{padding:18px 16px 20px}
+  .abas,.filtro-acervo{margin-left:16px;margin-right:16px}
+  .lado-acoes{padding:14px 16px 28px}
   .guia{padding:16px 16px 32px}
   .rodape-card{padding:16px 18px}
   .rodape-card p{flex-basis:100%;padding-left:0;border-left:0}
@@ -480,7 +537,8 @@ button{font:inherit;color:inherit}
     return (estado.arquivados ? arquivados : ativos).filter((p) => {
       if (estado.categoria !== 'todos' && p.categoria !== estado.categoria) return false;
       if (!palavras.length) return true;
-      const texto = norm([p.nome, p.descricao, tipo(p), categorias.get(p.categoria)?.nome, p.id, ...p.tags, ...p.paginas.map((pg) => pg.nome), ...p.versoes.map((v) => v.nome)].join(' '));
+      const acervo = (p.acervo?.grupos ?? []).flatMap((g) => [g.nome, ...g.paginas.map((pg) => pg.nome)]);
+      const texto = norm([p.nome, p.descricao, tipo(p), categorias.get(p.categoria)?.nome, p.id, ...p.tags, ...p.paginas.map((pg) => pg.nome), ...p.versoes.map((v) => v.nome), ...acervo].join(' '));
       return palavras.every((w) => texto.includes(w));
     });
   }
@@ -577,8 +635,10 @@ button{font:inherit;color:inherit}
       aoMudar?.(Math.round(faixa.scrollLeft / passo(faixa)));
     };
     faixa.addEventListener('scroll', atualizar, { passive: true });
-    new ResizeObserver(atualizar).observe(faixa);
+    const observador = new ResizeObserver(atualizar);
+    observador.observe(faixa);
     atualizar();
+    return observador;
   }
 
   function rolar(faixa, direcao) {
@@ -665,19 +725,119 @@ button{font:inherit;color:inherit}
   let abertoNaPagina = false;
   let voltarFoco = null;
 
-  function galeria(p) {
-    const n = p.telas.length;
-    if (!n) return `<div class="galeria"><div class="galeria-vazia"><div><b>${esc(iniciais(p.nome))}</b>Este projeto ainda não tem prints.</div></div></div>`;
+  // Galeria: mostra os prints do projeto ou, com um grupo do acervo aberto, os prints daquele grupo
+  let telasAtuais = [];
+  let observadorGaleria = null;
+
+  function galeria(telas, nome, rotulo) {
+    const n = telas.length;
+    if (!n) return `<div class="galeria"><div class="galeria-vazia"><div><b>${esc(iniciais(nome))}</b>Este projeto ainda não tem prints.</div></div></div>`;
     return `
       <div class="galeria">
+        ${rotulo ? `<span class="galeria-selo">${esc(rotulo)} <span>· ${n} ${n === 1 ? 'print' : 'prints'}</span></span>` : ''}
         <div class="slides" data-arrasta>
-          ${p.telas.map((t, i) => `<button class="slide" type="button" data-tela="${i}" aria-label="Ampliar tela ${i + 1} de ${n}"><img src="${esc(t)}" alt="" draggable="false" ${i ? 'loading="lazy"' : ''} decoding="async"></button>`).join('')}
+          ${telas.map((t, i) => `<button class="slide" type="button" data-tela="${i}" aria-label="Ampliar tela ${i + 1} de ${n}"><img src="${esc(t)}" alt="" draggable="false" ${i ? 'loading="lazy"' : ''} decoding="async"></button>`).join('')}
         </div>
         ${n > 1 ? seta(-1, 'Tela anterior', 'ant') + seta(1, 'Próxima tela', 'prox') : ''}
       </div>
       ${n > 1 ? `<div class="galeria-rodape">
-        <div class="pontos">${p.telas.map((_, i) => `<button class="ponto" type="button" data-ponto="${i}" aria-label="Ir para a tela ${i + 1} de ${n}"></button>`).join('')}</div>
+        <div class="pontos">${telas.map((_, i) => `<button class="ponto" type="button" data-ponto="${i}" aria-label="Ir para a tela ${i + 1} de ${n}"></button>`).join('')}</div>
       </div>` : ''}`;
+  }
+
+  function porGaleria(telas, rotulo = '') {
+    const caixa = ficha.querySelector('.galeria-caixa');
+    if (!caixa) return;
+    const troca = caixa.dataset.rotulo !== undefined;
+    if (troca && caixa.dataset.rotulo === rotulo) return;
+    caixa.dataset.rotulo = rotulo;
+    telasAtuais = telas;
+    caixa.innerHTML = galeria(telas, aberto.nome, rotulo);
+    caixa.classList.remove('troca');
+    if (troca) {
+      void caixa.offsetWidth;
+      caixa.classList.add('troca');
+    }
+    observadorGaleria?.disconnect();
+    observadorGaleria = null;
+    slides = caixa.querySelector('.slides');
+    if (slides) {
+      const pontos = caixa.querySelectorAll('[data-ponto]');
+      observadorGaleria = ligarSetas(caixa.querySelector('.galeria'), slides, (i) => {
+        pontos.forEach((pt, j) => pt.setAttribute('aria-current', String(i === j)));
+      });
+    }
+  }
+
+  // Acervo: as variações do projeto em grupos colapsáveis, numa aba própria da lateral.
+  // O último grupo aberto (que tenha prints) manda na galeria; fechar todos volta aos prints do projeto.
+
+  const acervo = { abertos: [], filtro: '', aba: 'projeto' };
+
+  const totalAcervo = (p) => p.acervo.grupos.reduce((n, g) => n + g.paginas.length, 0);
+
+  function desenharAcervo() {
+    const p = aberto;
+    const palavras = norm(acervo.filtro).split(/\s+/).filter(Boolean);
+    const filtrando = palavras.length > 0;
+    let achados = 0;
+    const html = p.acervo.grupos
+      .map((g, i) => {
+        const itens = g.paginas.filter((pg) => !filtrando || palavras.every((w) => norm(`${pg.nome} ${g.nome}`).includes(w)));
+        achados += itens.length;
+        if (!itens.length) return '';
+        const aberta = filtrando || acervo.abertos.includes(i);
+        return `<section class="grupo${aberta ? ' aberto' : ''}" data-grupo="${i}">
+          <h4 class="grupo-cab"><button class="grupo-btn" type="button" aria-expanded="${aberta}" aria-controls="grupo-${i}">${icone(DIR, 14)}<span class="grupo-nome">${esc(g.nome)}</span><span class="num">${itens.length}</span></button></h4>
+          <div class="grupo-corpo" id="grupo-${i}"><div class="grupo-dentro"><ul class="paginas">
+            ${g.url && !filtrando ? `<li class="todas"><a href="${esc(g.url)}" target="_blank" rel="noopener">${esc(g.rotulo || 'Ver todas juntas')} ${icone(FORA, 14)}</a></li>` : ''}
+            ${itens.map((pg) => `<li><a href="${esc(pg.url)}" target="_blank" rel="noopener"><span>${esc(pg.nome)}${pg.marca ? `<em>${esc(pg.marca)}</em>` : ''}</span>${icone(FORA, 14)}</a></li>`).join('')}
+          </ul></div></div>
+        </section>`;
+      })
+      .join('');
+    ficha.querySelector('.acervo').innerHTML =
+      html || `<p class="acervo-vazio">Nada no acervo com “${esc(acervo.filtro.trim())}”. Tente outra palavra ou limpe o filtro.</p>`;
+    return achados;
+  }
+
+  function galeriaDoAcervo() {
+    const p = aberto;
+    const i = acervo.aba === 'acervo' ? [...acervo.abertos].reverse().find((j) => p.acervo.grupos[j].telas.length) : undefined;
+    if (i === undefined) porGaleria(p.telas);
+    else porGaleria(p.acervo.grupos[i].telas, p.acervo.grupos[i].nome);
+  }
+
+  function alternarGrupo(secao) {
+    const i = Number(secao.dataset.grupo);
+    const abrirAgora = !secao.classList.contains('aberto');
+    secao.classList.toggle('aberto', abrirAgora);
+    secao.querySelector('.grupo-btn').setAttribute('aria-expanded', String(abrirAgora));
+    if (acervo.filtro.trim()) return;
+    acervo.abertos = acervo.abertos.filter((j) => j !== i);
+    if (abrirAgora) acervo.abertos.push(i);
+    galeriaDoAcervo();
+  }
+
+  function mostrarAba(nome, focar = false) {
+    acervo.aba = nome;
+    for (const aba of ficha.querySelectorAll('[role="tab"]')) {
+      const ativa = aba.dataset.aba === nome;
+      aba.setAttribute('aria-selected', String(ativa));
+      aba.tabIndex = ativa ? 0 : -1;
+      if (ativa && focar) aba.focus();
+    }
+    for (const p of ficha.querySelectorAll('[role="tabpanel"]')) p.hidden = p.dataset.aba !== nome;
+    ficha.querySelector('.filtro-acervo').hidden = nome !== 'acervo';
+    ficha.querySelector('.lado-corpo').scrollTop = 0;
+    galeriaDoAcervo();
+  }
+
+  function filtrarAcervo(texto) {
+    acervo.filtro = texto;
+    ficha.querySelector('.filtro-acervo').classList.toggle('com-texto', Boolean(texto));
+    desenharAcervo();
+    ficha.querySelector('.lado-corpo').scrollTop = 0;
   }
 
   function abrir(p) {
@@ -685,6 +845,9 @@ button{font:inherit;color:inherit}
     const principal = p.paginas[0];
     const endereco = absoluto(principal.url);
     const fora = p.externo ? new URL(endereco).host : null;
+    const temAcervo = Boolean(p.acervo?.grupos?.length);
+    Object.assign(acervo, { abertos: [], filtro: '', aba: 'projeto' });
+    const aba = (id) => (temAcervo ? `role="tabpanel" data-aba="${id}" id="painel-${id}" aria-labelledby="aba-${id}"` : '');
     $('#ficha-conteudo').innerHTML = `
       <header class="ficha-cab">
         <p class="discreto">${esc(p.id)}</p>
@@ -699,13 +862,25 @@ button{font:inherit;color:inherit}
       </header>
       <div class="ficha-grade">
         <div class="ficha-principal">
-          ${galeria(p)}
+          <div class="galeria-caixa"></div>
           <section class="sobre">
             <h3 class="rot-bloco">Sobre</h3>
             <p>${esc(p.descricao)}</p>
           </section>
         </div>
         <aside class="ficha-lado">
+          ${temAcervo ? `<div class="abas" role="tablist" aria-label="O que ver na ficha">
+            <button class="aba" type="button" role="tab" data-aba="projeto" id="aba-projeto" aria-controls="painel-projeto" aria-selected="true">Projeto</button>
+            <button class="aba" type="button" role="tab" data-aba="acervo" id="aba-acervo" aria-controls="painel-acervo" aria-selected="false" tabindex="-1"><span class="aba-nome">${esc(p.acervo.nome)}</span><span class="num">${totalAcervo(p)}</span></button>
+          </div>
+          <label class="filtro-acervo" hidden>
+            ${icone('M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-3.5-3.5', 15)}
+            <span class="oculto">Filtrar ${esc(p.acervo.nome)}</span>
+            <input type="search" placeholder="Filtrar por nome" autocomplete="off" data-filtro-acervo>
+            <button class="limpar" type="button" data-limpar-acervo aria-label="Limpar o filtro">${icone('M6 6l12 12M18 6 6 18', 13)}</button>
+          </label>` : ''}
+          <div class="lado-corpo">
+          <div class="painel-aba" ${aba('projeto')}>
           ${p.paginas.length > 1 ? `<section>
             <h3 class="rot-bloco">Páginas · ${p.paginas.length}</h3>
             <ul class="paginas">${p.paginas.map((pg) => `<li><a href="${esc(pg.url)}" target="_blank" rel="noopener">${esc(pg.nome)} ${icone(FORA, 14)}</a></li>`).join('')}</ul>
@@ -720,19 +895,17 @@ button{font:inherit;color:inherit}
             ${p.repo ? `<div><dt class="rot-bloco">Código</dt><dd><a href="${esc(p.repo)}" target="_blank" rel="noopener">${esc(p.repo.replace(/^https?:\/\/(www\.)?/, ''))}</a></dd></div>` : ''}
             ${p.tags.length ? `<div><dt class="rot-bloco">Tags</dt><dd class="tags">${p.tags.map((t) => `<span>${esc(t)}</span>`).join('')}</dd></div>` : ''}
           </dl>
+          </div>
+          ${temAcervo ? `<div class="painel-aba" ${aba('acervo')} hidden><div class="acervo"></div></div>` : ''}
+          </div>
           <div class="lado-acoes">
             <a class="btn primario" href="${esc(principal.url)}" target="_blank" rel="noopener">Abrir projeto ${icone(FORA, 15)}</a>
             <button class="btn" type="button" data-copiar>Copiar link</button>
           </div>
         </aside>
       </div>`;
-    slides = ficha.querySelector('.slides');
-    if (slides) {
-      const pontos = ficha.querySelectorAll('[data-ponto]');
-      ligarSetas(ficha.querySelector('.galeria'), slides, (i) => {
-        pontos.forEach((pt, j) => pt.setAttribute('aria-current', String(i === j)));
-      });
-    }
+    porGaleria(p.telas);
+    if (temAcervo) desenharAcervo();
     mostrarFicha(false);
   }
 
@@ -796,6 +969,8 @@ button{font:inherit;color:inherit}
     if (!aberto) return;
     aberto = null;
     slides = null;
+    observadorGaleria?.disconnect();
+    observadorGaleria = null;
     ficha.hidden = true;
     document.body.style.overflow = '';
     if (voltarFoco) voltarFoco.focus({ preventScroll: true });
@@ -810,8 +985,23 @@ button{font:inherit;color:inherit}
     }
   }
 
+  ficha.addEventListener('input', (e) => {
+    if (e.target.matches('[data-filtro-acervo]')) filtrarAcervo(e.target.value);
+  });
+
   ficha.addEventListener('click', async (e) => {
     if (e.target.closest('[data-fechar]')) return pedirFechar();
+    const aba = e.target.closest('[role="tab"]');
+    if (aba) return mostrarAba(aba.dataset.aba);
+    const grupo = e.target.closest('.grupo-btn');
+    if (grupo) return alternarGrupo(grupo.closest('.grupo'));
+    if (e.target.closest('[data-limpar-acervo]')) {
+      e.preventDefault();
+      const campo = ficha.querySelector('[data-filtro-acervo]');
+      campo.value = '';
+      filtrarAcervo('');
+      return campo.focus();
+    }
     const botao = e.target.closest('[data-rolar]');
     if (botao && slides) return rolar(slides, Number(botao.dataset.rolar));
     const ponto = e.target.closest('[data-ponto]');
@@ -847,8 +1037,8 @@ button{font:inherit;color:inherit}
   const zoom = $('#zoom');
   let zoomIndice = 0;
   function ampliar(i) {
-    zoomIndice = (i + aberto.telas.length) % aberto.telas.length;
-    zoom.querySelector('img').src = aberto.telas[zoomIndice];
+    zoomIndice = (i + telasAtuais.length) % telasAtuais.length;
+    zoom.querySelector('img').src = telasAtuais[zoomIndice];
     zoom.hidden = false;
   }
   zoom.addEventListener('click', () => (zoom.hidden = true));
@@ -861,8 +1051,21 @@ button{font:inherit;color:inherit}
       return;
     }
     if (aberto) {
-      if (e.key === 'Escape') return pedirFechar();
-      if (slides && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) return rolar(slides, e.key === 'ArrowRight' ? 1 : -1);
+      const filtro = e.target.closest?.('[data-filtro-acervo]');
+      if (e.key === 'Escape') {
+        if (filtro?.value) {
+          filtro.value = '';
+          return filtrarAcervo('');
+        }
+        return pedirFechar();
+      }
+      const lateral = e.key === 'ArrowRight' || e.key === 'ArrowLeft';
+      if (e.target.closest?.('[role="tab"]') && lateral) {
+        e.preventDefault();
+        return mostrarAba(acervo.aba === 'projeto' ? 'acervo' : 'projeto', true);
+      }
+      if (filtro) return;
+      if (slides && lateral) return rolar(slides, e.key === 'ArrowRight' ? 1 : -1);
       return;
     }
     if (e.key === 'Escape' && document.activeElement === busca && busca.value) return buscar('');

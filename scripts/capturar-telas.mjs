@@ -1,12 +1,14 @@
 // Tira os prints da vitrine com o Chrome ou o Edge instalados, sem dependências.
 //
-//   node scripts/capturar-telas.mjs <categoria>/<slug> [alvo ...] [--celular] [--espera=segundos]
+//   node scripts/capturar-telas.mjs <categoria>/<slug> [alvo ...] [--celular] [--espera=segundos] [--grupo=pasta]
 //
 // Sem alvo, usa a primeira página do projeto.json (ou o "link", se o projeto mora fora daqui).
 // O primeiro alvo vira _vitrine/capa.webp (1440×900); os outros, 01.webp, 02.webp...
 // Alvo é um arquivo da pasta (com #ancora ou ?parametro, se quiser) ou uma URL completa.
 // --celular captura a galeria (não a capa) em 390×844, bom para telas de app.
 // --espera=8 espera 8 s depois de carregar (padrão 4), para página com abertura animada.
+// --grupo=hero tira os prints de um grupo do acervo em _vitrine/hero/ (01.webp, 02.webp..., sem capa).
+//   Sem alvo, usa as 8 primeiras páginas do grupo que tem "prints": "hero" no projeto.json.
 // Outro navegador: defina CHROME com o caminho do executável.
 
 import { spawn } from 'node:child_process';
@@ -19,10 +21,11 @@ const raiz = fileURLToPath(new URL('..', import.meta.url));
 const args = process.argv.slice(2);
 const celular = args.includes('--celular');
 const espera = Number(args.find((a) => a.startsWith('--espera='))?.split('=')[1] ?? 4) * 1000;
+const grupo = args.find((a) => a.startsWith('--grupo='))?.split('=')[1];
 const [projeto, ...alvos] = args.filter((a) => !a.startsWith('--'));
 
 if (!projeto) {
-  console.error('Uso: node scripts/capturar-telas.mjs <categoria>/<slug> [alvo ...] [--celular] [--espera=segundos]');
+  console.error('Uso: node scripts/capturar-telas.mjs <categoria>/<slug> [alvo ...] [--celular] [--espera=segundos] [--grupo=pasta]');
   process.exit(1);
 }
 
@@ -33,6 +36,18 @@ if (!existsSync(ficha)) {
   process.exit(1);
 }
 const p = JSON.parse(readFileSync(ficha, 'utf8'));
+if (grupo && !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(grupo)) {
+  console.error('--grupo é o nome de uma subpasta de _vitrine/: minúsculas, números e hífen.');
+  process.exit(1);
+}
+if (!alvos.length && grupo) {
+  const g = p.acervo?.grupos?.find((x) => x.prints === grupo);
+  if (!g) {
+    console.error(`Nenhum grupo do acervo com "prints": "${grupo}" no projeto.json. Passe os alvos ou ajuste a ficha.`);
+    process.exit(1);
+  }
+  alvos.push(...g.paginas.slice(0, 8).map((pg) => pg.arquivo));
+}
 if (!alvos.length) alvos.push(p.paginas?.[0]?.arquivo ?? (p.link ? '' : 'index.html'));
 
 const pf = process.env.PROGRAMFILES;
@@ -113,14 +128,15 @@ const { targetId } = await enviar('Target.createTarget', { url: 'about:blank' })
 const { sessionId } = await enviar('Target.attachToTarget', { targetId, flatten: true });
 await enviar('Page.enable', {}, sessionId);
 
-const saida = join(pasta, '_vitrine');
+const saida = grupo ? join(pasta, '_vitrine', grupo) : join(pasta, '_vitrine');
+const relativo = grupo ? `_vitrine/${grupo}` : '_vitrine';
 mkdirSync(saida, { recursive: true });
 for (const f of readdirSync(saida)) if (/^(capa|\d{2})\.webp$/.test(f)) rmSync(join(saida, f));
 
 try {
   for (const [i, alvo] of alvos.entries()) {
-    const nome = i === 0 ? 'capa.webp' : `${String(i).padStart(2, '0')}.webp`;
-    const tela = i > 0 && celular ? { width: 390, height: 844, deviceScaleFactor: 2, mobile: true } : { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false };
+    const nome = grupo ? `${String(i + 1).padStart(2, '0')}.webp` : i === 0 ? 'capa.webp' : `${String(i).padStart(2, '0')}.webp`;
+    const tela = (i > 0 || grupo) && celular ? { width: 390, height: 844, deviceScaleFactor: 2, mobile: true } : { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false };
     const url = endereco(alvo);
 
     await enviar('Emulation.setDeviceMetricsOverride', tela, sessionId);
@@ -135,7 +151,7 @@ try {
 
     const { data } = await enviar('Page.captureScreenshot', { format: 'webp', quality: 82 }, sessionId);
     writeFileSync(join(saida, nome), Buffer.from(data, 'base64'));
-    console.log(`${projeto}/_vitrine/${nome}  ${Math.round(statSync(join(saida, nome)).size / 1024)} KB  ← ${url}`);
+    console.log(`${projeto}/${relativo}/${nome}  ${Math.round(statSync(join(saida, nome)).size / 1024)} KB  ← ${url}`);
   }
 } finally {
   await enviar('Browser.close').catch(() => {});

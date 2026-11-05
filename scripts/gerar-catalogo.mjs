@@ -77,12 +77,48 @@ for (const categoria of categorias) {
     }
 
     const pastaVitrine = join(pasta, '_vitrine');
-    const telas = ehPasta(pastaVitrine)
-      ? readdirSync(pastaVitrine)
-          .filter((f) => IMAGEM.test(f))
-          .sort((a, b) => b.startsWith('capa.') - a.startsWith('capa.') || a.localeCompare(b))
-      : [];
+    const imagens = (dir) =>
+      ehPasta(dir)
+        ? readdirSync(dir)
+            .filter((f) => IMAGEM.test(f))
+            .sort((a, b) => b.startsWith('capa.') - a.startsWith('capa.') || a.localeCompare(b))
+        : [];
+    const telas = imagens(pastaVitrine);
     if (!telas.length) aviso('sem imagens em _vitrine/ (a vitrine mostra uma capa provisória)');
+
+    // Acervo: as variações do projeto em grupos (uma aba própria na ficha). Cada grupo pode ter
+    // os próprios prints em _vitrine/<prints>/, que a galeria mostra quando o grupo está aberto.
+    let acervo = null;
+    if (p.acervo !== undefined) {
+      const grupos = Array.isArray(p.acervo?.grupos) ? p.acervo.grupos : [];
+      if (!grupos.length) aviso('"acervo" precisa de "grupos", cada um com "nome" e "paginas"');
+      acervo = {
+        nome: p.acervo?.nome || 'Acervo',
+        grupos: grupos.map((g) => {
+          const itens = Array.isArray(g.paginas) ? g.paginas : [];
+          if (!g.nome || !itens.length) aviso('cada grupo do "acervo" precisa de "nome" e "paginas"');
+          const falta = (arquivo) => !p.link && !externo(arquivo) && !existsSync(join(pasta, arquivo.split(/[?#]/)[0]));
+          for (const it of itens) {
+            if (!it.nome || typeof it.arquivo !== 'string') aviso(`acervo "${g.nome}": cada página precisa de "nome" e "arquivo"`);
+            else if (falta(it.arquivo)) aviso(`acervo "${g.nome}": "${it.arquivo}" não existe na pasta`);
+          }
+          if (g.arquivo !== undefined && (typeof g.arquivo !== 'string' || falta(g.arquivo))) aviso(`acervo "${g.nome}": "arquivo" do grupo não existe na pasta`);
+          let telasGrupo = [];
+          if (g.prints) {
+            if (!SLUG.test(g.prints)) aviso(`acervo "${g.nome}": "prints" é o nome de uma subpasta de _vitrine/ (minúsculas e hífen)`);
+            telasGrupo = imagens(join(pastaVitrine, g.prints));
+            if (!telasGrupo.length) aviso(`acervo "${g.nome}": sem imagens em _vitrine/${g.prints}/`);
+          }
+          return {
+            nome: g.nome ?? '',
+            url: typeof g.arquivo === 'string' ? url(g.arquivo) : null,
+            rotulo: g.rotulo ?? null,
+            paginas: itens.filter((it) => it.nome && typeof it.arquivo === 'string').map((it) => ({ nome: it.nome, url: url(it.arquivo), marca: it.marca ?? null })),
+            telas: telasGrupo.map((f) => `${id}/_vitrine/${g.prints}/${f}`),
+          };
+        }),
+      };
+    }
 
     projetos.push({
       id,
@@ -94,6 +130,7 @@ for (const categoria of categorias) {
       status: p.status ?? 'ativo',
       paginas: paginas.map((pg) => ({ nome: pg.nome, url: url(pg.arquivo) })),
       versoes: versoes.map((v) => ({ nome: v.nome, url: url(v.arquivo), data: v.data ?? null })),
+      acervo,
       externo: Boolean(p.link),
       repo: p.repo ?? null,
       tags: p.tags ?? [],
