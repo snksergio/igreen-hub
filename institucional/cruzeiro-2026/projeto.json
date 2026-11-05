@@ -1,15 +1,17 @@
 {
   "nome": "Let's Go Cruzeiro 2026",
-  "descricao": "Site da viagem de premiação Let's Go Cruzeiro iGreen 2026: abertura, as quatro experiências a bordo, o navio em 3D como mapa e o roteiro Santos–Búzios. Inclui a abertura em filme e, como versão anterior, o protótipo do filme controlado pelo scroll.",
+  "descricao": "Site da viagem de premiação Let's Go Cruzeiro iGreen 2026: abertura em filme, as quatro experiências a bordo, o navio em 3D como mapa e o roteiro Santos–Búzios. Inclui a variação só com imagens e, como versão anterior, o protótipo do filme por scroll.",
   "tipo": "hotsite",
   "atualizado": "2026-11-05",
   "paginas": [
     { "nome": "Site", "arquivo": "index.html" },
-    { "nome": "Abertura em filme + roteiro", "arquivo": "filme.html" },
+    { "nome": "Explore o navio (3D)", "arquivo": "index.html#navio" },
+    { "nome": "O roteiro", "arquivo": "index.html#roteiro" },
+    { "nome": "Variação só com imagens", "arquivo": "imagens.html" },
     { "nome": "Protótipo: filme por scroll", "arquivo": "prototipo.html" }
   ],
   "versoes": [
-    { "nome": "v2 · site completo (experiências, navio 3D, roteiro)", "arquivo": "index.html", "data": "2026-10-06" },
+    { "nome": "v2 · site completo (filme, experiências, navio 3D, roteiro)", "arquivo": "index.html", "data": "2026-10-06" },
     { "nome": "v1 · protótipo do filme por scroll", "arquivo": "prototipo.html", "data": "2026-09-25" }
   ],
   "acervo": {
