@@ -1,0 +1,114 @@
+{
+  "nome": "iGreen Live · Hero",
+  "descricao": "As 22 propostas de hero do site do iGreen Live, cada uma navegável: a parede de vídeos que vira cor (a C radial, que foi para o site), mosaicos, retratos, telas e painéis.",
+  "tipo": "proposta",
+  "atualizado": "2026-11-05",
+  "link": "https://snksergio.github.io/igreen-eventos-v2/",
+  "repo": "https://github.com/snksergio/igreen-eventos-v2",
+  "paginas": [
+    {
+      "nome": "Todas lado a lado",
+      "arquivo": "opcoes/index.html#hero"
+    },
+    {
+      "nome": "No site",
+      "arquivo": ""
+    },
+    {
+      "nome": "C radial · no site",
+      "arquivo": "opcoes/section-hero-c-radial.html"
+    },
+    {
+      "nome": "F2 · tela, com respiro",
+      "arquivo": "opcoes/section-hero-f2-tela.html"
+    },
+    {
+      "nome": "F2 · cards soltos",
+      "arquivo": "opcoes/section-hero-f2-soltos.html"
+    },
+    {
+      "nome": "E · correnteza em sequência",
+      "arquivo": "opcoes/section-hero-e-sequencia.html"
+    },
+    {
+      "nome": "B · o vale sobe",
+      "arquivo": "opcoes/section-hero-b-index.html"
+    },
+    {
+      "nome": "B · ignição",
+      "arquivo": "opcoes/hero-b.html"
+    },
+    {
+      "nome": "C · carga",
+      "arquivo": "opcoes/hero-c.html"
+    },
+    {
+      "nome": "C2 · carga completa",
+      "arquivo": "opcoes/hero-c2.html"
+    },
+    {
+      "nome": "C3 · arquibancada",
+      "arquivo": "opcoes/hero-c3.html"
+    },
+    {
+      "nome": "D · retrato",
+      "arquivo": "opcoes/hero-d.html"
+    },
+    {
+      "nome": "D2 · retrato ao centro",
+      "arquivo": "opcoes/hero-d2.html"
+    },
+    {
+      "nome": "D3 · órbita",
+      "arquivo": "opcoes/hero-d3.html"
+    },
+    {
+      "nome": "D4 · dupla exposição",
+      "arquivo": "opcoes/hero-d4.html"
+    },
+    {
+      "nome": "E · correnteza",
+      "arquivo": "opcoes/hero-e.html"
+    },
+    {
+      "nome": "F · tela",
+      "arquivo": "opcoes/hero-f.html"
+    },
+    {
+      "nome": "F2 · tela de cards",
+      "arquivo": "opcoes/hero-f2.html"
+    },
+    {
+      "nome": "F3 · plateia",
+      "arquivo": "opcoes/hero-f3.html"
+    },
+    {
+      "nome": "G · mosaico de vidas",
+      "arquivo": "opcoes/hero-g.html"
+    },
+    {
+      "nome": "G2 · frase única",
+      "arquivo": "opcoes/hero-g2.html"
+    },
+    {
+      "nome": "G3 · a multidão",
+      "arquivo": "opcoes/hero-g3.html"
+    },
+    {
+      "nome": "G4 · a lâmpada de pessoas",
+      "arquivo": "opcoes/hero-g4.html"
+    },
+    {
+      "nome": "H · painel de embarque",
+      "arquivo": "opcoes/hero-h.html"
+    }
+  ],
+  "tags": [
+    "evento",
+    "live",
+    "hero",
+    "vídeo",
+    "gsap",
+    "scroll"
+  ]
+}
