@@ -3,6 +3,7 @@
   "descricao": "A abertura da conta iGreen Pay no app, no CPF e no CNPJ: vantagens, selfie, dados, endereço e perfil até a análise, a situação do cadastro e os casos de empresa.",
   "tipo": "prototipo",
   "atualizado": "2026-11-05",
+  "repo": "https://github.com/snksergio/remote-claude",
   "paginas": [
     { "nome": "Conta no CPF", "arquivo": "index.html#cpf" },
     { "nome": "Conta no CNPJ", "arquivo": "index.html#cnpj" },
