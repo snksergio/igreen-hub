@@ -2,9 +2,16 @@
   "nome": "Cadastro iGreen Pay",
   "descricao": "A abertura da conta iGreen Pay no app, no CPF e no CNPJ: vantagens, selfie, dados, endereço e perfil até a análise, a situação do cadastro e os casos de empresa.",
   "tipo": "prototipo",
-  "atualizado": "2026-10-13",
-  "link": "https://snksergio.github.io/remote-claude/",
-  "repo": "https://github.com/snksergio/remote-claude",
+  "atualizado": "2026-11-05",
+  "paginas": [
+    { "nome": "Conta no CPF", "arquivo": "index.html#cpf" },
+    { "nome": "Conta no CNPJ", "arquivo": "index.html#cnpj" },
+    { "nome": "Situação do cadastro", "arquivo": "index.html#situacao" },
+    { "nome": "Sócio que é empresa", "arquivo": "index.html#socioPj" },
+    { "nome": "Falta sócio administrador", "arquivo": "index.html#semAdm" },
+    { "nome": "CNPJ que já tem conta Pay", "arquivo": "index.html#jaTem" },
+    { "nome": "Sem usar os dados do app", "arquivo": "index.html#semDados" }
+  ],
   "tags": [
     "pay",
     "conta digital",
