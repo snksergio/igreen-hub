@@ -1,0 +1,37 @@
+{
+  "nome": "iGreen Live · Selos das seções",
+  "descricao": "Três rodadas de propostas para os selos acima dos títulos das seções (palestrantes, tour, depoimentos, edições), até a 09·C: borda de energia com objeto 3D, que foi para o site.",
+  "tipo": "proposta",
+  "atualizado": "2026-11-05",
+  "link": "https://snksergio.github.io/igreen-eventos-v2/",
+  "repo": "https://github.com/snksergio/igreen-eventos-v2",
+  "paginas": [
+    {
+      "nome": "Todas lado a lado",
+      "arquivo": "opcoes/index.html#selos"
+    },
+    {
+      "nome": "09·C · no site",
+      "arquivo": "opcoes/badges.html#p09c"
+    },
+    {
+      "nome": "Rodada 3 · a partir da 09",
+      "arquivo": "opcoes/badges.html"
+    },
+    {
+      "nome": "Rodada 2 · 15 propostas",
+      "arquivo": "opcoes/badges-rodada2.html"
+    },
+    {
+      "nome": "Rodada 1 · 10 propostas",
+      "arquivo": "opcoes/badges-rodada1.html"
+    }
+  ],
+  "tags": [
+    "evento",
+    "live",
+    "selos",
+    "badges",
+    "micro-interação"
+  ]
+}
