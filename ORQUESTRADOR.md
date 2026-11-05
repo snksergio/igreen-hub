@@ -200,7 +200,7 @@ Inclua as duas pastas no `git sparse-checkout set`, rode `git mv <antiga> <nova>
 
 ## 6. Projeto que mora fora
 
-Para o que não entra aqui (seção 1), a pasta leva só o `projeto.json` e a `_vitrine/`, com `link` apontando para onde o projeto está. Assim a vitrine lista tudo, até o que não mora aqui. Para trazer um desses para cá depois, copie os arquivos para a pasta e apague o `link`.
+Para o que não entra aqui (seção 1), a pasta leva só o `projeto.json` e a `_vitrine/`, com `link` apontando para onde o projeto está. Assim a vitrine lista tudo, até o que não mora aqui. Para trazer um desses para cá depois, copie os arquivos para a pasta e apague o `link`: o passo a passo está no [MIGRACAO.md](MIGRACAO.md).
 
 ## 7. Limites e cuidados
 

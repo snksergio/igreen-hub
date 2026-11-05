@@ -13,6 +13,7 @@ Cada projeto mora em `<categoria>/<slug>/`, com uma ficha `projeto.json` e os pr
 | Arquivo | Para que serve |
 |---|---|
 | `ORQUESTRADOR.md` | As regras e o pipeline de subir e alterar projetos |
+| `MIGRACAO.md` | O passo a passo para trazer um projeto que já existe em outro repositório |
 | `categorias.json` | As categorias e os tipos de projeto |
 | `index.html` | A vitrine |
 | `scripts/gerar-catalogo.mjs` | Junta as fichas em `catalogo.js`, que a vitrine lê (roda sozinho na publicação) |
@@ -35,6 +36,14 @@ e siga o pipeline de lá. Nunca clone o repositório inteiro.
 ```
 
 Daí em diante basta dizer "sobe isso no hub".
+
+## Como migrar um projeto de outro repositório
+
+No chat do projeto, no Claude Code:
+
+> Migra este projeto para o iGreen Hub. Antes, leia e siga o MIGRACAO.md: `gh api repos/snksergio/igreen-hub/contents/MIGRACAO.md -H "Accept: application/vnd.github.raw"`
+
+O original continua no ar e intocado; a cópia no hub aponta para ele em `repo`. Detalhes no [MIGRACAO.md](MIGRACAO.md).
 
 ## Ver a vitrine no computador
 
