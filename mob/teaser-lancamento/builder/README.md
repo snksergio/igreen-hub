@@ -1,5 +1,7 @@
 # Builder — Teaser do lançamento
 
+> **Na vitrine:** desde 2026-11-06 este projeto fica arquivado (fora da lista principal) e aparece como POC na ficha do hotsite [`mob/hotsite-migre-bandeira`](../../hotsite-migre-bandeira/), aba "POCs": o Painel V2 e a Revelação V2 viraram o `contador.html` de lá. Os arquivos e os endereços continuam os mesmos.
+
 **O que é.** Duas propostas de teaser para o lançamento do iGreen MOB, com contagem regressiva para **01/11/2026 às 20h de Brasília**: o painel com a estrada em movimento (`../index.html`) e a revelação do carro e do eletroposto num estúdio escuro (`../revelacao.html`), mais as variações V2 e Dark 2.
 
 **Origem.** Migrado em 2026-11-06 da pasta local `Área de Trabalho/carro simulador/igreen-launch-countdown` (repositório git local, sem remoto, commit `c6e078e`, de 09 a 11/10/2026). Daqui em diante a fonte é esta pasta; o original fica intocado, só como registro. O README do original está em [`README-original.md`](README-original.md).

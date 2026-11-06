@@ -1,8 +1,8 @@
 {
   "nome": "Migre sua bandeira",
-  "descricao": "Hotsite que o licenciado envia a donos de eletroposto: proposta de migração de bandeira com simulador de receita e o eletroposto iGreen em 3D.",
+  "descricao": "Hotsite que o licenciado envia a donos de eletroposto: proposta de migração de bandeira com simulador de receita e o eletroposto iGreen em 3D. Na aba de POCs: o site premium, o estúdio do simulador 3D e o teaser da contagem regressiva, que deram origem às páginas finais.",
   "tipo": "hotsite",
-  "atualizado": "2026-11-05",
+  "atualizado": "2026-11-06",
   "repo": "https://github.com/snksergio/mob-hotsite",
   "paginas": [
     {
@@ -21,6 +21,93 @@
   "tags": [
     "eletroposto",
     "simulador",
-    "3d"
-  ]
+    "3d",
+    "poc",
+    "contagem regressiva"
+  ],
+  "acervo": {
+    "nome": "POCs",
+    "grupos": [
+      {
+        "nome": "Site premium · POC do site",
+        "prints": "premium",
+        "paginas": [
+          {
+            "nome": "v3 · Além da recarga",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/site-premium/v3/"
+          },
+          {
+            "nome": "v2 · Urbana",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/site-premium/v2/"
+          },
+          {
+            "nome": "v1 · Seu ponto. Novas conexões.",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/site-premium/v1/"
+          }
+        ]
+      },
+      {
+        "nome": "Simulador 3D · POC",
+        "prints": "simulador-3d",
+        "paginas": [
+          {
+            "nome": "Estúdio de simulação (07/10), que virou o simulador da home",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/estudio-simulacao/"
+          }
+        ]
+      },
+      {
+        "nome": "Contagem regressiva · POC do teaser",
+        "prints": "contagem",
+        "paginas": [
+          {
+            "nome": "Painel com a estrada e o contador",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/teaser-lancamento/"
+          },
+          {
+            "nome": "Revelação: carro e eletroposto",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/teaser-lancamento/revelacao.html"
+          },
+          {
+            "nome": "Painel V2, com o terreno em camadas",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/teaser-lancamento/painel-v2.html",
+            "marca": "no hotsite"
+          },
+          {
+            "nome": "Painel V2 sem movimento",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/teaser-lancamento/painel-v2-sem-movimento.html"
+          },
+          {
+            "nome": "Conexão V2",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/teaser-lancamento/revelacao-v2.html",
+            "marca": "no hotsite"
+          },
+          {
+            "nome": "Dark V2",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/teaser-lancamento/revelacao-dark-v2.html"
+          },
+          {
+            "nome": "Dark V2 sem efeito",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/teaser-lancamento/revelacao-dark-v2-sem-efeito.html"
+          },
+          {
+            "nome": "Dark 2",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/teaser-lancamento/dark-2.html"
+          },
+          {
+            "nome": "Dark 2 · luar (anterior)",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/teaser-lancamento/dark-2-luar-anterior.html"
+          },
+          {
+            "nome": "Dark 2 · par (anterior)",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/teaser-lancamento/dark-2-par-anterior.html"
+          },
+          {
+            "nome": "Dark 2 · estúdio (anterior)",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/teaser-lancamento/dark-2-studio-anterior.html"
+          }
+        ]
+      }
+    ]
+  }
 }

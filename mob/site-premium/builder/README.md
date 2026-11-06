@@ -1,5 +1,7 @@
 # Builder — Site Mob premium
 
+> **Na vitrine:** desde 2026-11-06 este projeto fica arquivado (fora da lista principal) e aparece como POC na ficha do hotsite [`mob/hotsite-migre-bandeira`](../../hotsite-migre-bandeira/), aba "POCs". Os arquivos e os endereços continuam os mesmos.
+
 **O que é.** O site para donos de eletroposto migrarem para a iGreen, em três versões independentes, todas com o simulador de receita das conexões (energia, seguro, telefonia e recarga na rede):
 
 | Versão | Pasta | Título |

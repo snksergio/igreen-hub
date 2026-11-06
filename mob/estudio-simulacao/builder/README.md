@@ -1,5 +1,7 @@
 # Builder — Estúdio de simulação
 
+> **Na vitrine:** desde 2026-11-06 este projeto fica arquivado (fora da lista principal) e aparece como POC em duas fichas: o simulador, no hotsite [`mob/hotsite-migre-bandeira`](../../hotsite-migre-bandeira/) (virou o simulador 3D da home); o construtor, no painel [`mob/painel-eletroposto-final`](../../painel-eletroposto-final/) (protótipo do "Construtor do posto"). Os arquivos e os endereços continuam os mesmos.
+
 **O que é.** Protótipo independente do simulador do investidor do iGreen MOB, com uma cena 3D do posto que muda conforme as escolhas (`../index.html`), e o construtor isométrico para montar o posto em vista isométrica e planta (`../construtor/`).
 
 **Origem.** Migrado em 2026-11-06 da pasta local `Área de Trabalho/carro simulador/igreen-simulador-studio` (repositório git local, sem remoto, commit `36ab08c` de 07/10/2026; a pasta `construtor/`, de 23/10, não estava commitada e veio como estava). Daqui em diante a fonte é esta pasta; o original fica intocado, só como registro. O README do original está em [`README-original.md`](README-original.md).

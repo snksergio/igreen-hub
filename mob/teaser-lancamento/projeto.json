@@ -4,8 +4,14 @@
   "tipo": "hotsite",
   "atualizado": "2026-11-06",
   "paginas": [
-    { "nome": "Painel com a estrada e o contador", "arquivo": "index.html" },
-    { "nome": "Revelação: carro e eletroposto", "arquivo": "revelacao.html" }
+    {
+      "nome": "Painel com a estrada e o contador",
+      "arquivo": "index.html"
+    },
+    {
+      "nome": "Revelação: carro e eletroposto",
+      "arquivo": "revelacao.html"
+    }
   ],
   "acervo": {
     "nome": "Variações",
@@ -14,30 +20,64 @@
         "nome": "Painel V2",
         "prints": "painel",
         "paginas": [
-          { "nome": "Painel V2, com o terreno em camadas", "arquivo": "painel-v2.html" },
-          { "nome": "Painel V2 sem movimento", "arquivo": "painel-v2-sem-movimento.html" }
+          {
+            "nome": "Painel V2, com o terreno em camadas",
+            "arquivo": "painel-v2.html"
+          },
+          {
+            "nome": "Painel V2 sem movimento",
+            "arquivo": "painel-v2-sem-movimento.html"
+          }
         ]
       },
       {
         "nome": "Revelação V2",
         "prints": "revelacao",
         "paginas": [
-          { "nome": "Conexão V2", "arquivo": "revelacao-v2.html" },
-          { "nome": "Dark V2", "arquivo": "revelacao-dark-v2.html" },
-          { "nome": "Dark V2 sem efeito", "arquivo": "revelacao-dark-v2-sem-efeito.html" }
+          {
+            "nome": "Conexão V2",
+            "arquivo": "revelacao-v2.html"
+          },
+          {
+            "nome": "Dark V2",
+            "arquivo": "revelacao-dark-v2.html"
+          },
+          {
+            "nome": "Dark V2 sem efeito",
+            "arquivo": "revelacao-dark-v2-sem-efeito.html"
+          }
         ]
       },
       {
         "nome": "Dark 2",
         "prints": "dark2",
         "paginas": [
-          { "nome": "Dark 2", "arquivo": "dark-2.html", "marca": "atual" },
-          { "nome": "Dark 2 · luar (anterior)", "arquivo": "dark-2-luar-anterior.html" },
-          { "nome": "Dark 2 · par (anterior)", "arquivo": "dark-2-par-anterior.html" },
-          { "nome": "Dark 2 · estúdio (anterior)", "arquivo": "dark-2-studio-anterior.html" }
+          {
+            "nome": "Dark 2",
+            "arquivo": "dark-2.html",
+            "marca": "atual"
+          },
+          {
+            "nome": "Dark 2 · luar (anterior)",
+            "arquivo": "dark-2-luar-anterior.html"
+          },
+          {
+            "nome": "Dark 2 · par (anterior)",
+            "arquivo": "dark-2-par-anterior.html"
+          },
+          {
+            "nome": "Dark 2 · estúdio (anterior)",
+            "arquivo": "dark-2-studio-anterior.html"
+          }
         ]
       }
     ]
   },
-  "tags": ["lançamento", "contagem regressiva", "teaser", "live"]
+  "tags": [
+    "lançamento",
+    "contagem regressiva",
+    "teaser",
+    "live"
+  ],
+  "status": "arquivado"
 }

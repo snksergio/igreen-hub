@@ -4,8 +4,21 @@
   "tipo": "prototipo",
   "atualizado": "2026-11-06",
   "paginas": [
-    { "nome": "Simulador com a cena 3D", "arquivo": "index.html" },
-    { "nome": "Construtor isométrico do posto", "arquivo": "construtor/montagem.html" }
+    {
+      "nome": "Simulador com a cena 3D",
+      "arquivo": "index.html"
+    },
+    {
+      "nome": "Construtor isométrico do posto",
+      "arquivo": "construtor/montagem.html"
+    }
   ],
-  "tags": ["simulador", "3d", "investidor", "eletroposto", "construtor"]
+  "tags": [
+    "simulador",
+    "3d",
+    "investidor",
+    "eletroposto",
+    "construtor"
+  ],
+  "status": "arquivado"
 }

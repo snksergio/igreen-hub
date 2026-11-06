@@ -16,3 +16,15 @@ Cópia de [snksergio/mob-hotsite](https://github.com/snksergio/mob-hotsite) (com
   `index.html?nome=Thiago%20Souza&cidade=Belo%20Horizonte%20%C2%B7%20MG&whats=5531999999999`
 
 Site estático, sem build: abre direto no navegador.
+
+## POCs (aba da ficha)
+
+Em 2026-11-06, a pedido do usuário, a ficha ganhou uma aba com os POCs que deram origem a páginas deste hotsite. Os arquivos deles **não** estão nesta pasta nem vêm do `mob-hotsite`: cada um continua no seu projeto do hub, que sai da lista principal da vitrine (`"status": "arquivado"`) e aparece aqui. Juntos passariam do limite de 50 MB por pasta.
+
+| POC | Projeto no hub | O que virou aqui |
+| --- | --- | --- |
+| Site premium v1, v2 e v3 (05/10) | [`mob/site-premium`](../site-premium/) | O hotsite (o simulador das conexões vem do mesmo conteúdo) |
+| Estúdio de simulação (07/10) | [`mob/estudio-simulacao`](../estudio-simulacao/) | O simulador 3D da home ("Comece pelo seu posto", 08/10 no `mob-hotsite`) |
+| Teaser do lançamento (09 a 11/10) | [`mob/teaser-lancamento`](../teaser-lancamento/) | `contador.html`: o Painel V2 e a Revelação V2, com a data de 10/10 |
+
+Ao copiar o `mob-hotsite` de novo para esta pasta, mantenha o `acervo` do `projeto.json` e as subpastas `_vitrine/premium`, `_vitrine/simulador-3d` e `_vitrine/contagem`.
