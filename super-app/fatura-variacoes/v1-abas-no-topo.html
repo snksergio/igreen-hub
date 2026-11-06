@@ -142,7 +142,7 @@ h1{margin:0; font:700 20px/1.25 var(--f-ig); letter-spacing:-.01em; color:var(--
   -webkit-mask-composite:source-in;
   mask:radial-gradient(circle 11px at 0 var(--ny), transparent 96%, #000 100%), radial-gradient(circle 11px at 100% var(--ny), transparent 96%, #000 100%);
   mask-composite:intersect}
-.ig-card::before{content:""; position:absolute; inset:0; z-index:0; border-style:solid; border-width:24px 14px; border-image:url("../assets/invoice-bg.png") 24 14 fill / 24px 14px stretch}
+.ig-card::before{content:""; position:absolute; inset:0; z-index:0; border-style:solid; border-width:24px 14px; border-image:url("builder/assets/invoice-bg.png") 24 14 fill / 24px 14px stretch}
 .ig-overlay{position:absolute; top:0; left:0; z-index:0; width:100%; height:auto; pointer-events:none}
 .ig-card-in{position:relative; z-index:1; padding:32px 24px 24px}
 .ig-pig{display:block; width:80px; height:80px; margin:0 auto 18px}
@@ -567,7 +567,7 @@ h1{margin:0; font:700 20px/1.25 var(--f-ig); letter-spacing:-.01em; color:var(--
 
 <div class="app">
   <header class="top">
-    <img class="top-logo" src="../assets/logo.svg" alt="iGreen Energy" width="92" height="28">
+    <img class="top-logo" src="builder/assets/logo.svg" alt="iGreen Energy" width="92" height="28">
     <span class="top-sep" aria-hidden="true"></span>
     <div class="top-text">
       <h1>Variações da Fatura</h1>
@@ -947,7 +947,7 @@ h1{margin:0; font:700 20px/1.25 var(--f-ig); letter-spacing:-.01em; color:var(--
   }
 
   /* Ícones e imagens originais da produção, na pasta assets/ */
-  const img = (f, w, h) => '<img src="../assets/' + f + '" alt="" width="' + w + '" height="' + (h || w) + '">';
+  const img = (f, w, h) => '<img src="builder/assets/' + f + '" alt="" width="' + w + '" height="' + (h || w) + '">';
   const I = {
     pix:img('icon-pix.svg', 16),
     barcode:img('icon-barcode.svg', 16),
@@ -1010,7 +1010,7 @@ h1{margin:0; font:700 20px/1.25 var(--f-ig); letter-spacing:-.01em; color:var(--
     return '<svg class="chart" viewBox="0 0 ' + (x0+slot*12+4) + ' 112" role="img" aria-label="Energia compensada nos últimos 12 meses, em kWh">' + s + '</svg>';
   }
   const linha = () => '00090.00009 01842.552703 01200.104252 7 1051' + String(Math.round(calc().ate*100)).padStart(10,'0');
-  const logo = cls => '<img class="' + cls + '" src="../assets/logo.svg" alt="iGreen Energy" width="92" height="28">';
+  const logo = cls => '<img class="' + cls + '" src="builder/assets/logo.svg" alt="iGreen Energy" width="92" height="28">';
 
   /* ---------- Invoice Web ---------- */
   function webScreen(){
@@ -1026,9 +1026,9 @@ h1{margin:0; font:700 20px/1.25 var(--f-ig); letter-spacing:-.01em; color:var(--
       '<div class="ig-logo">' + logo('') + '</div>' +
       '<div class="ig-col">' +
         '<div class="ig-card-wrap"><div class="ig-card">' +
-          '<img class="ig-overlay" src="../assets/invoice-overlay-bg.png" alt="" width="948" height="870">' +
+          '<img class="ig-overlay" src="builder/assets/invoice-overlay-bg.png" alt="" width="948" height="870">' +
           '<div class="ig-card-in">' +
-            '<img class="ig-pig" src="../assets/pig-bank.png" alt="" width="80" height="80">' +
+            '<img class="ig-pig" src="builder/assets/pig-bank.png" alt="" width="80" height="80">' +
             '<div class="ig-badge" data-rn="RN01 RN02"><span class="ig-badge-ico">' + badgeIco(S.variant) + '</span><span>' + v.web + '</span></div>' +
             (R ? '<div class="ig-title ghost" data-rn="RN03"><span class="s">Sua fatura veio mais barata!</span><span class="ghost-tag">Removido</span></div>' : '') +
             '<div class="ig-rows" data-rn="RN02">' +
@@ -1050,7 +1050,7 @@ h1{margin:0; font:700 20px/1.25 var(--f-ig); letter-spacing:-.01em; color:var(--
           opt('card', 'Cartão de crédito', I.card) +
         '</section>' +
         '<section class="ig-app"><h2>Baixe o App <b>iGreen Club</b> e tenha acesso a todos os seus benefícios e faturas em um só lugar!</h2>' +
-          '<div class="stores"><img src="../assets/google-play.png" alt="Disponível no Google Play" width="163" height="48"><img src="../assets/app-store.png" alt="Baixar na App Store" width="163" height="48"></div></section>' +
+          '<div class="stores"><img src="builder/assets/google-play.png" alt="Disponível no Google Play" width="163" height="48"><img src="builder/assets/app-store.png" alt="Baixar na App Store" width="163" height="48"></div></section>' +
       '</div>' +
     '</div>';
   }
@@ -1226,7 +1226,7 @@ h1{margin:0; font:700 20px/1.25 var(--f-ig); letter-spacing:-.01em; color:var(--
         '</dl></div>' +
       '</section>';
     const cta = '<section class="v2-cta"><div><b>Acompanhe tudo no app iGreen Club</b><span>Faturas, histórico de economia e o seu ' + name + ' em um só lugar.</span></div>' +
-        '<div class="v2-stores"><img src="../assets/google-play.png" alt="Disponível no Google Play" width="163" height="48"><img src="../assets/app-store.png" alt="Baixar na App Store" width="163" height="48"></div></section>';
+        '<div class="v2-stores"><img src="builder/assets/google-play.png" alt="Disponível no Google Play" width="163" height="48"><img src="builder/assets/app-store.png" alt="Baixar na App Store" width="163" height="48"></div></section>';
     const instr = c.split
       ? 'Até ' + VENC + ', conceder desconto de ' + brl(desc) + ' por pagamento em dia. Valor com desconto: ' + brl(c.ate) + '.<br>Após ' + VENC + ', cobrar o valor do documento.'
       : 'Após o vencimento, cobrar multa e juros conforme o contrato.';
@@ -1270,13 +1270,13 @@ h1{margin:0; font:700 20px/1.25 var(--f-ig); letter-spacing:-.01em; color:var(--
             '<span class="v3-cash-val">' + brl(c.ate) + '</span><span class="v3-cash-sub">' + (c.split ? 'pagando até o vencimento' : 'de cashback após o pagamento') + '</span>' + tag('origem a definir', true) +
             (c.split ? '<div class="v3-cash-after">Pagando depois de ' + B3.venc + '<b>' + brl(c.apos) + '</b></div>' : '') +
             (opt.noFoot ? '' : '<p class="v3-cash-foot">Cai no seu iGreen Club após a confirmação do pagamento.</p>') +
-            '<img class="v3-pig" src="../assets/pig-bank.png" alt="" width="80" height="80">' +
+            '<img class="v3-pig" src="builder/assets/pig-bank.png" alt="" width="80" height="80">' +
           '</div>' +
           '<div class="v3-pix">' + qr(42) + '<strong>Pague com Pix</strong><p>Aponte a câmera do app do seu banco. Antes de confirmar, veja se o recebedor é <b>iGreen Energy</b>.</p></div>' +
         '</section>',
       club: '<section class="v3-club"><div class="v3-club-logo">' + logo('') + '<span>Club</span></div>' +
           '<div><b>SEU CASHBACK CAI NO APP IGREEN CLUB</b><p>Você também tem acesso grátis a mais de 30 mil estabelecimentos com descontos.</p></div>' +
-          '<div class="v3-stores"><img src="../assets/google-play.png" alt="Disponível no Google Play" width="163" height="48"><img src="../assets/app-store.png" alt="Baixar na App Store" width="163" height="48"></div>' +
+          '<div class="v3-stores"><img src="builder/assets/google-play.png" alt="Disponível no Google Play" width="163" height="48"><img src="builder/assets/app-store.png" alt="Baixar na App Store" width="163" height="48"></div>' +
         '</section>',
       fraud: '<div class="v3-fraud"><span class="v3-tag">EVITE FRAUDES!</span><p>Pague só boletos enviados pelos canais oficiais da iGreen. No Pix, confira se o recebedor é <b>iGreen Energy</b>. Não nos responsabilizamos por pagamentos a terceiros.</p></div>',
       info: '<div class="v3-info" data-rn="RN07"><span class="v3-h">INFORMAÇÕES ADICIONAIS</span><p>' + info + '</p></div>'

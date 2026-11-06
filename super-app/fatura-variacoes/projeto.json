@@ -1,11 +1,43 @@
 {
   "nome": "Variações da fatura",
-  "descricao": "A fatura iGreen nos 7 tipos de cobrança da API (boleto único, conta dupla, sem injeção, acordo e distribuidora), no layout da Fatura PDF V1 aprovada, e o Invoice Web.",
+  "descricao": "A fatura iGreen nos 7 tipos de cobrança da API (boleto único, conta dupla, sem injeção, acordo e distribuidora), no layout da Fatura PDF V1 aprovada, o Invoice Web e as versões anteriores.",
   "tipo": "proposta",
-  "atualizado": "2026-11-03",
+  "atualizado": "2026-11-06",
   "paginas": [
     { "nome": "Fatura PDF por tipo", "arquivo": "index.html#UNIQUE_DEFAULT_DISCOUNT" },
     { "nome": "Invoice Web", "arquivo": "index.html#web-desktop" }
+  ],
+  "acervo": {
+    "nome": "Telas",
+    "grupos": [
+      {
+        "nome": "Fatura PDF por tipo de cobrança",
+        "prints": "tipos",
+        "paginas": [
+          { "nome": "Boleto Único padrão · UNIQUE_DEFAULT_DISCOUNT", "arquivo": "index.html#UNIQUE_DEFAULT_DISCOUNT" },
+          { "nome": "Boleto Único antecipado · UNIQUE_WITH_ADDITIONAL_DISCOUNT", "arquivo": "index.html#UNIQUE_WITH_ADDITIONAL_DISCOUNT" },
+          { "nome": "Boleto Único sem injeção · UNIQUE_WITH_NO_INJECTION", "arquivo": "index.html#UNIQUE_WITH_NO_INJECTION" },
+          { "nome": "Conta Dupla padrão · COMMON_DEFAULT_DISCOUNT", "arquivo": "index.html#COMMON_DEFAULT_DISCOUNT" },
+          { "nome": "Conta Dupla antecipada · COMMON_WITH_ADDITIONAL_DISCOUNT", "arquivo": "index.html#COMMON_WITH_ADDITIONAL_DISCOUNT" },
+          { "nome": "Parcelamento de dívida · DEBT_INSTALLMENT_PLAN", "arquivo": "index.html#DEBT_INSTALLMENT_PLAN" },
+          { "nome": "Boleto da distribuidora · DISTRIBUTOR", "arquivo": "index.html#DISTRIBUTOR" }
+        ]
+      },
+      {
+        "nome": "Invoice Web",
+        "prints": "invoice",
+        "paginas": [
+          { "nome": "Desktop", "arquivo": "index.html#web-desktop" },
+          { "nome": "Mobile", "arquivo": "index.html#web-mobile" }
+        ]
+      }
+    ]
+  },
+  "versoes": [
+    { "nome": "v4 · 7 tipos de cobrança", "arquivo": "index.html", "data": "2026-11-03" },
+    { "nome": "v3 · Fatura PDF V1 aprovada, com as V2 e V3", "arquivo": "v3-pdf-v1-aprovada.html", "data": "2026-10-22" },
+    { "nome": "v2 · menu lateral, web e mobile", "arquivo": "v2-menu-lateral.html", "data": "2026-10-21" },
+    { "nome": "v1 · abas no topo, com a Fatura PDF V4", "arquivo": "v1-abas-no-topo.html", "data": "2026-10-21" }
   ],
   "tags": [
     "fatura",
