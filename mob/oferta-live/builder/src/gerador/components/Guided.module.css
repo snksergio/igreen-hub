@@ -1,0 +1,395 @@
+/* ================= Formulário v2: seções lineares que aparecem na rolagem ================= */
+
+/* Entra quando chega perto da área visível (o conteúdo está sempre na página) */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.revealShown {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.sectionWrap + .sectionWrap {
+  margin-top: 36px;
+  padding-top: 36px;
+  border-top: 1px solid var(--border);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.sectionHead {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sectionTitle {
+  color: var(--fg-strong);
+}
+
+.sectionText {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+  color: var(--fg-muted);
+}
+
+/* ---------- Incluso no eletroposto: faixa cinza, tudo em uma linha ---------- */
+.included {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 14px 16px;
+  border-radius: var(--radius-base);
+  background: var(--bg-muted);
+}
+
+.includedTitle {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--fg-muted);
+}
+
+.includedList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.includedList li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--fg-strong);
+}
+
+.tick {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--bg-primary);
+}
+
+/* ---------- Campo: rótulo, controle e uma linha de ajuda ---------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Ajuda: mesma cor, mais suave, para não disputar com os rótulos */
+.help {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--fg-muted);
+  opacity: 0.7;
+}
+
+.info .help {
+  opacity: 1;
+}
+
+.link {
+  font-weight: 600;
+  color: var(--fg-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.alignStart {
+  align-self: flex-start;
+}
+
+/* ---------- Informação fixa (não editável) ---------- */
+.info {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-base);
+  background: var(--bg-muted);
+}
+
+.infoIcon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--bg-fill);
+}
+
+.infoText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.infoTitle {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--fg-strong);
+}
+
+.infoValue {
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 20px;
+  color: var(--fg-strong);
+}
+
+/* ---------- Conexões: um grupo único, lado a lado (empilha no celular) ---------- */
+.group {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-base);
+}
+
+.groupItem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+  padding: 14px;
+  text-align: left;
+  background: var(--bg-background);
+  transition: background-color 0.2s ease;
+}
+
+.groupItem + .groupItem {
+  border-left: 1px solid var(--border);
+}
+
+.groupItem:hover {
+  background: var(--bg-hover);
+}
+
+.groupOn,
+.groupOn:hover {
+  background: var(--bg-primary-subtle);
+}
+
+.groupTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.checkBox {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--fg-subtle);
+  border-radius: 5px;
+  background: var(--bg-background);
+}
+
+.groupOn .checkBox {
+  border-color: var(--bg-primary);
+  background: var(--bg-primary);
+}
+
+.groupName {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--fg-strong);
+}
+
+.groupValue {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--fg-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.groupDetail {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 11.5px;
+  line-height: 16px;
+  color: var(--fg-muted);
+}
+
+@media (max-width: 480px) {
+  .group {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .groupItem + .groupItem {
+    border-top: 1px solid var(--border);
+    border-left: 0;
+  }
+}
+
+/* ---------- Quanto a carteira rende: linhas iguais, com descrição dos dois lados ---------- */
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-base);
+}
+
+.listRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 64px;
+  padding: 12px 16px;
+}
+
+.listRow + .listRow {
+  border-top: 1px solid var(--border);
+}
+
+.listRow:first-child {
+  background: var(--bg-primary-subtle);
+}
+
+.listLeft,
+.listRight {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.listRight {
+  align-items: flex-end;
+  margin: 0;
+  text-align: right;
+}
+
+.listLeft dt {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--fg-strong);
+}
+
+.listRight b {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--fg-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.listRow:first-child .listLeft dt,
+.listRow:first-child .listRight b {
+  color: var(--fg-primary);
+}
+
+.listLeft span,
+.listRight span {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- "Como calculamos": explicação longa recolhida ---------- */
+.more {
+  padding-top: 4px;
+}
+
+.more summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--fg-primary);
+  list-style: none;
+  cursor: pointer;
+}
+
+.more summary::-webkit-details-marker {
+  display: none;
+}
+
+.moreChevron {
+  background-color: var(--fg-primary);
+  transition: transform 0.2s ease;
+}
+
+.more[open] .moreChevron {
+  transform: rotate(180deg);
+}
+
+.more p {
+  margin-top: 10px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--fg-muted);
+}
+
+.more p b {
+  font-weight: 700;
+  color: var(--fg-main);
+}
