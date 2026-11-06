@@ -1,17 +1,111 @@
 {
-  "nome": "Painel do eletroposto · versão final",
-  "descricao": "Versão final (V3) do painel do dono de eletroposto: maquete 3D e planta 2D ao vivo, construtor do posto e primeiro acesso, com a maquete montada no navegador.",
+  "nome": "Painel do eletroposto",
+  "descricao": "Painel do dono de eletroposto, versão final (V3): maquete 3D e planta 2D ao vivo, construtor do posto e primeiro acesso, com a maquete montada no navegador. Inclui o POC (V1), com a maquete feita no Blender, e o protótipo do construtor.",
   "tipo": "prototipo",
-  "atualizado": "2026-11-05",
+  "atualizado": "2026-11-06",
   "link": "https://snksergio.github.io/mob-dashboard-interativo/final/online/",
   "repo": "https://github.com/snksergio/mob-dashboard-interativo/tree/main/final",
   "paginas": [
-    { "nome": "Início", "arquivo": "" },
-    { "nome": "Painel 3D", "arquivo": "painel.html?posto=shopping-norte&visao=3d" },
-    { "nome": "Planta 2D", "arquivo": "painel.html?posto=shopping-norte&visao=2d" },
-    { "nome": "Construtor do posto", "arquivo": "construtor.html?posto=shopping-norte" },
-    { "nome": "Primeiro acesso", "arquivo": "primeiro-acesso/" },
-    { "nome": "Meus postos", "arquivo": "meu-posto.html" }
+    {
+      "nome": "Início",
+      "arquivo": ""
+    },
+    {
+      "nome": "Painel 3D",
+      "arquivo": "painel.html?posto=shopping-norte&visao=3d"
+    },
+    {
+      "nome": "Planta 2D",
+      "arquivo": "painel.html?posto=shopping-norte&visao=2d"
+    },
+    {
+      "nome": "Construtor do posto",
+      "arquivo": "construtor.html?posto=shopping-norte"
+    },
+    {
+      "nome": "Primeiro acesso",
+      "arquivo": "primeiro-acesso/"
+    },
+    {
+      "nome": "Meus postos",
+      "arquivo": "meu-posto.html"
+    }
   ],
-  "tags": ["eletroposto", "3d", "dashboard", "construtor", "maquete", "three.js", "ocpp", "v3"]
+  "tags": [
+    "eletroposto",
+    "3d",
+    "dashboard",
+    "construtor",
+    "maquete",
+    "three.js",
+    "ocpp",
+    "v3",
+    "poc",
+    "blender"
+  ],
+  "versoes": [
+    {
+      "nome": "V3 · versão final",
+      "arquivo": "",
+      "data": "2026-11-05"
+    },
+    {
+      "nome": "V1 · POC, maquete do Blender",
+      "arquivo": "https://snksergio.github.io/mob-dashboard-interativo/",
+      "data": "2026-10-21"
+    }
+  ],
+  "acervo": {
+    "nome": "Variações",
+    "grupos": [
+      {
+        "nome": "V1 · POC",
+        "prints": "v1",
+        "paginas": [
+          {
+            "nome": "Painel",
+            "arquivo": "https://snksergio.github.io/mob-dashboard-interativo/"
+          },
+          {
+            "nome": "Maquete viva",
+            "arquivo": "https://snksergio.github.io/mob-dashboard-interativo/demo.html"
+          },
+          {
+            "nome": "Proposta da maquete",
+            "arquivo": "https://snksergio.github.io/mob-dashboard-interativo/proposta/"
+          },
+          {
+            "nome": "Visão 2D",
+            "arquivo": "https://snksergio.github.io/mob-dashboard-interativo/?visao=2d"
+          },
+          {
+            "nome": "Dia sem recargas",
+            "arquivo": "https://snksergio.github.io/mob-dashboard-interativo/?estado=vazio"
+          },
+          {
+            "nome": "Primeiro dia do posto",
+            "arquivo": "https://snksergio.github.io/mob-dashboard-interativo/?estado=primeiro-dia"
+          },
+          {
+            "nome": "Dia de chuva",
+            "arquivo": "https://snksergio.github.io/mob-dashboard-interativo/?chuva=1"
+          }
+        ]
+      },
+      {
+        "nome": "Construtor isométrico · protótipo",
+        "prints": "construtor",
+        "paginas": [
+          {
+            "nome": "Construtor (23/10)",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/estudio-simulacao/construtor/montagem.html"
+          },
+          {
+            "nome": "Construtor num arquivo só",
+            "arquivo": "https://snksergio.github.io/igreen-hub/mob/estudio-simulacao/construtor/montagem-unico.html"
+          }
+        ]
+      }
+    ]
+  }
 }
