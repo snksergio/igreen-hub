@@ -2,27 +2,57 @@
   "nome": "Simulador do investidor",
   "descricao": "O simulador de investimento em eletroposto do Green Mob, guiado pelo DRE: escolher o modelo, ajustar as premissas e ver o recebimento até a proposta.",
   "tipo": "prototipo",
-  "atualizado": "2026-10-13",
-  "link": "https://igreen-mob-link.vercel.app/",
+  "atualizado": "2026-11-06",
   "repo": "https://github.com/snksergio/igreen-mob-link",
   "paginas": [
     {
-      "nome": "Abrir",
-      "arquivo": "#investir"
+      "nome": "Início",
+      "arquivo": "index.html#investir"
+    },
+    {
+      "nome": "Simulador",
+      "arquivo": "index.html#investir/simulador"
+    },
+    {
+      "nome": "Dados do investidor",
+      "arquivo": "index.html#investir/dados"
     }
   ],
   "versoes": [
     {
       "nome": "v2 · formulário linear, sem retorno nem ROI",
-      "arquivo": "#investir/simulador",
+      "arquivo": "index.html#investir/simulador",
       "data": "2026-09-30"
     },
     {
       "nome": "v1 · premissas em abas, com retorno e ROI",
-      "arquivo": "#gerador/simulador",
+      "arquivo": "index.html#gerador/simulador",
       "data": "2026-09-28"
     }
   ],
+  "acervo": {
+    "nome": "Telas",
+    "grupos": [
+      {
+        "nome": "v1 · premissas em abas",
+        "prints": "v1",
+        "paginas": [
+          {
+            "nome": "Início",
+            "arquivo": "index.html#gerador"
+          },
+          {
+            "nome": "Simulador",
+            "arquivo": "index.html#gerador/simulador"
+          },
+          {
+            "nome": "Dados do investidor",
+            "arquivo": "index.html#gerador/dados"
+          }
+        ]
+      }
+    ]
+  },
   "tags": [
     "simulador",
     "investidor",
