@@ -1,0 +1,11 @@
+{
+  "nome": "Estúdio de simulação",
+  "descricao": "Protótipo do simulador do investidor com uma cena 3D do posto que muda com as escolhas: equipamento, movimento e tarifas, carteira de energia e projeção. Inclui o construtor isométrico para montar o posto.",
+  "tipo": "prototipo",
+  "atualizado": "2026-11-06",
+  "paginas": [
+    { "nome": "Simulador com a cena 3D", "arquivo": "index.html" },
+    { "nome": "Construtor isométrico do posto", "arquivo": "construtor/montagem.html" }
+  ],
+  "tags": ["simulador", "3d", "investidor", "eletroposto", "construtor"]
+}

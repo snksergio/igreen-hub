@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101213"><meta name="description" content="Monte seu eletroposto iGreen MOB e explore a operação, a carteira e os resultados em um simulador visual."><title>Monte seu eletroposto · iGreen MOB</title><link rel="icon" href="assets/logo.svg" type="image/svg+xml"><link rel="stylesheet" href="fonts.css"><link rel="stylesheet" href="styles.css"></head>
+<body>
+<header class="site-header"><a class="brand" href="./" aria-label="iGreen MOB início"><img src="assets/logo.svg" alt="iGreen"><span>MOB<span class="brand-dot">®</span></span></a><span class="header-label">IDEIAS QUE VIRAM CONEXÕES.</span><span class="prototype"><i></i> Estúdio de simulação <b>PROTÓTIPO</b></span></header>
+<main>
+<section class="intro"><div><p class="eyebrow"><span></span> SEU PRÓXIMO MOVIMENTO</p><h1>Um posto. <em>Novas possibilidades.</em></h1></div><p>Monte seu eletroposto e descubra<br>como cada escolha transforma o seu negócio.</p></section>
+<section class="configurator" aria-label="Simulador de eletroposto">
+<nav class="steps" aria-label="Etapas da simulação">
+<button data-step="0" aria-current="step"><span class="step-number">01</span><span>Seu eletroposto<small>Escolha a estrutura</small></span><i>↗</i></button>
+<button data-step="1"><span class="step-number">02</span><span>Sua operação<small>Dê movimento ao posto</small></span><i>↗</i></button>
+<button data-step="2"><span class="step-number">03</span><span>Sua carteira<small>Conecte novas receitas</small></span><i>↗</i></button>
+<button data-step="3"><span class="step-number">04</span><span>Seu resultado<small>Enxergue o potencial</small></span><i>↗</i></button>
+</nav>
+<div class="workspace">
+<div class="visual-column">
+<div class="scene-header"><span class="scene-kicker"><i></i> SEU POSTO, EM CONSTRUÇÃO</span><button id="reset" class="text-button" title="Voltar à configuração inicial">↺ <span>Recomeçar</span></button></div>
+<div class="visual-stage" id="visual-stage"><div id="scene" role="img" aria-label="Visualização interativa do eletroposto"><div class="scene-loading">Preparando seu eletroposto<span></span></div></div><div class="scene-title"><span id="scene-model">iGreen Duo</span><strong id="scene-power">7 + 40 <small>kW</small></strong></div><div class="scene-tag" id="scene-tag"><span class="tag-dot"></span> Pronto para novas conexões</div><div class="scene-tools"><button id="view-rotate" aria-label="Girar a vista do posto" title="Girar a vista">↻</button><button id="view-reset" aria-label="Restaurar a vista do posto" title="Restaurar a vista">⌖</button></div><div class="scene-foot"><span id="scene-count">01 equipamento · 02 conectores</span><span>VISUAL ILUSTRATIVO</span></div><div id="connection-nodes" class="connection-nodes" hidden><span data-service="energy">↯ Energia</span><span data-service="insurance">◇ Seguros</span><span data-service="phone">⌁ Telefonia</span></div></div>
+<div class="live-summary"><div class="live-heading"><span><i></i> SUA SIMULAÇÃO, AO VIVO</span><button class="month-link" id="month-link">Mês <b id="summary-month">1</b> <span>↗</span></button></div><div class="live-values"><div class="live-total"><span>Recebimento estimado</span><strong id="live-total">R$ 5.956<small>,09</small></strong></div><div class="income-breakdown"><div><i class="charging-dot"></i><span>Recargas</span><b id="live-charging"></b></div><div><i class="wallet-dot"></i><span>Carteira</span><b id="live-wallet"></b></div></div></div><div class="income-track"><span id="charging-track"></span><span id="wallet-track"></span></div><p id="live-note">Estimativa com as premissas informadas. Valores não garantidos.</p></div>
+</div>
+<div class="control-column"><div id="panel" tabindex="-1"></div><div class="step-footer"><button id="previous" class="back-button">← <span>Voltar</span></button><span id="step-progress">01 / 04</span><button id="next" class="primary-button">Definir operação <span>↗</span></button></div></div>
+</div>
+</section>
+<footer class="section-footer"><span><i></i> Você controla as premissas. A simulação acompanha.</span><button id="premises" class="text-button">Premissas da simulação <span>↗</span></button></footer>
+</main>
+<dialog id="details-dialog"><div class="dialog-top"><div><p class="eyebrow">TRANSPARÊNCIA EM CADA NÚMERO</p><h2>Por dentro do cenário.</h2></div><button class="close-button" aria-label="Fechar detalhes">×</button></div><nav class="report-tabs" aria-label="Detalhes do cenário"><button data-report="dre" class="active">Demonstrativo</button><button data-report="months">Mês a mês</button><button data-report="tax">Ajustes fiscais</button><button data-report="premises">Premissas</button></nav><div id="report-content"></div></dialog>
+<div id="toast" role="status"></div>
+<script src="assets/three.min.js"></script><script src="assets/igreen-logo-svg.js"></script><script src="assets/igreen-kit.js"></script><script src="finance.js"></script><script src="scene.js"></script><script src="app.js"></script>
+</body></html>
