@@ -231,12 +231,14 @@ button{font:inherit;color:inherit}
 .painel-aba[hidden]{display:none}
 
 /* Abas da lateral: Projeto e o acervo (as variações do projeto em grupos) */
-.abas{flex:none;display:flex;gap:2px;margin:18px 22px 0;padding:3px;border-radius:12px;background:var(--abas-fundo);box-shadow:inset 0 0 0 1px var(--abas-borda)}
+.abas{flex:none;display:flex;gap:2px;margin:18px 22px 0;padding:5px;border-radius:12px;background:var(--abas-fundo);box-shadow:inset 0 0 0 1px var(--abas-borda)}
 .aba{flex:1 1 auto;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:7px;height:34px;padding:0 12px;border:0;border-radius:9px;background:none;color:var(--muted);font-size:13px;font-weight:500;letter-spacing:-.01em;cursor:pointer;white-space:nowrap}
 .aba:hover{color:var(--ink)}
 .aba[aria-selected="true"]{background:var(--aba);color:var(--ink);box-shadow:0 0 0 1px var(--aba-borda),0 1px 2px var(--aba-sombra)}
 .aba-nome{overflow:hidden;text-overflow:ellipsis}
-.aba .num{min-width:20px;height:20px;padding:0 6px;font-size:11px}
+/* número da aba no centro da pílula: line-height igual à altura deixa a linha de base fixa em relação à pílula,
+   e algarismos proporcionais centram o próprio desenho (no tabular, o "9" fica 1px à direita) */
+.aba .num{min-width:20px;height:20px;padding:0 6px;font-size:11px;line-height:20px;font-variant-numeric:normal}
 .aba[aria-selected="true"] .num{color:var(--ink)}
 .filtro-acervo{flex:none;display:flex;align-items:center;gap:8px;height:38px;margin:12px 22px 0;padding:0 4px 0 12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;color:var(--soft)}
 .filtro-acervo[hidden]{display:none}
