@@ -1,0 +1,9 @@
+Estudo isolado 7 — ajuste de câmera do sedã aprovado. Ferramenta integrada de geração de imagens. Telas não alteradas; bateria estática nesta arte.
+
+Precise camera-only revision of image 1, the APPROVED generic sporty sedan illustration. Images 2 and 3 are CAMERA REFERENCES ONLY. User likes the car and wants only a SMALL viewing-angle adjustment, not a redesign.
+
+Keep EXACTLY the same sporty four-door sedan identity, roof curve, hood, trunk, lamps, wheel designs, translucent gray-green body material, interior detail density, silver skateboard battery with 65% green fill, dark forest green backdrop and subtle underglow. Do not change body style, proportions or add styling features.
+
+Adjust camera to match the attached automotive dashboard references: a slightly higher elevated SIDE view, with a SMALL orbit toward the front-left corner (around 8–10 degrees from pure side), looking down a little more onto the roof and broad floor battery. Front still points LEFT. Show subtly more of the top surfaces of the hood, roof and battery. Near front wheel may sit slightly lower in the composition than near rear wheel because of true perspective, but ZERO camera roll and car physically level, not tilted over. The battery's long edges should acquire a very mild perspective slope like the references, rather than remain perfectly frontal/horizontal. This is predominantly a lateral view, NOT a dramatic front three-quarter view.
+All four wheels remain clearly readable: solid near-side wheels and softer far-side wheels through ghost shell. Keep correct axle relationships. The broad flat battery stays between axles. Preserve soft milky transparency, no neon wireframe.
+Output one standalone full-car asset centered, landscape 1536x1024. Same background #10251e, same lighting and margin. No words, labels, UI, numbers or logo. Re-render the same vehicle from the subtly adjusted camera, do not merely rotate the existing flat image.

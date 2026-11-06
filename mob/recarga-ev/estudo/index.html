@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recarga — estudo de interface</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="bolt" viewBox="0 0 24 24"><path d="m13 2-8 12h6l-1 8 9-13h-7z"/></symbol>
+    <symbol id="arrow" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="plug" viewBox="0 0 24 24"><path d="M8 3v5m8-5v5M6 8h12v4a6 6 0 0 1-12 0zm6 10v4"/></symbol>
+    <symbol id="check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></symbol>
+    <symbol id="bell" viewBox="0 0 24 24"><path d="M8 19h8m-6 3h4M5 17h14l-2-4V9A5 5 0 0 0 7 9v4z"/></symbol>
+    <symbol id="help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 5m0 3v.1"/></symbol>
+    <symbol id="pin" viewBox="0 0 24 24"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2"/></symbol>
+  </defs></svg>
+  <header class="board-header"><a class="wordmark" href="#">recarga<i>↗</i></a><span>ESTUDO DE PRODUTO / 01</span><a href="#rationale">Decisões de design <span>↘</span></a></header>
+  <main>
+    <section class="intro"><div><p class="eyebrow">RECARGA, COM CLAREZA</p><h1>Seu carro. Sua energia.</h1><p>Duas etapas, uma linguagem visual inspirada nos painéis automotivos.</p></div><span class="prototype-label"><i></i> Protótipo interativo · dados simulados</span></section>
+    <section class="screens" aria-label="Proposta das duas telas">
+      <div class="screen-column"><div class="screen-caption"><span>01 / CONEXÃO</span><span>Orientar, sem distrair.</span></div>
+        <article class="phone" id="connection" aria-label="Tela de conexão">
+          <div class="statusbar"><b>9:41</b><span>▮▮▮ &nbsp;◔ &nbsp;▰</span></div>
+          <nav class="app-nav"><button class="icon-button" data-action="cancel" aria-label="Voltar"><svg class="icon reverse"><use href="#arrow"/></svg></button><span>Preparar recarga</span><button class="icon-button" data-action="help" aria-label="Ajuda para conectar"><svg class="icon"><use href="#help"/></svg></button></nav>
+          <div class="station"><svg class="icon"><use href="#pin"/></svg><span>Shell Paulista</span><span class="station-id">C-01 · CCS2</span></div>
+          <div class="connect-heading"><span class="tag"><i></i> CONECTOR LIBERADO</span><h2 id="connect-title">Conecte o cabo<br>ao seu carro.</h2><p id="connect-copy">Encaixe o conector até ele travar.<br>A recarga começa automaticamente.</p></div>
+          <div class="connect-art"><img src="assets/connect.webp" alt="Conector alinhado à entrada de recarga de um carro prata"><span class="port-caption"><span>01</span> Encaixe até travar</span></div>
+          <div class="time-card"><div class="time-icon"><svg class="icon"><use href="#clock"/></svg></div><div><span>Tempo para conectar</span><p>A tomada está reservada para você</p></div><strong id="countdown">01:36</strong></div>
+          <ol class="steps"><li class="done"><span><svg class="icon"><use href="#check"/></svg></span><div>Tomada liberada</div></li><li class="current"><span>2</span><div>Conecte o cabo ao carro</div></li><li><span>3</span><div>Aguarde o início da recarga</div></li></ol>
+          <div class="connect-bottom"><button class="primary" id="connected-button">Já conectei <svg class="icon"><use href="#arrow"/></svg></button><button class="text-button" data-action="help">Preciso de ajuda</button></div>
+          <div class="home-indicator"></div>
+        </article>
+      </div>
+      <div class="screen-column"><div class="screen-caption"><span>02 / ACOMPANHAMENTO</span><span>O essencial, em um olhar.</span></div>
+        <article class="phone" id="charging" aria-label="Tela de acompanhamento" tabindex="-1">
+          <div class="statusbar"><b>9:41</b><span>▮▮▮ &nbsp;◔ &nbsp;▰</span></div>
+          <nav class="app-nav"><button class="icon-button" data-action="back" aria-label="Voltar para conexão"><svg class="icon reverse"><use href="#arrow"/></svg></button><span>Sua recarga</span><button class="icon-button" data-action="help" aria-label="Ajuda com a recarga"><svg class="icon"><use href="#help"/></svg></button></nav>
+          <div class="station"><svg class="icon"><use href="#pin"/></svg><span>Shell Paulista</span><span class="station-id">C-01 · CCS2</span></div>
+          <div class="charge-heading"><span class="tag" id="charge-state"><i></i> CARREGANDO</span><div class="soc"><strong id="soc-number">68</strong><span id="soc-unit">%</span></div><p id="soc-caption">Bateria do veículo</p></div>
+          <div class="car-art" role="img" aria-label="Carro translúcido com bateria no assoalho, 68% carregada" id="car-art">
+            <svg viewBox="0 110 1536 760" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs><linearGradient id="energy" x1="0" y1="1" x2="0.8" y2="0"><stop stop-color="#209d67"/><stop offset=".55" stop-color="#5fdf91"/><stop offset="1" stop-color="#c6ffb5"/></linearGradient><linearGradient id="pack-sheen" x1="0" y1="0" x2="0.2" y2="1"><stop stop-color="#e0ffe9" stop-opacity=".25"/><stop offset=".5" stop-color="#e0ffe9" stop-opacity="0"/></linearGradient><clipPath id="pack-clip"><rect width="100" height="100" rx="2"/></clipPath></defs>
+              <image href="assets/car-ghost-v2.webp" width="1536" height="1024"/>
+              <!-- Coordinates match the generated floor tray; normalized 0–100 surface. -->
+              <g transform="matrix(4.70,-0.30,0.40,0.80,550,568)">
+                  <path d="M0 100h100v6H0Z" fill="#599978"/>
+                  <rect width="100" height="100" rx="2" fill="#18342a" stroke="#c1e4cf" stroke-width="1"/>
+                <g clip-path="url(#pack-clip)"><rect id="pack-fill" width="68" height="100" fill="url(#energy)"/><path d="M10 0v100m10-100v100m10-100v100m10-100v100m10-100v100m10-100v100m10-100v100m10-100v100m10-100v100" stroke="#123d29" stroke-opacity=".3" stroke-width=".45"/><rect width="100" height="100" fill="url(#pack-sheen)"/><path id="pack-front" d="M68 0v100" stroke="#e4ffe8" stroke-width=".8"/></g>
+              </g>
+            </svg>
+          </div>
+          <div class="charge-context"><span>Início <b id="initial-soc">45%</b></span><span class="added" id="added-soc">+23 pontos de carga</span></div>
+          <div class="estimate"><svg class="icon"><use href="#clock"/></svg><p id="estimate-copy"><strong>~11 min</strong> para chegar a 80%</p><span>ESTIMATIVA</span></div>
+          <div class="metrics"><div><span><svg class="icon"><use href="#bolt"/></svg> Potência atual</span><strong id="power">42 <small>kW</small></strong></div><div><span>Energia fornecida</span><strong>18,4 <small>kWh</small></strong></div><div><span>Custo até agora</span><strong>R$ 36,80</strong></div><div><span>Tempo decorrido</span><strong>26 <small>min</small></strong></div></div>
+          <div class="budget"><div><span>Limite de valor</span><span><strong>R$ 36,80</strong> / R$ 50,00</span></div><div class="budget-track"><span></span></div><p id="budget-caption">A recarga encerra ao atingir R$ 50,00.</p></div>
+          <div class="alert-row"><svg class="icon"><use href="#bell"/></svg><span>Avisar ao chegar a 80%</span><button class="switch" id="alert-switch" role="switch" aria-checked="true" aria-label="Avisar ao chegar a 80%"><span></span></button></div>
+          <div class="charge-bottom"><button class="secondary" id="stop-button"><span class="stop-square"></span> Encerrar recarga</button><button class="icon-button details-button" data-action="details" aria-label="Ver detalhes da sessão"><svg class="icon"><use href="#arrow"/></svg></button></div>
+          <div class="home-indicator"></div>
+        </article>
+      </div>
+    </section>
+    <section class="demo-controls" aria-label="Controles do protótipo"><div><p class="eyebrow">EXPERIMENTE A BATERIA</p><p>O carro é uma imagem. A carga é interface.</p></div><label for="charge-range">Carga <output id="range-value">68%</output><input id="charge-range" type="range" min="45" max="100" value="68"></label><label class="checkbox-label"><input id="no-soc" type="checkbox"> Sem percentual informado</label><button class="reset-button" id="reset-button">Reiniciar demonstração ↺</button></section>
+    <section class="rationale" id="rationale"><p class="eyebrow">A DIREÇÃO VISUAL</p><h2>Automotivo. Não futurista.</h2><div class="notes-grid"><div><span>01</span><h3>O carro explica a carga</h3><p>Carroceria em transparência, rodas com volume e uma bateria plana entre os eixos. A cor fica onde importa: na energia armazenada.</p></div><div><span>02</span><h3>A interface continua sendo app</h3><p>Texto legível, botões amplos e informações em ordem de importância. Sem velocímetro decorativo, partículas ou luzes competindo entre si.</p></div><div><span>03</span><h3>Pronto para virar componente</h3><p>Uma imagem estática e uma camada vetorial de progresso. O controle acima altera a bateria sem substituir a imagem do carro.</p></div></div><a class="study-link" href="ESTUDO.md">Ler análise das 25 referências e fontes consultadas ↗</a></section>
+  </main>
+  <footer class="board-footer"><span>recarga / conceito visual</span><span>HTML + imagens + SVG · sem renderização 3D em tempo real</span></footer>
+  <dialog id="dialog"><form method="dialog"><button class="dialog-close" aria-label="Fechar">×</button></form><div id="dialog-body"></div></dialog>
+  <script src="app.js"></script>
+</body></html>

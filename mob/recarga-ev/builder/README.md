@@ -6,13 +6,14 @@
 
 | Pasta de origem | Datas | O que veio dela |
 |---|---|---|
-| `Área de Trabalho/mob app` (sem git) | 27 e 28/09/2026 | O pacote final (`../entrega/`), a apresentação, os fluxos, os moldes em verde e os scripts `processar-hd`, `processar-u29` e `processar-verde` |
+| `Área de Trabalho/mob app` (sem git) | 26 a 28/09/2026 | O pacote final (`../entrega/`), a apresentação, os fluxos, os moldes em verde, os scripts `processar-hd`, `processar-u29` e `processar-verde` e, da raiz, o estudo inicial (`../estudo/`) |
 | `.claude/worktrees/ev-charging-station-screens-3a9143` no projeto `Área de Trabalho/Mob` (branch `claude/ev-charging-station-screens-3a9143` do [igreen-mob-link](https://github.com/snksergio/igreen-mob-link)) | 26 a 28/09/2026 | A primeira versão: o protótipo com a análise de mercado, os 8 moldes e a referência `../handoff/recarga-ev/` |
 
 ## Estado atual
 
 - **A versão final é o pacote `../entrega/`**: `mockup.html` é a referência de visual e comportamento, e `IMPLEMENTACAO.md` é a especificação para implementar no app, escrita para o Claude do dev ler antes de escrever código. Foi feito em 28/09 à noite, a pedido do usuário, para passar a um amigo dev ("para que ele possa simplesmente pegar com o Claude dele e adaptar nas telas do aplicativo atual").
 - `../prototipos/recarga-ev-apresentacao.html` é a apresentação de onde o pacote saiu; o pacote é a mesma tela, com os arquivos separados.
+- `../estudo/` é o primeiro estudo das duas telas (26/09), antes das ilustrações dos carros. As notas da análise das 25 referências estão em [`estudo/ESTUDO.md`](estudo/ESTUDO.md) e os prompts em [`estudo/PROMPTS.md`](estudo/PROMPTS.md). Fica só como registro, na aba de versões.
 - `../handoff/recarga-ev/` é o pacote anterior, pedido na pasta de trabalho do Mob e **interrompido pelo usuário no meio** (28/09, 18:50). Ainda traz os 8 moldes. Fica só como registro, na aba de versões.
 - O que não sei pelos arquivos: se o pacote já foi entregue ao dev e se o app já implementou as telas. Pergunte ao usuário antes de continuar.
 
@@ -75,6 +76,8 @@ O pacote tem uma cópia própria do script em `../entrega/fontes/processar-hd.mj
 | [`../prototipos/recarga-ev-moldes.html`](../prototipos/recarga-ev-moldes.html) | Os 8 moldes no fundo escuro (primeira versão) |
 | [`../prototipos/recarga-ev.html`](../prototipos/recarga-ev.html) | O protótipo com telas, análise de mercado e primeira proposta |
 | [`../handoff/recarga-ev/index.html`](../handoff/recarga-ev/index.html) | A referência com 8 moldes, do pacote interrompido |
+| [`../estudo/index.html`](../estudo/index.html) | O estudo inicial das duas telas (26/09) |
+| [`estudo/`](estudo/) | As notas do estudo inicial (`ESTUDO.md`, `PROMPTS.md`), as capturas e os prompts das imagens |
 | [`prototipos/ilustracoes/processar-hd.mjs`](prototipos/ilustracoes/processar-hd.mjs) | Gera as imagens do pacote final em 3 larguras |
 | [`prototipos/ilustracoes/processar-verde.mjs`](prototipos/ilustracoes/processar-verde.mjs) | Gera as cópias para a tela verde |
 | [`prototipos/ilustracoes/processar-carregador.mjs`](prototipos/ilustracoes/processar-carregador.mjs) | Gera a cena de conectar (solto/plugado), com o carregador do Minimal SUV |
@@ -92,7 +95,7 @@ O pacote tem uma cópia própria do script em `../entrega/fontes/processar-hd.mj
 - `mob app/prototipos/ilustracoes/hd/png/`: idêntica a `../entrega/assets/png/`, que está aqui.
 - `mob app/entrega/recarga-ev-handoff.zip`: o mesmo pacote compactado (31 MB, com os renders da IA).
 - `mob app/output/` (cerca de 197 MB): imagens geradas nas explorações, e também os cartões iGreen, que são outro assunto.
-- A raiz de `mob app` (`index.html`, `app.js`, `style.css`, `ESTUDO.md`, `PROMPTS.md`): o primeiro estudo de 26/09, anterior às ilustrações.
+- Do estudo inicial, as imagens geradas por IA em `mob app/assets/` (`car-study-v3` a `v7`, `car-ghost*.png`, `connect.png`, `proposta-verde-*.png`, cerca de 18 MB), fonte pesada. A página usa só `car-ghost-v2.webp` e `connect.webp`, que estão em `../estudo/assets/`.
 - O resto da pasta de trabalho do Mob é o app de cadastro do igreen-mob-link num commit antigo (`77a2a52`), já migrado em `mob/cadastro-investidor`, `mob/simulador-investidor`, `mob/proposta-investidor` e `mob/oferta-live`. Também ficaram de fora as configurações locais de ferramentas (`.claude/`, `.impeccable/`, `.playwright-mcp/`).
 
 ## Visto no original

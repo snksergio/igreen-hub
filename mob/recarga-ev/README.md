@@ -21,6 +21,7 @@ Daqui em diante a fonte é esta pasta (veja o [README do builder](builder/README
 | Moldes de carro (escolher e ver nas duas telas) | https://snksergio.github.io/igreen-hub/mob/recarga-ev/prototipos/recarga-ev-moldes.html |
 | Telas e análise de mercado (primeira proposta) | https://snksergio.github.io/igreen-hub/mob/recarga-ev/prototipos/recarga-ev.html |
 | Referência com 8 moldes (pacote interrompido) | https://snksergio.github.io/igreen-hub/mob/recarga-ev/handoff/recarga-ev/ |
+| Estudo inicial (26/09, antes das ilustrações) | https://snksergio.github.io/igreen-hub/mob/recarga-ev/estudo/ |
 
 ## Estrutura
 
@@ -31,5 +32,6 @@ Daqui em diante a fonte é esta pasta (veja o [README do builder](builder/README
 - `prototipos/recarga-ev-moldes.html` e `recarga-ev.html` — a primeira versão: os 8 moldes no fundo escuro e o protótipo com a análise de mercado.
 - `prototipos/ilustracoes/` — as ilustrações usadas pelas páginas (`hd/` para a apresentação, `verde/` para os fluxos e moldes verdes).
 - `handoff/recarga-ev/` — a referência com os 8 moldes, do pacote interrompido.
+- `estudo/` — o primeiro estudo das duas telas (26/09), da raiz da pasta `mob app`, antes das ilustrações dos carros.
 - `index.html` — só leva para o mockup final.
 - `builder/` — os scripts, a geometria e as referências das ilustrações. Não aparece na vitrine.

@@ -1,0 +1,21 @@
+Refinamento das duas propostas pela ferramenta integrada de geração de imagens.
+
+Proposta 1 concluída: proposta-verde-01-ilustracao-refinada.png.
+Proposta 2 pendente: a ferramenta retornou usage_limit_reached; nenhum novo arquivo foi gerado para ela.
+
+Prompt da proposta 1:
+Refine the attached green ghost-car proposal into a premium standalone automotive illustration asset. Keep the EXACT vehicle silhouette, elevated side camera angle, four wheel positions, transparent shell design and floor battery shape of this image. Do not redesign car or change its viewpoint.
+
+REMOVE ALL INTERFACE ELEMENTS: remove "400 mi", all numbers and units at bottom, white triangle, dashed white charge-limit marker, any labels, and any graphic overlays. Reconstruct clean continuous transparent vehicle surfaces behind the removed central text. Remove the external charging cable and plug so only the vehicle, its internal battery and natural shadow remain.
+
+UPGRADE RENDER QUALITY: produce clean high-resolution CGI with precise anti-aliased edges, distinct tire and wheel forms, subtle readable seats and inner structure. Eliminate source-image blur, compression artifacts, grain, muddy surfaces and photographic screen texture. Keep restrained detail rather than adding mechanical clutter. Layer the material contrast: near wheels dark charcoal with satin silver rims; far wheels softer and translucent; body shell clear muted emerald glass with delicate pale mint edge highlights; battery silver casing crisp and dimensional, its filled area luminous emerald green (same proportion as reference), unfilled area darker desaturated green-gray. Reduce the uniform all-green wash and restore local contrast and depth. Green remains predominant. Highlights controlled, never clipped white or radioactive lime.
+Lighting: elegant soft studio illumination, faint emerald bounce under the battery, coherent contact shadows. Seamless deep forest green #10251e backdrop, no pedestal, grid or decorative rings.
+One full car centered with 8–10% breathing room on every side, landscape 2048x1152 or highest available comparable wide resolution. Only illustration. No text, numbers, symbols, logos, controls or watermark.
+
+Prompt preparado para a proposta 2 (não executado com sucesso):
+Refine the attached second green ghost-car proposal into a polished standalone automotive illustration. Preserve THIS vehicle's exact low sedan silhouette, elevated side view camera, wheel placement, soft matte translucent body shell, visible chassis and broad flat floor battery. Do not redesign it or change its angle. This should remain a different rendering style from a bright glass-like ghost car: understated satin translucent body, clear metallic mechanical parts.
+
+REMOVE ALL UI AND OVERLAYS completely: DAILY and TRIP text, scale above battery, DONE text and bottom button, white triangle, lock icon, green circular port status symbol and its horizontal leader line, all symbols, lines and labels external to the vehicle. Remove any artificial white charge-limit separator, retaining a simple natural color boundary on the battery. Reconstruct unobstructed body and battery surfaces.
+
+Improve quality substantially: clean premium high-resolution CGI, sharp intentional contours and anti-aliasing, no blurry upscaled screenshot artifacts or noise. Improve material separation and local contrast: dark tires, detailed but restrained satin silver wheel spokes, clear silver chassis parts, thin layered silver battery casing without blown-out white, gently translucent pale sage/emerald body with soft edge light. Battery fill rich emerald green with subtle surface depth and the SAME fill proportion, remaining part dark green-gray. Refine visible mechanical shapes without increasing visual clutter. Make the silhouette and floor plate legible at mobile size. Preserve matte ghost style, no excessive neon outlines.
+Deep forest green #10251e seamless background, natural contact shadow and very restrained green reflected light beneath battery. Only one full vehicle, centered, 8–10% margins on every side. Landscape 2048x1152 or highest available comparable wide resolution. No UI, text, numbers, logos, symbols, cables, decorative platform or watermark.
