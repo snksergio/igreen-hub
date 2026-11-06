@@ -1,0 +1,10 @@
+{
+  "nome": "Vídeo da primeira recarga",
+  "descricao": "A pesquisa de discovery da Conexão Mobi sobre a primeira recarga de carro elétrico no Brasil, em vídeo de 2min25: números do mercado, as duas personas e os momentos da jornada, da vaga à energia.",
+  "tipo": "apresentacao",
+  "atualizado": "2026-11-06",
+  "paginas": [
+    { "nome": "Assistir ao vídeo", "arquivo": "index.html" }
+  ],
+  "tags": ["vídeo", "pesquisa", "discovery", "primeira recarga", "remotion"]
+}
