@@ -1,0 +1,3596 @@
+{
+  "produto": "Eletroposto · iGreen",
+  "gerado": "2026-10-02",
+  "fonte": {
+    "canvas": "https://claude.ai/artifact/5fVEVwo14fpjPfWpdqmxba (versão 127)",
+    "figjam": "arquivo gQz8GAl6syHpwiLSPjdVq7, seções 1 a 28"
+  },
+  "tela": {
+    "largura": 390,
+    "alturaPadrao": 844,
+    "escalaPng": 2
+  },
+  "fluxos": [
+    {
+      "numero": 1,
+      "titulo": "Primeiro acesso",
+      "descricao": "Boas-vindas, permissões e cadastro do carro",
+      "entradas": [],
+      "saidas": [
+        "→ 2. Home"
+      ],
+      "telas": [
+        {
+          "id": "01-01-BoasVindas1",
+          "numero": "01-01",
+          "quadro": "BoasVindas1",
+          "titulo": "Primeiro acesso 1 · Cadastre seu carro",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/01-01-BoasVindas1.png",
+          "html": "html/01-01-BoasVindas1.html"
+        },
+        {
+          "id": "01-02-BoasVindas2",
+          "numero": "01-02",
+          "quadro": "BoasVindas2",
+          "titulo": "Primeiro acesso 2 · Pague com Pix",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/01-02-BoasVindas2.png",
+          "html": "html/01-02-BoasVindas2.html"
+        },
+        {
+          "id": "01-03-BoasVindas3",
+          "numero": "01-03",
+          "quadro": "BoasVindas3",
+          "titulo": "Primeiro acesso 3 · Carregador livre por perto",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/01-03-BoasVindas3.png",
+          "html": "html/01-03-BoasVindas3.html"
+        },
+        {
+          "id": "01-04-PermLocal",
+          "numero": "01-04",
+          "quadro": "PermLocal",
+          "titulo": "Primeiro acesso 4 · Permissão de localização",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/01-04-PermLocal.png",
+          "html": "html/01-04-PermLocal.html"
+        },
+        {
+          "id": "01-05-PermNotificacoes",
+          "numero": "01-05",
+          "quadro": "PermNotificacoes",
+          "titulo": "Primeiro acesso 5 · Permissão de notificações",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/01-05-PermNotificacoes.png",
+          "html": "html/01-05-PermNotificacoes.html"
+        },
+        {
+          "id": "01-06-VeiculoNovoVazio",
+          "numero": "01-06",
+          "quadro": "VeiculoNovoVazio",
+          "titulo": "Novo veículo · vazio",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/01-06-VeiculoNovoVazio.png",
+          "html": "html/01-06-VeiculoNovoVazio.html"
+        },
+        {
+          "id": "01-07-VeiculoEscolherModelo",
+          "numero": "01-07",
+          "quadro": "VeiculoEscolherModelo",
+          "titulo": "Novo veículo · escolher modelo",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/01-07-VeiculoEscolherModelo.png",
+          "html": "html/01-07-VeiculoEscolherModelo.html"
+        },
+        {
+          "id": "01-08-VeiculoNovoPreenchido",
+          "numero": "01-08",
+          "quadro": "VeiculoNovoPreenchido",
+          "titulo": "Novo veículo · preenchido (definitivo)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/01-08-VeiculoNovoPreenchido.png",
+          "html": "html/01-08-VeiculoNovoPreenchido.html"
+        },
+        {
+          "id": "01-09-VeiculoOk",
+          "numero": "01-09",
+          "quadro": "VeiculoOk",
+          "titulo": "Primeiro acesso 6 · Veículo cadastrado",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/01-09-VeiculoOk.png",
+          "html": "html/01-09-VeiculoOk.html"
+        },
+        {
+          "id": "01-10-VeiculoFichaSheet",
+          "numero": "01-10",
+          "quadro": "VeiculoFichaSheet",
+          "titulo": "Novo veículo · dados de recarga (sheet do botão ⓘ)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/01-10-VeiculoFichaSheet.png",
+          "html": "html/01-10-VeiculoFichaSheet.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "01-01-BoasVindas1",
+          "para": "01-02-BoasVindas2",
+          "gatilho": "Continuar"
+        },
+        {
+          "de": "01-02-BoasVindas2",
+          "para": "01-03-BoasVindas3",
+          "gatilho": "Continuar"
+        },
+        {
+          "de": "01-01-BoasVindas1",
+          "para": "01-04-PermLocal",
+          "gatilho": "Pular · entra pela 13. Entrar e criar conta"
+        },
+        {
+          "de": "01-03-BoasVindas3",
+          "para": "01-04-PermLocal",
+          "gatilho": "Começar agora · entra pela 13. Entrar e criar conta"
+        },
+        {
+          "de": "01-04-PermLocal",
+          "para": "01-05-PermNotificacoes",
+          "gatilho": "Permitir ou Agora não"
+        },
+        {
+          "de": "01-05-PermNotificacoes",
+          "para": "01-06-VeiculoNovoVazio",
+          "gatilho": "Ativar ou Agora não"
+        },
+        {
+          "de": "01-06-VeiculoNovoVazio",
+          "para": "01-07-VeiculoEscolherModelo",
+          "gatilho": "Marca e modelo"
+        },
+        {
+          "de": "01-07-VeiculoEscolherModelo",
+          "para": "01-08-VeiculoNovoPreenchido",
+          "gatilho": "Escolhe o modelo"
+        },
+        {
+          "de": "01-08-VeiculoNovoPreenchido",
+          "para": "01-09-VeiculoOk",
+          "gatilho": "Cadastrar veículo"
+        },
+        {
+          "de": "01-08-VeiculoNovoPreenchido",
+          "para": "01-10-VeiculoFichaSheet",
+          "gatilho": "Ver dados de recarga do modelo"
+        },
+        {
+          "de": "01-09-VeiculoOk",
+          "para": "→ 2. Home",
+          "gatilho": "Ir para o início"
+        }
+      ]
+    },
+    {
+      "numero": 2,
+      "titulo": "Home",
+      "descricao": "Ponto de partida: veículo, saldo, serviços e o posto mais perto",
+      "entradas": [],
+      "saidas": [
+        "→ 3. Encontrar um posto · Mapa · Mais próximo de você",
+        "→ 4. Começar a recarga · QR Code · Recarregar de novo",
+        "→ 7. Carteira · Saldo · Adicionar · Recargas",
+        "→ 8. Veículos · Trocar veículo · Veículos",
+        "→ 9. Conta e ajuda · Central de ajuda · Configurações",
+        "→ 10. Recarga grátis · Banner Para você"
+      ],
+      "telas": [
+        {
+          "id": "02-01-Carregando",
+          "numero": "02-01",
+          "quadro": "Carregando",
+          "titulo": "Estados · Carregando a home (esqueleto)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/02-01-Carregando.png",
+          "html": "html/02-01-Carregando.html"
+        },
+        {
+          "id": "02-02-HomeV04Completa",
+          "numero": "02-02",
+          "quadro": "HomeV04Completa",
+          "titulo": "Home completa · base V04 (Seu veículo)",
+          "grupo": null,
+          "altura": 1872,
+          "png": "telas/02-02-HomeV04Completa.png",
+          "html": "html/02-02-HomeV04Completa.html"
+        },
+        {
+          "id": "02-03-HomeServicosSheet",
+          "numero": "02-03",
+          "quadro": "HomeServicosSheet",
+          "titulo": "Todos os serviços (ao tocar na grade)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/02-03-HomeServicosSheet.png",
+          "html": "html/02-03-HomeServicosSheet.html"
+        },
+        {
+          "id": "02-04-ErroRede",
+          "numero": "02-04",
+          "quadro": "ErroRede",
+          "titulo": "Estados · Sem conexão (padrão das telas)",
+          "grupo": "Estados da home",
+          "altura": 844,
+          "png": "telas/02-04-ErroRede.png",
+          "html": "html/02-04-ErroRede.html"
+        },
+        {
+          "id": "02-05-HomeSemPosto",
+          "numero": "02-05",
+          "quadro": "HomeSemPosto",
+          "titulo": "Estados · Home sem posto perto e sem recargas",
+          "grupo": "Estados da home",
+          "altura": 1752,
+          "png": "telas/02-05-HomeSemPosto.png",
+          "html": "html/02-05-HomeSemPosto.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "02-01-Carregando",
+          "para": "02-02-HomeV04Completa",
+          "gatilho": "Dados carregados"
+        },
+        {
+          "de": "02-02-HomeV04Completa",
+          "para": "02-03-HomeServicosSheet",
+          "gatilho": "Ver todos os serviços"
+        },
+        {
+          "de": "02-01-Carregando",
+          "para": "02-04-ErroRede",
+          "gatilho": "Sem conexão"
+        },
+        {
+          "de": "02-02-HomeV04Completa",
+          "para": "02-05-HomeSemPosto",
+          "gatilho": "Sem posto perto e sem recargas"
+        },
+        {
+          "de": "02-02-HomeV04Completa",
+          "para": "→ 3. Encontrar um posto · Mapa · Mais próximo de você",
+          "gatilho": "Mapa · Mais próximo de você"
+        },
+        {
+          "de": "02-02-HomeV04Completa",
+          "para": "→ 4. Começar a recarga · QR Code · Recarregar de novo",
+          "gatilho": "QR Code · Recarregar de novo"
+        },
+        {
+          "de": "02-02-HomeV04Completa",
+          "para": "→ 7. Carteira · Saldo · Adicionar · Recargas",
+          "gatilho": "Saldo · Adicionar · Recargas"
+        },
+        {
+          "de": "02-02-HomeV04Completa",
+          "para": "→ 8. Veículos · Trocar veículo · Veículos",
+          "gatilho": "Trocar veículo · Veículos"
+        },
+        {
+          "de": "02-02-HomeV04Completa",
+          "para": "→ 9. Conta e ajuda · Central de ajuda · Configurações",
+          "gatilho": "Central de ajuda · Configurações"
+        },
+        {
+          "de": "02-02-HomeV04Completa",
+          "para": "→ 10. Recarga grátis · Banner Para você",
+          "gatilho": "Banner Para você"
+        }
+      ]
+    },
+    {
+      "numero": 3,
+      "titulo": "Encontrar um posto",
+      "descricao": "Mapa, lista, filtros, detalhe do posto, rota e chegada",
+      "entradas": [],
+      "saidas": [
+        "→ 5. Pagamento",
+        "→ 4. Ler o QR"
+      ],
+      "telas": [
+        {
+          "id": "03-01-MapaPostos",
+          "numero": "03-01",
+          "quadro": "MapaPostos",
+          "titulo": "Mapa 1 · postos no mapa",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/03-01-MapaPostos.png",
+          "html": "html/03-01-MapaPostos.html"
+        },
+        {
+          "id": "03-02-MapaPosto",
+          "numero": "03-02",
+          "quadro": "MapaPosto",
+          "titulo": "Mapa 5 · detalhe do posto e carregadores",
+          "grupo": null,
+          "altura": 944,
+          "png": "telas/03-02-MapaPosto.png",
+          "html": "html/03-02-MapaPosto.html"
+        },
+        {
+          "id": "03-03-MapaRota",
+          "numero": "03-03",
+          "quadro": "MapaRota",
+          "titulo": "Mapa 4 · rota até o posto",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/03-03-MapaRota.png",
+          "html": "html/03-03-MapaRota.html"
+        },
+        {
+          "id": "03-04-Chegou",
+          "numero": "03-04",
+          "quadro": "Chegou",
+          "titulo": "Chegada · Você chegou ao posto",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/03-04-Chegou.png",
+          "html": "html/03-04-Chegou.html"
+        },
+        {
+          "id": "03-05-MapaLista",
+          "numero": "03-05",
+          "quadro": "MapaLista",
+          "titulo": "Mapa 2 · lista (próximos, recentes, favoritos)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/03-05-MapaLista.png",
+          "html": "html/03-05-MapaLista.html"
+        },
+        {
+          "id": "03-06-MapaPostoSobre",
+          "numero": "03-06",
+          "quadro": "MapaPostoSobre",
+          "titulo": "Mapa 5b · sobre o local (aba do posto)",
+          "grupo": null,
+          "altura": 1040,
+          "png": "telas/03-06-MapaPostoSobre.png",
+          "html": "html/03-06-MapaPostoSobre.html"
+        },
+        {
+          "id": "03-07-ACaminhoOcupado",
+          "numero": "03-07",
+          "quadro": "ACaminhoOcupado",
+          "titulo": "Chegada · Carregador ocupado no caminho",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/03-07-ACaminhoOcupado.png",
+          "html": "html/03-07-ACaminhoOcupado.html"
+        },
+        {
+          "id": "03-08-PostoLotado",
+          "numero": "03-08",
+          "quadro": "PostoLotado",
+          "titulo": "Chegada · Posto lotado: avisar quando liberar",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/03-08-PostoLotado.png",
+          "html": "html/03-08-PostoLotado.html"
+        },
+        {
+          "id": "03-09-MapaFiltros",
+          "numero": "03-09",
+          "quadro": "MapaFiltros",
+          "titulo": "Mapa 3 · filtros (sheet)",
+          "grupo": "Estados do mapa",
+          "altura": 844,
+          "png": "telas/03-09-MapaFiltros.png",
+          "html": "html/03-09-MapaFiltros.html"
+        },
+        {
+          "id": "03-10-MapaCalculadora",
+          "numero": "03-10",
+          "quadro": "MapaCalculadora",
+          "titulo": "Mapa 6 · calculadora de valor (sheet)",
+          "grupo": "Estados do mapa",
+          "altura": 844,
+          "png": "telas/03-10-MapaCalculadora.png",
+          "html": "html/03-10-MapaCalculadora.html"
+        },
+        {
+          "id": "03-11-MapaSemLocal",
+          "numero": "03-11",
+          "quadro": "MapaSemLocal",
+          "titulo": "Estados · Mapa sem permissão de localização",
+          "grupo": "Estados do mapa",
+          "altura": 844,
+          "png": "telas/03-11-MapaSemLocal.png",
+          "html": "html/03-11-MapaSemLocal.html"
+        },
+        {
+          "id": "03-12-MapaSemResultado",
+          "numero": "03-12",
+          "quadro": "MapaSemResultado",
+          "titulo": "Estados · Mapa sem resultados na área",
+          "grupo": "Estados do mapa",
+          "altura": 844,
+          "png": "telas/03-12-MapaSemResultado.png",
+          "html": "html/03-12-MapaSemResultado.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "03-01-MapaPostos",
+          "para": "03-02-MapaPosto",
+          "gatilho": "Ver posto e carregadores"
+        },
+        {
+          "de": "03-02-MapaPosto",
+          "para": "03-03-MapaRota",
+          "gatilho": "Traçar rota até o posto"
+        },
+        {
+          "de": "03-03-MapaRota",
+          "para": "03-04-Chegou",
+          "gatilho": "Chegou ao posto"
+        },
+        {
+          "de": "03-01-MapaPostos",
+          "para": "03-05-MapaLista",
+          "gatilho": "Ver em lista"
+        },
+        {
+          "de": "03-02-MapaPosto",
+          "para": "03-06-MapaPostoSobre",
+          "gatilho": "Aba Sobre o local"
+        },
+        {
+          "de": "03-03-MapaRota",
+          "para": "03-07-ACaminhoOcupado",
+          "gatilho": "Carregador ocupou no caminho"
+        },
+        {
+          "de": "03-04-Chegou",
+          "para": "03-08-PostoLotado",
+          "gatilho": "Rápidos ocupados"
+        },
+        {
+          "de": "03-05-MapaLista",
+          "para": "03-09-MapaFiltros",
+          "gatilho": "Filtros"
+        },
+        {
+          "de": "03-06-MapaPostoSobre",
+          "para": "03-10-MapaCalculadora",
+          "gatilho": "Simular quanto vai custar"
+        },
+        {
+          "de": "03-02-MapaPosto",
+          "para": "→ 5. Pagamento",
+          "gatilho": "Carregar no C-01"
+        },
+        {
+          "de": "03-04-Chegou",
+          "para": "→ 4. Ler o QR",
+          "gatilho": "Ler o QR do C-01"
+        },
+        {
+          "de": "03-04-Chegou",
+          "para": "→ 5. Pagamento",
+          "gatilho": "Carregar no C-01 sem QR"
+        }
+      ]
+    },
+    {
+      "numero": 4,
+      "titulo": "Começar a recarga",
+      "descricao": "Atalho da home, leitura do QR, código digitado e conectores",
+      "entradas": [],
+      "saidas": [
+        "→ 5. Pagamento",
+        "→ QR 1 · escolher o conector"
+      ],
+      "telas": [
+        {
+          "id": "04-01-PropAtalhoHome",
+          "numero": "04-01",
+          "quadro": "PropAtalhoHome",
+          "titulo": "Proposta 1 · Recarregar de novo (card da home)",
+          "grupo": null,
+          "altura": 315,
+          "png": "telas/04-01-PropAtalhoHome.png",
+          "html": "html/04-01-PropAtalhoHome.html"
+        },
+        {
+          "id": "04-02-PropQR",
+          "numero": "04-02",
+          "quadro": "PropQR",
+          "titulo": "Proposta 2 · Ler o QR do carregador",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/04-02-PropQR.png",
+          "html": "html/04-02-PropQR.html"
+        },
+        {
+          "id": "04-03-QrConectores",
+          "numero": "04-03",
+          "quadro": "QrConectores",
+          "titulo": "QR 1 · Carregador encontrado: escolha o conector",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/04-03-QrConectores.png",
+          "html": "html/04-03-QrConectores.html"
+        },
+        {
+          "id": "04-04-QrQualConector",
+          "numero": "04-04",
+          "quadro": "QrQualConector",
+          "titulo": "QR 1b · Qual conector escolher (sheet)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/04-04-QrQualConector.png",
+          "html": "html/04-04-QrQualConector.html"
+        },
+        {
+          "id": "04-05-QrSemCamera",
+          "numero": "04-05",
+          "quadro": "QrSemCamera",
+          "titulo": "QR 2 · Sem acesso à câmera",
+          "grupo": "Erros da leitura",
+          "altura": 844,
+          "png": "telas/04-05-QrSemCamera.png",
+          "html": "html/04-05-QrSemCamera.html"
+        },
+        {
+          "id": "04-06-QrInvalido",
+          "numero": "04-06",
+          "quadro": "QrInvalido",
+          "titulo": "QR 3 · Código não reconhecido",
+          "grupo": "Erros da leitura",
+          "altura": 844,
+          "png": "telas/04-06-QrInvalido.png",
+          "html": "html/04-06-QrInvalido.html"
+        },
+        {
+          "id": "04-07-QrOutraRede",
+          "numero": "04-07",
+          "quadro": "QrOutraRede",
+          "titulo": "QR 4 · Carregador de outra rede",
+          "grupo": "Erros da leitura",
+          "altura": 844,
+          "png": "telas/04-07-QrOutraRede.png",
+          "html": "html/04-07-QrOutraRede.html"
+        },
+        {
+          "id": "04-08-QrSemInternet",
+          "numero": "04-08",
+          "quadro": "QrSemInternet",
+          "titulo": "QR 5 · Sem internet",
+          "grupo": "Erros da leitura",
+          "altura": 844,
+          "png": "telas/04-08-QrSemInternet.png",
+          "html": "html/04-08-QrSemInternet.html"
+        },
+        {
+          "id": "04-09-CodigoDigitar",
+          "numero": "04-09",
+          "quadro": "CodigoDigitar",
+          "titulo": "QR 6 · Digitar código do carregador",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/04-09-CodigoDigitar.png",
+          "html": "html/04-09-CodigoDigitar.html"
+        },
+        {
+          "id": "04-10-CodigoInvalido",
+          "numero": "04-10",
+          "quadro": "CodigoInvalido",
+          "titulo": "QR 7 · Código não encontrado",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/04-10-CodigoInvalido.png",
+          "html": "html/04-10-CodigoInvalido.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "04-01-PropAtalhoHome",
+          "para": "04-02-PropQR",
+          "gatilho": "Carregar R$ 50 ou Escolher outro valor"
+        },
+        {
+          "de": "04-02-PropQR",
+          "para": "04-03-QrConectores",
+          "gatilho": "QR lido"
+        },
+        {
+          "de": "04-03-QrConectores",
+          "para": "04-04-QrQualConector",
+          "gatilho": "Qual conector escolher?"
+        },
+        {
+          "de": "04-02-PropQR",
+          "para": "04-05-QrSemCamera",
+          "gatilho": "Sem acesso à câmera"
+        },
+        {
+          "de": "04-02-PropQR",
+          "para": "04-06-QrInvalido",
+          "gatilho": "Código não reconhecido"
+        },
+        {
+          "de": "04-02-PropQR",
+          "para": "04-07-QrOutraRede",
+          "gatilho": "QR de outra rede"
+        },
+        {
+          "de": "04-02-PropQR",
+          "para": "04-08-QrSemInternet",
+          "gatilho": "Sem internet"
+        },
+        {
+          "de": "04-05-QrSemCamera",
+          "para": "04-09-CodigoDigitar",
+          "gatilho": "Digitar código do carregador"
+        },
+        {
+          "de": "04-09-CodigoDigitar",
+          "para": "04-10-CodigoInvalido",
+          "gatilho": "Código não existe"
+        },
+        {
+          "de": "04-03-QrConectores",
+          "para": "→ 5. Pagamento",
+          "gatilho": "Continuar com o C-01"
+        },
+        {
+          "de": "04-09-CodigoDigitar",
+          "para": "→ QR 1 · escolher o conector",
+          "gatilho": "Código válido"
+        }
+      ]
+    },
+    {
+      "numero": 5,
+      "titulo": "Pagamento",
+      "descricao": "Como e quanto carregar, forma de pagamento e saldo",
+      "entradas": [
+        "Carregador e conector escolhidos"
+      ],
+      "saidas": [
+        "→ 6. Recarga"
+      ],
+      "telas": [
+        {
+          "id": "05-01-PropPrimeiraVez",
+          "numero": "05-01",
+          "quadro": "PropPrimeiraVez",
+          "titulo": "Proposta 3c · Só na primeira recarga: como pagar",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/05-01-PropPrimeiraVez.png",
+          "html": "html/05-01-PropPrimeiraVez.html"
+        },
+        {
+          "id": "05-02-PropConfira",
+          "numero": "05-02",
+          "quadro": "PropConfira",
+          "titulo": "Proposta 3 · Pagamento: escolha como e quanto carregar",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/05-02-PropConfira.png",
+          "html": "html/05-02-PropConfira.html"
+        },
+        {
+          "id": "05-03-PropSaldoInsuf",
+          "numero": "05-03",
+          "quadro": "PropSaldoInsuf",
+          "titulo": "Proposta 3b · Mesma sheet quando o saldo não cobre",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/05-03-PropSaldoInsuf.png",
+          "html": "html/05-03-PropSaldoInsuf.html"
+        },
+        {
+          "id": "05-04-PropPixRecarga",
+          "numero": "05-04",
+          "quadro": "PropPixRecarga",
+          "titulo": "Proposta 3d · Pix gerado: a recarga começa sozinha",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/05-04-PropPixRecarga.png",
+          "html": "html/05-04-PropPixRecarga.html"
+        },
+        {
+          "id": "05-05-PropModo",
+          "numero": "05-05",
+          "quadro": "PropModo",
+          "titulo": "Proposta 3e · Como carregar (abre pelo botão do valor)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/05-05-PropModo.png",
+          "html": "html/05-05-PropModo.html"
+        },
+        {
+          "id": "05-06-PagPixSheet",
+          "numero": "05-06",
+          "quadro": "PagPixSheet",
+          "titulo": "Pagamento 1c · Adicionar saldo: quanto (sheet)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/05-06-PagPixSheet.png",
+          "html": "html/05-06-PagPixSheet.html"
+        },
+        {
+          "id": "05-07-PagMetodoSheet",
+          "numero": "05-07",
+          "quadro": "PagMetodoSheet",
+          "titulo": "Pagamento 1b · Forma de pagamento (sheet do Trocar)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/05-07-PagMetodoSheet.png",
+          "html": "html/05-07-PagMetodoSheet.html"
+        },
+        {
+          "id": "05-08-SaldoZero",
+          "numero": "05-08",
+          "quadro": "SaldoZero",
+          "titulo": "Pagamento · Carteira sem saldo (ao escolher a carteira)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/05-08-SaldoZero.png",
+          "html": "html/05-08-SaldoZero.html"
+        },
+        {
+          "id": "05-09-PixExpirado",
+          "numero": "05-09",
+          "quadro": "PixExpirado",
+          "titulo": "Pagamento · Pix expirado",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/05-09-PixExpirado.png",
+          "html": "html/05-09-PixExpirado.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "Carregador e conector escolhidos",
+          "para": "05-01-PropPrimeiraVez",
+          "gatilho": "Primeira recarga"
+        },
+        {
+          "de": "Carregador e conector escolhidos",
+          "para": "05-02-PropConfira",
+          "gatilho": "Já escolheu como pagar"
+        },
+        {
+          "de": "05-01-PropPrimeiraVez",
+          "para": "05-02-PropConfira",
+          "gatilho": "Continuar"
+        },
+        {
+          "de": "05-02-PropConfira",
+          "para": "05-03-PropSaldoInsuf",
+          "gatilho": "Saldo não cobre o valor"
+        },
+        {
+          "de": "05-03-PropSaldoInsuf",
+          "para": "05-04-PropPixRecarga",
+          "gatilho": "Adicionar R$ 13,60 e iniciar"
+        },
+        {
+          "de": "05-02-PropConfira",
+          "para": "05-05-PropModo",
+          "gatilho": "Botão do valor"
+        },
+        {
+          "de": "05-06-PagPixSheet",
+          "para": "05-04-PropPixRecarga",
+          "gatilho": "Gerar código Pix"
+        },
+        {
+          "de": "05-03-PropSaldoInsuf",
+          "para": "05-06-PagPixSheet",
+          "gatilho": "Adicionar outro valor via Pix"
+        },
+        {
+          "de": "05-02-PropConfira",
+          "para": "05-07-PagMetodoSheet",
+          "gatilho": "Trocar"
+        },
+        {
+          "de": "05-08-SaldoZero",
+          "para": "05-06-PagPixSheet",
+          "gatilho": "Adicionar saldo via Pix"
+        },
+        {
+          "de": "05-07-PagMetodoSheet",
+          "para": "05-08-SaldoZero",
+          "gatilho": "Carteira sem saldo"
+        },
+        {
+          "de": "05-04-PropPixRecarga",
+          "para": "05-09-PixExpirado",
+          "gatilho": "Código expirou"
+        },
+        {
+          "de": "05-02-PropConfira",
+          "para": "→ 6. Recarga",
+          "gatilho": "Iniciar recarga"
+        },
+        {
+          "de": "05-04-PropPixRecarga",
+          "para": "→ 6. Recarga",
+          "gatilho": "Pix pago: começa sozinha"
+        }
+      ]
+    },
+    {
+      "numero": 6,
+      "titulo": "Recarga",
+      "descricao": "Conectar o cabo, acompanhar, encerrar e o que pode dar errado",
+      "entradas": [],
+      "saidas": [
+        "→ 9. Detalhe da recarga",
+        "→ 9. Reportar um problema"
+      ],
+      "telas": [
+        {
+          "id": "06-01-PropConectar",
+          "numero": "06-01",
+          "quadro": "PropConectar",
+          "titulo": "Proposta 4 · Conecte o cabo (une Liberado e Conecte)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/06-01-PropConectar.png",
+          "html": "html/06-01-PropConectar.html"
+        },
+        {
+          "id": "06-02-PagCarregando",
+          "numero": "06-02",
+          "quadro": "PagCarregando",
+          "titulo": "Pagamento 4 · Carregando",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/06-02-PagCarregando.png",
+          "html": "html/06-02-PagCarregando.html"
+        },
+        {
+          "id": "06-03-HomeAtiva",
+          "numero": "06-03",
+          "quadro": "HomeAtiva",
+          "titulo": "Recarga · Home com o carro carregando",
+          "grupo": null,
+          "altura": 1885,
+          "png": "telas/06-03-HomeAtiva.png",
+          "html": "html/06-03-HomeAtiva.html"
+        },
+        {
+          "id": "06-04-Notificacoes",
+          "numero": "06-04",
+          "quadro": "Notificacoes",
+          "titulo": "Recarga · Notificações enquanto você está longe",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/06-04-Notificacoes.png",
+          "html": "html/06-04-Notificacoes.html"
+        },
+        {
+          "id": "06-05-TempoEsgotado",
+          "numero": "06-05",
+          "quadro": "TempoEsgotado",
+          "titulo": "Recarga · Tempo para plugar acabou",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/06-05-TempoEsgotado.png",
+          "html": "html/06-05-TempoEsgotado.html"
+        },
+        {
+          "id": "06-06-CarregandoAC",
+          "numero": "06-06",
+          "quadro": "CarregandoAC",
+          "titulo": "Recarga · Carregando em AC (sem % da bateria)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/06-06-CarregandoAC.png",
+          "html": "html/06-06-CarregandoAC.html"
+        },
+        {
+          "id": "06-07-EncerrarSheet",
+          "numero": "06-07",
+          "quadro": "EncerrarSheet",
+          "titulo": "Recarga · Encerrar a recarga (sheet)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/06-07-EncerrarSheet.png",
+          "html": "html/06-07-EncerrarSheet.html"
+        },
+        {
+          "id": "06-08-ConcluidaManual",
+          "numero": "06-08",
+          "quadro": "ConcluidaManual",
+          "titulo": "Recarga · Concluída: encerrada por você",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/06-08-ConcluidaManual.png",
+          "html": "html/06-08-ConcluidaManual.html"
+        },
+        {
+          "id": "06-09-ConcluidaLimite",
+          "numero": "06-09",
+          "quadro": "ConcluidaLimite",
+          "titulo": "Recarga · Concluída: limite atingido",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/06-09-ConcluidaLimite.png",
+          "html": "html/06-09-ConcluidaLimite.html"
+        },
+        {
+          "id": "06-10-ConcluidaCheia",
+          "numero": "06-10",
+          "quadro": "ConcluidaCheia",
+          "titulo": "Recarga · Concluída: bateria cheia",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/06-10-ConcluidaCheia.png",
+          "html": "html/06-10-ConcluidaCheia.html"
+        },
+        {
+          "id": "06-11-PropConcluida",
+          "numero": "06-11",
+          "quadro": "PropConcluida",
+          "titulo": "Proposta 5 · Recarga concluída: reservado, cobrado, liberado",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/06-11-PropConcluida.png",
+          "html": "html/06-11-PropConcluida.html"
+        },
+        {
+          "id": "06-12-CartaoRecusado",
+          "numero": "06-12",
+          "quadro": "CartaoRecusado",
+          "titulo": "Pagamento · Cartão recusado no fim (pendência)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/06-12-CartaoRecusado.png",
+          "html": "html/06-12-CartaoRecusado.html"
+        },
+        {
+          "id": "06-13-Interrompida",
+          "numero": "06-13",
+          "quadro": "Interrompida",
+          "titulo": "Recarga · Interrompida por falha do equipamento",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/06-13-Interrompida.png",
+          "html": "html/06-13-Interrompida.html"
+        },
+        {
+          "id": "06-14-CaboDesconectado",
+          "numero": "06-14",
+          "quadro": "CaboDesconectado",
+          "titulo": "Recarga · Cabo desconectado no meio",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/06-14-CaboDesconectado.png",
+          "html": "html/06-14-CaboDesconectado.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "06-01-PropConectar",
+          "para": "06-02-PagCarregando",
+          "gatilho": "Cabo conectado"
+        },
+        {
+          "de": "06-01-PropConectar",
+          "para": "06-05-TempoEsgotado",
+          "gatilho": "Não conectou a tempo"
+        },
+        {
+          "de": "06-02-PagCarregando",
+          "para": "06-06-CarregandoAC",
+          "gatilho": "Carregador AC: sem % da bateria"
+        },
+        {
+          "de": "06-02-PagCarregando",
+          "para": "06-03-HomeAtiva",
+          "gatilho": "Volta para a home com a recarga rodando"
+        },
+        {
+          "de": "06-03-HomeAtiva",
+          "para": "06-04-Notificacoes",
+          "gatilho": "Fora do app"
+        },
+        {
+          "de": "06-02-PagCarregando",
+          "para": "06-07-EncerrarSheet",
+          "gatilho": "Encerrar recarga"
+        },
+        {
+          "de": "06-07-EncerrarSheet",
+          "para": "06-08-ConcluidaManual",
+          "gatilho": "Encerrar agora"
+        },
+        {
+          "de": "06-02-PagCarregando",
+          "para": "06-09-ConcluidaLimite",
+          "gatilho": "Chegou ao valor escolhido"
+        },
+        {
+          "de": "06-02-PagCarregando",
+          "para": "06-10-ConcluidaCheia",
+          "gatilho": "Bateria encheu"
+        },
+        {
+          "de": "06-02-PagCarregando",
+          "para": "06-11-PropConcluida",
+          "gatilho": "Fim de uma recarga no cartão"
+        },
+        {
+          "de": "06-11-PropConcluida",
+          "para": "06-12-CartaoRecusado",
+          "gatilho": "Cartão recusado no fim"
+        },
+        {
+          "de": "06-02-PagCarregando",
+          "para": "06-13-Interrompida",
+          "gatilho": "Falha do carregador"
+        },
+        {
+          "de": "06-02-PagCarregando",
+          "para": "06-14-CaboDesconectado",
+          "gatilho": "Cabo desconectado"
+        },
+        {
+          "de": "06-09-ConcluidaLimite",
+          "para": "→ 9. Detalhe da recarga",
+          "gatilho": "Recibo"
+        },
+        {
+          "de": "06-09-ConcluidaLimite",
+          "para": "→ 9. Reportar um problema",
+          "gatilho": "Teve algum problema?"
+        }
+      ]
+    },
+    {
+      "numero": 7,
+      "titulo": "Carteira",
+      "descricao": "Saldo, cashback, adicionar via Pix, cartões, recargas e extrato",
+      "entradas": [],
+      "saidas": [
+        "→ 9. Detalhe da recarga"
+      ],
+      "telas": [
+        {
+          "id": "07-01-CarteiraHome",
+          "numero": "07-01",
+          "quadro": "CarteiraHome",
+          "titulo": "Carteira 1 · Minha carteira",
+          "grupo": null,
+          "altura": 1373,
+          "png": "telas/07-01-CarteiraHome.png",
+          "html": "html/07-01-CarteiraHome.html"
+        },
+        {
+          "id": "07-02-CarteiraAdicionar",
+          "numero": "07-02",
+          "quadro": "CarteiraAdicionar",
+          "titulo": "Carteira 2 · Adicionar saldo",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/07-02-CarteiraAdicionar.png",
+          "html": "html/07-02-CarteiraAdicionar.html"
+        },
+        {
+          "id": "07-03-CarteiraPix",
+          "numero": "07-03",
+          "quadro": "CarteiraPix",
+          "titulo": "Carteira 2b · Pix gerado",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/07-03-CarteiraPix.png",
+          "html": "html/07-03-CarteiraPix.html"
+        },
+        {
+          "id": "07-04-CarteiraCashback",
+          "numero": "07-04",
+          "quadro": "CarteiraCashback",
+          "titulo": "Carteira 1b · Cashback",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/07-04-CarteiraCashback.png",
+          "html": "html/07-04-CarteiraCashback.html"
+        },
+        {
+          "id": "07-05-CarteiraPagamentos",
+          "numero": "07-05",
+          "quadro": "CarteiraPagamentos",
+          "titulo": "Carteira 3 · Formas de pagamento",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/07-05-CarteiraPagamentos.png",
+          "html": "html/07-05-CarteiraPagamentos.html"
+        },
+        {
+          "id": "07-06-CarteiraNovoCartao",
+          "numero": "07-06",
+          "quadro": "CarteiraNovoCartao",
+          "titulo": "Carteira 3b · Adicionar cartão",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/07-06-CarteiraNovoCartao.png",
+          "html": "html/07-06-CarteiraNovoCartao.html"
+        },
+        {
+          "id": "07-07-CarteiraRecargas",
+          "numero": "07-07",
+          "quadro": "CarteiraRecargas",
+          "titulo": "Carteira 4 · Minhas recargas",
+          "grupo": null,
+          "altura": 1100,
+          "png": "telas/07-07-CarteiraRecargas.png",
+          "html": "html/07-07-CarteiraRecargas.html"
+        },
+        {
+          "id": "07-08-CarteiraExtrato",
+          "numero": "07-08",
+          "quadro": "CarteiraExtrato",
+          "titulo": "Carteira 5 · Extrato",
+          "grupo": null,
+          "altura": 1305,
+          "png": "telas/07-08-CarteiraExtrato.png",
+          "html": "html/07-08-CarteiraExtrato.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "07-01-CarteiraHome",
+          "para": "07-02-CarteiraAdicionar",
+          "gatilho": "Adicionar saldo"
+        },
+        {
+          "de": "07-02-CarteiraAdicionar",
+          "para": "07-03-CarteiraPix",
+          "gatilho": "Gerar código Pix"
+        },
+        {
+          "de": "07-01-CarteiraHome",
+          "para": "07-04-CarteiraCashback",
+          "gatilho": "Ver regras do cashback"
+        },
+        {
+          "de": "07-01-CarteiraHome",
+          "para": "07-05-CarteiraPagamentos",
+          "gatilho": "Formas de pagamento · Gerenciar"
+        },
+        {
+          "de": "07-05-CarteiraPagamentos",
+          "para": "07-06-CarteiraNovoCartao",
+          "gatilho": "Adicionar cartão"
+        },
+        {
+          "de": "07-01-CarteiraHome",
+          "para": "07-07-CarteiraRecargas",
+          "gatilho": "Minhas recargas"
+        },
+        {
+          "de": "07-01-CarteiraHome",
+          "para": "07-08-CarteiraExtrato",
+          "gatilho": "Extrato"
+        },
+        {
+          "de": "07-07-CarteiraRecargas",
+          "para": "→ 9. Detalhe da recarga",
+          "gatilho": "Toca numa recarga"
+        }
+      ]
+    },
+    {
+      "numero": 8,
+      "titulo": "Veículos",
+      "descricao": "Lista de veículos e o cadastro (o mesmo do primeiro acesso)",
+      "entradas": [],
+      "saidas": [
+        "→ 1. Novo veículo"
+      ],
+      "telas": [
+        {
+          "id": "08-01-VeiculosListaVazia",
+          "numero": "08-01",
+          "quadro": "VeiculosListaVazia",
+          "titulo": "Meus veículos · nenhum cadastrado",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/08-01-VeiculosListaVazia.png",
+          "html": "html/08-01-VeiculosListaVazia.html"
+        },
+        {
+          "id": "08-02-VeiculosLista",
+          "numero": "08-02",
+          "quadro": "VeiculosLista",
+          "titulo": "Meus veículos (lista)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/08-02-VeiculosLista.png",
+          "html": "html/08-02-VeiculosLista.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "08-01-VeiculosListaVazia",
+          "para": "08-02-VeiculosLista",
+          "gatilho": "Depois do primeiro cadastro"
+        },
+        {
+          "de": "08-02-VeiculosLista",
+          "para": "→ 1. Novo veículo",
+          "gatilho": "Cadastrar veículo"
+        }
+      ]
+    },
+    {
+      "numero": 9,
+      "titulo": "Conta e ajuda",
+      "descricao": "Detalhe da recarga, como recarregar, reportar, configurações e pontos",
+      "entradas": [],
+      "saidas": [
+        "→ 5. Pagamento"
+      ],
+      "telas": [
+        {
+          "id": "09-01-DetalheRecarga",
+          "numero": "09-01",
+          "quadro": "DetalheRecarga",
+          "titulo": "Conta · Detalhe da recarga",
+          "grupo": null,
+          "altura": 900,
+          "png": "telas/09-01-DetalheRecarga.png",
+          "html": "html/09-01-DetalheRecarga.html"
+        },
+        {
+          "id": "09-02-AjudaReportar",
+          "numero": "09-02",
+          "quadro": "AjudaReportar",
+          "titulo": "Ajuda · Reportar um problema",
+          "grupo": null,
+          "altura": 900,
+          "png": "telas/09-02-AjudaReportar.png",
+          "html": "html/09-02-AjudaReportar.html"
+        },
+        {
+          "id": "09-03-AjudaComo",
+          "numero": "09-03",
+          "quadro": "AjudaComo",
+          "titulo": "Ajuda · Como recarregar (passo a passo)",
+          "grupo": null,
+          "altura": 1050,
+          "png": "telas/09-03-AjudaComo.png",
+          "html": "html/09-03-AjudaComo.html"
+        },
+        {
+          "id": "09-04-Configuracoes",
+          "numero": "09-04",
+          "quadro": "Configuracoes",
+          "titulo": "Conta · Configurações",
+          "grupo": null,
+          "altura": 1115,
+          "png": "telas/09-04-Configuracoes.png",
+          "html": "html/09-04-Configuracoes.html"
+        },
+        {
+          "id": "09-05-MeusPontos",
+          "numero": "09-05",
+          "quadro": "MeusPontos",
+          "titulo": "Conta · Meus pontos (carregadores particulares)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/09-05-MeusPontos.png",
+          "html": "html/09-05-MeusPontos.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "09-01-DetalheRecarga",
+          "para": "09-02-AjudaReportar",
+          "gatilho": "Reportar um problema nesta recarga"
+        },
+        {
+          "de": "09-03-AjudaComo",
+          "para": "09-02-AjudaReportar",
+          "gatilho": "Falar com a gente"
+        },
+        {
+          "de": "09-05-MeusPontos",
+          "para": "→ 5. Pagamento",
+          "gatilho": "Carregar aqui"
+        }
+      ]
+    },
+    {
+      "numero": 10,
+      "titulo": "Recarga grátis",
+      "descricao": "Cashback de energia: ativar o desconto na conta de luz",
+      "entradas": [],
+      "saidas": [
+        "→ 4. Começar a recarga",
+        "→ 7. Carteira"
+      ],
+      "telas": [
+        {
+          "id": "10-01-Ofertas",
+          "numero": "10-01",
+          "quadro": "Ofertas",
+          "titulo": "Recarga grátis · Ofertas de cashback",
+          "grupo": null,
+          "altura": 914,
+          "png": "telas/10-01-Ofertas.png",
+          "html": "html/10-01-Ofertas.html"
+        },
+        {
+          "id": "10-02-AtivarEnergia",
+          "numero": "10-02",
+          "quadro": "AtivarEnergia",
+          "titulo": "Recarga grátis · Ativar desconto na conta de luz",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/10-02-AtivarEnergia.png",
+          "html": "html/10-02-AtivarEnergia.html"
+        },
+        {
+          "id": "10-03-CashbackOk",
+          "numero": "10-03",
+          "quadro": "CashbackOk",
+          "titulo": "Recarga grátis · Cashback concedido",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/10-03-CashbackOk.png",
+          "html": "html/10-03-CashbackOk.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "10-01-Ofertas",
+          "para": "10-02-AtivarEnergia",
+          "gatilho": "Ativar desconto"
+        },
+        {
+          "de": "10-02-AtivarEnergia",
+          "para": "10-03-CashbackOk",
+          "gatilho": "Continuar"
+        },
+        {
+          "de": "10-03-CashbackOk",
+          "para": "→ 4. Começar a recarga",
+          "gatilho": "Fazer uma recarga"
+        },
+        {
+          "de": "10-03-CashbackOk",
+          "para": "→ 7. Carteira",
+          "gatilho": "Ver minha carteira"
+        }
+      ]
+    },
+    {
+      "numero": 11,
+      "titulo": "Carro sem foto no catálogo",
+      "descricao": "Carro genérico no lugar da foto e o aviso da falta de imagem: a pessoa reporta (A) ou o app avisa sozinho (B)",
+      "entradas": [],
+      "saidas": [],
+      "telas": [
+        {
+          "id": "11-01-VeiculoNovoSemFoto",
+          "numero": "11-01",
+          "quadro": "VeiculoNovoSemFoto",
+          "titulo": "Sem foto · Novo veículo com a silhueta",
+          "grupo": "Opção A · a pessoa reporta",
+          "altura": 844,
+          "png": "telas/11-01-VeiculoNovoSemFoto.png",
+          "html": "html/11-01-VeiculoNovoSemFoto.html"
+        },
+        {
+          "id": "11-02-VeiculoOkSemFoto",
+          "numero": "11-02",
+          "quadro": "VeiculoOkSemFoto",
+          "titulo": "Sem foto · Veículo cadastrado",
+          "grupo": "Opção A · a pessoa reporta",
+          "altura": 844,
+          "png": "telas/11-02-VeiculoOkSemFoto.png",
+          "html": "html/11-02-VeiculoOkSemFoto.html"
+        },
+        {
+          "id": "11-03-HomeSemFoto",
+          "numero": "11-03",
+          "quadro": "HomeSemFoto",
+          "titulo": "Sem foto · Home com \"Reportar falta de imagem\"",
+          "grupo": "Opção A · a pessoa reporta",
+          "altura": 1872,
+          "png": "telas/11-03-HomeSemFoto.png",
+          "html": "html/11-03-HomeSemFoto.html"
+        },
+        {
+          "id": "11-04-SemFotoReportarSheet",
+          "numero": "11-04",
+          "quadro": "SemFotoReportarSheet",
+          "titulo": "Sem foto · Reportar falta de imagem (sheet)",
+          "grupo": "Opção A · a pessoa reporta",
+          "altura": 844,
+          "png": "telas/11-04-SemFotoReportarSheet.png",
+          "html": "html/11-04-SemFotoReportarSheet.html"
+        },
+        {
+          "id": "11-05-HomeSemFotoReportada",
+          "numero": "11-05",
+          "quadro": "HomeSemFotoReportada",
+          "titulo": "Sem foto · Home depois de reportar",
+          "grupo": "Opção A · a pessoa reporta",
+          "altura": 1872,
+          "png": "telas/11-05-HomeSemFotoReportada.png",
+          "html": "html/11-05-HomeSemFotoReportada.html"
+        },
+        {
+          "id": "11-06-HomeSemFotoAuto",
+          "numero": "11-06",
+          "quadro": "HomeSemFotoAuto",
+          "titulo": "Sem foto · Home com reporte automático",
+          "grupo": "Opção B · o app avisa sozinho (recomendada)",
+          "altura": 1872,
+          "png": "telas/11-06-HomeSemFotoAuto.png",
+          "html": "html/11-06-HomeSemFotoAuto.html"
+        },
+        {
+          "id": "11-07-SemFotoAutoSheet",
+          "numero": "11-07",
+          "quadro": "SemFotoAutoSheet",
+          "titulo": "Sem foto · Reporte automático (sheet)",
+          "grupo": "Opção B · o app avisa sozinho (recomendada)",
+          "altura": 844,
+          "png": "telas/11-07-SemFotoAutoSheet.png",
+          "html": "html/11-07-SemFotoAutoSheet.html"
+        },
+        {
+          "id": "11-08-VeiculosListaSemFoto",
+          "numero": "11-08",
+          "quadro": "VeiculosListaSemFoto",
+          "titulo": "Sem foto · Meus veículos",
+          "grupo": "Outras telas com o carro genérico",
+          "altura": 844,
+          "png": "telas/11-08-VeiculosListaSemFoto.png",
+          "html": "html/11-08-VeiculosListaSemFoto.html"
+        },
+        {
+          "id": "11-09-HomeAtivaSemFoto",
+          "numero": "11-09",
+          "quadro": "HomeAtivaSemFoto",
+          "titulo": "Sem foto · Home com o carro carregando",
+          "grupo": "Outras telas com o carro genérico",
+          "altura": 1885,
+          "png": "telas/11-09-HomeAtivaSemFoto.png",
+          "html": "html/11-09-HomeAtivaSemFoto.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "11-01-VeiculoNovoSemFoto",
+          "para": "11-02-VeiculoOkSemFoto",
+          "gatilho": "Cadastrar veículo"
+        },
+        {
+          "de": "11-02-VeiculoOkSemFoto",
+          "para": "11-03-HomeSemFoto",
+          "gatilho": "Ir para o início"
+        },
+        {
+          "de": "11-03-HomeSemFoto",
+          "para": "11-04-SemFotoReportarSheet",
+          "gatilho": "Reportar falta de imagem"
+        },
+        {
+          "de": "11-04-SemFotoReportarSheet",
+          "para": "11-05-HomeSemFotoReportada",
+          "gatilho": "Avisar a equipe"
+        },
+        {
+          "de": "11-02-VeiculoOkSemFoto",
+          "para": "11-06-HomeSemFotoAuto",
+          "gatilho": "Ir para o início · pedido de foto automático"
+        },
+        {
+          "de": "11-06-HomeSemFotoAuto",
+          "para": "11-07-SemFotoAutoSheet",
+          "gatilho": "Toca em Foto a caminho"
+        }
+      ]
+    },
+    {
+      "numero": 12,
+      "titulo": "Banners da seção Para você",
+      "descricao": "Propostas de banner para a home: energia (desconto na conta de luz) e seguro auto, os dois com R$ 10 de cashback na carteira. Cada quadro mostra a dupla energia + seguro.",
+      "entradas": [],
+      "saidas": [],
+      "telas": [
+        {
+          "id": "12-01-BannerP1",
+          "numero": "12-01",
+          "quadro": "BannerP1",
+          "titulo": "Banners · Proposta 1 · Cor profunda + objeto 3D",
+          "grupo": "Rodada 2 ajustada · 1 e 2 originais, 1 v2 com mais respiro",
+          "altura": 560,
+          "png": "telas/12-01-BannerP1.png",
+          "html": "html/12-01-BannerP1.html"
+        },
+        {
+          "id": "12-02-BannerP1V2",
+          "numero": "12-02",
+          "quadro": "BannerP1V2",
+          "titulo": "Banners · Proposta 1 · v2 · Cor profunda + objeto 3D",
+          "grupo": "Rodada 2 ajustada · 1 e 2 originais, 1 v2 com mais respiro",
+          "altura": 643,
+          "png": "telas/12-02-BannerP1V2.png",
+          "html": "html/12-02-BannerP1V2.html"
+        },
+        {
+          "id": "12-03-BannerP2",
+          "numero": "12-03",
+          "quadro": "BannerP2",
+          "titulo": "Banners · Proposta 2 · Branco + objeto escultural",
+          "grupo": "Rodada 2 ajustada · 1 e 2 originais, 1 v2 com mais respiro",
+          "altura": 560,
+          "png": "telas/12-03-BannerP2.png",
+          "html": "html/12-03-BannerP2.html"
+        },
+        {
+          "id": "12-04-BannerP3",
+          "numero": "12-04",
+          "quadro": "BannerP3",
+          "titulo": "Banners · Proposta 3 · Ticket que sai do card",
+          "grupo": "Rodada 2 ajustada · 1 e 2 originais, 1 v2 com mais respiro",
+          "altura": 685,
+          "png": "telas/12-04-BannerP3.png",
+          "html": "html/12-04-BannerP3.html"
+        },
+        {
+          "id": "12-05-BannerP4",
+          "numero": "12-05",
+          "quadro": "BannerP4",
+          "titulo": "Banners · Proposta 4 · Cofre esmeralda",
+          "grupo": "Rodada 2 ajustada · 1 e 2 originais, 1 v2 com mais respiro",
+          "altura": 605,
+          "png": "telas/12-05-BannerP4.png",
+          "html": "html/12-05-BannerP4.html"
+        },
+        {
+          "id": "12-06-BannerP5",
+          "numero": "12-06",
+          "quadro": "BannerP5",
+          "titulo": "Banners · Proposta 5 · Argila verde-lima",
+          "grupo": "Rodada 2 ajustada · 1 e 2 originais, 1 v2 com mais respiro",
+          "altura": 587,
+          "png": "telas/12-06-BannerP5.png",
+          "html": "html/12-06-BannerP5.html"
+        },
+        {
+          "id": "12-07-BannerP8",
+          "numero": "12-07",
+          "quadro": "BannerP8",
+          "titulo": "Banners · Proposta 8 · Faixa compacta",
+          "grupo": "Rodada 2 ajustada · 1 e 2 originais, 1 v2 com mais respiro",
+          "altura": 397,
+          "png": "telas/12-07-BannerP8.png",
+          "html": "html/12-07-BannerP8.html"
+        },
+        {
+          "id": "12-08-BannerP9",
+          "numero": "12-08",
+          "quadro": "BannerP9",
+          "titulo": "Banners · Proposta 9 · Cards verticais",
+          "grupo": "Rodada 2 ajustada · 1 e 2 originais, 1 v2 com mais respiro",
+          "altura": 459,
+          "png": "telas/12-08-BannerP9.png",
+          "html": "html/12-08-BannerP9.html"
+        },
+        {
+          "id": "12-09-BannerP10",
+          "numero": "12-09",
+          "quadro": "BannerP10",
+          "titulo": "Banners · Proposta 10 · Carteira com cartão",
+          "grupo": "Rodada 2 ajustada · 1 e 2 originais, 1 v2 com mais respiro",
+          "altura": 627,
+          "png": "telas/12-09-BannerP10.png",
+          "html": "html/12-09-BannerP10.html"
+        },
+        {
+          "id": "12-10-BannerP11",
+          "numero": "12-10",
+          "quadro": "BannerP11",
+          "titulo": "Banners · Proposta 11 · Missão em 3 passos",
+          "grupo": "Rodada 2 ajustada · 1 e 2 originais, 1 v2 com mais respiro",
+          "altura": 769,
+          "png": "telas/12-10-BannerP11.png",
+          "html": "html/12-10-BannerP11.html"
+        },
+        {
+          "id": "12-11-BannerP12",
+          "numero": "12-11",
+          "quadro": "BannerP12",
+          "titulo": "Banners · Proposta 12 · Etiqueta pendurada",
+          "grupo": "Rodada 2 ajustada · 1 e 2 originais, 1 v2 com mais respiro",
+          "altura": 585,
+          "png": "telas/12-11-BannerP12.png",
+          "html": "html/12-11-BannerP12.html"
+        },
+        {
+          "id": "12-12-BannerP13",
+          "numero": "12-12",
+          "quadro": "BannerP13",
+          "titulo": "Banners · Proposta 13 · Objeto que salta do card",
+          "grupo": "Rodada 3 · 10 propostas novas",
+          "altura": 783,
+          "png": "telas/12-12-BannerP13.png",
+          "html": "html/12-12-BannerP13.html"
+        },
+        {
+          "id": "12-13-BannerP14",
+          "numero": "12-13",
+          "quadro": "BannerP14",
+          "titulo": "Banners · Proposta 14 · Missão centralizada",
+          "grupo": "Rodada 3 · 10 propostas novas",
+          "altura": 833,
+          "png": "telas/12-13-BannerP14.png",
+          "html": "html/12-13-BannerP14.html"
+        },
+        {
+          "id": "12-14-BannerP15",
+          "numero": "12-14",
+          "quadro": "BannerP15",
+          "titulo": "Banners · Proposta 15 · Título gigante em carrossel",
+          "grupo": "Rodada 3 · 10 propostas novas",
+          "altura": 699,
+          "png": "telas/12-14-BannerP15.png",
+          "html": "html/12-14-BannerP15.html"
+        },
+        {
+          "id": "12-15-BannerP16",
+          "numero": "12-15",
+          "quadro": "BannerP16",
+          "titulo": "Banners · Proposta 16 · Personagem no pódio",
+          "grupo": "Rodada 3 · 10 propostas novas",
+          "altura": 742,
+          "png": "telas/12-15-BannerP16.png",
+          "html": "html/12-15-BannerP16.html"
+        },
+        {
+          "id": "12-16-BannerP17",
+          "numero": "12-16",
+          "quadro": "BannerP17",
+          "titulo": "Banners · Proposta 17 · Formas e marca-texto",
+          "grupo": "Rodada 3 · 10 propostas novas",
+          "altura": 729,
+          "png": "telas/12-16-BannerP17.png",
+          "html": "html/12-16-BannerP17.html"
+        },
+        {
+          "id": "12-17-BannerP18",
+          "numero": "12-17",
+          "quadro": "BannerP18",
+          "titulo": "Banners · Proposta 18 · Cápsulas geométricas",
+          "grupo": "Rodada 3 · 10 propostas novas",
+          "altura": 673,
+          "png": "telas/12-17-BannerP18.png",
+          "html": "html/12-17-BannerP18.html"
+        },
+        {
+          "id": "12-18-BannerP19",
+          "numero": "12-18",
+          "quadro": "BannerP19",
+          "titulo": "Banners · Proposta 19 · Promoção com celular",
+          "grupo": "Rodada 3 · 10 propostas novas",
+          "altura": 665,
+          "png": "telas/12-18-BannerP19.png",
+          "html": "html/12-18-BannerP19.html"
+        },
+        {
+          "id": "12-19-BannerP20",
+          "numero": "12-19",
+          "quadro": "BannerP20",
+          "titulo": "Banners · Proposta 20 · Número gigante no escuro",
+          "grupo": "Rodada 3 · 10 propostas novas",
+          "altura": 681,
+          "png": "telas/12-19-BannerP20.png",
+          "html": "html/12-19-BannerP20.html"
+        },
+        {
+          "id": "12-20-BannerP21",
+          "numero": "12-20",
+          "quadro": "BannerP21",
+          "titulo": "Banners · Proposta 21 · Aba e objetos por baixo",
+          "grupo": "Rodada 3 · 10 propostas novas",
+          "altura": 709,
+          "png": "telas/12-20-BannerP21.png",
+          "html": "html/12-20-BannerP21.html"
+        },
+        {
+          "id": "12-21-BannerP22",
+          "numero": "12-21",
+          "quadro": "BannerP22",
+          "titulo": "Banners · Proposta 22 · Celular com a conta",
+          "grupo": "Rodada 3 · 10 propostas novas",
+          "altura": 721,
+          "png": "telas/12-21-BannerP22.png",
+          "html": "html/12-21-BannerP22.html"
+        }
+      ],
+      "caminhos": []
+    },
+    {
+      "numero": 13,
+      "titulo": "Entrar e criar conta",
+      "descricao": "Depois das boas-vindas: uma tela só identifica a pessoa por CPF, e-mail ou celular e segue pelo caminho certo",
+      "entradas": [
+        "Boas-vindas · Começar agora ou Pular"
+      ],
+      "saidas": [
+        "→ 1. Permissões e veículo",
+        "→ 2. Home"
+      ],
+      "telas": [
+        {
+          "id": "13-01-LoginIdentificar",
+          "numero": "13-01",
+          "quadro": "LoginIdentificar",
+          "titulo": "Login · Digite seu CPF, e-mail ou celular",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/13-01-LoginIdentificar.png",
+          "html": "html/13-01-LoginIdentificar.html"
+        },
+        {
+          "id": "13-02-LoginCanal",
+          "numero": "13-02",
+          "quadro": "LoginCanal",
+          "titulo": "Login · Para onde enviamos o código",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/13-02-LoginCanal.png",
+          "html": "html/13-02-LoginCanal.html"
+        },
+        {
+          "id": "13-03-LoginCodigo",
+          "numero": "13-03",
+          "quadro": "LoginCodigo",
+          "titulo": "Login · Código de 6 dígitos",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/13-03-LoginCodigo.png",
+          "html": "html/13-03-LoginCodigo.html"
+        },
+        {
+          "id": "13-04-LoginCriarSenha",
+          "numero": "13-04",
+          "quadro": "LoginCriarSenha",
+          "titulo": "Login · Crie sua senha de 6 dígitos",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/13-04-LoginCriarSenha.png",
+          "html": "html/13-04-LoginCriarSenha.html"
+        },
+        {
+          "id": "13-05-LoginBiometria",
+          "numero": "13-05",
+          "quadro": "LoginBiometria",
+          "titulo": "Login · Ativar biometria neste aparelho",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/13-05-LoginBiometria.png",
+          "html": "html/13-05-LoginBiometria.html"
+        },
+        {
+          "id": "13-06-LoginCriarConta",
+          "numero": "13-06",
+          "quadro": "LoginCriarConta",
+          "titulo": "Login · Ainda não é cliente: criar conta",
+          "grupo": "Mais de um e-mail no CPF e quem ainda não é cliente",
+          "altura": 844,
+          "png": "telas/13-06-LoginCriarConta.png",
+          "html": "html/13-06-LoginCriarConta.html"
+        },
+        {
+          "id": "13-07-LoginQualEmail",
+          "numero": "13-07",
+          "quadro": "LoginQualEmail",
+          "titulo": "Login · Qual desses e-mails é seu",
+          "grupo": "Mais de um e-mail no CPF e quem ainda não é cliente",
+          "altura": 844,
+          "png": "telas/13-07-LoginQualEmail.png",
+          "html": "html/13-07-LoginQualEmail.html"
+        },
+        {
+          "id": "13-08-LoginNovoEmail",
+          "numero": "13-08",
+          "quadro": "LoginNovoEmail",
+          "titulo": "Login · Cadastre o e-mail que é seu",
+          "grupo": "Mais de um e-mail no CPF e quem ainda não é cliente",
+          "altura": 844,
+          "png": "telas/13-08-LoginNovoEmail.png",
+          "html": "html/13-08-LoginNovoEmail.html"
+        },
+        {
+          "id": "13-09-LoginCodigoErro",
+          "numero": "13-09",
+          "quadro": "LoginCodigoErro",
+          "titulo": "Login · Código incorreto",
+          "grupo": "Mais de um e-mail no CPF e quem ainda não é cliente",
+          "altura": 844,
+          "png": "telas/13-09-LoginCodigoErro.png",
+          "html": "html/13-09-LoginCodigoErro.html"
+        },
+        {
+          "id": "13-10-LoginGoogleConta",
+          "numero": "13-10",
+          "quadro": "LoginGoogleConta",
+          "titulo": "Login · Google: escolher a conta",
+          "grupo": "Entrar com o Google",
+          "altura": 844,
+          "png": "telas/13-10-LoginGoogleConta.png",
+          "html": "html/13-10-LoginGoogleConta.html"
+        },
+        {
+          "id": "13-11-LoginGoogleCpf",
+          "numero": "13-11",
+          "quadro": "LoginGoogleCpf",
+          "titulo": "Login · Google: falta só o CPF",
+          "grupo": "Entrar com o Google",
+          "altura": 844,
+          "png": "telas/13-11-LoginGoogleCpf.png",
+          "html": "html/13-11-LoginGoogleCpf.html"
+        },
+        {
+          "id": "13-12-LoginGoogleCompletar",
+          "numero": "13-12",
+          "quadro": "LoginGoogleCompletar",
+          "titulo": "Login · Google: complete seu cadastro",
+          "grupo": "Entrar com o Google",
+          "altura": 844,
+          "png": "telas/13-12-LoginGoogleCompletar.png",
+          "html": "html/13-12-LoginGoogleCompletar.html"
+        },
+        {
+          "id": "13-13-LoginGoogleVincular",
+          "numero": "13-13",
+          "quadro": "LoginGoogleVincular",
+          "titulo": "Login · Google: já existe conta com esse e-mail",
+          "grupo": "Entrar com o Google",
+          "altura": 844,
+          "png": "telas/13-13-LoginGoogleVincular.png",
+          "html": "html/13-13-LoginGoogleVincular.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "Boas-vindas · Começar agora ou Pular",
+          "para": "13-01-LoginIdentificar",
+          "gatilho": "Abre a identificação"
+        },
+        {
+          "de": "13-01-LoginIdentificar",
+          "para": "13-02-LoginCanal",
+          "gatilho": "Já é cliente"
+        },
+        {
+          "de": "13-02-LoginCanal",
+          "para": "13-03-LoginCodigo",
+          "gatilho": "Enviar código"
+        },
+        {
+          "de": "13-03-LoginCodigo",
+          "para": "13-04-LoginCriarSenha",
+          "gatilho": "Código certo"
+        },
+        {
+          "de": "13-04-LoginCriarSenha",
+          "para": "13-05-LoginBiometria",
+          "gatilho": "Criar senha"
+        },
+        {
+          "de": "13-05-LoginBiometria",
+          "para": "→ 1. Permissões e veículo",
+          "gatilho": "Ativar ou Agora não"
+        },
+        {
+          "de": "13-01-LoginIdentificar",
+          "para": "13-06-LoginCriarConta",
+          "gatilho": "Ainda não é cliente"
+        },
+        {
+          "de": "13-06-LoginCriarConta",
+          "para": "13-03-LoginCodigo",
+          "gatilho": "Continuar"
+        },
+        {
+          "de": "13-02-LoginCanal",
+          "para": "13-07-LoginQualEmail",
+          "gatilho": "Mais de um e-mail no CPF"
+        },
+        {
+          "de": "13-07-LoginQualEmail",
+          "para": "13-08-LoginNovoEmail",
+          "gatilho": "Nenhum desses é meu"
+        },
+        {
+          "de": "13-08-LoginNovoEmail",
+          "para": "13-03-LoginCodigo",
+          "gatilho": "Continuar"
+        },
+        {
+          "de": "13-03-LoginCodigo",
+          "para": "13-09-LoginCodigoErro",
+          "gatilho": "Código errado"
+        },
+        {
+          "de": "13-10-LoginGoogleConta",
+          "para": "13-11-LoginGoogleCpf",
+          "gatilho": "Conta nova no Google"
+        },
+        {
+          "de": "13-11-LoginGoogleCpf",
+          "para": "13-12-LoginGoogleCompletar",
+          "gatilho": "CPF sem conta iGreen"
+        },
+        {
+          "de": "13-12-LoginGoogleCompletar",
+          "para": "13-03-LoginCodigo",
+          "gatilho": "Continuar · confirma o celular"
+        },
+        {
+          "de": "13-11-LoginGoogleCpf",
+          "para": "13-13-LoginGoogleVincular",
+          "gatilho": "E-mail já tem conta"
+        },
+        {
+          "de": "13-13-LoginGoogleVincular",
+          "para": "→ 2. Home",
+          "gatilho": "Vincular e entrar"
+        }
+      ]
+    },
+    {
+      "numero": 14,
+      "titulo": "Voltar ao app",
+      "descricao": "Biometria, senha, tentativas erradas, aparelho novo e sessão expirada",
+      "entradas": [
+        "Abre o app com a conta salva"
+      ],
+      "saidas": [
+        "→ 2. Home",
+        "→ 13. Código de 6 dígitos"
+      ],
+      "telas": [
+        {
+          "id": "14-01-LoginSplash",
+          "numero": "14-01",
+          "quadro": "LoginSplash",
+          "titulo": "Login · Abrir com biometria",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/14-01-LoginSplash.png",
+          "html": "html/14-01-LoginSplash.html"
+        },
+        {
+          "id": "14-02-LoginDigital",
+          "numero": "14-02",
+          "quadro": "LoginDigital",
+          "titulo": "Login · Biometria cancelada: digital ou senha",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/14-02-LoginDigital.png",
+          "html": "html/14-02-LoginDigital.html"
+        },
+        {
+          "id": "14-03-LoginSenha",
+          "numero": "14-03",
+          "quadro": "LoginSenha",
+          "titulo": "Login · Senha de 6 dígitos",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/14-03-LoginSenha.png",
+          "html": "html/14-03-LoginSenha.html"
+        },
+        {
+          "id": "14-04-LoginSenhaErro",
+          "numero": "14-04",
+          "quadro": "LoginSenhaErro",
+          "titulo": "Login · Senha incorreta",
+          "grupo": "Senha errada e esqueci a senha",
+          "altura": 844,
+          "png": "telas/14-04-LoginSenhaErro.png",
+          "html": "html/14-04-LoginSenhaErro.html"
+        },
+        {
+          "id": "14-05-LoginBloqueado",
+          "numero": "14-05",
+          "quadro": "LoginBloqueado",
+          "titulo": "Login · Acesso pausado por tentativas",
+          "grupo": "Senha errada e esqueci a senha",
+          "altura": 844,
+          "png": "telas/14-05-LoginBloqueado.png",
+          "html": "html/14-05-LoginBloqueado.html"
+        },
+        {
+          "id": "14-06-SenhaRedefinida",
+          "numero": "14-06",
+          "quadro": "SenhaRedefinida",
+          "titulo": "Login · Senha nova criada (esqueci a senha)",
+          "grupo": "Senha errada e esqueci a senha",
+          "altura": 844,
+          "png": "telas/14-06-SenhaRedefinida.png",
+          "html": "html/14-06-SenhaRedefinida.html"
+        },
+        {
+          "id": "14-07-SessaoExpirada",
+          "numero": "14-07",
+          "quadro": "SessaoExpirada",
+          "titulo": "Conta · Sessão expirada (sheet)",
+          "grupo": "Sessão expirada, biometria desligada e aparelho novo",
+          "altura": 844,
+          "png": "telas/14-07-SessaoExpirada.png",
+          "html": "html/14-07-SessaoExpirada.html"
+        },
+        {
+          "id": "14-08-LoginBiometriaOff",
+          "numero": "14-08",
+          "quadro": "LoginBiometriaOff",
+          "titulo": "Login · Biometria desativada pelo sistema",
+          "grupo": "Sessão expirada, biometria desligada e aparelho novo",
+          "altura": 844,
+          "png": "telas/14-08-LoginBiometriaOff.png",
+          "html": "html/14-08-LoginBiometriaOff.html"
+        },
+        {
+          "id": "14-09-LoginNovoAparelho",
+          "numero": "14-09",
+          "quadro": "LoginNovoAparelho",
+          "titulo": "Login · Aparelho novo: senha",
+          "grupo": "Sessão expirada, biometria desligada e aparelho novo",
+          "altura": 844,
+          "png": "telas/14-09-LoginNovoAparelho.png",
+          "html": "html/14-09-LoginNovoAparelho.html"
+        },
+        {
+          "id": "14-10-LoginPrepararAparelho",
+          "numero": "14-10",
+          "quadro": "LoginPrepararAparelho",
+          "titulo": "Login · Aparelho novo: vamos preparar",
+          "grupo": "Sessão expirada, biometria desligada e aparelho novo",
+          "altura": 844,
+          "png": "telas/14-10-LoginPrepararAparelho.png",
+          "html": "html/14-10-LoginPrepararAparelho.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "Abre o app com a conta salva",
+          "para": "14-01-LoginSplash",
+          "gatilho": "Biometria ativa"
+        },
+        {
+          "de": "14-01-LoginSplash",
+          "para": "→ 2. Home",
+          "gatilho": "Digital reconhecida"
+        },
+        {
+          "de": "14-01-LoginSplash",
+          "para": "14-02-LoginDigital",
+          "gatilho": "Cancelar ou falhou"
+        },
+        {
+          "de": "14-02-LoginDigital",
+          "para": "14-03-LoginSenha",
+          "gatilho": "Usar minha senha"
+        },
+        {
+          "de": "14-03-LoginSenha",
+          "para": "→ 2. Home",
+          "gatilho": "Entrar"
+        },
+        {
+          "de": "14-03-LoginSenha",
+          "para": "14-04-LoginSenhaErro",
+          "gatilho": "Senha errada"
+        },
+        {
+          "de": "14-04-LoginSenhaErro",
+          "para": "14-05-LoginBloqueado",
+          "gatilho": "3ª tentativa errada"
+        },
+        {
+          "de": "14-05-LoginBloqueado",
+          "para": "14-06-SenhaRedefinida",
+          "gatilho": "Criar uma nova senha (o mesmo de “Esqueci minha senha”)"
+        },
+        {
+          "de": "14-06-SenhaRedefinida",
+          "para": "→ 2. Home",
+          "gatilho": "Entrar no app"
+        },
+        {
+          "de": "14-07-SessaoExpirada",
+          "para": "14-03-LoginSenha",
+          "gatilho": "Entrar de novo"
+        },
+        {
+          "de": "14-08-LoginBiometriaOff",
+          "para": "14-03-LoginSenha",
+          "gatilho": "Entrar com a senha e reativar"
+        },
+        {
+          "de": "14-09-LoginNovoAparelho",
+          "para": "14-10-LoginPrepararAparelho",
+          "gatilho": "Senha certa num aparelho novo"
+        },
+        {
+          "de": "14-10-LoginPrepararAparelho",
+          "para": "→ 13. Código de 6 dígitos",
+          "gatilho": "Receber o código"
+        }
+      ]
+    },
+    {
+      "numero": 15,
+      "titulo": "Ajuda de segurança",
+      "descricao": "O “?” das telas de login: não consigo entrar, roubo, uso indevido e cadastro que não é meu",
+      "entradas": [
+        "? em qualquer tela de login"
+      ],
+      "saidas": [
+        "→ Atendimento ou análise de documento"
+      ],
+      "telas": [
+        {
+          "id": "15-01-LoginAjuda",
+          "numero": "15-01",
+          "quadro": "LoginAjuda",
+          "titulo": "Login · Ajuda de segurança",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/15-01-LoginAjuda.png",
+          "html": "html/15-01-LoginAjuda.html"
+        },
+        {
+          "id": "15-02-LoginIdentidade",
+          "numero": "15-02",
+          "quadro": "LoginIdentidade",
+          "titulo": "Login · Confirmar a identidade de outro jeito",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/15-02-LoginIdentidade.png",
+          "html": "html/15-02-LoginIdentidade.html"
+        },
+        {
+          "id": "15-03-LoginBloquearPagamentos",
+          "numero": "15-03",
+          "quadro": "LoginBloquearPagamentos",
+          "titulo": "Login · Bloquear pagamentos da conta",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/15-03-LoginBloquearPagamentos.png",
+          "html": "html/15-03-LoginBloquearPagamentos.html"
+        },
+        {
+          "id": "15-04-LoginBloqueioOk",
+          "numero": "15-04",
+          "quadro": "LoginBloqueioOk",
+          "titulo": "Login · Pagamentos bloqueados",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/15-04-LoginBloqueioOk.png",
+          "html": "html/15-04-LoginBloqueioOk.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "? em qualquer tela de login",
+          "para": "15-01-LoginAjuda",
+          "gatilho": "Ajuda com a conta"
+        },
+        {
+          "de": "15-01-LoginAjuda",
+          "para": "15-02-LoginIdentidade",
+          "gatilho": "Não consigo entrar"
+        },
+        {
+          "de": "15-02-LoginIdentidade",
+          "para": "→ Atendimento ou análise de documento",
+          "gatilho": "Documento e selfie ou atendimento"
+        },
+        {
+          "de": "15-01-LoginAjuda",
+          "para": "15-03-LoginBloquearPagamentos",
+          "gatilho": "Roubo, uso indevido ou cadastro que não é meu"
+        },
+        {
+          "de": "15-03-LoginBloquearPagamentos",
+          "para": "15-04-LoginBloqueioOk",
+          "gatilho": "Bloquear pagamentos agora"
+        }
+      ]
+    },
+    {
+      "numero": 16,
+      "titulo": "Conta sem carro",
+      "descricao": "Quem pulou o cadastro do carro no primeiro acesso: a home convida a cadastrar",
+      "entradas": [
+        "Primeiro acesso · pulou o cadastro do carro"
+      ],
+      "saidas": [
+        "→ 1. Novo veículo"
+      ],
+      "telas": [
+        {
+          "id": "16-01-HomeSemVeiculo",
+          "numero": "16-01",
+          "quadro": "HomeSemVeiculo",
+          "titulo": "Conta · Home sem veículo cadastrado",
+          "grupo": null,
+          "altura": 1654,
+          "png": "telas/16-01-HomeSemVeiculo.png",
+          "html": "html/16-01-HomeSemVeiculo.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "Primeiro acesso · pulou o cadastro do carro",
+          "para": "16-01-HomeSemVeiculo",
+          "gatilho": "Abre a home"
+        },
+        {
+          "de": "16-01-HomeSemVeiculo",
+          "para": "→ 1. Novo veículo",
+          "gatilho": "Cadastrar veículo"
+        }
+      ]
+    },
+    {
+      "numero": 17,
+      "titulo": "Dinheiro pendente",
+      "descricao": "Reserva recusada no início, carregador que não começa e pendência de uma recarga anterior",
+      "entradas": [
+        "5. Confira e inicie · pagando com cartão",
+        "6. Conecte o cabo · cabo conectado",
+        "6. Cartão recusado no fim"
+      ],
+      "saidas": [
+        "→ 5. Pix, saldo ou outro cartão",
+        "→ 6. Carregando",
+        "→ 18. Reportar o carregador",
+        "→ 5. Pagamento no C-01"
+      ],
+      "telas": [
+        {
+          "id": "17-01-ReservaRecusada",
+          "numero": "17-01",
+          "quadro": "ReservaRecusada",
+          "titulo": "Pagamento · Cartão recusou a reserva ao iniciar",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/17-01-ReservaRecusada.png",
+          "html": "html/17-01-ReservaRecusada.html"
+        },
+        {
+          "id": "17-02-Iniciando",
+          "numero": "17-02",
+          "quadro": "Iniciando",
+          "titulo": "Recarga · Iniciando: o carregador confirma o carro",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/17-02-Iniciando.png",
+          "html": "html/17-02-Iniciando.html"
+        },
+        {
+          "id": "17-03-NaoIniciou",
+          "numero": "17-03",
+          "quadro": "NaoIniciou",
+          "titulo": "Recarga · O carregador não iniciou",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/17-03-NaoIniciou.png",
+          "html": "html/17-03-NaoIniciou.html"
+        },
+        {
+          "id": "17-04-HomePendencia",
+          "numero": "17-04",
+          "quadro": "HomePendencia",
+          "titulo": "Pagamento · Home com pendência em aberto",
+          "grupo": null,
+          "altura": 2113,
+          "png": "telas/17-04-HomePendencia.png",
+          "html": "html/17-04-HomePendencia.html"
+        },
+        {
+          "id": "17-05-PendenciaBloqueio",
+          "numero": "17-05",
+          "quadro": "PendenciaBloqueio",
+          "titulo": "Pagamento · Pendência impede nova recarga (sheet)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/17-05-PendenciaBloqueio.png",
+          "html": "html/17-05-PendenciaBloqueio.html"
+        },
+        {
+          "id": "17-06-PendenciaPaga",
+          "numero": "17-06",
+          "quadro": "PendenciaPaga",
+          "titulo": "Pagamento · Pendência quitada",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/17-06-PendenciaPaga.png",
+          "html": "html/17-06-PendenciaPaga.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "5. Confira e inicie · pagando com cartão",
+          "para": "17-01-ReservaRecusada",
+          "gatilho": "Banco não aprova a reserva"
+        },
+        {
+          "de": "17-01-ReservaRecusada",
+          "para": "→ 5. Pix, saldo ou outro cartão",
+          "gatilho": "Pagar via Pix ou usar outro cartão"
+        },
+        {
+          "de": "6. Conecte o cabo · cabo conectado",
+          "para": "17-02-Iniciando",
+          "gatilho": "O carregador confirma o carro"
+        },
+        {
+          "de": "17-02-Iniciando",
+          "para": "→ 6. Carregando",
+          "gatilho": "Energia começou"
+        },
+        {
+          "de": "17-02-Iniciando",
+          "para": "17-03-NaoIniciou",
+          "gatilho": "Carregador não respondeu"
+        },
+        {
+          "de": "17-03-NaoIniciou",
+          "para": "→ 18. Reportar o carregador",
+          "gatilho": "Reportar este carregador"
+        },
+        {
+          "de": "6. Cartão recusado no fim",
+          "para": "17-04-HomePendencia",
+          "gatilho": "Volta para a home"
+        },
+        {
+          "de": "17-04-HomePendencia",
+          "para": "17-05-PendenciaBloqueio",
+          "gatilho": "Tenta carregar de novo"
+        },
+        {
+          "de": "17-05-PendenciaBloqueio",
+          "para": "17-06-PendenciaPaga",
+          "gatilho": "Pagar via Pix"
+        },
+        {
+          "de": "17-06-PendenciaPaga",
+          "para": "→ 5. Pagamento no C-01",
+          "gatilho": "Carregar no C-01"
+        }
+      ]
+    },
+    {
+      "numero": 18,
+      "titulo": "Reportar e acompanhar",
+      "descricao": "Todo relato vira um chamado com protocolo, prazo e resposta, inclusive contestação e “não fui eu”",
+      "entradas": [
+        "9. Reportar um problema · Enviar",
+        "6. Interrompida · Contestar a cobrança",
+        "6. Cabo desconectado · Não fui eu",
+        "9. Ajuda · Falar com a gente"
+      ],
+      "saidas": [],
+      "telas": [
+        {
+          "id": "18-01-ReportEnviado",
+          "numero": "18-01",
+          "quadro": "ReportEnviado",
+          "titulo": "Ajuda · Relato enviado com protocolo",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/18-01-ReportEnviado.png",
+          "html": "html/18-01-ReportEnviado.html"
+        },
+        {
+          "id": "18-02-MeusChamados",
+          "numero": "18-02",
+          "quadro": "MeusChamados",
+          "titulo": "Ajuda · Meus chamados",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/18-02-MeusChamados.png",
+          "html": "html/18-02-MeusChamados.html"
+        },
+        {
+          "id": "18-03-ChamadoDetalhe",
+          "numero": "18-03",
+          "quadro": "ChamadoDetalhe",
+          "titulo": "Ajuda · Chamado resolvido com estorno",
+          "grupo": null,
+          "altura": 991,
+          "png": "telas/18-03-ChamadoDetalhe.png",
+          "html": "html/18-03-ChamadoDetalhe.html"
+        },
+        {
+          "id": "18-04-Contestar",
+          "numero": "18-04",
+          "quadro": "Contestar",
+          "titulo": "Ajuda · Contestar a cobrança",
+          "grupo": null,
+          "altura": 863,
+          "png": "telas/18-04-Contestar.png",
+          "html": "html/18-04-Contestar.html"
+        },
+        {
+          "id": "18-05-NaoFuiEu",
+          "numero": "18-05",
+          "quadro": "NaoFuiEu",
+          "titulo": "Recarga · Cabo desconectado: não fui eu (sheet)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/18-05-NaoFuiEu.png",
+          "html": "html/18-05-NaoFuiEu.html"
+        },
+        {
+          "id": "18-06-ChatSuporte",
+          "numero": "18-06",
+          "quadro": "ChatSuporte",
+          "titulo": "Ajuda · Chat com o atendimento",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/18-06-ChatSuporte.png",
+          "html": "html/18-06-ChatSuporte.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "9. Reportar um problema · Enviar",
+          "para": "18-01-ReportEnviado",
+          "gatilho": "Relato enviado"
+        },
+        {
+          "de": "18-01-ReportEnviado",
+          "para": "18-02-MeusChamados",
+          "gatilho": "Acompanhar em Meus chamados"
+        },
+        {
+          "de": "18-02-MeusChamados",
+          "para": "18-03-ChamadoDetalhe",
+          "gatilho": "Toca num chamado resolvido"
+        },
+        {
+          "de": "6. Interrompida · Contestar a cobrança",
+          "para": "18-04-Contestar",
+          "gatilho": "Contestar a cobrança"
+        },
+        {
+          "de": "18-04-Contestar",
+          "para": "18-01-ReportEnviado",
+          "gatilho": "Enviar contestação"
+        },
+        {
+          "de": "6. Cabo desconectado · Não fui eu",
+          "para": "18-05-NaoFuiEu",
+          "gatilho": "Não fui eu"
+        },
+        {
+          "de": "18-05-NaoFuiEu",
+          "para": "18-01-ReportEnviado",
+          "gatilho": "Registrar ocorrência"
+        },
+        {
+          "de": "9. Ajuda · Falar com a gente",
+          "para": "18-06-ChatSuporte",
+          "gatilho": "Chat"
+        },
+        {
+          "de": "18-06-ChatSuporte",
+          "para": "18-02-MeusChamados",
+          "gatilho": "Contestação aberta pelo chat"
+        }
+      ]
+    },
+    {
+      "numero": 19,
+      "titulo": "Seguro auto",
+      "descricao": "Dos banners “Simular seguro” até a apólice, com R$ 10 de cashback na 1ª mensalidade",
+      "entradas": [
+        "Banner Para você · Simular seguro"
+      ],
+      "saidas": [
+        "→ 2. Home"
+      ],
+      "telas": [
+        {
+          "id": "19-01-SeguroInicio",
+          "numero": "19-01",
+          "quadro": "SeguroInicio",
+          "titulo": "Seguro auto · O seguro do seu elétrico",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/19-01-SeguroInicio.png",
+          "html": "html/19-01-SeguroInicio.html"
+        },
+        {
+          "id": "19-02-SeguroDados",
+          "numero": "19-02",
+          "quadro": "SeguroDados",
+          "titulo": "Seguro auto · Dados para a cotação",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/19-02-SeguroDados.png",
+          "html": "html/19-02-SeguroDados.html"
+        },
+        {
+          "id": "19-03-SeguroCotacoes",
+          "numero": "19-03",
+          "quadro": "SeguroCotacoes",
+          "titulo": "Seguro auto · Três cotações para comparar",
+          "grupo": null,
+          "altura": 1062,
+          "png": "telas/19-03-SeguroCotacoes.png",
+          "html": "html/19-03-SeguroCotacoes.html"
+        },
+        {
+          "id": "19-04-SeguroPlano",
+          "numero": "19-04",
+          "quadro": "SeguroPlano",
+          "titulo": "Seguro auto · Detalhes do plano Completo",
+          "grupo": null,
+          "altura": 932,
+          "png": "telas/19-04-SeguroPlano.png",
+          "html": "html/19-04-SeguroPlano.html"
+        },
+        {
+          "id": "19-05-SeguroContratar",
+          "numero": "19-05",
+          "quadro": "SeguroContratar",
+          "titulo": "Seguro auto · Confira e contrate",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/19-05-SeguroContratar.png",
+          "html": "html/19-05-SeguroContratar.html"
+        },
+        {
+          "id": "19-06-SeguroContratado",
+          "numero": "19-06",
+          "quadro": "SeguroContratado",
+          "titulo": "Seguro auto · Contratado",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/19-06-SeguroContratado.png",
+          "html": "html/19-06-SeguroContratado.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "Banner Para você · Simular seguro",
+          "para": "19-01-SeguroInicio",
+          "gatilho": "Abre o seguro"
+        },
+        {
+          "de": "19-01-SeguroInicio",
+          "para": "19-02-SeguroDados",
+          "gatilho": "Simular agora"
+        },
+        {
+          "de": "19-02-SeguroDados",
+          "para": "19-03-SeguroCotacoes",
+          "gatilho": "Ver cotações"
+        },
+        {
+          "de": "19-03-SeguroCotacoes",
+          "para": "19-04-SeguroPlano",
+          "gatilho": "Ver detalhes do plano"
+        },
+        {
+          "de": "19-03-SeguroCotacoes",
+          "para": "19-05-SeguroContratar",
+          "gatilho": "Continuar com o Completo"
+        },
+        {
+          "de": "19-04-SeguroPlano",
+          "para": "19-05-SeguroContratar",
+          "gatilho": "Contratar"
+        },
+        {
+          "de": "19-05-SeguroContratar",
+          "para": "19-06-SeguroContratado",
+          "gatilho": "Contratar seguro"
+        },
+        {
+          "de": "19-06-SeguroContratado",
+          "para": "→ 2. Home",
+          "gatilho": "Ir para o início"
+        }
+      ]
+    },
+    {
+      "numero": 20,
+      "titulo": "Desconto na conta de luz",
+      "descricao": "Depois de ativar: foto da conta, análise da distribuidora e quando a conta não é elegível",
+      "entradas": [
+        "10. Ativar desconto · Continuar",
+        "10. Prefere enviar uma foto da conta?"
+      ],
+      "saidas": [
+        "→ 10. Cashback concedido"
+      ],
+      "telas": [
+        {
+          "id": "20-01-EnergiaFoto",
+          "numero": "20-01",
+          "quadro": "EnergiaFoto",
+          "titulo": "Recarga grátis · Enviar foto da conta de luz",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/20-01-EnergiaFoto.png",
+          "html": "html/20-01-EnergiaFoto.html"
+        },
+        {
+          "id": "20-02-EnergiaAnalise",
+          "numero": "20-02",
+          "quadro": "EnergiaAnalise",
+          "titulo": "Recarga grátis · Conta de luz em análise",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/20-02-EnergiaAnalise.png",
+          "html": "html/20-02-EnergiaAnalise.html"
+        },
+        {
+          "id": "20-03-EnergiaNaoElegivel",
+          "numero": "20-03",
+          "quadro": "EnergiaNaoElegivel",
+          "titulo": "Recarga grátis · Conta de luz não elegível",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/20-03-EnergiaNaoElegivel.png",
+          "html": "html/20-03-EnergiaNaoElegivel.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "10. Prefere enviar uma foto da conta?",
+          "para": "20-01-EnergiaFoto",
+          "gatilho": "Enviar foto"
+        },
+        {
+          "de": "20-01-EnergiaFoto",
+          "para": "20-02-EnergiaAnalise",
+          "gatilho": "Foto enviada"
+        },
+        {
+          "de": "10. Ativar desconto · Continuar",
+          "para": "20-02-EnergiaAnalise",
+          "gatilho": "Dados enviados"
+        },
+        {
+          "de": "20-02-EnergiaAnalise",
+          "para": "→ 10. Cashback concedido",
+          "gatilho": "Aprovado em até 2 dias úteis"
+        },
+        {
+          "de": "20-02-EnergiaAnalise",
+          "para": "20-03-EnergiaNaoElegivel",
+          "gatilho": "Distribuidora não atendida"
+        }
+      ]
+    },
+    {
+      "numero": 21,
+      "titulo": "Carteira e cartões",
+      "descricao": "Confirmação do Pix, erros ao salvar cartão, verificação do banco e gerenciar cartões",
+      "entradas": [
+        "7. Carteira · Pix gerado",
+        "7. Adicionar cartão · Salvar",
+        "7. Formas de pagamento · ⋯ num cartão"
+      ],
+      "saidas": [
+        "→ 4. Começar a recarga",
+        "→ 7. Formas de pagamento"
+      ],
+      "telas": [
+        {
+          "id": "21-01-PixAguardando",
+          "numero": "21-01",
+          "quadro": "PixAguardando",
+          "titulo": "Carteira · Aguardando a confirmação do Pix",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/21-01-PixAguardando.png",
+          "html": "html/21-01-PixAguardando.html"
+        },
+        {
+          "id": "21-02-PixRecebido",
+          "numero": "21-02",
+          "quadro": "PixRecebido",
+          "titulo": "Carteira · Pix recebido, saldo adicionado",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/21-02-PixRecebido.png",
+          "html": "html/21-02-PixRecebido.html"
+        },
+        {
+          "id": "21-03-CartaoErro",
+          "numero": "21-03",
+          "quadro": "CartaoErro",
+          "titulo": "Carteira · Adicionar cartão com erros",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/21-03-CartaoErro.png",
+          "html": "html/21-03-CartaoErro.html"
+        },
+        {
+          "id": "21-04-CartaoVerificar",
+          "numero": "21-04",
+          "quadro": "CartaoVerificar",
+          "titulo": "Carteira · Banco pede confirmação do cartão",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/21-04-CartaoVerificar.png",
+          "html": "html/21-04-CartaoVerificar.html"
+        },
+        {
+          "id": "21-05-CartaoGerenciar",
+          "numero": "21-05",
+          "quadro": "CartaoGerenciar",
+          "titulo": "Carteira · Gerenciar um cartão (sheet)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/21-05-CartaoGerenciar.png",
+          "html": "html/21-05-CartaoGerenciar.html"
+        },
+        {
+          "id": "21-06-CartaoRemover",
+          "numero": "21-06",
+          "quadro": "CartaoRemover",
+          "titulo": "Carteira · Remover cartão (confirmação)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/21-06-CartaoRemover.png",
+          "html": "html/21-06-CartaoRemover.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "7. Carteira · Pix gerado",
+          "para": "21-01-PixAguardando",
+          "gatilho": "Copiou o código"
+        },
+        {
+          "de": "21-01-PixAguardando",
+          "para": "21-02-PixRecebido",
+          "gatilho": "Banco confirmou"
+        },
+        {
+          "de": "21-02-PixRecebido",
+          "para": "→ 4. Começar a recarga",
+          "gatilho": "Fazer uma recarga"
+        },
+        {
+          "de": "7. Adicionar cartão · Salvar",
+          "para": "21-03-CartaoErro",
+          "gatilho": "Dados errados"
+        },
+        {
+          "de": "21-03-CartaoErro",
+          "para": "21-04-CartaoVerificar",
+          "gatilho": "Corrigiu · banco pede confirmação"
+        },
+        {
+          "de": "21-04-CartaoVerificar",
+          "para": "→ 7. Formas de pagamento",
+          "gatilho": "Já aprovei"
+        },
+        {
+          "de": "7. Formas de pagamento · ⋯ num cartão",
+          "para": "21-05-CartaoGerenciar",
+          "gatilho": "Abre as opções"
+        },
+        {
+          "de": "21-05-CartaoGerenciar",
+          "para": "21-06-CartaoRemover",
+          "gatilho": "Remover cartão"
+        }
+      ]
+    },
+    {
+      "numero": 22,
+      "titulo": "Veículos",
+      "descricao": "Editar, remover, modelo que não está na lista e placa já usada em outra conta",
+      "entradas": [
+        "8. Meus veículos · toca num carro",
+        "1. Novo veículo"
+      ],
+      "saidas": [],
+      "telas": [
+        {
+          "id": "22-01-VeiculoDetalhe",
+          "numero": "22-01",
+          "quadro": "VeiculoDetalhe",
+          "titulo": "Veículos · Editar veículo",
+          "grupo": null,
+          "altura": 859,
+          "png": "telas/22-01-VeiculoDetalhe.png",
+          "html": "html/22-01-VeiculoDetalhe.html"
+        },
+        {
+          "id": "22-02-VeiculoRemover",
+          "numero": "22-02",
+          "quadro": "VeiculoRemover",
+          "titulo": "Veículos · Remover veículo (confirmação)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/22-02-VeiculoRemover.png",
+          "html": "html/22-02-VeiculoRemover.html"
+        },
+        {
+          "id": "22-03-VeiculoNaoAchei",
+          "numero": "22-03",
+          "quadro": "VeiculoNaoAchei",
+          "titulo": "Veículos · Meu carro não está na lista",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/22-03-VeiculoNaoAchei.png",
+          "html": "html/22-03-VeiculoNaoAchei.html"
+        },
+        {
+          "id": "22-04-VeiculoPlacaRepetida",
+          "numero": "22-04",
+          "quadro": "VeiculoPlacaRepetida",
+          "titulo": "Veículos · Placa já cadastrada em outra conta",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/22-04-VeiculoPlacaRepetida.png",
+          "html": "html/22-04-VeiculoPlacaRepetida.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "8. Meus veículos · toca num carro",
+          "para": "22-01-VeiculoDetalhe",
+          "gatilho": "Abre o veículo"
+        },
+        {
+          "de": "22-01-VeiculoDetalhe",
+          "para": "22-02-VeiculoRemover",
+          "gatilho": "Remover veículo"
+        },
+        {
+          "de": "1. Novo veículo",
+          "para": "22-03-VeiculoNaoAchei",
+          "gatilho": "Meu carro não está na lista"
+        },
+        {
+          "de": "1. Novo veículo",
+          "para": "22-04-VeiculoPlacaRepetida",
+          "gatilho": "Placa já usada em outra conta"
+        }
+      ]
+    },
+    {
+      "numero": 23,
+      "titulo": "Mapa e carregador",
+      "descricao": "Busca por endereço, só compatíveis, carregador em uso ou fora do ar e conector que não encaixa",
+      "entradas": [
+        "3. Mapa · buscar",
+        "1. Ficha do veículo · Ver eletropostos compatíveis",
+        "4. QR lido ou código digitado",
+        "6. Conecte o cabo · não encaixa"
+      ],
+      "saidas": [
+        "→ 5. Pagamento no C-01",
+        "→ 4. Escolher o conector"
+      ],
+      "telas": [
+        {
+          "id": "23-01-MapaBusca",
+          "numero": "23-01",
+          "quadro": "MapaBusca",
+          "titulo": "Mapa · Buscar endereço ou posto",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/23-01-MapaBusca.png",
+          "html": "html/23-01-MapaBusca.html"
+        },
+        {
+          "id": "23-02-MapaBuscaVazia",
+          "numero": "23-02",
+          "quadro": "MapaBuscaVazia",
+          "titulo": "Mapa · Busca sem resultado",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/23-02-MapaBuscaVazia.png",
+          "html": "html/23-02-MapaBuscaVazia.html"
+        },
+        {
+          "id": "23-03-MapaCompativeis",
+          "numero": "23-03",
+          "quadro": "MapaCompativeis",
+          "titulo": "Mapa · Só eletropostos compatíveis com o carro",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/23-03-MapaCompativeis.png",
+          "html": "html/23-03-MapaCompativeis.html"
+        },
+        {
+          "id": "23-04-CarregadorEmUso",
+          "numero": "23-04",
+          "quadro": "CarregadorEmUso",
+          "titulo": "Carregador · Em uso por outra pessoa",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/23-04-CarregadorEmUso.png",
+          "html": "html/23-04-CarregadorEmUso.html"
+        },
+        {
+          "id": "23-05-CarregadorOffline",
+          "numero": "23-05",
+          "quadro": "CarregadorOffline",
+          "titulo": "Carregador · Fora do ar",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/23-05-CarregadorOffline.png",
+          "html": "html/23-05-CarregadorOffline.html"
+        },
+        {
+          "id": "23-06-ConectorNaoEncaixa",
+          "numero": "23-06",
+          "quadro": "ConectorNaoEncaixa",
+          "titulo": "Recarga · O conector não encaixa (sheet)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/23-06-ConectorNaoEncaixa.png",
+          "html": "html/23-06-ConectorNaoEncaixa.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "3. Mapa · buscar",
+          "para": "23-01-MapaBusca",
+          "gatilho": "Buscar endereço ou posto"
+        },
+        {
+          "de": "23-01-MapaBusca",
+          "para": "23-02-MapaBuscaVazia",
+          "gatilho": "Nada encontrado"
+        },
+        {
+          "de": "1. Ficha do veículo · Ver eletropostos compatíveis",
+          "para": "23-03-MapaCompativeis",
+          "gatilho": "Mapa filtrado pelo carro"
+        },
+        {
+          "de": "4. QR lido ou código digitado",
+          "para": "23-04-CarregadorEmUso",
+          "gatilho": "Carregador em uso"
+        },
+        {
+          "de": "4. QR lido ou código digitado",
+          "para": "23-05-CarregadorOffline",
+          "gatilho": "Carregador fora do ar"
+        },
+        {
+          "de": "23-04-CarregadorEmUso",
+          "para": "→ 5. Pagamento no C-01",
+          "gatilho": "Carregar no C-01"
+        },
+        {
+          "de": "23-05-CarregadorOffline",
+          "para": "→ 5. Pagamento no C-01",
+          "gatilho": "Carregar no C-01"
+        },
+        {
+          "de": "6. Conecte o cabo · não encaixa",
+          "para": "23-06-ConectorNaoEncaixa",
+          "gatilho": "O conector não encaixa?"
+        },
+        {
+          "de": "23-06-ConectorNaoEncaixa",
+          "para": "→ 4. Escolher o conector",
+          "gatilho": "Trocar de conector"
+        }
+      ]
+    },
+    {
+      "numero": 24,
+      "titulo": "Durante e depois",
+      "descricao": "Sem internet com a recarga rolando, avaliação ao terminar e a central de notificações",
+      "entradas": [
+        "6. Carregando",
+        "6. Recarga concluída",
+        "2. Home · sino"
+      ],
+      "saidas": [],
+      "telas": [
+        {
+          "id": "24-01-CarregandoOffline",
+          "numero": "24-01",
+          "quadro": "CarregandoOffline",
+          "titulo": "Recarga · Carregando sem internet no celular",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/24-01-CarregandoOffline.png",
+          "html": "html/24-01-CarregandoOffline.html"
+        },
+        {
+          "id": "24-02-AvaliarRecarga",
+          "numero": "24-02",
+          "quadro": "AvaliarRecarga",
+          "titulo": "Recarga · Avaliar a recarga (sheet)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/24-02-AvaliarRecarga.png",
+          "html": "html/24-02-AvaliarRecarga.html"
+        },
+        {
+          "id": "24-03-CentralNotificacoes",
+          "numero": "24-03",
+          "quadro": "CentralNotificacoes",
+          "titulo": "Conta · Central de notificações",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/24-03-CentralNotificacoes.png",
+          "html": "html/24-03-CentralNotificacoes.html"
+        },
+        {
+          "id": "24-04-PrefNotificacoes",
+          "numero": "24-04",
+          "quadro": "PrefNotificacoes",
+          "titulo": "Conta · Preferências de notificação",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/24-04-PrefNotificacoes.png",
+          "html": "html/24-04-PrefNotificacoes.html"
+        },
+        {
+          "id": "24-05-NotificacoesVazio",
+          "numero": "24-05",
+          "quadro": "NotificacoesVazio",
+          "titulo": "Vazio · Notificações",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/24-05-NotificacoesVazio.png",
+          "html": "html/24-05-NotificacoesVazio.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "6. Carregando",
+          "para": "24-01-CarregandoOffline",
+          "gatilho": "Celular sem internet"
+        },
+        {
+          "de": "6. Recarga concluída",
+          "para": "24-02-AvaliarRecarga",
+          "gatilho": "Avaliar a recarga"
+        },
+        {
+          "de": "2. Home · sino",
+          "para": "24-03-CentralNotificacoes",
+          "gatilho": "Notificações"
+        },
+        {
+          "de": "24-03-CentralNotificacoes",
+          "para": "24-04-PrefNotificacoes",
+          "gatilho": "Preferências"
+        },
+        {
+          "de": "24-03-CentralNotificacoes",
+          "para": "24-05-NotificacoesVazio",
+          "gatilho": "Nada novo"
+        }
+      ]
+    },
+    {
+      "numero": 25,
+      "titulo": "Conta",
+      "descricao": "Meus dados, termos, sair, encerrar, resumo do mês, indicar amigos e ponto particular",
+      "entradas": [
+        "9. Configurações · Editar",
+        "9. Configurações · Termos",
+        "9. Configurações · Sair da conta",
+        "9. Configurações · Encerrar conta",
+        "2. Home · Economia vs. gasolina",
+        "2. Home · Indicar",
+        "9. Meus pontos · Adicionar ponto"
+      ],
+      "saidas": [
+        "→ 14. Voltar ao app"
+      ],
+      "telas": [
+        {
+          "id": "25-01-PerfilEditar",
+          "numero": "25-01",
+          "quadro": "PerfilEditar",
+          "titulo": "Conta · Meus dados",
+          "grupo": null,
+          "altura": 883,
+          "png": "telas/25-01-PerfilEditar.png",
+          "html": "html/25-01-PerfilEditar.html"
+        },
+        {
+          "id": "25-02-Termos",
+          "numero": "25-02",
+          "quadro": "Termos",
+          "titulo": "Conta · Termos e privacidade",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/25-02-Termos.png",
+          "html": "html/25-02-Termos.html"
+        },
+        {
+          "id": "25-03-SairConta",
+          "numero": "25-03",
+          "quadro": "SairConta",
+          "titulo": "Conta · Sair da conta (confirmação)",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/25-03-SairConta.png",
+          "html": "html/25-03-SairConta.html"
+        },
+        {
+          "id": "25-04-EncerrarConta",
+          "numero": "25-04",
+          "quadro": "EncerrarConta",
+          "titulo": "Conta · Encerrar conta",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/25-04-EncerrarConta.png",
+          "html": "html/25-04-EncerrarConta.html"
+        },
+        {
+          "id": "25-05-ContaEncerrada",
+          "numero": "25-05",
+          "quadro": "ContaEncerrada",
+          "titulo": "Conta · Conta encerrada",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/25-05-ContaEncerrada.png",
+          "html": "html/25-05-ContaEncerrada.html"
+        },
+        {
+          "id": "25-06-MeuResumo",
+          "numero": "25-06",
+          "quadro": "MeuResumo",
+          "titulo": "Conta · Meu resumo: economia vs. gasolina",
+          "grupo": null,
+          "altura": 924,
+          "png": "telas/25-06-MeuResumo.png",
+          "html": "html/25-06-MeuResumo.html"
+        },
+        {
+          "id": "25-07-Indicar",
+          "numero": "25-07",
+          "quadro": "Indicar",
+          "titulo": "Conta · Indicar amigos",
+          "grupo": null,
+          "altura": 869,
+          "png": "telas/25-07-Indicar.png",
+          "html": "html/25-07-Indicar.html"
+        },
+        {
+          "id": "25-08-AdicionarPonto",
+          "numero": "25-08",
+          "quadro": "AdicionarPonto",
+          "titulo": "Conta · Adicionar ponto particular",
+          "grupo": null,
+          "altura": 844,
+          "png": "telas/25-08-AdicionarPonto.png",
+          "html": "html/25-08-AdicionarPonto.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "9. Configurações · Editar",
+          "para": "25-01-PerfilEditar",
+          "gatilho": "Meus dados"
+        },
+        {
+          "de": "9. Configurações · Termos",
+          "para": "25-02-Termos",
+          "gatilho": "Termos e privacidade"
+        },
+        {
+          "de": "9. Configurações · Sair da conta",
+          "para": "25-03-SairConta",
+          "gatilho": "Sair da conta"
+        },
+        {
+          "de": "25-03-SairConta",
+          "para": "→ 14. Voltar ao app",
+          "gatilho": "Sair"
+        },
+        {
+          "de": "9. Configurações · Encerrar conta",
+          "para": "25-04-EncerrarConta",
+          "gatilho": "Encerrar conta"
+        },
+        {
+          "de": "25-04-EncerrarConta",
+          "para": "25-05-ContaEncerrada",
+          "gatilho": "Encerrar minha conta"
+        },
+        {
+          "de": "2. Home · Economia vs. gasolina",
+          "para": "25-06-MeuResumo",
+          "gatilho": "Meu resumo"
+        },
+        {
+          "de": "2. Home · Indicar",
+          "para": "25-07-Indicar",
+          "gatilho": "Indicar amigos"
+        },
+        {
+          "de": "9. Meus pontos · Adicionar ponto",
+          "para": "25-08-AdicionarPonto",
+          "gatilho": "Adicionar ponto"
+        }
+      ]
+    },
+    {
+      "numero": 26,
+      "titulo": "Estados vazios e sistema",
+      "descricao": "Primeiro uso sem dados e as telas que bloqueiam o app inteiro",
+      "entradas": [],
+      "saidas": [],
+      "telas": [
+        {
+          "id": "26-01-RecargasVazio",
+          "numero": "26-01",
+          "quadro": "RecargasVazio",
+          "titulo": "Vazio · Minhas recargas",
+          "grupo": "Estados vazios",
+          "altura": 844,
+          "png": "telas/26-01-RecargasVazio.png",
+          "html": "html/26-01-RecargasVazio.html"
+        },
+        {
+          "id": "26-02-ExtratoVazio",
+          "numero": "26-02",
+          "quadro": "ExtratoVazio",
+          "titulo": "Vazio · Extrato do mês",
+          "grupo": "Estados vazios",
+          "altura": 844,
+          "png": "telas/26-02-ExtratoVazio.png",
+          "html": "html/26-02-ExtratoVazio.html"
+        },
+        {
+          "id": "26-03-FavoritosVazio",
+          "numero": "26-03",
+          "quadro": "FavoritosVazio",
+          "titulo": "Vazio · Postos favoritos",
+          "grupo": "Estados vazios",
+          "altura": 844,
+          "png": "telas/26-03-FavoritosVazio.png",
+          "html": "html/26-03-FavoritosVazio.html"
+        },
+        {
+          "id": "26-04-PontosVazio",
+          "numero": "26-04",
+          "quadro": "PontosVazio",
+          "titulo": "Vazio · Meus pontos",
+          "grupo": "Estados vazios",
+          "altura": 844,
+          "png": "telas/26-04-PontosVazio.png",
+          "html": "html/26-04-PontosVazio.html"
+        },
+        {
+          "id": "26-05-AtualizarApp",
+          "numero": "26-05",
+          "quadro": "AtualizarApp",
+          "titulo": "Sistema · Atualização obrigatória",
+          "grupo": "Sistema",
+          "altura": 844,
+          "png": "telas/26-05-AtualizarApp.png",
+          "html": "html/26-05-AtualizarApp.html"
+        },
+        {
+          "id": "26-06-Manutencao",
+          "numero": "26-06",
+          "quadro": "Manutencao",
+          "titulo": "Sistema · Em manutenção",
+          "grupo": "Sistema",
+          "altura": 844,
+          "png": "telas/26-06-Manutencao.png",
+          "html": "html/26-06-Manutencao.html"
+        }
+      ],
+      "caminhos": []
+    },
+    {
+      "numero": 27,
+      "titulo": "Avise-me quando liberar",
+      "descricao": "Carregador ocupado ou posto cheio: o aviso fica na home e chega como alerta no app, ou como push com o app fechado",
+      "entradas": [
+        "3. Posto · carregador ocupado",
+        "3. Mapa · posto com todos ocupados"
+      ],
+      "saidas": [
+        "→ 5. Forma de pagamento",
+        "↺ O aviso continua ativo na home"
+      ],
+      "telas": [
+        {
+          "id": "27-01-AvisoBombaSheet",
+          "numero": "27-01",
+          "quadro": "AvisoBombaSheet",
+          "titulo": "Aviso de vaga · Carregador ocupado: quer ser avisado?",
+          "grupo": "Um carregador ocupado",
+          "altura": 844,
+          "png": "telas/27-01-AvisoBombaSheet.png",
+          "html": "html/27-01-AvisoBombaSheet.html"
+        },
+        {
+          "id": "27-02-AvisoAtivado",
+          "numero": "27-02",
+          "quadro": "AvisoAtivado",
+          "titulo": "Aviso de vaga · Aviso ativado no carregador",
+          "grupo": "Um carregador ocupado",
+          "altura": 1030,
+          "png": "telas/27-02-AvisoAtivado.png",
+          "html": "html/27-02-AvisoAtivado.html"
+        },
+        {
+          "id": "27-03-AvisoPostoCheio",
+          "numero": "27-03",
+          "quadro": "AvisoPostoCheio",
+          "titulo": "Aviso de vaga · Posto com todos os carregadores ocupados",
+          "grupo": "Posto cheio",
+          "altura": 944,
+          "png": "telas/27-03-AvisoPostoCheio.png",
+          "html": "html/27-03-AvisoPostoCheio.html"
+        },
+        {
+          "id": "27-04-AvisoPostoSheet",
+          "numero": "27-04",
+          "quadro": "AvisoPostoSheet",
+          "titulo": "Aviso de vaga · Posto cheio: avisar no primeiro que liberar",
+          "grupo": "Posto cheio",
+          "altura": 844,
+          "png": "telas/27-04-AvisoPostoSheet.png",
+          "html": "html/27-04-AvisoPostoSheet.html"
+        },
+        {
+          "id": "27-05-AvisoHome",
+          "numero": "27-05",
+          "quadro": "AvisoHome",
+          "titulo": "Aviso de vaga · Home com o aviso em aberto",
+          "grupo": "O aviso na home",
+          "altura": 2208,
+          "png": "telas/27-05-AvisoHome.png",
+          "html": "html/27-05-AvisoHome.html"
+        },
+        {
+          "id": "27-06-AvisoLiberouApp",
+          "numero": "27-06",
+          "quadro": "AvisoLiberouApp",
+          "titulo": "Aviso de vaga · Alerta dentro do app quando liberou",
+          "grupo": "Quando o carregador libera",
+          "altura": 844,
+          "png": "telas/27-06-AvisoLiberouApp.png",
+          "html": "html/27-06-AvisoLiberouApp.html"
+        },
+        {
+          "id": "27-07-AvisoPushFechado",
+          "numero": "27-07",
+          "quadro": "AvisoPushFechado",
+          "titulo": "Aviso de vaga · Push com o app fechado",
+          "grupo": "Quando o carregador libera",
+          "altura": 844,
+          "png": "telas/27-07-AvisoPushFechado.png",
+          "html": "html/27-07-AvisoPushFechado.html"
+        },
+        {
+          "id": "27-08-AvisoHomeLiberou",
+          "numero": "27-08",
+          "quadro": "AvisoHomeLiberou",
+          "titulo": "Aviso de vaga · Home quando o carregador liberou",
+          "grupo": "Quando o carregador libera",
+          "altura": 2187,
+          "png": "telas/27-08-AvisoHomeLiberou.png",
+          "html": "html/27-08-AvisoHomeLiberou.html"
+        },
+        {
+          "id": "27-09-AvisoLiberouPosto",
+          "numero": "27-09",
+          "quadro": "AvisoLiberouPosto",
+          "titulo": "Aviso de vaga · Posto com o carregador que liberou",
+          "grupo": "Quando o carregador libera",
+          "altura": 944,
+          "png": "telas/27-09-AvisoLiberouPosto.png",
+          "html": "html/27-09-AvisoLiberouPosto.html"
+        },
+        {
+          "id": "27-10-AvisoChegouAntes",
+          "numero": "27-10",
+          "quadro": "AvisoChegouAntes",
+          "titulo": "Aviso de vaga · Alguém conectou antes",
+          "grupo": "Quando o carregador libera",
+          "altura": 844,
+          "png": "telas/27-10-AvisoChegouAntes.png",
+          "html": "html/27-10-AvisoChegouAntes.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "3. Posto · carregador ocupado",
+          "para": "27-01-AvisoBombaSheet",
+          "gatilho": "Abre o sheet"
+        },
+        {
+          "de": "27-01-AvisoBombaSheet",
+          "para": "27-02-AvisoAtivado",
+          "gatilho": "Me avisar quando liberar"
+        },
+        {
+          "de": "3. Mapa · posto com todos ocupados",
+          "para": "27-03-AvisoPostoCheio",
+          "gatilho": "Abre o posto"
+        },
+        {
+          "de": "27-03-AvisoPostoCheio",
+          "para": "27-04-AvisoPostoSheet",
+          "gatilho": "Me avisar quando um liberar"
+        },
+        {
+          "de": "27-04-AvisoPostoSheet",
+          "para": "27-02-AvisoAtivado",
+          "gatilho": "Me avisar quando liberar"
+        },
+        {
+          "de": "27-02-AvisoAtivado",
+          "para": "27-05-AvisoHome",
+          "gatilho": "Voltar para o início"
+        },
+        {
+          "de": "27-05-AvisoHome",
+          "para": "27-06-AvisoLiberouApp",
+          "gatilho": "Liberou com o app aberto"
+        },
+        {
+          "de": "27-05-AvisoHome",
+          "para": "27-07-AvisoPushFechado",
+          "gatilho": "Liberou com o app fechado"
+        },
+        {
+          "de": "27-06-AvisoLiberouApp",
+          "para": "27-09-AvisoLiberouPosto",
+          "gatilho": "Toca no alerta"
+        },
+        {
+          "de": "27-06-AvisoLiberouApp",
+          "para": "27-08-AvisoHomeLiberou",
+          "gatilho": "Fecha o alerta"
+        },
+        {
+          "de": "27-07-AvisoPushFechado",
+          "para": "27-09-AvisoLiberouPosto",
+          "gatilho": "Toca no push"
+        },
+        {
+          "de": "27-08-AvisoHomeLiberou",
+          "para": "27-09-AvisoLiberouPosto",
+          "gatilho": "Carregar no C-02"
+        },
+        {
+          "de": "27-09-AvisoLiberouPosto",
+          "para": "→ 5. Forma de pagamento",
+          "gatilho": "Carregar no C-02"
+        },
+        {
+          "de": "27-09-AvisoLiberouPosto",
+          "para": "27-10-AvisoChegouAntes",
+          "gatilho": "Alguém conectou antes"
+        },
+        {
+          "de": "27-10-AvisoChegouAntes",
+          "para": "↺ O aviso continua ativo na home",
+          "gatilho": "Avisar no próximo que liberar"
+        }
+      ]
+    },
+    {
+      "numero": 28,
+      "titulo": "Carro verde",
+      "descricao": "Tesla Model S Plaid e GWM WEY 07: home com um banner P13 em carrossel no Para você e a recarga em andamento",
+      "entradas": [],
+      "saidas": [],
+      "telas": [
+        {
+          "id": "28-01-HomeVerdeTesla",
+          "numero": "28-01",
+          "quadro": "HomeVerdeTesla",
+          "titulo": "Carro verde · Home com o Tesla Model S Plaid",
+          "grupo": "Tesla Model S Plaid",
+          "altura": 1944,
+          "png": "telas/28-01-HomeVerdeTesla.png",
+          "html": "html/28-01-HomeVerdeTesla.html"
+        },
+        {
+          "id": "28-02-CarregandoVerdeTesla",
+          "numero": "28-02",
+          "quadro": "CarregandoVerdeTesla",
+          "titulo": "Carro verde · Carregando o Tesla Model S Plaid",
+          "grupo": "Tesla Model S Plaid",
+          "altura": 844,
+          "png": "telas/28-02-CarregandoVerdeTesla.png",
+          "html": "html/28-02-CarregandoVerdeTesla.html"
+        },
+        {
+          "id": "28-03-CarregandoVerdeTeslaV2",
+          "numero": "28-03",
+          "quadro": "CarregandoVerdeTeslaV2",
+          "titulo": "Carro verde · Carregando o Tesla Model S Plaid · V2 bateria vazia com o tracejado final",
+          "grupo": "Tesla Model S Plaid",
+          "altura": 844,
+          "png": "telas/28-03-CarregandoVerdeTeslaV2.png",
+          "html": "html/28-03-CarregandoVerdeTeslaV2.html"
+        },
+        {
+          "id": "28-04-HomeVerdeGwm",
+          "numero": "28-04",
+          "quadro": "HomeVerdeGwm",
+          "titulo": "Carro verde · Home com o GWM WEY 07",
+          "grupo": "GWM WEY 07",
+          "altura": 1944,
+          "png": "telas/28-04-HomeVerdeGwm.png",
+          "html": "html/28-04-HomeVerdeGwm.html"
+        },
+        {
+          "id": "28-05-CarregandoVerdeGwm",
+          "numero": "28-05",
+          "quadro": "CarregandoVerdeGwm",
+          "titulo": "Carro verde · Carregando o GWM WEY 07",
+          "grupo": "GWM WEY 07",
+          "altura": 844,
+          "png": "telas/28-05-CarregandoVerdeGwm.png",
+          "html": "html/28-05-CarregandoVerdeGwm.html"
+        },
+        {
+          "id": "28-06-CarregandoVerdeGwmV2",
+          "numero": "28-06",
+          "quadro": "CarregandoVerdeGwmV2",
+          "titulo": "Carro verde · Carregando o GWM WEY 07 · V2 bateria vazia com o tracejado final",
+          "grupo": "GWM WEY 07",
+          "altura": 844,
+          "png": "telas/28-06-CarregandoVerdeGwmV2.png",
+          "html": "html/28-06-CarregandoVerdeGwmV2.html"
+        }
+      ],
+      "caminhos": [
+        {
+          "de": "28-01-HomeVerdeTesla",
+          "para": "28-02-CarregandoVerdeTesla",
+          "gatilho": "Carregar aqui"
+        },
+        {
+          "de": "28-04-HomeVerdeGwm",
+          "para": "28-05-CarregandoVerdeGwm",
+          "gatilho": "Carregar aqui"
+        }
+      ]
+    }
+  ]
+}

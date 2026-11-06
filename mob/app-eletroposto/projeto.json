@@ -1,0 +1,11 @@
+{
+  "nome": "App Eletroposto",
+  "descricao": "O app de recarga do motorista: 28 fluxos e 208 telas, do primeiro acesso ao recibo, passando por mapa, pagamento, recarga, carteira e veículos. Cada tela em HTML e PNG, com o documento dos fluxos e das regras.",
+  "tipo": "prototipo",
+  "atualizado": "2026-11-06",
+  "paginas": [
+    { "nome": "Galeria dos 28 fluxos", "arquivo": "index.html" },
+    { "nome": "Home, veículos e pagamento", "arquivo": "Eletroposto - home.html" }
+  ],
+  "tags": ["eletroposto", "recarga", "app", "motorista", "fluxos"]
+}
