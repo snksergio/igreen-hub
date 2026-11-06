@@ -2,22 +2,37 @@
   "nome": "Cadastro de investidor",
   "descricao": "O fluxo completo de cadastro do investidor Green Mob, feito em React a partir do Figma e do design system Novo Link Cadastro.",
   "tipo": "prototipo",
-  "atualizado": "2026-10-22",
-  "link": "https://igreen-mob-link.vercel.app/",
+  "atualizado": "2026-11-06",
   "repo": "https://github.com/snksergio/igreen-mob-link",
+  "paginas": [
+    {
+      "nome": "Início",
+      "arquivo": "index.html"
+    },
+    {
+      "nome": "Simulador por CPF",
+      "arquivo": "index.html#simulador"
+    },
+    {
+      "nome": "Dados do investidor",
+      "arquivo": "index.html#step1"
+    },
+    {
+      "nome": "Modelo do eletroposto",
+      "arquivo": "index.html#step2"
+    },
+    {
+      "nome": "Endereço do eletroposto",
+      "arquivo": "index.html#step3"
+    },
+    {
+      "nome": "Resumo",
+      "arquivo": "index.html#step4"
+    }
+  ],
   "tags": [
     "cadastro",
     "investidor",
     "react"
-  ],
-  "paginas": [
-    {
-      "nome": "Início",
-      "arquivo": ""
-    },
-    {
-      "nome": "Simulador por CPF",
-      "arquivo": "#simulador"
-    }
   ]
 }

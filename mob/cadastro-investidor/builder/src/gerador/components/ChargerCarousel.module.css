@@ -1,0 +1,240 @@
+.carousel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* ---------- Trilho ---------- */
+.track {
+  display: flex;
+  gap: 12px;
+  margin: -4px;
+  padding: 4px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 4px;
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Todos cabem: dividem a largura igualmente */
+.trackFit .card {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* ---------- Card ---------- */
+.card {
+  display: flex;
+  flex: 0 0 248px;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 18px;
+  text-align: left;
+  background: var(--bg-background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  scroll-snap-align: start;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--fg-subtle);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--border-primary);
+  outline-offset: 2px;
+}
+
+.cardActive,
+.cardActive:hover {
+  background: var(--bg-primary-subtle);
+  border-color: var(--border-primary);
+}
+
+.cardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.radio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--fg-subtle);
+  border-radius: 50%;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.radioOn {
+  background: var(--bg-primary);
+  border-color: var(--bg-primary);
+}
+
+.name {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--fg-main);
+}
+
+.power {
+  margin-top: 2px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 32px;
+  letter-spacing: -0.04em;
+  color: var(--fg-strong);
+  white-space: nowrap;
+}
+
+.power small {
+  margin-left: 4px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  color: var(--fg-muted);
+}
+
+.meta {
+  margin-top: 6px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--fg-muted);
+}
+
+.invest {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.cardActive .invest {
+  border-top-color: var(--border-primary-subtle);
+}
+
+.investLabel {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--fg-muted);
+}
+
+.investValue {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  color: var(--fg-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.society {
+  margin-top: 2px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--fg-muted);
+}
+
+.societySolo {
+  font-weight: 600;
+  color: var(--fg-primary);
+}
+
+/* ---------- Paginação abaixo dos cards ---------- */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border-radius: var(--radius-full);
+  background: var(--border);
+  transition:
+    background-color 0.2s ease,
+    width 0.25s ease;
+}
+
+.dotOn {
+  width: 18px;
+  background: var(--bg-primary);
+}
+
+.arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  transition:
+    background-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.arrow:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+.arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.arrowIcon {
+  background-color: var(--fg-main);
+}
+
+.arrowLeft {
+  transform: rotate(90deg);
+}
+
+.arrowRight {
+  transform: rotate(-90deg);
+}
+
+@media (max-width: 560px) {
+  .card {
+    flex-basis: min(78%, 270px);
+    padding: 16px;
+  }
+}
