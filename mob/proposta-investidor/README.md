@@ -29,4 +29,6 @@ Migrado de [snksergio/igreen-mob-link](https://github.com/snksergio/igreen-mob-l
 - `index.html`, `assets/`, `favicon.png` — o app pronto (build do Vite com caminho relativo). É um app React só, com rotas por hash; esta ficha mostra a página da proposta gerada (`#proposta-v3`, atual, e `#proposta-v2`, o primeiro modelo).
 - `builder/` — o código-fonte, os testes, os scripts e a documentação, na organização do original, mais o gerador do resultado ([README do builder](builder/README.md)). Não aparece na vitrine.
 
-O mesmo app está também em `mob/cadastro-investidor`, `mob/simulador-investidor`, `mob/oferta-live`, cada pasta com a sua cópia.
+A oferta da live (`#cadastro-simplificado`), o link que a licenciada manda durante a live para escolher o eletroposto e pagar a entrada numa tela só, também abre daqui: https://snksergio.github.io/igreen-hub/mob/proposta-investidor/?responsavel=Juliana%20Martins#cadastro-simplificado
+
+O mesmo app está também em `mob/simulador-investidor` (o simulador e o cadastro original), com a sua cópia. Até 2026-11-06 a oferta da live tinha um card próprio, `mob/oferta-live`, com uma cópia idêntica do app; ele foi juntado aqui.

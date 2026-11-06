@@ -4,7 +4,7 @@
 
 **Origem:** Migrado de [snksergio/igreen-mob-link](https://github.com/snksergio/igreen-mob-link) (commit `5af67d1`) em 2026-11-06. Daqui em diante a fonte é esta pasta; o original fica intocado, só como registro.
 
-> **O mesmo app em 4 pastas.** Este código é um app React + Vite só, com quatro assuntos em rotas por hash. No hub ele virou quatro projetos, cada um com uma cópia completa do código: `mob/cadastro-investidor`, `mob/simulador-investidor`, `mob/proposta-investidor` e `mob/oferta-live`. Esta pasta é a de a página da proposta gerada (`#proposta-v3`, atual, e `#proposta-v2`, o primeiro modelo). Partes são compartilhadas (design system em `src/components` e `src/styles`, `src/Root.tsx`, os cards dos modelos): uma mudança nelas precisa ir para as outras pastas também, ou antes é preciso decidir qual pasta passa a ser a fonte única (veja Pendências).
+> **O mesmo app em 2 pastas.** Este código é um app React + Vite só, com quatro assuntos em rotas por hash. No hub ele fica em dois projetos, cada um com uma cópia completa do código: `mob/simulador-investidor` (o simulador, v2 em `#investir` e v1 em `#gerador`, e o cadastro original na rota raiz) e `mob/proposta-investidor` (a proposta, `#proposta-v3` e `#proposta-v2`, e a oferta da live, `#cadastro-simplificado`). Até 2026-11-06 eram quatro: `mob/cadastro-investidor` e `mob/oferta-live` tinham cópias idênticas e foram juntados nestes dois. Esta pasta é a da proposta e da oferta da live. Partes são compartilhadas (design system em `src/components` e `src/styles`, `src/Root.tsx`, os cards dos modelos): uma mudança nelas precisa ir para a outra pasta também, ou antes é preciso decidir qual pasta passa a ser a fonte única (veja Pendências).
 
 ## Estado atual
 

@@ -1,6 +1,6 @@
 {
   "nome": "Proposta do investidor",
-  "descricao": "A página que o investidor recebe com a proposta gerada: o próximo passo e o andamento de proposta a entrega, com contrato, pagamento, vistoria e carregadores em pontos.",
+  "descricao": "A página que o investidor recebe com a proposta gerada: o próximo passo e o andamento de proposta a entrega, com contrato, pagamento, vistoria e carregadores em pontos. Inclui a oferta da live, a tela de compra que leva à proposta.",
   "tipo": "prototipo",
   "atualizado": "2026-11-06",
   "repo": "https://github.com/snksergio/igreen-mob-link",
@@ -24,6 +24,10 @@
     {
       "nome": "Entrega para aceite",
       "arquivo": "index.html#proposta-v3/9E89C902?cenario=entrega"
+    },
+    {
+      "nome": "Oferta da live (compra na live)",
+      "arquivo": "index.html?responsavel=Juliana%20Martins#cadastro-simplificado"
     }
   ],
   "versoes": [
@@ -122,6 +126,16 @@
             "arquivo": "index.html#proposta-v2/9E89C902?cenario=recusada"
           }
         ]
+      },
+      {
+        "nome": "Oferta da live",
+        "prints": "oferta",
+        "paginas": [
+          {
+            "nome": "Escolher o eletroposto e pagar a entrada",
+            "arquivo": "index.html?responsavel=Juliana%20Martins#cadastro-simplificado"
+          }
+        ]
       }
     ]
   },
@@ -130,6 +144,8 @@
     "investidor",
     "contrato",
     "vistoria",
-    "pontos"
+    "pontos",
+    "live",
+    "oferta"
   ]
 }
