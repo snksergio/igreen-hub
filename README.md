@@ -43,7 +43,7 @@ No chat do projeto, no Claude Code:
 
 > Migra este projeto para o iGreen Hub. É só organização: não altere o projeto. Antes, leia e siga o MIGRACAO.md: `gh api repos/snksergio/igreen-hub/contents/MIGRACAO.md -H "Accept: application/vnd.github.raw"`
 
-Migrar é organizar, não revisar: os arquivos vão para a pasta certa e os links passam a funcionar no hub, mas o projeto em si não muda. O original continua no ar e intocado; a cópia no hub aponta para ele em `repo`. Detalhes no [MIGRACAO.md](MIGRACAO.md).
+Migrar é organizar, não revisar: os arquivos vão para a pasta certa e os links passam a funcionar no hub, mas o projeto em si não muda. O original continua no ar e intocado; a cópia no hub aponta para ele em `repo`. O chat lista o que o repositório tem e você escolhe, item por item: **só o resultado** (para mostrar) ou **completo** (com código-fonte, estudos e documentação no `builder/`, para continuar o trabalho num outro chat a partir do hub). Detalhes no [MIGRACAO.md](MIGRACAO.md).
 
 ## Ver a vitrine no computador
 
