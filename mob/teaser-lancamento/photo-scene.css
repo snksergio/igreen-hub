@@ -1,0 +1,6 @@
+/* Separate photographic lighting states. No grayscale or brightness filters. */
+.photo-light{opacity:0;transition:opacity 1.1s ease}
+.light-full .photo-light{opacity:1}
+.dark-two .master-composition{mask-image:linear-gradient(to bottom,transparent,#000 13%,#000 80%,transparent),linear-gradient(to right,transparent,#000 9%,#000 91%,transparent);mask-composite:intersect;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 13%,#000 80%,transparent),linear-gradient(to right,transparent,#000 9%,#000 91%,transparent);-webkit-mask-composite:source-in}
+@media(prefers-reduced-motion:reduce){.photo-light{transition:none}}
+.dark-two .master-composition{mask-image:none;-webkit-mask-image:none}

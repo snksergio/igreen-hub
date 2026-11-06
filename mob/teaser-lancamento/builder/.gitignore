@@ -1,0 +1,5 @@
+research/
+visuals/
+screenshots/
+*.tar
+node_modules/

@@ -1,0 +1,7 @@
+.dark-two .master-composition{animation:none!important;opacity:1!important}.master-base{filter:brightness(.11) saturate(.75);transition:filter .8s ease}.master-details{opacity:.7;transition:opacity .8s ease}.light-full .master-base{filter:brightness(1) saturate(1)}.light-full .master-details{opacity:0}.dark-two .master-composition{mask-image:linear-gradient(to bottom,transparent,#000 7%,#000 87%,transparent);-webkit-mask-image:linear-gradient(to bottom,transparent,#000 7%,#000 87%,transparent)}
+.screen-emission{opacity:.24;transition:opacity .8s ease}.light-full .screen-emission{opacity:.72}
+/* Registered moonlight preserves scene geometry while removing green spill. */
+.master-base{filter:grayscale(.96) sepia(.12) hue-rotate(165deg) saturate(.55) brightness(.13)}
+.master-moon{filter:grayscale(1) sepia(.18) hue-rotate(168deg) saturate(.65) brightness(1.1);opacity:.85;transition:opacity .8s ease}
+.light-full .master-base{filter:grayscale(0) sepia(0) hue-rotate(0deg) saturate(1) brightness(1)}
+.light-full .master-moon{opacity:0}

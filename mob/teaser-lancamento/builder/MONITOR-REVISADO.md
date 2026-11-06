@@ -1,0 +1,14 @@
+# Revisão do visor
+
+Somente as duas imagens de `dist/assets/dark-2-apagada.webp` e `dist/assets/dark-2-acesa.webp` foram substituídas na página. Originais desta revisão em `visuals/dark-2-apagada-revisada.png` e `visuals/dark-2-acesa-revisada.png`.
+
+Ferramenta: imagegen integrada, edição por referência. O visor não possui mais logo, percentual ou legendas legíveis. Tem barra, três ícones e traços. Neon aceso com halo localizado, bordas escuras. Consistência visual revisada; edição generativa não garante igualdade pixel a pixel.
+
+## Prompt acesa
+STRICT minimal localized edit of this lit charging station image. Preserve camera framing, every object shape and position, exposure, logos on canopy and charger body, car, cables, architecture. Modify only tiny oval monitor UI: REMOVE miniature logo above bar and REMOVE 78% numerals entirely. Move green progress bar into the upper portion of monitor. Below it place exactly THREE small circular line icons evenly spaced in one row (thermometer, lightning, timer), beneath EACH icon four tiny short neutral grey strokes suggesting labels, absolutely NO letters, numbers, percentages or logos inside monitor. Monitor should look like subtle dark glass LCD. Keep same outer oval housing and bottom circular physical button. Also add a restrained soft emerald light bloom immediately around the canopy neon, fading to pure black well before reaching top edge or side edges; do not fill background with green haze. Everything else unchanged. Same original aspect ratio.
+
+## Prompt apagada
+Edit IMAGE 1 DARK scene only. IMAGE 2 is the EXACT monitor UI reference. Preserve all image1 dark scene composition and black exposure, every object position and shape. Replace only monitor UI with an exact duplicate of image2 monitor UI at same relative coordinates: one green progress bar high in screen, no logo, no percentage, no text, below bar exactly three line icons thermometer/lightning/timer with tiny grey dashes beneath each. Identical proportions and spacing to image2. Same outer oval housing and physical bottom button, visible only subtly in dark. Screen emission should remain dim; add slightly more soft local greenish light spill around the glass onto the immediate bezel, rather than brightening the screen itself. Do not change car, canopy, logos outside monitor, framing, or general darkness. Do not turn neon on. Consistency is paramount; do not reinterpret monitor icons. Same aspect ratio.
+
+## Correção de preenchimento da barra
+One tiny precise correction to IMAGE1 dark scene, use IMAGE2 lit scene as monitor reference. The green monitor bar in image1 is half-filled; make its entire length uniformly dim green, EXACTLY the same full-length green pill bar as image2, but retain dim night brightness. Everything else in image1 MUST remain unchanged, particularly three icons/dashes and camera geometry and dark lighting. No text or digits. Do not regenerate or change any other region.

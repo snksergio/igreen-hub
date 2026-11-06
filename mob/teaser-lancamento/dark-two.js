@@ -1,0 +1,1 @@
+(()=>{const buttons=[...document.querySelectorAll('[data-light-mode]')],hint=document.querySelector('.light-hint');buttons.forEach(b=>b.addEventListener('click',()=>{const on=b.dataset.lightMode==='full';document.body.classList.toggle('light-full',on);buttons.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));hint.textContent=on?'Luzes acesas.':'Luzes apagadas.';}));})();

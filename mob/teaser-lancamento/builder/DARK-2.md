@@ -1,0 +1,13 @@
+# Dark 2
+
+Nova página: `dist/dark-2.html`. Originais e páginas anteriores preservados. Alternância manual Apagar/Acender, sem pulso automático.
+
+Edição das duas referências do usuário pela ferramenta imagegen integrada. Imagens finais: `visuals/dark-2-apagada.png` e `visuals/dark-2-acesa.png`; WebP para a página em `dist/assets/dark-2-apagada.webp` e `dist/assets/dark-2-acesa.webp`. Resolução produzida pelo gerador: 1678×937, menor que as referências de 3840×2142. Não houve ampliação artificial.
+
+O visor foi usado como referência entre os dois estados, mas imagens geradas não garantem identidade pixel a pixel. A página usa o mesmo enquadramento para ambos.
+
+## Prompt — apagada
+Precise minimal edit of image 1, the DARK EV station image. Image 2 is ONLY a reference for the physical monitor housing. Preserve image 1 EXACTLY: very dark exposure, colors, black background, car, canopy, logos, charger position, all geometry and crop. Change ONLY the tiny charging monitor at x63.7% y42%: make it a believable small inset rectangular LCD television screen behind dark smoked glass, within the existing vertical oval black housing. Screen content is dim distant soft green-white charging information, a tiny progress bar and 78%, NOT sharply legible floating text. Reduce screen brightness considerably (about half), add faint physically realistic light spill onto immediate bezel, subtle glass reflection. Screen should remain understated and distant, no bright halo. All other pixels especially dark tonal quality must remain identical. Output wide original aspect ratio, highest available resolution.
+
+## Prompt — acesa
+Precise edit of IMAGE 1 (lit EV charging station). IMAGE 2 is exact reference for corrected monitor design. Preserve composition/camera/crop/geometry/car/canopy/signage/cable positions from image1. Three very restrained changes ONLY: (1) make charger casing slightly more realistic powder-coated painted metal with fine microtexture and restrained highlights, less plastic; retain green color and logos. (2) copy IDENTICAL monitor shape/content/layout from image2, same dim smoked-glass LCD screen, same progress bar and icons, same geometry; it is the very same device under different ambient lighting. (3) background outside canopy must be pure black, particularly entire top edge/header and corners, remove all green fog/ambient green wash in background. Keep localized green neon glow close to canopy strips, realistic reflections on car/charger/floor. No broad green sky. Maintain scene alignment with image2 for an on/off crossfade. Highest available resolution, original wide aspect ratio.
