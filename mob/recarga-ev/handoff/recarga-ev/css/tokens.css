@@ -1,0 +1,31 @@
+/* Tokens das telas de recarga (tema escuro).
+   Mesma base do app: fonte Geist e verde iGreen. No React Native, vire um objeto de tema. */
+:root {
+  --fonte: Geist, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fonte-mono: 'Geist Mono', ui-monospace, monospace;
+
+  /* texto sobre fundo escuro */
+  --texto: #f1f5f3;
+  --texto-2: rgba(241, 245, 243, .68);
+  --texto-3: rgba(241, 245, 243, .45);
+
+  /* superfícies translúcidas: funcionam sobre o fundo de qualquer molde */
+  --superficie-1: rgba(255, 255, 255, .045);
+  --superficie-2: rgba(255, 255, 255, .07);
+  --linha: rgba(214, 236, 226, .08);
+  --linha-2: rgba(214, 236, 226, .14);
+
+  /* energia (só a carga, o cabo e as ações de concluir usam verde) */
+  --verde: #2fd07f;
+  --verde-claro: #4be6a0;
+  --verde-escuro: #16a35b;
+  --texto-sobre-verde: #04130b;
+  --brilho-guia: #e8fff3; /* pulsos e guias da tela 1 */
+
+  /* fundo da tela: sobrescrito pela cor "fundo" do molde escolhido */
+  --fundo-tela: #06100d;
+
+  --raio-card: 20px;
+  --raio-botao: 18px;
+  --raio-pill: 999px;
+}

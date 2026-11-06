@@ -1,0 +1,46 @@
+/* Estados e animações da ilustração (SVG). Tudo que se move aqui é opacity, transform ou
+   stroke-dashoffset, que no React Native vira Reanimated (withRepeat/withTiming). */
+
+.scene-svg text { font-family: var(--fonte); }
+
+/* estado da cena (classes no <svg>)
+   is-charging  → carregando: luz no chão, brilho que corre, fluxo no cabo, porta verde
+   is-complete  → limite atingido: congela a carga, sem efeitos
+   is-scan      → AC sem %: blocos acendem em sequência, sem marcador de limite
+   is-connected → tela 1: cabo plugado (troca de imagem) e porta verde */
+.scene-svg:not(.is-charging) .fx-charging { display: none; }
+.scene-svg.is-complete .fx-charging { display: none; }
+.scene-svg.is-scan .pk-limit-g { display: none; }
+.scene-svg:not(.is-connected) .fx-connected { display: none; }
+.scene-svg.is-connected .fx-guide { display: none; }
+
+/* varredura do AC: cada bloco acende 110 ms depois do anterior */
+.scene-svg .cell { fill: #3fe394; opacity: 0; }
+.scene-svg.is-scan .cell { animation: cellScan 1.9s ease-in-out infinite; animation-delay: calc(var(--i) * 110ms); }
+@keyframes cellScan { 0%, 100% { opacity: 0 } 30% { opacity: .5 } 60% { opacity: 0 } }
+
+/* fluxo de energia no cabo (tracejado andando em direção à porta) */
+.scene-svg .flow { stroke-dasharray: 6 24; animation: flow .8s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: 30 } }
+
+/* caminho do conector até a porta (tela 1) */
+.scene-svg .march { stroke-dasharray: 10 14; animation: march 1s linear infinite; }
+@keyframes march { to { stroke-dashoffset: -24 } }
+
+/* brilhos respirando e pulso da porta */
+.scene-svg .breathe { animation: breathe 2.8s ease-in-out infinite; }
+@keyframes breathe { 0%, 100% { opacity: .55 } 50% { opacity: 1 } }
+.scene-svg .ping { transform-box: fill-box; transform-origin: center; animation: ping 1.7s ease-out infinite; }
+@keyframes ping { 0% { transform: scale(1); opacity: .9 } 100% { transform: scale(2.8); opacity: 0 } }
+
+/* borda de avanço da carga */
+.scene-svg .lead { animation: breathe 1.4s ease-in-out infinite; }
+.scene-svg.is-complete .lead { animation: none; opacity: .5; }
+
+/* tela 1: troca solto → plugado */
+.scene-svg .plugado { opacity: 0; transition: opacity .6s ease; }
+.scene-svg.is-connected .plugado { opacity: 1; }
+.scene-svg.is-connected .plug { opacity: 0; }
+
+.no-anim .scene-svg * { animation: none !important; }
+@media (prefers-reduced-motion: reduce) { .scene-svg * { animation: none !important; } }

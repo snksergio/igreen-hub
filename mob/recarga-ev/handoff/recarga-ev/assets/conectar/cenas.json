@@ -1,0 +1,47 @@
+{
+  "$descricao": "Cenas da Tela 1 (carro + carregador). \"solto\" = conector no suporte; \"plugado\" = mesma cena com o cabo na porta (troca por crossfade). Coordenadas em pixels da imagem. porta = centro da entrada de recarga; suporte = onde o conector está guardado no carregador. Moldes \"foto\" usam a cena \"foto\"; moldes \"mini\" usam a \"mini\".",
+  "cenas": {
+    "foto": {
+      "imagens": {
+        "solto": "foto/solto.webp",
+        "plugado": "foto/plugado.webp"
+      },
+      "largura": 1400,
+      "altura": 974,
+      "porta": [
+        538.7,
+        421.2
+      ],
+      "suporte": [
+        1174.8,
+        347
+      ],
+      "fundo": [
+        10,
+        21,
+        17
+      ]
+    },
+    "mini": {
+      "imagens": {
+        "solto": "mini/solto.webp",
+        "plugado": "mini/plugado.webp"
+      },
+      "largura": 1400,
+      "altura": 974,
+      "porta": [
+        451,
+        404.8
+      ],
+      "suporte": [
+        967.8,
+        420
+      ],
+      "fundo": [
+        15,
+        28,
+        46
+      ]
+    }
+  }
+}

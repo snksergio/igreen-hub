@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recarga EV · Referência</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/pagina.css">
+<link rel="stylesheet" href="css/telas.css">
+<link rel="stylesheet" href="css/cena.css">
+<script>if (location.protocol === 'file:') document.documentElement.classList.add('is-file');</script>
+<script type="module" src="js/app.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page-head">
+    <div class="eyebrow">iGreen Mob · Recarga em eletroposto</div>
+    <h1>Conectar e acompanhar a recarga</h1>
+    <p>Referência visual e de comportamento das duas telas. Especificação completa em <code>IMPLEMENTACAO.md</code>; prints de cada estado em <code>referencia/</code>.</p>
+  </header>
+
+  <div class="aviso-file">Esta página carrega módulos e JSON, então precisa de um servidor local. Na pasta do handoff, rode <code>npx serve .</code> (ou <code>python -m http.server</code>) e abra o endereço indicado.</div>
+
+  <div class="stage">
+
+    <!-- ================= TELA 1 · CONECTAR O CABO ================= -->
+    <div class="phone-col">
+      <div class="phone">
+        <div class="island"></div>
+        <div class="screen" id="screen1">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons" aria-hidden="true">
+            <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 11.6 5.6 9.2a3.4 3.4 0 0 1 4.8 0L8 11.6ZM2.8 6.4a7.4 7.4 0 0 1 10.4 0l-1.4 1.4a5.4 5.4 0 0 0-7.6 0L2.8 6.4ZM0 3.6a11.3 11.3 0 0 1 16 0l-1.4 1.4a9.3 9.3 0 0 0-13.2 0L0 3.6Z"/></svg>
+            <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.6" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2" y="2" width="20" height="9" rx="2.2"/><path d="M25 4.5v4a2 2 0 0 0 0-4Z" fill-opacity=".4"/></svg>
+          </span></div>
+          <div class="topbar">
+            <button class="icon-btn" aria-label="Cancelar"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+            <div class="topbar-mid"><span class="chip"><span class="d"></span>Shell Paulista · C-01</span></div>
+            <button class="icon-btn" aria-label="Ajuda"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.3-2.5 3.6"/><path d="M12 17h.01"/></svg></button>
+          </div>
+          <div class="body">
+            <div class="s1-head">
+              <h1>Conecte o cabo no carro</h1>
+              <p>Encaixe o conector <b>CCS2</b> na entrada de recarga até travar. A recarga começa sozinha.</p>
+            </div>
+            <div class="scene" id="scene1"></div>
+            <div class="detect" id="s1detect"><span class="pd"></span><span id="s1status">Aguardando o carro ser conectado…</span></div>
+            <div class="card connector">
+              <div class="conn-ico">
+                <svg viewBox="0 0 28 34" width="24" height="30" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <path d="M6 4H22A10.5 10.5 0 1 1 6 4Z"/>
+                  <circle cx="11" cy="7.4" r="1.1"/><circle cx="17" cy="7.4" r="1.1"/>
+                  <circle cx="8.3" cy="11.8" r="1.6"/><circle cx="14" cy="11.8" r="1.6"/><circle cx="19.7" cy="11.8" r="1.6"/>
+                  <circle cx="11" cy="16.4" r="1.6"/><circle cx="17" cy="16.4" r="1.6"/>
+                  <rect x="5" y="24" width="18" height="8.5" rx="4.25"/>
+                  <circle cx="10" cy="28.25" r="2"/><circle cx="18" cy="28.25" r="2"/>
+                </svg>
+              </div>
+              <div>
+                <div class="conn-t">CCS2 · Conector C-01</div>
+                <div class="conn-s">DC · até 150 kW</div>
+              </div>
+              <span class="tag">Liberado</span>
+            </div>
+            <button class="help">O conector não encaixa no carro?<svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+          </div>
+          <div class="bottom">
+            <div class="timer">
+              <div class="timer-row"><span>Conecte em até</span><b id="s1timer">2:00</b></div>
+              <div class="bar"><i id="s1bar"></i></div>
+            </div>
+            <button class="btn btn-quiet">Cancelar</button>
+          </div>
+          <div class="home"></div>
+        </div>
+      </div>
+      <div class="phone-cap"><b>1</b>Conectar o cabo</div>
+    </div>
+
+    <!-- ================= TELA 2 · ACOMPANHAR A RECARGA ================= -->
+    <div class="phone-col">
+      <div class="phone">
+        <div class="island"></div>
+        <div class="screen" id="screen2">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons" aria-hidden="true">
+            <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 11.6 5.6 9.2a3.4 3.4 0 0 1 4.8 0L8 11.6ZM2.8 6.4a7.4 7.4 0 0 1 10.4 0l-1.4 1.4a5.4 5.4 0 0 0-7.6 0L2.8 6.4ZM0 3.6a11.3 11.3 0 0 1 16 0l-1.4 1.4a9.3 9.3 0 0 0-13.2 0L0 3.6Z"/></svg>
+            <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.6" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2" y="2" width="20" height="9" rx="2.2"/><path d="M25 4.5v4a2 2 0 0 0 0-4Z" fill-opacity=".4"/></svg>
+          </span></div>
+          <div class="topbar">
+            <button class="icon-btn" aria-label="Minimizar"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div class="topbar-mid">
+              <div class="tb-title"><span class="live"></span><span id="s2title">Carregando</span></div>
+              <div class="tb-sub">Shell Paulista · C-01 · <span id="s2plug">CCS2</span></div>
+            </div>
+            <button class="icon-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg></button>
+          </div>
+          <div class="body">
+            <div class="hero">
+              <div class="big num"><span id="s2big">68</span><small id="s2unit">%</small></div>
+              <div class="hero-sub" id="s2sub"></div>
+              <span class="chip ac-chip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>Em recarga AC o carro não informa a %</span>
+            </div>
+            <div class="scene" id="scene2"></div>
+            <div class="metrics num">
+              <div class="metric"><b id="m1"></b><span>Potência</span></div>
+              <div class="metric"><b id="m2"></b><span id="m2l">Energia</span></div>
+              <div class="metric"><b id="m3"></b><span>Autonomia*</span></div>
+              <div class="metric"><b id="m4"></b><span>Decorrido</span></div>
+            </div>
+            <div class="card cost">
+              <div class="row"><span>Custo até agora</span><span class="num" id="tariff"></span></div>
+              <div class="cost-val num" id="costVal"></div>
+              <div class="bar"><i id="costBar"></i></div>
+              <div class="row cost-foot"><span id="costFoot"></span><button class="link">Alterar</button></div>
+            </div>
+            <div class="card list">
+              <div class="li">
+                <svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                <span class="grow" id="notifyLabel"></span>
+                <button class="toggle" role="switch" aria-checked="true" aria-label="Avisar"></button>
+              </div>
+              <div class="li">
+                <svg viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+                <span class="grow">Detalhes da recarga</span>
+                <svg class="chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="bottom">
+            <button class="btn btn-quiet when-charging"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg>Encerrar recarga</button>
+            <button class="btn btn-primary when-complete">Desconectar e ver recibo</button>
+          </div>
+          <div class="home"></div>
+        </div>
+      </div>
+      <div class="phone-cap"><b>2</b>Acompanhar a recarga</div>
+    </div>
+
+    <!-- ================= PAINEL DE ESTADOS (só na referência) ================= -->
+    <aside class="controls">
+      <h3>Simular estados</h3>
+      <p class="hint">Mude o molde e os dados da sessão: a ilustração reage como vai reagir no app.</p>
+      <div class="ctl">
+        <div class="lbl">Molde</div>
+        <div class="molde-grid" id="moldePick"></div>
+      </div>
+      <div class="ctl">
+        <label for="soc">Bateria do carro <output id="socOut">68%</output></label>
+        <input type="range" id="soc" min="5" max="100" value="68">
+      </div>
+      <div class="ctl">
+        <div class="lbl">Limite da recarga</div>
+        <div class="seg" id="limitSeg">
+          <button aria-pressed="true" data-v="80">80%</button>
+          <button aria-pressed="false" data-v="90">90%</button>
+          <button aria-pressed="false" data-v="100">100%</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="lbl">Tipo de carregador</div>
+        <div class="seg" id="modeSeg">
+          <button aria-pressed="true" data-v="dc">DC · informa %</button>
+          <button aria-pressed="false" data-v="ac">AC · sem %</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="sw">Animações <input type="checkbox" id="optAnim" checked></div>
+      </div>
+      <button class="act" id="btnConnect">▶ Simular conexão (tela 1)</button>
+      <button class="act alt" id="btnCharge">▶ Carregar até o limite (tela 2)</button>
+    </aside>
+  </div>
+</div>
+</body>
+</html>

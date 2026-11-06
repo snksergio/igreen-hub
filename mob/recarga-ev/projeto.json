@@ -1,0 +1,38 @@
+{
+  "nome": "Recarga EV",
+  "descricao": "As telas de recarga em eletroposto do iGreen Mob: conectar o cabo e acompanhar a recarga, com a cena do carro e da bateria. Inclui o protótipo com a análise de mercado e os moldes de carro.",
+  "tipo": "prototipo",
+  "atualizado": "2026-11-06",
+  "paginas": [
+    {
+      "nome": "Referência das duas telas",
+      "arquivo": "handoff/recarga-ev/index.html"
+    },
+    {
+      "nome": "Telas e análise",
+      "arquivo": "prototipos/recarga-ev.html"
+    }
+  ],
+  "acervo": {
+    "nome": "Variações",
+    "grupos": [
+      {
+        "nome": "Moldes de carro",
+        "prints": "moldes",
+        "paginas": [
+          {
+            "nome": "Escolher um molde e ver nas duas telas",
+            "arquivo": "prototipos/recarga-ev-moldes.html"
+          }
+        ]
+      }
+    ]
+  },
+  "tags": [
+    "recarga",
+    "ev",
+    "eletroposto",
+    "carregador",
+    "app"
+  ]
+}

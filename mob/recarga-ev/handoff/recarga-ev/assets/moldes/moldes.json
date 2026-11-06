@@ -1,0 +1,426 @@
+{
+  "$descricao": "Moldes da ilustração da Tela 2. Coordenadas em pixels da imagem (largura × altura). pack = 4 cantos da face de cima do pack, na ordem [frente-longe, trás-longe, trás-perto, frente-perto]. viewBox = área a mostrar. fundo = RGB da cor de fundo da tela. luzChao = elipse onde a luz verde do chão aparece (só moldes \"foto\"). blocos = colunas de módulos (varredura no AC; nos \"mini\", blocos desenhados).",
+  "padrao": "a2",
+  "ordem": [
+    "a2",
+    "a3",
+    "s21",
+    "s22",
+    "s23",
+    "s24",
+    "m25",
+    "m27"
+  ],
+  "moldes": {
+    "a2": {
+      "id": "a2",
+      "nome": "Crossover",
+      "descricao": "Vista lateral elevada, pack em grade 3×8.",
+      "tipo": "foto",
+      "imagens": {
+        "vazio": "a2/vazio.webp",
+        "cheio": "a2/cheio.webp"
+      },
+      "largura": 1600,
+      "altura": 714,
+      "viewBox": [
+        36,
+        20,
+        1528,
+        674
+      ],
+      "pack": [
+        [
+          596.4,
+          372.1
+        ],
+        [
+          1021.4,
+          371.4
+        ],
+        [
+          1052.9,
+          480
+        ],
+        [
+          564.3,
+          480.7
+        ]
+      ],
+      "porta": [
+        1333.6,
+        302.1
+      ],
+      "fundo": [
+        6,
+        16,
+        13
+      ],
+      "limiteOffset": 38,
+      "blocos": 8,
+      "luzChao": {
+        "cx": 808.6,
+        "cy": 612.9,
+        "rx": 361.3,
+        "ry": 171.4
+      }
+    },
+    "a3": {
+      "id": "a3",
+      "nome": "Crossover 3/4",
+      "descricao": "Câmera alta em 3/4: o pack aparece inteiro.",
+      "tipo": "foto",
+      "imagens": {
+        "vazio": "a3/vazio.webp",
+        "cheio": "a3/cheio.webp"
+      },
+      "largura": 1600,
+      "altura": 773,
+      "viewBox": [
+        36,
+        20,
+        1528,
+        733
+      ],
+      "pack": [
+        [
+          625.6,
+          387.7
+        ],
+        [
+          1063.9,
+          438.3
+        ],
+        [
+          962.1,
+          590.1
+        ],
+        [
+          489.6,
+          530.6
+        ]
+      ],
+      "porta": [
+        1307.4,
+        418.5
+      ],
+      "fundo": [
+        5,
+        12,
+        10
+      ],
+      "limiteOffset": 38,
+      "blocos": 8,
+      "luzChao": {
+        "cx": 725.8,
+        "cy": 699.5,
+        "rx": 353,
+        "ry": 157.3
+      }
+    },
+    "s21": {
+      "id": "s21",
+      "nome": "Sedã vidro verde",
+      "descricao": "Carroceria em vidro verde com contorno luminoso.",
+      "tipo": "foto",
+      "imagens": {
+        "vazio": "s21/vazio.webp",
+        "cheio": "s21/cheio.webp"
+      },
+      "largura": 1600,
+      "altura": 735,
+      "viewBox": [
+        0,
+        0,
+        1600,
+        735
+      ],
+      "pack": [
+        [
+          562,
+          293.4
+        ],
+        [
+          1056.8,
+          293.4
+        ],
+        [
+          1084.5,
+          454.2
+        ],
+        [
+          523.7,
+          452.4
+        ]
+      ],
+      "porta": [
+        1354.9,
+        327.5
+      ],
+      "fundo": [
+        14,
+        18,
+        19
+      ],
+      "limiteOffset": 38,
+      "blocos": 8,
+      "luzChao": {
+        "cx": 804.1,
+        "cy": 548.5,
+        "rx": 470.1,
+        "ry": 153.2
+      }
+    },
+    "s22": {
+      "id": "s22",
+      "nome": "Sedã 6 módulos",
+      "descricao": "Vidro neutro e pack em 6 placas grandes.",
+      "tipo": "foto",
+      "imagens": {
+        "vazio": "s22/vazio.webp",
+        "cheio": "s22/cheio.webp"
+      },
+      "largura": 1600,
+      "altura": 717,
+      "viewBox": [
+        0,
+        0,
+        1600,
+        717
+      ],
+      "pack": [
+        [
+          542.2,
+          319.2
+        ],
+        [
+          1016.7,
+          318.6
+        ],
+        [
+          1046.8,
+          469.2
+        ],
+        [
+          506.3,
+          469.2
+        ]
+      ],
+      "porta": [
+        1367.7,
+        337.1
+      ],
+      "fundo": [
+        18,
+        21,
+        27
+      ],
+      "limiteOffset": 38,
+      "blocos": 8,
+      "luzChao": {
+        "cx": 776.5,
+        "cy": 561.9,
+        "rx": 450.7,
+        "ry": 150.6
+      }
+    },
+    "s23": {
+      "id": "s23",
+      "nome": "Sedã neon",
+      "descricao": "Contorno com brilho forte e grade fina de células.",
+      "tipo": "foto",
+      "imagens": {
+        "vazio": "s23/vazio.webp",
+        "cheio": "s23/cheio.webp"
+      },
+      "largura": 1600,
+      "altura": 704,
+      "viewBox": [
+        0,
+        0,
+        1600,
+        704
+      ],
+      "pack": [
+        [
+          563.2,
+          295.3
+        ],
+        [
+          1060.8,
+          285.4
+        ],
+        [
+          1084.9,
+          441.3
+        ],
+        [
+          533.7,
+          439.6
+        ]
+      ],
+      "porta": [
+        1319.5,
+        325.9
+      ],
+      "fundo": [
+        13,
+        18,
+        26
+      ],
+      "limiteOffset": 38,
+      "blocos": 8,
+      "luzChao": {
+        "cx": 809.3,
+        "cy": 528.8,
+        "rx": 472.8,
+        "ry": 142.2
+      }
+    },
+    "s24": {
+      "id": "s24",
+      "nome": "Sedã chassi técnico",
+      "descricao": "Mais mecânica à mostra, tom mais sóbrio.",
+      "tipo": "foto",
+      "imagens": {
+        "vazio": "s24/vazio.webp",
+        "cheio": "s24/cheio.webp"
+      },
+      "largura": 1600,
+      "altura": 715,
+      "viewBox": [
+        0,
+        0,
+        1600,
+        715
+      ],
+      "pack": [
+        [
+          565.2,
+          303.6
+        ],
+        [
+          1026.1,
+          304.2
+        ],
+        [
+          1047.9,
+          461.4
+        ],
+        [
+          540.1,
+          456.5
+        ]
+      ],
+      "porta": [
+        1355.4,
+        321.6
+      ],
+      "fundo": [
+        15,
+        21,
+        28
+      ],
+      "limiteOffset": 38,
+      "blocos": 8,
+      "luzChao": {
+        "cx": 794,
+        "cy": 548.8,
+        "rx": 437.8,
+        "ry": 142
+      }
+    },
+    "m25": {
+      "id": "m25",
+      "nome": "Minimal SUV",
+      "descricao": "Silhueta limpa, 8 blocos e anéis no chão.",
+      "tipo": "mini",
+      "imagens": {
+        "vazio": "m25/vazio.webp"
+      },
+      "largura": 1600,
+      "altura": 787,
+      "viewBox": [
+        0,
+        0,
+        1600,
+        787
+      ],
+      "pack": [
+        [
+          575,
+          335.1
+        ],
+        [
+          1054.5,
+          335.1
+        ],
+        [
+          1067.6,
+          436.3
+        ],
+        [
+          558.6,
+          437.7
+        ]
+      ],
+      "porta": [
+        1355.4,
+        303.7
+      ],
+      "fundo": [
+        8,
+        18,
+        28
+      ],
+      "limiteOffset": 24,
+      "blocos": 8
+    },
+    "m27": {
+      "id": "m27",
+      "nome": "Minimal raio-x",
+      "descricao": "Bancos à mostra, 11 blocos em perspectiva.",
+      "tipo": "mini",
+      "imagens": {
+        "vazio": "m27/vazio.webp"
+      },
+      "largura": 1600,
+      "altura": 757,
+      "viewBox": [
+        0,
+        0,
+        1600,
+        757
+      ],
+      "pack": [
+        [
+          568.2,
+          329.8
+        ],
+        [
+          1043.7,
+          329.8
+        ],
+        [
+          1078.1,
+          411.5
+        ],
+        [
+          525.4,
+          411.5
+        ]
+      ],
+      "porta": [
+        1334.2,
+        292.3
+      ],
+      "fundo": [
+        6,
+        17,
+        30
+      ],
+      "limiteOffset": 24,
+      "blocos": 11
+    }
+  }
+}

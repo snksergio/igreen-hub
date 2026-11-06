@@ -1,0 +1,1264 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recarga EV · Telas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --page: #e7eae8;
+    --ink: #121614;
+    --ink-2: #444c48;
+    --ink-3: #737b77;
+    --hair: rgba(18, 22, 20, .1);
+    --card: #fbfcfb;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: Geist, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  .wrap { max-width: 1260px; margin: 0 auto; padding: 48px 24px 120px; }
+
+  /* ---------- page header ---------- */
+  .page-head { max-width: 760px; margin: 0 auto 40px; text-align: center; }
+  .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #0a8f4c; }
+  .page-head h1 { font-size: 36px; line-height: 1.1; letter-spacing: -.03em; margin: 10px 0 12px; font-weight: 600; }
+  .page-head p { font-size: 16px; line-height: 1.55; color: var(--ink-2); margin: 0; }
+
+  /* ---------- stage ---------- */
+  .stage { display: flex; gap: 36px; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
+  .phone-col { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .phone-cap { font-size: 13px; color: var(--ink-2); display: flex; gap: 8px; align-items: center; }
+  .phone-cap b { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: #fff; font-size: 12px; display: inline-grid; place-items: center; }
+
+  .phone {
+    width: 410px; height: 864px; padding: 10px; border-radius: 60px;
+    background: #050706;
+    box-shadow: 0 40px 80px -20px rgba(16, 32, 24, .35), 0 12px 24px -8px rgba(16, 32, 24, .2), inset 0 0 0 1.5px #2a302d, inset 0 0 0 5px #0c0f0e;
+    position: relative;
+  }
+  .island { position: absolute; top: 21px; left: 50%; transform: translateX(-50%); width: 122px; height: 35px; border-radius: 20px; background: #000; z-index: 20; }
+
+  /* ---------- app screen ---------- */
+  .screen {
+    --bg: #0a0d0c;
+    --s1: #121715;
+    --s2: #19201d;
+    --line: rgba(214, 236, 226, .08);
+    --line-2: rgba(214, 236, 226, .14);
+    --tx: #f1f5f3;
+    --tx2: rgba(241, 245, 243, .68);
+    --tx3: rgba(241, 245, 243, .45);
+    --g: #2fd07f;
+    --g2: #4be6a0;
+    width: 390px; height: 844px; border-radius: 50px; overflow: hidden; position: relative;
+    display: flex; flex-direction: column;
+    color: var(--tx);
+    background: radial-gradient(120% 50% at 50% 34%, #0f1914 0%, var(--bg) 62%);
+    font-family: Geist, ui-sans-serif, system-ui, sans-serif;
+  }
+  .num { font-variant-numeric: tabular-nums; }
+  .statusbar { height: 50px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 6px 30px 0 40px; font-size: 16px; font-weight: 600; }
+  .statusbar .sb-icons { display: flex; gap: 6px; align-items: center; fill: var(--tx); }
+  .topbar { height: 52px; flex: none; display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; padding: 0 16px; gap: 8px; }
+  .icon-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--s1); display: grid; place-items: center; }
+  .icon-btn svg { width: 18px; height: 18px; stroke: var(--tx); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .topbar-mid { text-align: center; min-width: 0; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px; border-radius: 999px; background: var(--s1); border: 1px solid var(--line); font-size: 13px; color: var(--tx2); white-space: nowrap; }
+  .chip .d { width: 6px; height: 6px; border-radius: 50%; background: var(--g); }
+  .tb-title { font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
+  .tb-sub { font-size: 12px; color: var(--tx3); margin-top: 2px; white-space: nowrap; }
+  .live { width: 8px; height: 8px; border-radius: 50%; background: var(--g); position: relative; }
+  .live::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 1.5px solid var(--g); animation: live 1.8s ease-out infinite; }
+  @keyframes live { from { transform: scale(.5); opacity: .9 } to { transform: scale(1.4); opacity: 0 } }
+
+  .body { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; display: flex; flex-direction: column; }
+  .body::-webkit-scrollbar { display: none; }
+  .bottom { flex: none; padding: 12px 16px 38px; display: flex; flex-direction: column; gap: 12px; }
+  .home { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; border-radius: 3px; background: rgba(241, 245, 243, .9); }
+
+  .btn { height: 56px; border-radius: 18px; border: 0; width: 100%; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .btn-primary { background: var(--g); color: #04130b; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35); }
+  .btn-quiet { background: var(--s2); color: var(--tx); border: 1px solid var(--line-2); }
+  .btn svg { width: 16px; height: 16px; }
+
+  .card { background: var(--s1); border: 1px solid var(--line); border-radius: 20px; }
+
+  /* screen 1 */
+  .stepper { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 8px 24px 0; }
+  .st i { display: block; height: 3px; border-radius: 2px; background: rgba(241, 245, 243, .12); overflow: hidden; position: relative; }
+  .st span { display: block; margin-top: 8px; font-size: 12px; color: var(--tx3); }
+  .st.done i { background: var(--g); }
+  .st.done span { color: var(--tx2); }
+  .st.current span { color: var(--tx); font-weight: 500; }
+  .st.current i::after { content: ''; position: absolute; inset: 0; width: 45%; border-radius: 2px; background: var(--g); animation: stepRun 1.6s ease-in-out infinite; }
+  @keyframes stepRun { from { transform: translateX(-100%) } to { transform: translateX(230%) } }
+
+  .s1-head { text-align: center; margin: 28px 28px 0; }
+  .s1-head h1 { font-size: 24px; line-height: 1.2; letter-spacing: -.02em; margin: 0; font-weight: 600; }
+  .s1-head p { font-size: 15px; line-height: 1.45; color: var(--tx2); margin: 8px auto 0; max-width: 310px; }
+  .s1-head p b { color: var(--tx); font-weight: 600; }
+
+  .scene { position: relative; width: 100%; flex: none; }
+  .scene svg { display: block; width: 100%; height: auto; overflow: visible; }
+  #scene1 { margin-top: 12px; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 24%); mask-image: linear-gradient(90deg, transparent 0, #000 24%); }
+
+  .detect { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px; color: var(--tx2); margin-top: 4px; min-height: 20px; }
+  .detect .pd { width: 8px; height: 8px; border-radius: 50%; background: #e8fff3; position: relative; flex: none; }
+  .detect .pd::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 1.5px solid #e8fff3; animation: live 1.6s ease-out infinite; }
+  .detect.ok .pd, .detect.ok .pd::after { background: var(--g); border-color: var(--g); }
+  .detect.ok { color: var(--tx); }
+
+  .connector { margin: 20px 16px 0; padding: 14px 16px; display: grid; grid-template-columns: 48px 1fr auto; gap: 14px; align-items: center; }
+  .conn-ico { width: 48px; height: 48px; border-radius: 14px; background: var(--s2); border: 1px solid var(--line); display: grid; place-items: center; color: var(--tx); }
+  .conn-t { font-size: 15px; font-weight: 600; }
+  .conn-s { font-size: 13px; color: var(--tx3); margin-top: 2px; }
+  .tag { font-size: 12px; font-weight: 600; color: var(--g2); background: rgba(47, 208, 127, .1); border: 1px solid rgba(47, 208, 127, .22); height: 26px; padding: 0 10px; border-radius: 999px; display: inline-flex; align-items: center; }
+
+  .help { margin: 12px 16px 0; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; height: 48px; font-size: 14px; color: var(--tx2); border-radius: 16px; border: 1px dashed var(--line-2); background: transparent; width: calc(100% - 32px); text-align: left; }
+  .help svg { width: 16px; height: 16px; stroke: var(--tx3); fill: none; stroke-width: 2; }
+
+  .timer { display: flex; flex-direction: column; gap: 8px; padding: 0 4px; }
+  .timer-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--tx3); }
+  .timer-row b { color: var(--tx); font-weight: 600; font-family: 'Geist Mono', ui-monospace, monospace; }
+  .bar { height: 4px; border-radius: 2px; background: rgba(241, 245, 243, .08); overflow: hidden; }
+  .bar i { display: block; height: 100%; border-radius: 2px; background: rgba(241, 245, 243, .55); transition: width .9s linear; }
+
+  /* screen 2 */
+  .hero { text-align: center; margin-top: 18px; flex: none; }
+  .big { font-size: 68px; line-height: 1; font-weight: 600; letter-spacing: -.045em; display: inline-flex; align-items: baseline; gap: 4px; }
+  .big small { font-size: 26px; font-weight: 500; color: var(--tx2); letter-spacing: -.02em; }
+  .hero-sub { font-size: 14px; color: var(--tx2); margin-top: 10px; min-height: 20px; }
+  .hero-sub b { color: var(--g2); font-weight: 600; }
+  .ac-chip { display: none; margin-top: 10px; }
+  .screen.ac .big small { margin-left: 6px; }
+  .screen.ac .ac-chip { display: inline-flex; }
+  .ac-chip svg { width: 14px; height: 14px; stroke: var(--tx3); fill: none; stroke-width: 2; }
+
+  .metrics { margin: 2px 16px 0; display: grid; grid-template-columns: repeat(4, 1fr); flex: none; }
+  .metric { text-align: center; padding: 10px 2px; }
+  .metric + .metric { border-left: 1px solid var(--line); }
+  .metric b { display: block; font-size: 17px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
+  .metric b small { font-size: 12px; font-weight: 500; color: var(--tx3); margin-left: 1px; }
+  .metric span { display: block; font-size: 12px; color: var(--tx3); margin-top: 4px; }
+
+  .cost { margin: 18px 16px 0; padding: 16px 16px 14px; flex: none; }
+  .row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--tx2); }
+  .cost-val { font-size: 30px; font-weight: 600; letter-spacing: -.03em; margin: 6px 0 12px; }
+  .cost .bar { height: 6px; border-radius: 3px; }
+  .cost .bar i { background: linear-gradient(90deg, #16a35b, var(--g2)); border-radius: 3px; transition: width .4s ease; }
+  .cost-foot { margin-top: 10px; font-size: 13px; color: var(--tx3); }
+  .link { background: none; border: 0; padding: 0; color: var(--g2); font-weight: 600; font-size: 13px; }
+
+  .list { margin: 12px 16px 16px; flex: none; }
+  .li { display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 16px; font-size: 15px; }
+  .li + .li { border-top: 1px solid var(--line); }
+  .li > svg { width: 18px; height: 18px; stroke: var(--tx2); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .li .grow { flex: 1; }
+  .li .chev { width: 16px; height: 16px; stroke: var(--tx3); }
+  .toggle { width: 46px; height: 28px; border-radius: 14px; background: var(--g); position: relative; border: 0; flex: none; }
+  .toggle::after { content: ''; position: absolute; top: 3px; left: 21px; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: left .2s; box-shadow: 0 1px 3px rgba(0, 0, 0, .3); }
+  .toggle[aria-checked="false"] { background: rgba(241, 245, 243, .16); }
+  .toggle[aria-checked="false"]::after { left: 3px; }
+
+  .screen .when-complete { display: none; }
+  .screen.complete .when-complete { display: flex; }
+  .screen.complete .when-charging { display: none; }
+  .screen.complete .live { background: var(--g); }
+  .screen.complete .live::after { display: none; }
+
+  /* ---------- scene svg states ---------- */
+  .scene-svg text { font-family: Geist, ui-sans-serif, system-ui, sans-serif; }
+  .scene-svg .cell { fill: #3fe394; opacity: 0; }
+  .scene-svg.is-scan .cell { animation: cellScan 1.9s ease-in-out infinite; animation-delay: calc(var(--i) * 110ms); }
+  .scene-svg.wake .cell { animation: cellScan 1s ease-in-out 1 both; animation-delay: calc(var(--i) * 55ms); }
+  @keyframes cellScan { 0%, 100% { opacity: 0 } 30% { opacity: .5 } 60% { opacity: 0 } }
+
+  .scene-svg .flow { stroke-dasharray: 1.3 5.2; animation: flow .8s linear infinite; }
+  @keyframes flow { to { stroke-dashoffset: 6.5 } }
+  .scene-svg .march { stroke-dasharray: 2 3; animation: march 1s linear infinite; }
+  .scene-svg .flowp { stroke-dasharray: 6 24; animation: flowp .8s linear infinite; }
+  @keyframes flowp { to { stroke-dashoffset: 30 } }
+  .scene-svg .marchp { stroke-dasharray: 10 14; animation: marchp 1s linear infinite; }
+  @keyframes marchp { to { stroke-dashoffset: -24 } }
+  .screen.photo { background: #06100d; }
+  @keyframes march { to { stroke-dashoffset: -5 } }
+
+  .scene-svg .ring { transform-box: fill-box; transform-origin: center; animation: ring 3s ease-out infinite; }
+  .scene-svg .ring.r2 { animation-delay: 1.5s; }
+  @keyframes ring { 0% { transform: scale(.55); opacity: .7 } 100% { transform: scale(1.18); opacity: 0 } }
+  .scene-svg .breathe { animation: breathe 2.8s ease-in-out infinite; }
+  @keyframes breathe { 0%, 100% { opacity: .55 } 50% { opacity: 1 } }
+  .scene-svg .ping { transform-box: fill-box; transform-origin: center; animation: ping 1.7s ease-out infinite; }
+  @keyframes ping { 0% { transform: scale(1); opacity: .9 } 100% { transform: scale(2.8); opacity: 0 } }
+  .scene-svg .shimmer { animation: shim 2.6s cubic-bezier(.45, 0, .25, 1) infinite; }
+  @keyframes shim { from { transform: translateX(0) } to { transform: translateX(180px) } }
+  .scene-svg .lead { animation: breathe 1.4s ease-in-out infinite; }
+  .scene-svg .led { animation: led 1.2s steps(2, jump-none) infinite; }
+  @keyframes led { 0% { opacity: .25 } 100% { opacity: 1 } }
+
+  .scene-svg:not(.is-charging) .fx-charging { display: none; }
+  .scene-svg.is-complete .fx-charging { display: none; }
+  .scene-svg.is-complete .lead { animation: none; opacity: .5; }
+  .scene-svg:not(.is-connected) .fx-connected { display: none; }
+  .scene-svg.is-connected .fx-guide { display: none; }
+  .scene-svg.is-connected .led { animation: none; opacity: 1; }
+  .scene-svg.no-interior .interior { display: none; }
+  .scene-svg.is-scan .pk-limit-g { display: none; }
+  .no-anim .scene-svg *, .no-anim .scene-svg *::after, .no-anim .live::after, .no-anim .pd::after, .no-anim .st i::after { animation: none !important; }
+  @media (prefers-reduced-motion: reduce) { .scene-svg *, .live::after, .pd::after, .st i::after { animation: none !important; } }
+
+  /* ---------- controls ---------- */
+  .controls { width: 300px; background: var(--card); border-radius: 22px; padding: 22px; box-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset, 0 20px 40px -24px rgba(16, 32, 24, .3); border: 1px solid var(--hair); position: sticky; top: 24px; }
+  .controls h3 { margin: 0 0 4px; font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+  .controls .hint { font-size: 13px; color: var(--ink-3); line-height: 1.45; margin: 0 0 18px; }
+  .ctl { margin-bottom: 18px; }
+  .ctl label, .ctl .lbl { display: flex; justify-content: space-between; font-size: 13px; font-weight: 500; color: var(--ink-2); margin-bottom: 8px; }
+  .ctl output { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; }
+  input[type=range] { width: 100%; accent-color: #0a8f4c; }
+  .seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: #eef1ef; border-radius: 12px; padding: 3px; gap: 3px; }
+  .seg button { border: 0; background: transparent; height: 34px; border-radius: 9px; font-size: 13px; font-weight: 500; color: var(--ink-2); }
+  .seg button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(0, 0, 0, .08), 0 0 0 1px rgba(0, 0, 0, .04); }
+  .sw { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 500; color: var(--ink-2); padding: 6px 0; }
+  .sw input { width: 18px; height: 18px; accent-color: #0a8f4c; }
+  .act { width: 100%; height: 42px; border-radius: 12px; border: 1px solid var(--hair); background: var(--ink); color: #fff; font-size: 13px; font-weight: 600; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .act.alt { background: #fff; color: var(--ink); }
+  .ctl-note { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--hair); font-size: 12px; line-height: 1.5; color: var(--ink-3); }
+  .ctl-note code { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11.5px; color: var(--ink-2); }
+
+  /* ---------- sections ---------- */
+  section.doc { margin-top: 96px; }
+  .sec-head { max-width: 720px; margin-bottom: 28px; }
+  .sec-head .eyebrow { display: block; margin-bottom: 8px; }
+  .sec-head h2 { font-size: 28px; line-height: 1.15; letter-spacing: -.025em; margin: 0 0 10px; font-weight: 600; }
+  .sec-head p { font-size: 15px; line-height: 1.6; color: var(--ink-2); margin: 0; }
+
+  .anatomy { background: #0a0d0c; border-radius: 28px; padding: 28px; color: #f1f5f3; }
+  .layers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .layer { background: #111614; border: 1px solid rgba(214, 236, 226, .07); border-radius: 18px; padding: 14px 14px 16px; }
+  .layer .ls { background: radial-gradient(90% 70% at 50% 60%, #121c17, #0b0f0d); border-radius: 12px; padding: 6px 4px; }
+  .layer h4 { margin: 14px 0 4px; font-size: 14px; font-weight: 600; }
+  .layer p { margin: 0; font-size: 12.5px; line-height: 1.5; color: rgba(241, 245, 243, .6); }
+  .layer .pill { display: inline-block; margin-top: 10px; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px; }
+  .pill.static { background: rgba(241, 245, 243, .08); color: rgba(241, 245, 243, .7); }
+  .pill.anim { background: rgba(47, 208, 127, .14); color: #4be6a0; }
+  .photo-layers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
+  .photo-layers img { display: block; width: 100%; height: auto; }
+  .sub-h { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: rgba(241, 245, 243, .5); margin: 0 0 12px; }
+  .composite { margin-top: 14px; display: grid; grid-template-columns: 1.3fr 1fr; gap: 14px; }
+  .composite .layer .ls { padding: 18px 8px; }
+  .geo { font-size: 13px; line-height: 1.6; color: rgba(241, 245, 243, .7); }
+  .geo code { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12px; color: #4be6a0; }
+  .geo ol { margin: 8px 0 0; padding-left: 18px; }
+  .geo li { margin-bottom: 6px; }
+
+  .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; }
+  .pcard { background: var(--card); border: 1px solid var(--hair); border-radius: 20px; padding: 20px; }
+  .pcard .n { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12px; color: #0a8f4c; }
+  .pcard h4 { margin: 8px 0 8px; font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+  .pcard p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+  .pcard .refs { margin-top: 12px; font-size: 12px; color: var(--ink-3); }
+  .pcard.dark { background: #121614; color: #f1f5f3; border-color: #121614; }
+  .pcard.dark p { color: rgba(241, 245, 243, .72); }
+  .pcard.dark .n { color: #4be6a0; }
+  .pcard.warn { background: #fff7ea; border-color: #f3dfbd; }
+  .pcard.warn .n { color: #b86200; }
+
+  .diag { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .diag .pcard ul { margin: 10px 0 0; padding-left: 18px; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+  .diag .pcard li { margin-bottom: 4px; }
+  .verdict { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: #eef1ef; color: var(--ink-2); }
+
+  .rn { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+  table.t { width: 100%; border-collapse: collapse; font-size: 13.5px; background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid var(--hair); }
+  table.t th, table.t td { text-align: left; padding: 12px 14px; vertical-align: top; line-height: 1.45; }
+  table.t th { font-size: 12px; font-weight: 600; color: var(--ink-3); background: #f1f3f2; }
+  table.t tr + tr td { border-top: 1px solid var(--hair); }
+  table.t code, .rn-list code { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12px; background: #eef1ef; padding: 1px 5px; border-radius: 5px; }
+  pre.code { margin: 0; background: #0d1110; color: #d9e6df; border-radius: 20px; padding: 20px; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12.5px; line-height: 1.6; overflow-x: auto; }
+  pre.code .c { color: #6f8279; }
+  pre.code .k { color: #4be6a0; }
+  pre.code .s { color: #f0c987; }
+  .rn-list { margin-top: 14px; background: var(--card); border: 1px solid var(--hair); border-radius: 20px; padding: 18px 20px; font-size: 14px; line-height: 1.6; color: var(--ink-2); }
+  .rn-list h4 { margin: 0 0 6px; font-size: 14px; color: var(--ink); }
+  .rn-list ul { margin: 0 0 12px; padding-left: 18px; }
+  .rn-list ul:last-child { margin-bottom: 0; }
+
+  @media (max-width: 1100px) {
+    .layers { grid-template-columns: repeat(2, 1fr); }
+    .composite, .rn, .diag, .photo-layers { grid-template-columns: 1fr; }
+    .controls { position: static; }
+  }
+  @media (max-width: 460px) {
+    .wrap { padding: 32px 16px 80px; }
+    .phone { zoom: .84; }
+    .controls { width: 100%; }
+    .layers { grid-template-columns: 1fr; }
+    .page-head h1 { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page-head">
+    <div class="eyebrow">iGreen Mob · Recarga em eletroposto</div>
+    <h1>Conectar e acompanhar a recarga</h1>
+    <p>Duas telas com a mesma ilustração: carro "fantasma" visto de cima e a bateria no assoalho servindo de barra de progresso. O carro é um render gerado com IA; a carga é dado, calculada por código, do jeito que dá para levar para React Native.</p>
+  </header>
+
+  <div class="stage" id="stage">
+
+    <!-- ================= TELA 1 ================= -->
+    <div class="phone-col">
+      <div class="phone">
+        <div class="island"></div>
+        <div class="screen" id="screen1">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons" data-sb></span></div>
+          <div class="topbar">
+            <button class="icon-btn" aria-label="Cancelar"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+            <div class="topbar-mid"><span class="chip"><span class="d"></span>Shell Paulista · C-01</span></div>
+            <button class="icon-btn" aria-label="Ajuda"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.3-2.5 3.6"/><path d="M12 17h.01"/></svg></button>
+          </div>
+          <div class="body">
+            <div class="stepper" id="s1steps">
+              <div class="st done"><i></i><span>Liberado</span></div>
+              <div class="st current"><i></i><span>Conectar</span></div>
+              <div class="st"><i></i><span>Carregar</span></div>
+            </div>
+            <div class="s1-head">
+              <h1>Conecte o cabo no carro</h1>
+              <p>Encaixe o conector <b>CCS2</b> na entrada de recarga até travar. A recarga começa sozinha.</p>
+            </div>
+            <div class="scene" id="scene1"></div>
+            <div class="detect" id="s1detect"><span class="pd"></span><span id="s1status">Aguardando o carro ser conectado…</span></div>
+            <div class="card connector">
+              <div class="conn-ico">
+                <svg viewBox="0 0 28 34" width="24" height="30" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M6 4H22A10.5 10.5 0 1 1 6 4Z"/>
+                  <circle cx="11" cy="7.4" r="1.1"/><circle cx="17" cy="7.4" r="1.1"/>
+                  <circle cx="8.3" cy="11.8" r="1.6"/><circle cx="14" cy="11.8" r="1.6"/><circle cx="19.7" cy="11.8" r="1.6"/>
+                  <circle cx="11" cy="16.4" r="1.6"/><circle cx="17" cy="16.4" r="1.6"/>
+                  <rect x="5" y="24" width="18" height="8.5" rx="4.25"/>
+                  <circle cx="10" cy="28.25" r="2"/><circle cx="18" cy="28.25" r="2"/>
+                </svg>
+              </div>
+              <div>
+                <div class="conn-t">CCS2 · Conector C-01</div>
+                <div class="conn-s">DC · até 150 kW</div>
+              </div>
+              <span class="tag">Liberado</span>
+            </div>
+            <button class="help">O conector não encaixa no carro?<svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+          </div>
+          <div class="bottom">
+            <div class="timer">
+              <div class="timer-row"><span>Conecte em até</span><b id="s1timer">2:00</b></div>
+              <div class="bar"><i id="s1bar" style="width:100%"></i></div>
+            </div>
+            <button class="btn btn-quiet">Cancelar</button>
+          </div>
+          <div class="home"></div>
+        </div>
+      </div>
+      <div class="phone-cap"><b>1</b>Conectar o cabo</div>
+    </div>
+
+    <!-- ================= TELA 2 ================= -->
+    <div class="phone-col">
+      <div class="phone">
+        <div class="island"></div>
+        <div class="screen" id="screen2">
+          <div class="statusbar"><span>9:41</span><span class="sb-icons" data-sb></span></div>
+          <div class="topbar">
+            <button class="icon-btn" aria-label="Minimizar"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div class="topbar-mid">
+              <div class="tb-title"><span class="live"></span><span id="s2title">Carregando</span></div>
+              <div class="tb-sub">Shell Paulista · C-01 · <span id="s2plug">CCS2</span></div>
+            </div>
+            <button class="icon-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg></button>
+          </div>
+          <div class="body">
+            <div class="hero">
+              <div class="big num"><span id="s2big">68</span><small id="s2unit">%</small></div>
+              <div class="hero-sub" id="s2sub"></div>
+              <span class="chip ac-chip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>Em recarga AC o carro não informa a %</span>
+            </div>
+            <div class="scene" id="scene2"></div>
+            <div class="metrics num">
+              <div class="metric"><b id="m1"></b><span id="m1l">Potência</span></div>
+              <div class="metric"><b id="m2"></b><span id="m2l">Energia</span></div>
+              <div class="metric"><b id="m3"></b><span>Autonomia*</span></div>
+              <div class="metric"><b id="m4"></b><span>Decorrido</span></div>
+            </div>
+            <div class="card cost">
+              <div class="row"><span>Custo até agora</span><span class="num" id="tariff">R$ 1,30/kWh</span></div>
+              <div class="cost-val num" id="costVal">R$ 35,10</div>
+              <div class="bar"><i id="costBar"></i></div>
+              <div class="row cost-foot"><span id="costFoot"></span><button class="link">Alterar</button></div>
+            </div>
+            <div class="card list">
+              <div class="li">
+                <svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                <span class="grow" id="notifyLabel">Avisar quando chegar em 80%</span>
+                <button class="toggle" role="switch" aria-checked="true" aria-label="Avisar"></button>
+              </div>
+              <div class="li">
+                <svg viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+                <span class="grow">Detalhes da recarga</span>
+                <svg class="chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="bottom">
+            <button class="btn btn-quiet when-charging"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg>Encerrar recarga</button>
+            <button class="btn btn-primary when-complete">Desconectar e ver recibo</button>
+          </div>
+          <div class="home"></div>
+        </div>
+      </div>
+      <div class="phone-cap"><b>2</b>Acompanhar a recarga</div>
+    </div>
+
+    <!-- ================= CONTROLES ================= -->
+    <aside class="controls" id="controls">
+      <h3>Simular estados</h3>
+      <p class="hint">Mexa aqui para ver a ilustração reagindo aos dados, como ela reagiria no app.</p>
+      <div class="ctl">
+        <div class="lbl">Ilustração</div>
+        <div class="seg" id="styleSeg">
+          <button aria-pressed="true" data-v="a2">Render A2</button>
+          <button aria-pressed="false" data-v="a3">Render A3</button>
+          <button aria-pressed="false" data-v="vetor">Vetor</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <label for="soc">Bateria do carro <output id="socOut">68%</output></label>
+        <input type="range" id="soc" min="5" max="100" value="68">
+      </div>
+      <div class="ctl">
+        <div class="lbl">Limite da recarga</div>
+        <div class="seg" id="limitSeg">
+          <button aria-pressed="true" data-v="80">80%</button>
+          <button aria-pressed="false" data-v="90">90%</button>
+          <button aria-pressed="false" data-v="100">100%</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="lbl">Tipo de carregador</div>
+        <div class="seg" id="modeSeg">
+          <button aria-pressed="true" data-v="dc">DC · informa %</button>
+          <button aria-pressed="false" data-v="ac">AC · sem %</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="sw">Interior em raio-x <input type="checkbox" id="optInterior" checked></div>
+        <div class="sw">Animações <input type="checkbox" id="optAnim" checked></div>
+      </div>
+      <button class="act" id="btnConnect">▶ Simular conexão (tela 1)</button>
+      <button class="act alt" id="btnCharge">▶ Carregar até o limite (tela 2)</button>
+      <div class="ctl-note">O que se move: <code>transform</code>, <code>opacity</code>, <code>strokeDashoffset</code> e o <code>d</code> de 2 paths da bateria. É exatamente o que o Reanimated anima na UI thread.</div>
+    </aside>
+  </div>
+
+  <!-- ================= ANATOMIA ================= -->
+  <section class="doc">
+    <div class="sec-head">
+      <span class="eyebrow">Como a ilustração é feita</span>
+      <h2>Duas imagens e um recorte</h2>
+      <p>A IA gera o carro com o pack 100% carregado. Por código, sai uma cópia idêntica com o pack apagado. No app, a imagem cheia só aparece dentro do recorte da face do pack, e esse recorte cresce com a % real. Continua sendo dado, não foto parada.</p>
+    </div>
+    <div class="anatomy">
+      <div class="photo-layers">
+        <div class="layer"><div class="ls"><img src="ilustracoes/carro-a2-vazio.webp" alt="Render com o pack apagado"></div><h4>1 · Render vazio</h4><p>Derivado do render da IA: o verde do pack e a luz no chão são neutralizados por código, pixel a pixel. Por isso encaixa perfeito.</p><span class="pill static">Imagem fixa · WebP 104 KB</span></div>
+        <div class="layer"><div class="ls"><img src="ilustracoes/carro-a2-cheio.webp" alt="Render com o pack carregado"></div><h4>2 · Render cheio</h4><p>O render original da IA, com o pack carregado e a luz verde no chão.</p><span class="pill static">Imagem fixa · WebP 103 KB</span></div>
+        <div class="layer"><div class="ls" id="photoComposite"></div><h4>3 · Composição em 68%</h4><p>A cheia aparece só dentro do recorte, calculado com os 4 cantos do pack (perspectiva). Limite, brilho e cabo vão por cima.</p><span class="pill anim">Animado · 1 recorte</span></div>
+      </div>
+      <div class="sub-h">Alternativa vetorial, sem imagem</div>
+      <div class="layers" id="layers"></div>
+      <div class="composite">
+        <div class="layer"><div class="ls" id="compositeScene"></div><h4>Composição final</h4><p>Mesma arte nas duas telas. Na tela 1 a bateria fica apagada e a porta pisca; na tela 2 ela enche e a energia corre pelo cabo.</p></div>
+        <div class="layer geo">
+          <h4 style="margin-top:0">A bateria em perspectiva, sem 3D</h4>
+          Cada ponto do pack passa por uma função de projeção simples:
+          <pre class="code" style="margin:10px 0;padding:14px;border-radius:12px;font-size:12px">P(x, y, t) → k = 1 − 0,045·t
+  X = 184 + (x − 184)·k
+  Y = −220 + (y + 220)·k</pre>
+          <ol>
+            <li><code>t = 0</code> é o lado de perto e <code>t = 1</code> o lado de longe. As rodas de trás e o pack usam a mesma conta, por isso tudo "encaixa".</li>
+            <li>A face de cima vai de <code>t 0,08</code> a <code>0,92</code>; a lateral é a espessura do pack.</li>
+            <li>O preenchimento é o mesmo polígono cortado em <code>x0 + (x1 − x0)·%</code>. Sem máscara, sem filtro.</li>
+            <li>Trocar de carro (hatch, SUV, sedã) só muda a arte e 4 números: <code>x0, x1, yTopo, yBase</code>.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MERCADO ================= -->
+  <section class="doc">
+    <div class="sec-head">
+      <span class="eyebrow">Leitura das referências</span>
+      <h2>O que o mercado faz de fato</h2>
+      <p>As melhores referências vêm do painel dos carros (Tesla, BYD, MG/Roewe, Jaguar, Xpeng), não de apps. Elas seguem quase o mesmo roteiro. Os números entre parênteses são as imagens que você mandou.</p>
+    </div>
+    <div class="grid-cards">
+      <div class="pcard"><div class="n">01</div><h4>Perfil, visto um pouco de cima</h4><p>O carro aparece de lado, com uma perspectiva bem leve. É o único ângulo que mostra ao mesmo tempo o assoalho (bateria) e a porta de recarga.</p><div class="refs">Refs 9, 11, 13–20</div></div>
+      <div class="pcard"><div class="n">02</div><h4>Carro fantasma, só a energia tem cor</h4><p>Carroceria translúcida em tom frio e neutro. O verde aparece só na bateria, no cabo e na porta, então a cor passa a ser informação, não enfeite.</p><div class="refs">Refs 8, 11, 16, 17, 18</div></div>
+      <div class="pcard"><div class="n">03</div><h4>A bateria é a barra de progresso</h4><p>Bloco retangular entre os eixos, dividido em módulos, enchendo da frente para trás; o vazio fica cinza. A Tesla mostra a face de cima do pack, e é isso que faz ler como "piso".</p><div class="refs">Refs 11, 15, 17, 18, 19</div></div>
+      <div class="pcard"><div class="n">04</div><h4>Um marcador de limite</h4><p>Um ▲ embaixo do pack mostra onde a recarga vai parar ("Daily/Trip" da Tesla, o 80% da ref. 7). No eletroposto, vira o limite por % ou por R$.</p><div class="refs">Refs 7, 11, 15, 18</div></div>
+      <div class="pcard"><div class="n">05</div><h4>Um número principal</h4><p>Montadoras destacam autonomia em km porque o carro conhece o próprio consumo. O app do posto não conhece o modelo com certeza: o número principal deve ser % (DC) ou kWh (AC), e km só como estimativa.</p><div class="refs">Refs 8, 11, 17, 19</div></div>
+      <div class="pcard"><div class="n">06</div><h4>Telemetria em linha, sem cards</h4><p>Embaixo do carro, 3 ou 4 números soltos: km/h, +km, A, V (Tesla); tempo restante (MG). Pouco enfeite e hierarquia clara.</p><div class="refs">Refs 11, 17, 19</div></div>
+      <div class="pcard"><div class="n">07</div><h4>O estado aparece na porta e no cabo</h4><p>O LED da porta muda (branco = aguardando, verde pulsando = carregando, âmbar = atenção) e o cabo sai de cena. É a base perfeita para a tela "conecte o cabo".</p><div class="refs">Refs 13, 14, 15, 19</div></div>
+      <div class="pcard"><div class="n">08</div><h4>Parar é um botão neutro</h4><p>"Stop charging" é cinza, nunca o verde principal. O verde fica reservado para energia e para a ação de concluir.</p><div class="refs">Refs 5, 8, 18</div></div>
+      <div class="pcard dark"><div class="n">Por que os painéis parecem 3D</div><h4>Motor 3D no carro, camadas 2D no app</h4><p>Os painéis de BYD, GWM, Xpeng e NIO rodam motores 3D (Kanzi, Unity, Unreal) em chips automotivos com GPU dedicada. O app da Tesla e os de eletroposto usam arte estática com poucas camadas animadas por cima. Em RN, o caminho certo é o mesmo.</p></div>
+      <div class="pcard warn"><div class="n">Limitação real do eletroposto</div><h4>A % só existe em DC</h4><p>Em DC (CCS2, CHAdeMO, GB/T) o carro envia a % para a estação, e ela chega pelo OCPP como <i>SoC</i>. Em AC Tipo 2 a estação não recebe esse dado. A tela precisa de um estado AC honesto: número principal em kWh e bateria só com animação de fluxo, sem inventar número.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= DIAGNÓSTICO ================= -->
+  <section class="doc">
+    <div class="sec-head">
+      <span class="eyebrow">Sobre os protótipos atuais</span>
+      <h2>O que manter e o que trocar</h2>
+    </div>
+    <div class="diag">
+      <div class="pcard"><span class="verdict">Imagens 1 e 2</span><h4>Informação boa, visual infantil</h4><ul><li>Verde-limão saturado sobre verde chapado deixa tudo com cara de brinquedo.</li><li>Ilustração tipo clip-art (carro e poste cartoon).</li><li>O anel do timer ganha mais destaque que a instrução.</li><li>Todos os cards com o mesmo peso.</li></ul><p style="margin-top:10px">Manter: limite em R$, custo, energia e tempo; bateria em segmentos.</p></div>
+      <div class="pcard"><span class="verdict">Imagem 3</span><h4>Bonita como imagem, ruim como interface</h4><ul><li>Render fotográfico não liga o preenchimento à % real.</li><li>Arquivo pesado e glow por toda parte.</li><li>Quatro focos disputando atenção: arco, carro, cards e card do posto.</li><li>O botão de parar é a coisa mais brilhante da tela.</li></ul><p style="margin-top:10px">Manter: potência, tempo restante, energia e custo em grade.</p></div>
+      <div class="pcard"><span class="verdict">Esta proposta</span><h4>Um só foco por tela</h4><ul><li>Fundo grafite (o mesmo do tema escuro do app) com verde só na energia.</li><li>Tela 1: carro, porta e conector. O timer fica discreto, no rodapé.</li><li>Tela 2: um número principal, o carro como gráfico e a telemetria em linha.</li><li>Estados cobertos: DC, AC sem %, limite atingido e conexão.</li></ul></div>
+    </div>
+  </section>
+
+  <!-- ================= REACT NATIVE ================= -->
+  <section class="doc">
+    <div class="sec-head">
+      <span class="eyebrow">Levando para React Native</span>
+      <h2>Um SVG por tela, cinco coisas animadas</h2>
+      <p>Tudo aqui cabe em <code style="font-family:'Geist Mono',monospace;font-size:14px">react-native-svg</code> e Reanimated. Nada de filtro de blur, Lottie ou imagem 3D por porcentagem.</p>
+    </div>
+    <div class="rn">
+      <div>
+        <table class="t">
+          <tr><th>Camada</th><th>Em RN</th><th>Anima?</th></tr>
+          <tr><td>Render do carro, pack vazio</td><td><code>&lt;Image&gt;</code> do <code>react-native-svg</code> (WebP com borda transparente, ~100 KB)</td><td>Não</td></tr>
+          <tr><td>Render do carro, pack cheio</td><td>Mesma imagem dentro de um <code>ClipPath</code>; o <code>d</code> do recorte vem de um worklet (homografia dos 4 cantos) a partir da %</td><td>Sim, na UI thread</td></tr>
+          <tr><td>Alternativa vetorial</td><td>Carro em <code>react-native-svg</code> estático + 2 <code>AnimatedPath</code> para a bateria</td><td>Só a bateria</td></tr>
+          <tr><td>Brilho que corre no pack</td><td>1 retângulo com gradiente dentro de <code>ClipPath</code>, <code>translateX</code> com <code>withRepeat</code></td><td>Loop</td></tr>
+          <tr><td>Porta, anéis no chão</td><td>Círculos e elipses: <code>opacity</code> e <code>scale</code></td><td>Loop</td></tr>
+          <tr><td>Energia no cabo</td><td>1 path tracejado, <code>strokeDashoffset</code></td><td>Loop</td></tr>
+          <tr><td>Números, cards, botões</td><td>View e Text nativos, fora do SVG</td><td>Só texto</td></tr>
+        </table>
+        <div class="rn-list">
+          <h4>Render com IA: cuidados</h4>
+          <ul>
+            <li>Se o <code>ClipPath</code> animado der trabalho no Android, a mesma ideia roda com <code>@shopify/react-native-skia</code> (<code>Image</code> + <code>clipPath</code>), também na UI thread.</li>
+            <li>Um par de imagens por "modelo de carro" (SUV, hatch, sedã): o JSON com os 4 cantos do pack e a posição da porta acompanha cada par.</li>
+            <li>O par é gerado pelo script <code>processar-ia.mjs</code>: detecta o pack, apaga o verde e exporta WebP @3x com a geometria.</li>
+          </ul>
+          <h4>Regras de desempenho</h4>
+          <ul>
+            <li>Glow sempre com <code>RadialGradient</code>, nunca <code>feGaussianBlur</code> ou sombra no SVG (Android sofre).</li>
+            <li>Pausar os loops quando a tela perde o foco (<code>useIsFocused</code>) e respeitar "reduzir movimento".</li>
+            <li>A % chega do backend a cada poucos segundos: interpolar com <code>withTiming</code>, sem re-render do SVG inteiro.</li>
+            <li>Se quiser glow com blur de verdade, <code>@shopify/react-native-skia</code> faz bem, mas não é necessário.</li>
+          </ul>
+          <h4>Dados que a tela precisa</h4>
+          <ul>
+            <li>Status do conector no OCPP: <code>Preparing</code> → <code>Charging</code> → <code>Finishing</code> (dirige a tela 1 → 2).</li>
+            <li><code>MeterValues</code>: energia, potência e <code>SoC</code> (só em DC). Porta dianteira ou traseira vem do cadastro do veículo, se houver.</li>
+          </ul>
+        </div>
+      </div>
+<pre class="code"><span class="c">// BatteryFloor.tsx: só a bateria é animada</span>
+<span class="k">const</span> AnimatedPath = Animated.createAnimatedComponent(Path);
+
+<span class="k">const</span> PK = { x0: <span class="s">114</span>, x1: <span class="s">256</span>, yT: <span class="s">124</span>, yB: <span class="s">136</span>, tN: <span class="s">0.08</span>, tF: <span class="s">0.92</span> };
+
+<span class="k">function</span> P(x: number, y: number, t: number) {
+  <span class="s">'worklet'</span>;
+  <span class="k">const</span> k = <span class="s">1</span> - <span class="s">0.045</span> * t;
+  <span class="k">return</span> `${<span class="s">184</span> + (x - <span class="s">184</span>) * k} ${-<span class="s">220</span> + (y + <span class="s">220</span>) * k}`;
+}
+
+<span class="k">function</span> topFace(p: number) {
+  <span class="s">'worklet'</span>;
+  <span class="k">const</span> a = PK.x0, b = PK.x0 + (PK.x1 - PK.x0) * p;
+  <span class="k">return</span> `M${P(a, PK.yT, PK.tN)} L${P(b, PK.yT, PK.tN)}
+          L${P(b, PK.yT, PK.tF)} L${P(a, PK.yT, PK.tF)} Z`;
+}
+<span class="c">// sideFace(p) é igual, usando yT/yB com tN</span>
+
+<span class="k">export function</span> BatteryFloor({ soc }: { soc: number }) {
+  <span class="k">const</span> p = useSharedValue(<span class="s">0</span>);
+  useEffect(() => {
+    p.value = withTiming(soc / <span class="s">100</span>, { duration: <span class="s">700</span> });
+  }, [soc]);
+
+  <span class="k">const</span> top  = useAnimatedProps(() => ({ d: topFace(p.value) }));
+  <span class="k">const</span> side = useAnimatedProps(() => ({ d: sideFace(p.value) }));
+
+  <span class="k">return</span> (
+    &lt;G&gt;
+      &lt;Path d={PACK_TOP} fill=<span class="s">"#111916"</span> /&gt;
+      &lt;Path d={PACK_SIDE} fill=<span class="s">"#0c110f"</span> /&gt;
+      &lt;AnimatedPath animatedProps={top}  fill=<span class="s">"url(#fillTop)"</span> /&gt;
+      &lt;AnimatedPath animatedProps={side} fill=<span class="s">"url(#fillSide)"</span> /&gt;
+      &lt;Path d={MODULE_LINES} stroke=<span class="s">"#070a09"</span> /&gt;
+    &lt;/G&gt;
+  );
+}
+
+<span class="c">// ChargingScene.tsx</span>
+&lt;Svg viewBox=<span class="s">"14 22 352 142"</span>&gt;
+  &lt;CarGhost /&gt;          <span class="c">{/* memo, nunca re-renderiza */}</span>
+  &lt;BatteryFloor soc={soc} /&gt;
+  &lt;LimitMarker value={limit} /&gt;
+  &lt;EnergyFx active={charging} /&gt;
+&lt;/Svg&gt;</pre>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  /* ============ geometria base ============ */
+  const CX = 184, HY = -220, KD = 0.045;
+  const P = (x, y, t = 0) => { const k = 1 - KD * t; return [CX + (x - CX) * k, HY + (y - HY) * k]; };
+  const S = p => p[0].toFixed(2) + ' ' + p[1].toFixed(2);
+  const poly = pts => 'M' + pts.map(S).join(' L') + ' Z';
+  const seg = (a, b) => 'M' + S(a) + ' L' + S(b);
+
+  const PK = { x0: 114, x1: 256, yT: 124, yB: 136, tN: 0.08, tF: 0.92, N: 10 };
+  const px = f => PK.x0 + (PK.x1 - PK.x0) * f;
+  const topFace = (a, b, t0 = PK.tN, t1 = PK.tF) =>
+    poly([P(px(a), PK.yT, t0), P(px(b), PK.yT, t0), P(px(b), PK.yT, t1), P(px(a), PK.yT, t1)]);
+  const sideFace = (a, b) =>
+    poly([P(px(a), PK.yT, PK.tN), P(px(b), PK.yT, PK.tN), P(px(b), PK.yB, PK.tN), P(px(a), PK.yB, PK.tN)]);
+  const edgeAt = f => 'M' + S(P(px(f), PK.yT, PK.tF)) + ' L' + S(P(px(f), PK.yT, PK.tN)) + ' L' + S(P(px(f), PK.yB, PK.tN));
+
+  const FW = { x: 90, y: 125 }, RW = { x: 280, y: 125 }, TR = 25;
+  const PORT = { x: 313, y: 89 };
+
+  const BODY = 'M36 137 C31 136.6 28 133 27.4 126 C26.8 118 28.4 106 31.2 97.5 C32.6 92.5 35.6 88.6 41.5 87.4 C72 82.6 112 77.4 139 74.8 C158 62.5 177 50 197 43 C214 38.6 244 37.2 266 38.2 C288 39.4 306 43.6 318 49 C321.4 50.6 322.6 52.2 322.6 53.4 C327 60.4 333 68.8 337.8 76.4 C340.4 83.6 341.6 91.6 341.6 100 C341.6 111.5 341 121.5 339.2 129 C338.2 134 335.6 137 330.5 137 L308.6 137 A31 31 0 1 0 251.4 137 L118.6 137 A31 31 0 1 0 61.4 137 Z';
+  const DLO = 'M150 78.2 C162 67.5 181 54.5 199.5 47.4 C216 44.4 246 43.4 266 44.2 C284 45.2 298 48.2 307 52.6 C312 57.6 316 63.2 318.4 69.2 C298 70.8 250 74.4 200 76.8 C182 77.6 164 78 150 78.2 Z';
+  const PILLARS = 'M220.8 76.6 L226.6 76.3 L229.4 44.2 L223.8 44.3 Z M286.4 72.6 L292.2 72.1 L294 47.8 L288.8 47.1 Z';
+  const DOORS = 'M147 79.4 C145.4 94 144 111 144.6 131 M223.7 76.5 L222.6 131 M289.4 72.4 C291 81 290.4 87.5 285.6 92.4 M122.45 131 L247.55 131';
+  const TRIMS = 'M59.26 137 A33 33 0 1 1 120.74 137 M249.26 137 A33 33 0 1 1 310.74 137';
+  const SHOULDER = 'M40 91.8 C100 86.4 220 83.4 337.8 78.8';
+  const SCULPT = 'M150 116.5 C180 114 215 111.5 244 108.2';
+  const ROOFHL = 'M202 44.6 C222 40.8 250 40 290 42.8';
+  const HEADL = 'M31 96.5 C40 92.4 52 89.8 67 88 L67.6 90.6 C53.6 92.6 42 95.6 32.2 100 Z';
+  const TAILL = 'M319.5 81.4 C327 80.6 334.6 80.2 339.8 80.4 L340.4 86.6 C334.6 86.6 327 87 320.4 87.6 Z';
+  const MIRROR = 'M148.6 78 C147.8 72.6 153 69.8 161.5 70.2 C167 70.6 168.4 75 165.4 78 Z';
+  const REARGLASS = 'M320.8 55 C325 61.4 329.6 67.6 333.2 73.6';
+  const INTAKE = 'M29.6 121 C36 123.4 46 124.4 56 123.6';
+
+  const SEAT_F = 'M170 113.4 L201 113.4 C204.6 113.4 206.2 111.6 206.8 108.6 L212.6 79.4 C213.3 75.6 211.2 73.6 208.4 73.6 C205.8 73.6 204.2 75.2 203.6 78 L198.8 104.2 C198.4 106.4 197 107.4 194.6 107.4 L173 107.4 C170.4 107.4 168.8 108.8 168.8 111 Z';
+  const SEAT_R = 'M240 112.4 L272 112.4 C275.4 112.4 277 110.8 277.6 108 L282.6 80.4 C283.2 76.8 281.2 75 278.6 75 C276.2 75 274.6 76.4 274.1 79 L270 104 C269.6 106 268.2 107 266 107 L243 107 C240.4 107 238.8 108.4 238.8 110.4 Z';
+
+  const GC = '#d6ece2';
+
+  /* ============ camadas ============ */
+  const defs = id => `<defs>
+    <linearGradient id="${id}-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe8dc" stop-opacity=".17"/><stop offset=".5" stop-color="#cfe8dc" stop-opacity=".065"/><stop offset="1" stop-color="#cfe8dc" stop-opacity=".03"/></linearGradient>
+    <linearGradient id="${id}-glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a8dcc5" stop-opacity=".22"/><stop offset="1" stop-color="#a8dcc5" stop-opacity=".06"/></linearGradient>
+    <linearGradient id="${id}-hl" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <radialGradient id="${id}-shadow"><stop offset="0" stop-color="#000" stop-opacity=".75"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${id}-glow"><stop offset="0" stop-color="#2fd07f" stop-opacity=".55"/><stop offset="1" stop-color="#2fd07f" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${id}-aura"><stop offset="0" stop-color="#2fd07f" stop-opacity=".16"/><stop offset="1" stop-color="#2fd07f" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${id}-port"><stop offset="0" stop-color="#4be6a0" stop-opacity=".9"/><stop offset="1" stop-color="#4be6a0" stop-opacity="0"/></radialGradient>
+    <radialGradient id="${id}-portw"><stop offset="0" stop-color="#e8fff3" stop-opacity=".55"/><stop offset="1" stop-color="#e8fff3" stop-opacity="0"/></radialGradient>
+    <linearGradient id="${id}-ft" x1="0" x2="1"><stop offset="0" stop-color="#0f8f4d"/><stop offset="1" stop-color="#55eca8"/></linearGradient>
+    <linearGradient id="${id}-fs" x1="0" x2="1"><stop offset="0" stop-color="#0a6034"/><stop offset="1" stop-color="#22b46c"/></linearGradient>
+    <linearGradient id="${id}-shim" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="${id}-chg" x1="0" x2="1"><stop offset="0" stop-color="#1f2826"/><stop offset="1" stop-color="#101514"/></linearGradient>
+    <linearGradient id="${id}-floor" x1="0" x2="1"><stop offset="0" stop-color="${GC}" stop-opacity="0"/><stop offset=".5" stop-color="${GC}" stop-opacity=".16"/><stop offset="1" stop-color="${GC}" stop-opacity="0"/></linearGradient>
+    <clipPath id="${id}-clip"><path class="c-top" d="M0 0"/><path class="c-side" d="M0 0"/></clipPath>
+  </defs>`;
+
+  const ground = id => `<g>
+    <ellipse cx="184" cy="150.5" rx="172" ry="8.5" fill="url(#${id}-shadow)"/>
+    <path d="M-20 150.5 H430" stroke="url(#${id}-floor)" stroke-width=".6"/>
+    <ellipse cx="${FW.x}" cy="150" rx="22" ry="2.2" fill="#000" opacity=".7"/>
+    <ellipse cx="${RW.x}" cy="150" rx="22" ry="2.2" fill="#000" opacity=".7"/>
+  </g>`;
+
+  const glow = id => `<g class="fx-charging">
+    <ellipse class="breathe" cx="185" cy="120" rx="118" ry="34" fill="url(#${id}-aura)"/>
+    <ellipse class="breathe" cx="185" cy="148.5" rx="122" ry="10" fill="url(#${id}-glow)"/>
+    <ellipse class="ring" cx="185" cy="148.5" rx="118" ry="9" fill="none" stroke="#3fe394" stroke-opacity=".45" stroke-width=".6"/>
+    <ellipse class="ring r2" cx="185" cy="148.5" rx="118" ry="9" fill="none" stroke="#3fe394" stroke-opacity=".45" stroke-width=".6"/>
+  </g>`;
+
+  const farWheel = c => {
+    const [x, y] = P(c.x, c.y, 1), r = TR * (1 - KD);
+    return `<circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${r.toFixed(2)}" fill="#070a09" stroke="${GC}" stroke-opacity=".1" stroke-width=".6"/>
+      <circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${(r * .7).toFixed(2)}" fill="none" stroke="${GC}" stroke-opacity=".09" stroke-width=".5"/>`;
+  };
+  const far = () => `<g>
+    <path d="${BODY}" transform="translate(${CX} ${HY}) scale(${1 - KD}) translate(${-CX} ${-HY})" fill="none" stroke="${GC}" stroke-opacity=".07" stroke-width=".7"/>
+    ${farWheel(FW)}${farWheel(RW)}
+  </g>`;
+
+  const bodyFill = id => `<g>
+    <path d="${BODY}" fill="url(#${id}-body)"/>
+    <path d="${DLO}" fill="url(#${id}-glass)"/>
+    <path d="${PILLARS}" fill="#101614"/>
+  </g>`;
+
+  const interior = () => `<g class="interior" fill="${GC}" fill-opacity=".05" stroke="${GC}" stroke-opacity=".2" stroke-width=".6" stroke-linejoin="round">
+    <path d="M143 85 C158 81.6 172 81.2 185 84" fill="none"/>
+    <ellipse cx="178" cy="85" rx="2.3" ry="8" transform="rotate(-22 178 85)" fill="none"/>
+    <path d="${SEAT_F}"/><rect x="205.6" y="63.6" width="7.6" height="8.8" rx="3" transform="rotate(11 209.4 68)"/>
+    <path d="${SEAT_R}"/><rect x="276" y="65.4" width="7.2" height="8.4" rx="3" transform="rotate(10 279.6 69.6)"/>
+  </g>`;
+
+  const bodyLines = id => `<g stroke-linejoin="round" stroke-linecap="round">
+    <path d="${BODY}" fill="none" stroke="${GC}" stroke-opacity=".62" stroke-width=".95"/>
+    <path d="${DLO}" fill="none" stroke="${GC}" stroke-opacity=".38" stroke-width=".7"/>
+    <path d="${PILLARS}" fill="none" stroke="${GC}" stroke-opacity=".22" stroke-width=".5"/>
+    <g fill="none" stroke="${GC}" stroke-opacity=".24" stroke-width=".6">
+      <path d="${DOORS}"/><path d="${TRIMS}"/><path d="${REARGLASS}"/><path d="${INTAKE}"/>
+    </g>
+    <path d="${SHOULDER}" fill="none" stroke="${GC}" stroke-opacity=".16" stroke-width=".6"/>
+    <path d="${SCULPT}" fill="none" stroke="${GC}" stroke-opacity=".1" stroke-width=".6"/>
+    <path d="${SHOULDER}" fill="none" stroke="url(#${id}-hl)" stroke-opacity=".5" stroke-width=".9"/>
+    <path d="${ROOFHL}" fill="none" stroke="url(#${id}-hl)" stroke-opacity=".7" stroke-width=".9"/>
+    <path d="${HEADL}" fill="#eefaf4" fill-opacity=".85"/>
+    <path d="${TAILL}" fill="#ff7a7a" fill-opacity=".38" stroke="#ff9a9a" stroke-opacity=".35" stroke-width=".4"/>
+    <path d="${MIRROR}" fill="#121816" stroke="${GC}" stroke-opacity=".42" stroke-width=".6"/>
+    <rect x="192" y="86.6" width="14" height="2.6" rx="1.3" fill="${GC}" fill-opacity=".28"/>
+    <rect x="258" y="84.6" width="14" height="2.6" rx="1.3" fill="${GC}" fill-opacity=".28"/>
+  </g>`;
+
+  const pack = id => {
+    let cells = '', div = '';
+    for (let i = 0; i < PK.N; i++) {
+      const a = i / PK.N, b = (i + 1) / PK.N;
+      cells += `<path class="cell" style="--i:${i}" d="${topFace(a, b, PK.tN, .5)}"/><path class="cell" style="--i:${i}" d="${topFace(a, b, .5, PK.tF)}"/><path class="cell" style="--i:${i};fill:#27b56e" d="${sideFace(a, b)}"/>`;
+      if (i) div += edgeAt(a) + ' ';
+    }
+    div += seg(P(PK.x0, PK.yT, .5), P(PK.x1, PK.yT, .5));
+    return `<g class="pack">
+      <path d="${topFace(0, 1)}" fill="#111916" stroke="${GC}" stroke-opacity=".3" stroke-width=".8" stroke-linejoin="round"/>
+      <path d="${sideFace(0, 1)}" fill="#0c110f" stroke="${GC}" stroke-opacity=".3" stroke-width=".8" stroke-linejoin="round"/>
+      <g>${cells}</g>
+      <path class="f-top" fill="url(#${id}-ft)" d="M0 0"/>
+      <path class="f-side" fill="url(#${id}-fs)" d="M0 0"/>
+      <g clip-path="url(#${id}-clip)" class="fx-charging"><rect class="shimmer" x="${PK.x0 - 36}" y="100" width="30" height="40" fill="url(#${id}-shim)"/></g>
+      <g class="pk-limit-g">
+        <path class="beyond" d="M0 0" fill="#000" fill-opacity=".32"/>
+      </g>
+      <path d="${div}" fill="none" stroke="#060908" stroke-width="1.1"/>
+      <path d="${seg(P(PK.x0, PK.yT, PK.tN), P(PK.x1, PK.yT, PK.tN))}" stroke="${GC}" stroke-opacity=".35" stroke-width=".6"/>
+      <path class="lead" d="M0 0" fill="none" stroke="#caffe4" stroke-width=".9" stroke-linejoin="round"/>
+      <g class="pk-limit-g">
+        <path class="lim" d="M0 0" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width=".7" stroke-dasharray="1.6 1.3"/>
+        <path class="tri" d="M0 0" fill="#fff" fill-opacity=".85"/>
+        <text class="lim-t" font-size="9.5" font-weight="600" fill="#fff" fill-opacity=".7">80%</text>
+      </g>
+    </g>`;
+  };
+
+  const nearWheel = c => {
+    let sp = '';
+    for (let i = 0; i < 5; i++) {
+      const a = (i * 72 - 90) * Math.PI / 180;
+      const q = (r, d) => [c.x + r * Math.cos(a + d), c.y + r * Math.sin(a + d)];
+      sp += `<path d="${poly([q(5.4, -.36), q(16.4, -.2), q(16.4, .2), q(5.4, .36)])}"/>`;
+    }
+    return `<g>
+      <circle cx="${c.x}" cy="${c.y}" r="${TR}" fill="#0a0d0c" stroke="${GC}" stroke-opacity=".18" stroke-width=".7"/>
+      <path d="M${c.x - 21} ${c.y - 6} A22 22 0 0 1 ${c.x + 14} ${c.y - 17.5}" fill="none" stroke="${GC}" stroke-opacity=".12" stroke-width="1.2" stroke-linecap="round"/>
+      <circle cx="${c.x}" cy="${c.y}" r="17.6" fill="#141a18" stroke="${GC}" stroke-opacity=".45" stroke-width=".7"/>
+      <g fill="${GC}" fill-opacity=".15" stroke="${GC}" stroke-opacity=".34" stroke-width=".45" stroke-linejoin="round">${sp}</g>
+      <circle cx="${c.x}" cy="${c.y}" r="4.2" fill="#0a0d0c" stroke="${GC}" stroke-opacity=".42" stroke-width=".6"/>
+      <circle cx="${c.x}" cy="${c.y}" r="1.2" fill="${GC}" fill-opacity=".5"/>
+    </g>`;
+  };
+  const wheels = () => nearWheel(FW) + nearWheel(RW);
+
+  const charger = id => `<g>
+    <rect x="360" y="146.6" width="46" height="4" rx="2" fill="#141a18" stroke="${GC}" stroke-opacity=".14" stroke-width=".5"/>
+    <path d="M367 147 V60 C367 55.6 370.6 52 375 52 H392 C396.4 52 400 55.6 400 60 V147 Z" fill="url(#${id}-chg)" stroke="${GC}" stroke-opacity=".34" stroke-width=".8"/>
+    <rect x="371.5" y="58.5" width="24" height="17" rx="2.6" fill="#050807" stroke="${GC}" stroke-opacity=".16" stroke-width=".6"/>
+    <path d="M384.6 61.6 L380.4 67.8 H383.4 L382.3 72.6 L386.6 66.2 H383.6 Z" fill="#3fe394"/>
+    <rect class="led" x="367.9" y="82" width="1.5" height="44" rx=".75" fill="#3fe394"/>
+    <path d="M374 84 H393" stroke="${GC}" stroke-opacity=".12" stroke-width=".6"/>
+    <rect x="361.5" y="96" width="6" height="15" rx="2.4" fill="#0d1210" stroke="${GC}" stroke-opacity=".28" stroke-width=".6"/>
+    <circle cx="368.4" cy="130" r="2.3" fill="#0d1210" stroke="${GC}" stroke-opacity=".3" stroke-width=".6"/>
+  </g>`;
+
+  const GUIDE = { a: { x: 364.5, y: 103.5 }, c: { x: 342, y: 44 }, b: { x: PORT.x, y: PORT.y } };
+  const EXIT = { x: 368.4, y: 130 };
+
+  const plugShape = (cls, extra = '') => `<g class="${cls}" ${extra}>
+    <circle r="5.6" fill="#0d1210" stroke="${GC}" stroke-opacity=".6" stroke-width=".8"/>
+    <circle r="3.3" fill="none" stroke="#3fe394" stroke-width=".8"/>
+    <circle r="1" fill="#3fe394"/>
+  </g>`;
+
+  const energy = (id, variant) => {
+    if (variant === 'plug') {
+      return `<g>
+        <g class="fx-guide">
+          <path d="M${GUIDE.a.x} ${GUIDE.a.y} Q ${GUIDE.c.x} ${GUIDE.c.y} ${PORT.x + 7} ${PORT.y - 3}" fill="none" stroke="#e8fff3" stroke-opacity=".35" stroke-width=".8" class="march" stroke-linecap="round"/>
+          <circle cx="${PORT.x}" cy="${PORT.y}" r="9" fill="url(#${id}-portw)" class="breathe"/>
+          <circle cx="${PORT.x}" cy="${PORT.y}" r="5.4" fill="none" stroke="#e8fff3" stroke-width=".8" class="ping"/>
+          <g transform="translate(${PORT.x} 25)">
+            <rect x="-22" y="-7.5" width="44" height="15" rx="7.5" fill="#e8fff3" fill-opacity=".1" stroke="#e8fff3" stroke-opacity=".3" stroke-width=".5"/>
+            <text y="3.6" font-size="10" font-weight="600" text-anchor="middle" fill="#e8fff3">Entrada</text>
+          </g>
+          <path d="M${PORT.x} 32.5 V${PORT.y - 7}" stroke="#e8fff3" stroke-opacity=".35" stroke-width=".6" stroke-dasharray="1.4 1.6"/>
+        </g>
+        <g class="fx-connected">
+          <circle cx="${PORT.x}" cy="${PORT.y}" r="13" fill="url(#${id}-port)" class="breathe"/>
+        </g>
+        <circle cx="${PORT.x}" cy="${PORT.y}" r="4.3" fill="#07100b" stroke="${GC}" stroke-opacity=".7" stroke-width=".7"/>
+        <path class="cable-o" d="M0 0" fill="none" stroke="${GC}" stroke-opacity=".25" stroke-width="4.4" stroke-linecap="round"/>
+        <path class="cable" d="M0 0" fill="none" stroke="#0b0f0d" stroke-width="3" stroke-linecap="round"/>
+        ${plugShape('plug')}
+        ${plugShape('ghost', 'opacity="0"')}
+      </g>`;
+    }
+    const CABLE = `M${PORT.x + 1} ${PORT.y + 4} C ${PORT.x + 5} 128 334 146 380 145`;
+    return `<g>
+      <path d="${CABLE}" fill="none" stroke="${GC}" stroke-opacity=".22" stroke-width="4.4" stroke-linecap="round"/>
+      <path d="${CABLE}" fill="none" stroke="#0b0f0d" stroke-width="3" stroke-linecap="round"/>
+      <path d="${CABLE}" class="flow fx-charging" fill="none" stroke="#4be6a0" stroke-width="1.3" stroke-linecap="round"/>
+      <circle class="breathe fx-charging" cx="${PORT.x}" cy="${PORT.y}" r="13" fill="url(#${id}-port)"/>
+      <circle cx="${PORT.x}" cy="${PORT.y}" r="5.4" fill="#0d1210" stroke="${GC}" stroke-opacity=".55" stroke-width=".8"/>
+      <circle cx="${PORT.x}" cy="${PORT.y}" r="3.2" fill="none" stroke="#3fe394" stroke-width=".9"/>
+      <circle cx="${PORT.x}" cy="${PORT.y}" r="1" fill="#3fe394"/>
+    </g>`;
+  };
+
+  /* ============ fábrica de cena ============ */
+  const ALL = ['ground', 'glow', 'far', 'body', 'interior', 'pack', 'wheels', 'charger', 'energy'];
+  function createScene(host, o) {
+    const id = o.id, L = new Set(o.layers || ALL);
+    let h = `<svg viewBox="${o.vb}" class="scene-svg" aria-hidden="true">` + defs(id);
+    if (L.has('ground')) h += ground(id);
+    if (L.has('glow')) h += glow(id);
+    if (L.has('far')) h += far(id);
+    if (L.has('body')) h += bodyFill(id);
+    if (L.has('interior')) h += interior(id);
+    if (L.has('body')) h += bodyLines(id);
+    if (L.has('pack')) h += pack(id);
+    if (L.has('wheels')) h += wheels(id);
+    if (L.has('charger') && o.charger) h += charger(id);
+    if (L.has('energy')) h += energy(id, o.variant);
+    h += '</svg>';
+    host.innerHTML = h;
+    const svg = host.querySelector('svg');
+    const $ = s => svg.querySelector(s);
+    const el = {
+      ft: $('.f-top'), fs: $('.f-side'), ct: $('.c-top'), cs: $('.c-side'), lead: $('.lead'),
+      lim: $('.lim'), tri: $('.tri'), limT: $('.lim-t'), beyond: $('.beyond'),
+      plug: $('.plug'), ghost: $('.ghost'), cable: $('.cable'), cableO: $('.cable-o')
+    };
+    const api = { svg, f: 0, raf: 0 };
+    api.set = f => {
+      api.f = f;
+      if (!el.ft) return;
+      const on = f > 0.004, E = 'M0 0';
+      el.ft.setAttribute('d', on ? topFace(0, f) : E);
+      el.fs.setAttribute('d', on ? sideFace(0, f) : E);
+      el.ct.setAttribute('d', on ? topFace(0, f) : E);
+      el.cs.setAttribute('d', on ? sideFace(0, f) : E);
+      el.lead.setAttribute('d', on && f < .998 ? edgeAt(f) : E);
+    };
+    api.tween = (to, dur = 700, onFrame) => {
+      cancelAnimationFrame(api.raf);
+      const from = api.f, t0 = performance.now();
+      const step = now => {
+        const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+        api.set(from + (to - from) * e);
+        onFrame && onFrame(api.f);
+        if (k < 1) api.raf = requestAnimationFrame(step);
+      };
+      api.raf = requestAnimationFrame(step);
+    };
+    api.setLimit = l => {
+      if (!el.lim) return;
+      const g = svg.querySelectorAll('.pk-limit-g');
+      g.forEach(n => n.style.display = l == null ? 'none' : '');
+      if (l == null) return;
+      el.lim.setAttribute('d', edgeAt(l));
+      el.beyond.setAttribute('d', l < .999 ? topFace(l, 1) + ' ' + sideFace(l, 1) : 'M0 0');
+      const [x, y] = P(px(l), PK.yB, PK.tN);
+      el.tri.setAttribute('d', `M${(x - 3.4).toFixed(2)} ${(y + 8.6).toFixed(2)} L${(x + 3.4).toFixed(2)} ${(y + 8.6).toFixed(2)} L${x.toFixed(2)} ${(y + 3).toFixed(2)} Z`);
+      el.limT.setAttribute('x', (x + 5.5).toFixed(2));
+      el.limT.setAttribute('y', (y + 11.4).toFixed(2));
+      el.limT.textContent = Math.round(l * 100) + '%';
+    };
+    api.placePlug = p => {
+      if (!el.plug) return;
+      el.plug.setAttribute('transform', `translate(${p.x.toFixed(2)} ${p.y.toFixed(2)})`);
+      const cx = (EXIT.x + p.x) / 2, cy = Math.max(EXIT.y, p.y) + 22;
+      const d = `M${EXIT.x} ${EXIT.y} Q ${cx.toFixed(2)} ${cy.toFixed(2)} ${p.x.toFixed(2)} ${(p.y + 2.5).toFixed(2)}`;
+      el.cable.setAttribute('d', d);
+      el.cableO.setAttribute('d', d);
+    };
+    api.el = el;
+    api.guide = GUIDE;
+    api.approach = { x: PORT.x + 7, y: PORT.y - 3 };
+    return api;
+  }
+
+  /* ============ cena com o render da IA ============ */
+  // Duas imagens alinhadas pixel a pixel (pack vazio / pack cheio). A cheia só aparece dentro
+  // do recorte da face de cima do pack, calculado pela %. Coordenadas em pixels da imagem.
+  const PHOTO = {
+    a2: { w: 1600, h: 714, quad: [[596.4, 372.1], [1021.4, 371.4], [1052.9, 480], [564.3, 480.7]], port: [1333.6, 302.1], spill: { cx: 808.6, cy: 612.9, rx: 361.3, ry: 171.4 }, frame: 36, vb: { s1: '440 40 1160 674', s2: '36 24 1528 672' } },
+    a3: { w: 1600, h: 773, quad: [[625.6, 387.7], [1063.9, 438.3], [962.1, 590.1], [489.6, 530.6]], port: [1307.4, 418.5], spill: { cx: 725.8, cy: 699.5, rx: 353, ry: 157.3 }, frame: 34, vb: { s1: '420 40 1180 733', s2: '36 20 1528 740' } }
+  };
+  // homografia do quadrado unitário para a face do pack (u: frente → trás, v: lado de longe → perto)
+  function homography(q) {
+    const [[x0, y0], [x1, y1], [x2, y2], [x3, y3]] = q;
+    const dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3;
+    const dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3;
+    const det = dx1 * dy2 - dx2 * dy1;
+    const g = (dx3 * dy2 - dx2 * dy3) / det, h = (dx1 * dy3 - dx3 * dy1) / det;
+    const a = x1 - x0 + g * x1, b = x3 - x0 + h * x3, d = y1 - y0 + g * y1, e = y3 - y0 + h * y3;
+    return (u, v) => { const w = g * u + h * v + 1; return [(a * u + b * v + x0) / w, (d * u + e * v + y0) / w]; };
+  }
+  const plugP = (cls, extra = '') => `<g class="${cls}" ${extra}><circle r="24" fill="#0d1210" stroke="${GC}" stroke-opacity=".6" stroke-width="3.5"/><circle r="14" fill="none" stroke="#3fe394" stroke-width="3.5"/><circle r="4.5" fill="#3fe394"/></g>`;
+
+  function createPhotoScene(host, o) {
+    const G = PHOTO[o.style], id = o.id, H = homography(G.quad);
+    const S1 = p => p[0].toFixed(1) + ' ' + p[1].toFixed(1);
+    const region = (u0, u1) => u1 - u0 < .002 ? 'M0 0' : 'M' + [H(u0, 0), H(u1, 0), H(u1, 1), H(u0, 1)].map(S1).join(' L') + ' Z';
+    const edge = u => 'M' + S1(H(u, 0)) + ' L' + S1(H(u, 1));
+    const [px, py] = G.port;
+    const src = n => `ilustracoes/carro-${o.style}-${n}.webp`;
+    let cells = '';
+    for (let i = 0; i < 8; i++) cells += `<path class="cell" style="--i:${i}" d="${region(i / 8, (i + 1) / 8)}"/>`;
+    const guide = { a: { x: G.w + 40, y: py + 300 }, c: { x: px + 300, y: py - 40 }, b: { x: px, y: py } };
+    const approach = { x: px + 34, y: py - 6 };
+    const EXITP = { x: G.w + 80, y: G.h + 20 };
+    // a luz no chão só pode aparecer abaixo da borda de perto do pack (senão revela o pack cheio)
+    const A = H(0, 1), B = H(1, 1), yAt = x => A[1] + (B[1] - A[1]) * (x - A[0]) / (B[0] - A[0]) + 6;
+    const below = `M0 ${yAt(0).toFixed(1)} L${G.w} ${yAt(G.w).toFixed(1)} L${G.w} ${G.h + 50} L0 ${G.h + 50} Z`;
+    let energy;
+    if (o.variant === 'plug') {
+      energy = `
+        <g class="fx-guide">
+          <path d="M${guide.a.x} ${guide.a.y} Q ${guide.c.x} ${guide.c.y} ${approach.x} ${approach.y}" fill="none" stroke="#e8fff3" stroke-opacity=".4" stroke-width="3.5" stroke-linecap="round" class="marchp"/>
+          <circle cx="${px}" cy="${py}" r="46" fill="url(#${id}-portw)" class="breathe"/>
+          <circle cx="${px}" cy="${py}" r="22" fill="none" stroke="#e8fff3" stroke-width="3.5" class="ping"/>
+          <path d="M${px} ${py - 30} V${py - 112}" stroke="#e8fff3" stroke-opacity=".45" stroke-width="2.5" stroke-dasharray="6 7"/>
+          <g transform="translate(${px} ${py - 144})"><rect x="-92" y="-30" width="184" height="60" rx="30" fill="#0d1612" fill-opacity=".8" stroke="#e8fff3" stroke-opacity=".35" stroke-width="2"/><text y="14" font-size="40" font-weight="600" text-anchor="middle" fill="#e8fff3">Entrada</text></g>
+        </g>
+        <g class="fx-connected"><circle cx="${px}" cy="${py}" r="60" fill="url(#${id}-port)" class="breathe"/></g>
+        <circle cx="${px}" cy="${py}" r="17" fill="#07100b" stroke="${GC}" stroke-opacity=".7" stroke-width="3"/>
+        <path class="cable-o" d="M0 0" fill="none" stroke="${GC}" stroke-opacity=".28" stroke-width="20" stroke-linecap="round"/>
+        <path class="cable" d="M0 0" fill="none" stroke="#0b0f0d" stroke-width="14" stroke-linecap="round"/>
+        ${plugP('plug')}${plugP('ghost', 'opacity="0"')}`;
+    } else {
+      const C = `M${px + 12} ${py + 16} C ${px + 120} ${py + 50} ${px + 180} ${py + 280} ${G.w + 60} ${G.h - 40}`;
+      energy = `
+        <path d="${C}" fill="none" stroke="${GC}" stroke-opacity=".25" stroke-width="20" stroke-linecap="round"/>
+        <path d="${C}" fill="none" stroke="#0b0f0d" stroke-width="14" stroke-linecap="round"/>
+        <path d="${C}" class="flowp fx-charging" fill="none" stroke="#4be6a0" stroke-width="6" stroke-linecap="round"/>
+        <circle class="breathe fx-charging" cx="${px}" cy="${py}" r="62" fill="url(#${id}-port)"/>
+        <circle cx="${px}" cy="${py}" r="22" fill="#0d1210" stroke="${GC}" stroke-opacity=".55" stroke-width="3"/>
+        <circle cx="${px}" cy="${py}" r="13" fill="none" stroke="#3fe394" stroke-width="4"/>
+        <circle cx="${px}" cy="${py}" r="4" fill="#3fe394"/>`;
+    }
+    host.innerHTML = `<svg viewBox="${G.vb[o.crop]}" class="scene-svg photo" aria-hidden="true">
+      <defs>
+        <clipPath id="${id}-fill"><path class="c-fill" d="M0 0"/></clipPath>
+        <clipPath id="${id}-spill"><ellipse cx="${G.spill.cx}" cy="${G.spill.cy}" rx="${G.spill.rx}" ry="${G.spill.ry}"/></clipPath>
+        <clipPath id="${id}-below"><path d="${below}"/></clipPath>
+        <radialGradient id="${id}-port"><stop offset="0" stop-color="#4be6a0" stop-opacity=".85"/><stop offset="1" stop-color="#4be6a0" stop-opacity="0"/></radialGradient>
+        <radialGradient id="${id}-portw"><stop offset="0" stop-color="#e8fff3" stop-opacity=".5"/><stop offset="1" stop-color="#e8fff3" stop-opacity="0"/></radialGradient>
+      </defs>
+      <image href="${src('vazio')}" width="${G.w}" height="${G.h}"/>
+      <g class="fx-charging" clip-path="url(#${id}-below)"><image href="${src('cheio')}" width="${G.w}" height="${G.h}" clip-path="url(#${id}-spill)" class="breathe"/></g>
+      <image href="${src('cheio')}" width="${G.w}" height="${G.h}" clip-path="url(#${id}-fill)"/>
+      <g>${cells}</g>
+      <g clip-path="url(#${id}-fill)" class="fx-charging"><path class="shim" d="M0 0" fill="#fff" fill-opacity=".2"/></g>
+      <g class="pk-limit-g"><path class="beyond" d="M0 0" fill="#000" fill-opacity=".38"/></g>
+      <path class="lead" d="M0 0" stroke="#d8ffe9" stroke-width="5" stroke-linecap="round"/>
+      <g class="pk-limit-g">
+        <path class="lim" d="M0 0" stroke="#fff" stroke-opacity=".85" stroke-width="4" stroke-dasharray="14 10"/>
+        <path class="tri" d="M0 0" fill="#fff" fill-opacity=".92"/>
+        <text class="lim-t" font-size="42" font-weight="600" fill="#fff" fill-opacity=".75">80%</text>
+      </g>
+      ${energy}
+    </svg>`;
+    const svg = host.querySelector('svg'), q = s => svg.querySelector(s);
+    const el = { cf: q('.c-fill'), lead: q('.lead'), shim: q('.shim'), lim: q('.lim'), tri: q('.tri'), limT: q('.lim-t'), beyond: q('.beyond'), plug: q('.plug'), ghost: q('.ghost'), cable: q('.cable'), cableO: q('.cable-o') };
+    const api = { svg, f: 0, raf: 0, el, guide, approach };
+    api.set = f => {
+      api.f = f;
+      el.cf.setAttribute('d', f > .004 ? region(0, f) : 'M0 0');
+      el.lead.setAttribute('d', f > .004 && f < .998 ? edge(f) : 'M0 0');
+    };
+    api.tween = (to, dur = 700, onFrame) => {
+      cancelAnimationFrame(api.raf);
+      const from = api.f, t0 = performance.now();
+      const step = now => {
+        const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+        api.set(from + (to - from) * e);
+        onFrame && onFrame(api.f);
+        if (k < 1) api.raf = requestAnimationFrame(step);
+      };
+      api.raf = requestAnimationFrame(step);
+    };
+    api.setLimit = l => {
+      svg.querySelectorAll('.pk-limit-g').forEach(n => n.style.display = l == null ? 'none' : '');
+      if (l == null) return;
+      el.lim.setAttribute('d', edge(l));
+      el.beyond.setAttribute('d', region(l, 1));
+      const [x, y] = H(l, 1), y0 = y + G.frame + 10;
+      el.tri.setAttribute('d', `M${(x - 22).toFixed(1)} ${(y0 + 30).toFixed(1)} L${(x + 22).toFixed(1)} ${(y0 + 30).toFixed(1)} L${x.toFixed(1)} ${y0.toFixed(1)} Z`);
+      el.limT.setAttribute('x', (x + 32).toFixed(1));
+      el.limT.setAttribute('y', (y0 + 31).toFixed(1));
+      el.limT.textContent = Math.round(l * 100) + '%';
+    };
+    api.placePlug = p => {
+      if (!el.plug) return;
+      el.plug.setAttribute('transform', `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})`);
+      const cx = (EXITP.x + p.x) / 2, cy = Math.max(EXITP.y, p.y) + 40;
+      const d = `M${EXITP.x} ${EXITP.y} Q ${cx.toFixed(1)} ${cy.toFixed(1)} ${p.x.toFixed(1)} ${(p.y + 12).toFixed(1)}`;
+      el.cable.setAttribute('d', d);
+      el.cableO.setAttribute('d', d);
+    };
+    // brilho que corre dentro da parte cheia, seguindo a perspectiva do pack
+    api.tick = now => {
+      if (api.f < .02) { el.shim.setAttribute('d', 'M0 0'); return; }
+      const t = (now % 2600) / 2600, w = .09, s = -w + t * (api.f + w);
+      el.shim.setAttribute('d', region(Math.max(0, s), Math.min(api.f, s + w)));
+    };
+    return api;
+  }
+
+  /* ============ util ============ */
+  const qb = (a, c, b, t) => { const u = 1 - t; return { x: u * u * a.x + 2 * u * t * c.x + t * t * b.x, y: u * u * a.y + 2 * u * t * c.y + t * t * b.y }; };
+  const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  const nf1 = n => n.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const brl = n => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const dur = m => m < 60 ? `${Math.max(1, Math.round(m))} <small>min</small>` : `${Math.floor(m / 60)}h${String(Math.round(m % 60)).padStart(2, '0')}`;
+  const $ = s => document.querySelector(s);
+
+  document.querySelectorAll('[data-sb]').forEach(n => n.innerHTML =
+    '<svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>' +
+    '<svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 11.6 5.6 9.2a3.4 3.4 0 0 1 4.8 0L8 11.6ZM2.8 6.4a7.4 7.4 0 0 1 10.4 0l-1.4 1.4a5.4 5.4 0 0 0-7.6 0L2.8 6.4ZM0 3.6a11.3 11.3 0 0 1 16 0l-1.4 1.4a9.3 9.3 0 0 0-13.2 0L0 3.6Z"/></svg>' +
+    '<svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.6" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2" y="2" width="20" height="9" rx="2.2"/><path d="M25 4.5v4a2 2 0 0 0 0-4Z" fill-opacity=".4"/></svg>');
+
+  /* ============ estado ============ */
+  const START = 23, CAP = 60, CAP_BRL = 60;
+  const state = { soc: 68, limit: 80, mode: 'dc', style: 'a2' };
+
+  let s1, s2, photoComp = null;
+  const tickers = () => [s1, s2, photoComp].filter(Boolean);
+  function buildScenes() {
+    const photo = state.style !== 'vetor';
+    if (photo) {
+      s1 = createPhotoScene($('#scene1'), { id: 'p1', style: state.style, variant: 'plug', crop: 's1' });
+      s2 = createPhotoScene($('#scene2'), { id: 'p2', style: state.style, variant: 'charging', crop: 's2' });
+    } else {
+      s1 = createScene($('#scene1'), { id: 's1', vb: '112 14 300 150', variant: 'plug', charger: true });
+      s2 = createScene($('#scene2'), { id: 's2', vb: '18 24 344 140', variant: 'charging' });
+    }
+    s1.setLimit(null); s1.set(0); s1.placePlug(s1.guide.a);
+    s2.svg.classList.add('is-charging');
+    document.querySelectorAll('.screen').forEach(s => s.classList.toggle('photo', photo));
+    [s1, s2].forEach(s => s.svg.classList.toggle('no-interior', !$('#optInterior').checked));
+    $('#optInterior').closest('.sw').style.opacity = photo ? .4 : 1;
+  }
+  buildScenes();
+
+  /* ---- tela 2 ---- */
+  const powerAt = soc => soc < 50 ? 78 : Math.max(16, 78 - (soc - 50) * 2.2);
+  function renderS2(socShown) {
+    const scr = $('#screen2');
+    const dc = state.mode === 'dc';
+    const soc = socShown;
+    const complete = dc && soc >= state.limit - 0.01;
+    scr.classList.toggle('ac', !dc);
+    scr.classList.toggle('complete', complete);
+    s2.svg.classList.toggle('is-complete', complete);
+    s2.svg.classList.toggle('is-scan', !dc);
+    $('#s2title').textContent = complete ? 'Recarga concluída' : 'Carregando';
+    $('#s2plug').textContent = dc ? 'CCS2' : 'Tipo 2';
+    let kwh, power, km, elapsed, price;
+    if (dc) {
+      kwh = Math.max(0, soc - START) / 100 * CAP;
+      power = complete ? 0 : powerAt(soc);
+      price = 1.3;
+      elapsed = kwh / 62 * 60;
+      const remain = Math.max(0, state.limit - soc) / 100 * CAP;
+      const minLeft = remain / ((powerAt(soc) + powerAt(state.limit)) / 2) * 60;
+      $('#s2big').textContent = Math.floor(soc);
+      $('#s2unit').textContent = '%';
+      $('#s2sub').innerHTML = complete
+        ? `Limite de ${state.limit}% atingido`
+        : `<b>~${Math.max(1, Math.round(minLeft))} min</b> para ${state.limit === 100 ? 'completar' : 'chegar em ' + state.limit + '%'}`;
+      $('#m2').innerHTML = `${nf1(kwh)} <small>kWh</small>`;
+      $('#m2l').textContent = 'Energia';
+      $('#costFoot').textContent = `Encerra sozinha em ${state.limit}% ou ${brl(CAP_BRL)}`;
+      $('#notifyLabel').textContent = `Avisar quando chegar em ${state.limit}%`;
+    } else {
+      kwh = soc / 100 * 30;
+      power = 7.2;
+      price = 1.1;
+      elapsed = kwh / 7.2 * 60;
+      $('#s2big').textContent = nf1(kwh);
+      $('#s2unit').textContent = 'kWh';
+      $('#s2sub').innerHTML = `entregues em ${dur(elapsed).replace(/<\/?small>/g, '')}`;
+      $('#m2').innerHTML = `<small>R$</small> ${price.toFixed(2).replace('.', ',')}`;
+      $('#m2l').textContent = 'Tarifa/kWh';
+      $('#costFoot').textContent = `Encerra sozinha ao atingir ${brl(CAP_BRL)}`;
+      $('#notifyLabel').textContent = 'Avisar quando encerrar';
+    }
+    km = kwh * 6.3;
+    const cost = kwh * price;
+    $('#m1').innerHTML = `${power ? (power % 1 ? nf1(power) : Math.round(power)) : '0'} <small>kW</small>`;
+    $('#m3').innerHTML = `+${Math.round(km)} <small>km</small>`;
+    $('#m4').innerHTML = dur(elapsed);
+    $('#tariff').textContent = `${brl(price)}/kWh`;
+    $('#costVal').textContent = brl(cost);
+    $('#costBar').style.width = Math.min(100, cost / CAP_BRL * 100) + '%';
+  }
+
+  function applyS2(animate) {
+    const dc = state.mode === 'dc';
+    s2.setLimit(dc ? state.limit / 100 : null);
+    const target = dc ? state.soc / 100 : 0;
+    if (animate) s2.tween(target, 700, f => renderS2(dc ? f * 100 : state.soc));
+    else { s2.set(target); renderS2(state.soc); }
+    $('#socOut').textContent = dc ? Math.round(state.soc) + '%' : nf1(state.soc / 100 * 30) + ' kWh';
+  }
+  applyS2(false);
+
+  /* ---- controles ---- */
+  const soc = $('#soc');
+  soc.addEventListener('input', () => { clearInterval(simT); state.soc = +soc.value; applyS2(false); });
+  const segs = (sel, fn) => $(sel).addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    $(sel).querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    fn(b.dataset.v);
+  });
+  segs('#limitSeg', v => { state.limit = +v; if (state.soc > state.limit) { state.soc = state.limit; soc.value = state.soc; } applyS2(false); });
+  segs('#modeSeg', v => { state.mode = v; applyS2(true); });
+  segs('#styleSeg', v => { state.style = v; buildScenes(); resetS1(); applyS2(false); });
+  $('#optInterior').addEventListener('change', e => document.querySelectorAll('.scene-svg').forEach(s => s.classList.toggle('no-interior', !e.target.checked)));
+  $('#optAnim').addEventListener('change', e => document.body.classList.toggle('no-anim', !e.target.checked));
+
+  let simT = 0;
+  $('#btnCharge').addEventListener('click', () => {
+    if (state.mode !== 'dc') $('#modeSeg [data-v=dc]').click();
+    clearInterval(simT);
+    if (state.soc >= state.limit - 1) state.soc = Math.max(START, state.limit - 16);
+    applyS2(false);
+    simT = setInterval(() => {
+      state.soc = Math.min(state.limit, state.soc + .25);
+      soc.value = state.soc;
+      applyS2(false);
+      if (state.soc >= state.limit) clearInterval(simT);
+    }, 60);
+  });
+
+  /* ---- tela 1 ---- */
+  let s1Mode = 'guide';
+  const steps = [...document.querySelectorAll('#s1steps .st')];
+  const setSteps = arr => steps.forEach((s, i) => { s.className = 'st ' + (arr[i] || ''); });
+  const detect = $('#s1detect'), status = $('#s1status');
+
+  function s1Loop(now) {
+    const g = s1.el.ghost;
+    if (s1Mode === 'guide' && !document.body.classList.contains('no-anim')) {
+      const T = 2800, t = (now % T) / T;
+      let k, a;
+      if (t < .55) { k = ease(t / .55); a = Math.min(1, t / .08); }
+      else if (t < .8) { k = 1; a = 1; }
+      else { k = 1; a = 1 - (t - .8) / .2; }
+      const p = qb(s1.guide.a, s1.guide.c, s1.approach, k);
+      g.setAttribute('transform', `translate(${p.x.toFixed(2)} ${p.y.toFixed(2)})`);
+      g.setAttribute('opacity', (a * .7).toFixed(3));
+    } else g.setAttribute('opacity', 0);
+    if (!document.body.classList.contains('no-anim')) tickers().forEach(s => s.tick && s.tick(now));
+    requestAnimationFrame(s1Loop);
+  }
+  requestAnimationFrame(s1Loop);
+
+  function connect() {
+    if (s1Mode !== 'guide') return;
+    s1Mode = 'moving';
+    const t0 = performance.now(), D = 1000;
+    const step = now => {
+      const k = Math.min(1, (now - t0) / D);
+      s1.placePlug(qb(s1.guide.a, s1.guide.c, s1.guide.b, ease(k)));
+      if (k < 1) requestAnimationFrame(step); else connected();
+    };
+    requestAnimationFrame(step);
+  }
+  function connected() {
+    s1Mode = 'connected';
+    s1.svg.classList.add('is-connected', 'wake');
+    detect.classList.add('ok');
+    status.textContent = 'Carro conectado · lendo a bateria…';
+    setSteps(['done', 'done', 'current']);
+    setTimeout(() => {
+      s1.svg.classList.remove('wake');
+      s1.tween(START / 100, 900);
+      status.textContent = `Bateria em ${START}% · iniciando a recarga`;
+    }, 1150);
+    setTimeout(resetS1, 5600);
+  }
+  function resetS1() {
+    s1.svg.classList.remove('is-connected', 'wake');
+    s1.set(0);
+    s1.placePlug(s1.guide.a);
+    detect.classList.remove('ok');
+    status.textContent = 'Aguardando o carro ser conectado…';
+    setSteps(['done', 'current', '']);
+    s1Mode = 'guide';
+  }
+  $('#btnConnect').addEventListener('click', connect);
+
+  let left = 120;
+  setInterval(() => {
+    left = left <= 0 ? 120 : left - 1;
+    $('#s1timer').textContent = `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`;
+    $('#s1bar').style.width = (left / 120 * 100) + '%';
+  }, 1000);
+
+  /* ---- anatomia ---- */
+  photoComp = createPhotoScene($('#photoComposite'), { id: 'pc', style: 'a2', variant: 'charging', crop: 's2' });
+  photoComp.svg.classList.add('is-charging');
+  photoComp.set(.68); photoComp.setLimit(.8);
+  const LAYERS = [
+    { layers: ['ground', 'body'], t: '1 · Carroceria fantasma', d: 'Contorno, vidros e vincos. Preenchimento translúcido em gradiente, sem textura.', k: 'static', p: 'Estático' },
+    { layers: ['ground', 'far', 'interior', 'wheels'], t: '2 · Raio-x e rodas', d: 'Rodas do lado de longe e bancos aparecem através da carroceria: é o que dá a sensação de 3D.', k: 'static', p: 'Estático' },
+    { layers: ['pack'], t: '3 · Bateria no assoalho', d: 'Face de cima e lateral, em 10 módulos. O preenchimento e o limite vêm da %.', k: 'anim', p: 'Animado · 2 paths', fill: .68, lim: .8 },
+    { layers: ['glow', 'energy'], t: '4 · Energia', d: 'Porta com brilho, fluxo no cabo e anéis no chão. Só aparece carregando.', k: 'anim', p: 'Loops' }
+  ];
+  const lw = $('#layers');
+  LAYERS.forEach((L, i) => {
+    const div = document.createElement('div');
+    div.className = 'layer';
+    div.innerHTML = `<div class="ls"></div><h4>${L.t}</h4><p>${L.d}</p><span class="pill ${L.k}">${L.p}</span>`;
+    lw.appendChild(div);
+    const sc = createScene(div.querySelector('.ls'), { id: 'a' + i, vb: '14 22 352 142', variant: 'charging', layers: L.layers });
+    sc.svg.classList.add('is-charging');
+    if (L.fill) { sc.set(L.fill); sc.setLimit(L.lim); }
+  });
+  const comp = createScene($('#compositeScene'), { id: 'ac', vb: '14 12 396 150', variant: 'charging', charger: true });
+  comp.svg.classList.add('is-charging');
+  comp.set(.68); comp.setLimit(.8);
+})();
+</script>
+</body>
+</html>
