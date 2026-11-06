@@ -1,0 +1,15 @@
+{
+  "nome": "Site Mob premium",
+  "descricao": "O site para donos de eletroposto migrarem para a iGreen, em três versões: a primeira, a Urbana e a \"Além da recarga\", com o simulador de receita das conexões (energia, seguro, telefonia e rede de recarga).",
+  "tipo": "landing",
+  "atualizado": "2026-11-06",
+  "paginas": [
+    { "nome": "Além da recarga (v3)", "arquivo": "v3/index.html" }
+  ],
+  "versoes": [
+    { "nome": "v3 · Além da recarga", "arquivo": "v3/index.html", "data": "2026-10-05" },
+    { "nome": "v2 · Urbana", "arquivo": "v2/index.html", "data": "2026-10-05" },
+    { "nome": "v1 · Seu ponto. Novas conexões.", "arquivo": "v1/index.html", "data": "2026-10-05" }
+  ],
+  "tags": ["site", "eletroposto", "migração", "simulador", "conexões"]
+}
