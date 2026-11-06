@@ -6,8 +6,8 @@
 
 ## Estado atual
 
-- O projeto Remotion está completo. O original não tinha nenhum vídeo renderizado: o `../primeira-recarga.mp4` foi renderizado na migração, a partir deste código e sem mudar nada nele, e o `../poster.webp` é o quadro 75 da abertura.
-- `../index.html` é a página do hub que toca o vídeo. É o único arquivo novo da migração, junto com o MP4 e o pôster.
+- O projeto Remotion está completo. O original não tinha nenhum vídeo renderizado: o `../assets/primeira-recarga.mp4` foi renderizado na migração, a partir deste código e sem mudar nada nele, e o `../assets/poster.webp` é o quadro 75 da abertura.
+- `../index.html` é a página do hub que toca o vídeo. É o único arquivo novo da migração, junto com o MP4 e o pôster, que ficam em `../assets/`.
 - O que não sei pelos arquivos: para quem o vídeo foi apresentado e se ainda vai mudar. Pergunte ao usuário antes de continuar.
 
 ## Decisões tomadas
@@ -28,13 +28,13 @@ Pelo README do original:
 cd builder
 npm install
 npm run studio                                   # abre o Remotion Studio para ajustar textos, tempos e cores
-npx remotion render src/index.ts PrimeiraRecarga ../primeira-recarga.mp4
+npx remotion render src/index.ts PrimeiraRecarga ../assets/primeira-recarga.mp4
 ```
 
 Na migração, o render foi feito com o Chrome instalado (`--browser-executable="C:/Program Files/Google/Chrome/Application/chrome.exe"`) e `--bundle-cache=false`, e saiu com 30 MB. Para o hub, o MP4 foi comprimido de novo, sem mudar resolução nem duração (1920×1080, 2min25), e ficou com 11 MB:
 
 ```sh
-ffmpeg -i video-renderizado.mp4 -c:v libx264 -crf 25 -preset slow -pix_fmt yuv420p -movflags +faststart -c:a aac -b:a 96k ../primeira-recarga.mp4
+ffmpeg -i video-renderizado.mp4 -c:v libx264 -crf 25 -preset slow -pix_fmt yuv420p -movflags +faststart -c:a aac -b:a 96k ../assets/primeira-recarga.mp4
 ```
 
 O pôster é o quadro 75 (`npx remotion still src/index.ts PrimeiraRecarga poster.png --frame=75`), em WebP de 1280 px. O vídeo tem que continuar comprimido e curto (ORQUESTRADOR.md, seção 7: arquivo até 50 MB, site inteiro até 1 GB).
@@ -46,7 +46,7 @@ O pôster é o quadro 75 (`npx remotion still src/index.ts PrimeiraRecarga poste
 | Arquivo ou pasta | O que é |
 |---|---|
 | [`../index.html`](../index.html) | A página que toca o vídeo |
-| `../primeira-recarga.mp4` | O vídeo renderizado |
+| `../assets/primeira-recarga.mp4` | O vídeo renderizado |
 | [`src/data.ts`](src/data.ts) | Todo o conteúdo: momentos, falas, dores e curvas |
 | [`src/Root.tsx`](src/Root.tsx) | A montagem das cenas e as transições |
 | [`src/scenes/`](src/scenes/) | Cenas de abertura, momento e fechamento |
