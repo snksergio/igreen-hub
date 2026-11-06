@@ -1,0 +1,41 @@
+{
+  "_leia": "Coordenadas no ESPACO LOGICO de cada imagem (carros: 1600 px de largura; carregadores: 1400 px), independentes da resolucao do arquivo (480/960/1440 ou @1x/@2x/@3x). Para desenhar, multiplique por (largura exibida / largura logica). Explicacao completa em IMPLEMENTACAO.md.",
+  "carros": {
+    "m25": {
+      "nome": "Minimal SUV",
+      "arquivo": "carro-m25-vazio",
+      "espacoLogico": [1600, 788],
+      "pack": [[574.9, 335.3], [1054.6, 335.3], [1067.8, 436.6], [558.5, 438]],
+      "blocos": 8,
+      "carregador": "minisuv"
+    },
+    "m27": {
+      "nome": "Minimal raio-x",
+      "arquivo": "carro-m27-vazio",
+      "espacoLogico": [1600, 756],
+      "pack": [[568.3, 329.6], [1043.6, 329.6], [1078, 411.3], [525.5, 411.3]],
+      "blocos": 11,
+      "carregador": "mini"
+    }
+  },
+  "_pack": "4 cantos da face de cima da bateria, nesta ordem: longe-frente, longe-tras, perto-tras, perto-frente (na imagem: sup. esquerdo, sup. direito, inf. direito, inf. esquerdo). A frente do carro fica a esquerda: 0% da bateria na borda esquerda, 100% na direita.",
+  "carregadores": {
+    "minisuv": {
+      "arquivos": { "solto": "carregador-minisuv-solto", "plugado": "carregador-minisuv-plugado" },
+      "espacoLogico": [1400, 974],
+      "porta": [451, 404.8],
+      "suporte": [967.8, 420]
+    },
+    "mini": {
+      "arquivos": { "solto": "carregador-mini-solto", "plugado": "carregador-mini-plugado" },
+      "espacoLogico": [1400, 974],
+      "porta": [451, 404.8],
+      "suporte": [967.8, 420]
+    }
+  },
+  "bateria": {
+    "espessuraFrenteBarra3D": 16,
+    "folgaEntreBlocos": 0.014,
+    "afastamentoRotuloEmbaixo": 24
+  }
+}

@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recarga EV · Fluxo (5 moldes)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --page: #e7eae8;
+    --ink: #121614;
+    --ink-2: #444c48;
+    --ink-3: #6a726e;
+    --hair: rgba(18, 22, 20, .1);
+    --card: #fbfcfb;
+    --brand: #338449;
+    --brand-ink: #2d7641;
+    /* mais escuro em cima, abrindo para o verde embaixo; escuro e pouco saturado para o #338449 dos botões sobressair (≥ 3,7:1) */
+    --verde-bg: linear-gradient(180deg, #020705 0%, #06120c 45%, #0c1f16 100%);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: Geist, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  .wrap { max-width: 1260px; margin: 0 auto; padding: 48px 24px 120px; }
+
+  .page-head { max-width: 760px; margin: 0 auto 44px; text-align: center; }
+  .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--brand-ink); }
+  .page-head h1 { font-size: 36px; line-height: 1.1; letter-spacing: -.03em; margin: 10px 0 12px; font-weight: 600; }
+  .page-head p { font-size: 16px; line-height: 1.55; color: var(--ink-2); margin: 0; }
+  .page-head a { color: var(--brand-ink); }
+  .hex { font-family: 'Geist Mono', ui-monospace, monospace; font-size: .92em; }
+
+  /* ---------- stage ---------- */
+  .stage { display: flex; gap: 36px; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
+  .phones { display: flex; flex-direction: column; }
+  .theme-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 20px; font-size: 14px; color: var(--ink-2); }
+  .theme-head b { font-size: 17px; color: var(--ink); font-weight: 600; letter-spacing: -.01em; }
+  .swatch { width: 20px; height: 20px; border-radius: 7px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .14); flex: none; background: var(--verde-bg); }
+  .t-branco .swatch { background: #fff; }
+  .pair { display: flex; gap: 36px; justify-content: center; flex-wrap: wrap; }
+  .phone-col { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .phone-cap { font-size: 13px; color: var(--ink-2); display: flex; gap: 8px; align-items: center; }
+  .phone-cap b { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: #fff; font-size: 12px; display: inline-grid; place-items: center; }
+  .phone {
+    width: 410px; height: 864px; padding: 10px; border-radius: 60px;
+    background: #050706;
+    box-shadow: 0 40px 80px -20px rgba(16, 32, 24, .35), 0 12px 24px -8px rgba(16, 32, 24, .2), inset 0 0 0 1.5px #2a302d, inset 0 0 0 5px #0c0f0e;
+    position: relative;
+  }
+  .island { position: absolute; top: 21px; left: 50%; transform: translateX(-50%); width: 122px; height: 35px; border-radius: 20px; background: #000; z-index: 20; }
+
+  /* ---------- app screen: cores por tema ---------- */
+  .t-verde .screen {
+    --bg: var(--verde-bg);
+    --s1: rgba(255, 255, 255, .06);
+    --s2: rgba(255, 255, 255, .09);
+    --line: rgba(214, 240, 222, .12);
+    --line-2: rgba(214, 240, 222, .22);
+    --tx: #f2f7f3;
+    --tx2: rgba(242, 247, 243, .76);
+    --tx3: rgba(242, 247, 243, .6);
+    --on-brand: #fff;
+    --accent: #9ee3b1;
+    --tag-bg: rgba(158, 227, 177, .12);
+    --tag-bd: rgba(158, 227, 177, .3);
+    --tag-tx: #9ee3b1;
+    --track: rgba(242, 247, 243, .12);
+    --track-fill: rgba(242, 247, 243, .62);
+    --bar-fill: linear-gradient(90deg, #338449, #9ee3b1);
+    --home: rgba(242, 247, 243, .9);
+    --pulse: #e8fff3;
+    --btn-hi: rgba(255, 255, 255, .18);
+    --btn-shadow: 0 8px 18px -10px rgba(0, 0, 0, .7);
+    --quiet-bg: rgba(51, 132, 73, .16);
+    --quiet-bd: rgba(51, 132, 73, .5);
+  }
+  .t-branco .screen {
+    --bg: #ffffff;
+    --s1: #f3f6f4;
+    --s2: #eaf0ec;
+    --line: #e2e8e4;
+    --line-2: #d3dcd6;
+    --tx: #102016;
+    --tx2: #46564b;
+    --tx3: #5d6c62;
+    --on-brand: #fff;
+    --accent: #2d7641;
+    --tag-bg: #e8f3eb;
+    --tag-bd: #cfe6d6;
+    --tag-tx: #2a6d3c;
+    --track: #e6ebe8;
+    --track-fill: #5d6c62;
+    --bar-fill: linear-gradient(90deg, #338449, #5bb173);
+    --home: #102016;
+    --pulse: #5d6c62;
+    --btn-hi: rgba(255, 255, 255, .22);
+  }
+  .screen {
+    width: 390px; height: 844px; border-radius: 50px; overflow: hidden; position: relative;
+    display: flex; flex-direction: column;
+    color: var(--tx);
+    background: var(--bg);
+    font-family: Geist, ui-sans-serif, system-ui, sans-serif;
+  }
+  .num { font-variant-numeric: tabular-nums; }
+  .statusbar { height: 50px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 6px 30px 0 40px; font-size: 16px; font-weight: 600; }
+  .statusbar .sb-icons { display: flex; gap: 6px; align-items: center; fill: var(--tx); color: var(--tx); }
+  .topbar { height: 52px; flex: none; display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; padding: 0 16px; gap: 8px; }
+  .icon-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--s1); display: grid; place-items: center; }
+  .icon-btn svg { width: 18px; height: 18px; stroke: var(--tx); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .topbar-mid { text-align: center; min-width: 0; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px; border-radius: 999px; background: var(--s1); border: 1px solid var(--line); font-size: 13px; color: var(--tx2); white-space: nowrap; }
+  .chip .d { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .tb-title { font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
+  .tb-sub { font-size: 12px; color: var(--tx3); margin-top: 2px; white-space: nowrap; }
+  .live { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); position: relative; }
+  .live::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 1.5px solid var(--accent); animation: live 1.8s ease-out infinite; }
+  @keyframes live { from { transform: scale(.5); opacity: .9 } to { transform: scale(1.4); opacity: 0 } }
+
+  .body { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; display: flex; flex-direction: column; }
+  .body::-webkit-scrollbar { display: none; }
+  .bottom { flex: none; padding: 12px 16px 38px; display: flex; flex-direction: column; gap: 12px; }
+  .home { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; border-radius: 3px; background: var(--home); }
+
+  .btn { height: 56px; border-radius: 18px; border: 0; width: 100%; font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .btn-primary { background: var(--brand); color: var(--on-brand); box-shadow: inset 0 1px 0 var(--btn-hi), var(--btn-shadow, 0 0 0 transparent); }
+  .btn-quiet { background: var(--quiet-bg, var(--s2)); color: var(--tx); border: 1px solid var(--quiet-bd, var(--line-2)); }
+  .btn svg { width: 16px; height: 16px; }
+  .card { background: var(--s1); border: 1px solid var(--line); border-radius: 20px; }
+
+  /* tela 1 */
+  .s1-head { text-align: center; margin: 16px 28px 0; }
+  .s1-head h1 { font-size: 24px; line-height: 1.2; letter-spacing: -.02em; margin: 0; font-weight: 600; }
+  .s1-head p { font-size: 15px; line-height: 1.45; color: var(--tx2); margin: 8px auto 0; max-width: 310px; }
+  .s1-head p b { color: var(--tx); font-weight: 600; }
+  .scene { position: relative; width: 100%; flex: none; }
+  .art-wrap { position: relative; }
+  .art svg { display: block; width: 100%; height: auto; overflow: visible; }
+  /* rótulo do limite numa camada própria, fora da soma com o fundo, para o halo escuro funcionar */
+  .art-wrap > .lbl-layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  /* renders de fundo escuro na tela verde: o fundo já convertido em preto some ao somar a luz (screen) */
+  .blend > .art-wrap > .art { mix-blend-mode: screen; }
+  .sc1 { margin-top: 12px; }
+  .sc1 .art { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 24%); mask-image: linear-gradient(90deg, transparent 0, #000 24%); }
+  .sc1.cena-carregador { margin-top: 4px; }
+  .sc1.cena-carregador .art { -webkit-mask-image: none; mask-image: none; }
+  .detect { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px; color: var(--tx2); margin-top: 4px; min-height: 20px; }
+  .detect .pd { width: 8px; height: 8px; border-radius: 50%; background: var(--pulse); position: relative; flex: none; }
+  .detect .pd::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 1.5px solid var(--pulse); animation: live 1.6s ease-out infinite; }
+  .detect.ok .pd, .detect.ok .pd::after { background: var(--accent); border-color: var(--accent); }
+  .detect.ok { color: var(--tx); }
+  .connector { margin: 20px 16px 0; padding: 14px 16px; display: grid; grid-template-columns: 48px 1fr auto; gap: 14px; align-items: center; }
+  .conn-ico { width: 48px; height: 48px; border-radius: 14px; background: var(--s2); border: 1px solid var(--line); display: grid; place-items: center; color: var(--tx); }
+  .conn-t { font-size: 15px; font-weight: 600; }
+  .conn-s { font-size: 13px; color: var(--tx3); margin-top: 2px; }
+  .tag { font-size: 12px; font-weight: 600; color: var(--tag-tx); background: var(--tag-bg); border: 1px solid var(--tag-bd); height: 26px; padding: 0 10px; border-radius: 999px; display: inline-flex; align-items: center; }
+  .help { margin: 12px 16px 0; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; height: 48px; font-size: 14px; color: var(--tx2); border-radius: 16px; border: 1px dashed var(--line-2); background: transparent; width: calc(100% - 32px); text-align: left; }
+  .help svg { width: 16px; height: 16px; stroke: var(--tx3); fill: none; stroke-width: 2; }
+  .timer { display: flex; flex-direction: column; gap: 8px; padding: 0 4px; }
+  .timer-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--tx3); }
+  .timer-row b { color: var(--tx); font-weight: 600; font-family: 'Geist Mono', ui-monospace, monospace; }
+  .bar { height: 4px; border-radius: 2px; background: var(--track); overflow: hidden; }
+  .bar i { display: block; width: 100%; height: 100%; border-radius: 2px; background: var(--track-fill); transform-origin: left center; transition: transform .9s linear; }
+
+  /* tela 2 */
+  .hero { text-align: center; margin-top: 18px; flex: none; }
+  .big { font-size: 54px; line-height: 1; font-weight: 600; letter-spacing: -.04em; display: inline-flex; align-items: baseline; gap: 3px; }
+  .big small { font-size: 22px; font-weight: 500; color: var(--tx2); letter-spacing: -.02em; }
+  .screen.ac .big small { margin-left: 6px; }
+  .hero-sub { font-size: 14px; color: var(--tx2); margin-top: 10px; min-height: 20px; }
+  .hero-sub b { color: var(--accent); font-weight: 600; }
+  .ac-chip { display: none; margin-top: 10px; }
+  .screen.ac .ac-chip { display: inline-flex; }
+  .ac-chip svg { width: 14px; height: 14px; stroke: var(--tx3); fill: none; stroke-width: 2; }
+  .metrics { margin: 2px 16px 0; display: grid; grid-template-columns: repeat(4, 1fr); flex: none; }
+  .metric { text-align: center; padding: 10px 2px; }
+  .metric + .metric { border-left: 1px solid var(--line); }
+  .metric b { display: block; font-size: 17px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
+  .metric b small { font-size: 12px; font-weight: 500; color: var(--tx3); margin-left: 1px; }
+  .metric span { display: block; font-size: 12px; color: var(--tx3); margin-top: 4px; }
+  .cost { margin: 16px 16px 0; padding: 16px 16px 14px; flex: none; }
+  .row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--tx2); }
+  .cost-val { font-size: 30px; font-weight: 600; letter-spacing: -.03em; margin: 6px 0 12px; }
+  .cost .bar { height: 6px; border-radius: 3px; }
+  .cost .bar i { background: var(--bar-fill); border-radius: 3px; transition: transform .4s ease; }
+  .cost-foot { margin-top: 10px; font-size: 13px; color: var(--tx3); }
+  .link { background: none; border: 0; padding: 0; color: var(--accent); font-weight: 600; font-size: 13px; }
+  .list { margin: 12px 16px 16px; flex: none; }
+  .li { display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 16px; font-size: 15px; }
+  .li + .li { border-top: 1px solid var(--line); }
+  .li > svg { width: 18px; height: 18px; stroke: var(--tx2); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .li .grow { flex: 1; }
+  .li .chev { width: 16px; height: 16px; stroke: var(--tx3); }
+  .toggle { width: 46px; height: 28px; border-radius: 14px; background: var(--brand); position: relative; border: 0; flex: none; }
+  .toggle::after { content: ''; position: absolute; top: 3px; left: 21px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .3); }
+  .screen .when-complete { display: none; }
+  .screen.complete .when-complete { display: flex; }
+  .screen.complete .when-charging { display: none; }
+  .screen.complete .live::after { display: none; }
+
+  /* ---------- estados da cena ---------- */
+  .scene-svg text { font-family: Geist, ui-sans-serif, system-ui, sans-serif; }
+  .scene-svg .cell { fill: #3fe394; opacity: 0; }
+  .scene-svg.is-scan .cell { animation: cellScan 1.9s ease-in-out infinite; animation-delay: calc(var(--i) * 110ms); }
+  .scene-svg.wake .cell { animation: cellScan 1s ease-in-out 1 both; animation-delay: calc(var(--i) * 55ms); }
+  @keyframes cellScan { 0%, 100% { opacity: 0 } 30% { opacity: .5 } 60% { opacity: 0 } }
+  .scene-svg .flowp { stroke-dasharray: 6 24; animation: flowp .8s linear infinite; }
+  @keyframes flowp { to { stroke-dashoffset: 30 } }
+  .scene-svg .marchp { stroke-dasharray: 10 14; animation: marchp 1s linear infinite; }
+  @keyframes marchp { to { stroke-dashoffset: -24 } }
+  .scene-svg .breathe { animation: breathe 2.8s ease-in-out infinite; }
+  @keyframes breathe { 0%, 100% { opacity: .55 } 50% { opacity: 1 } }
+  .scene-svg .ping { transform-box: fill-box; transform-origin: center; animation: ping 1.7s ease-out infinite; }
+  @keyframes ping { 0% { transform: scale(1); opacity: .9 } 100% { transform: scale(2.8); opacity: 0 } }
+  .scene-svg .lead { animation: breathe 1.4s ease-in-out infinite; }
+  .scene-svg:not(.is-charging) .fx-charging { display: none; }
+  .scene-svg.is-complete .fx-charging { display: none; }
+  .scene-svg.is-complete .lead { animation: none; opacity: .5; }
+  .scene-svg:not(.is-connected) .fx-connected { display: none; }
+  .scene-svg.is-connected .fx-guide { display: none; }
+  .scene-svg.is-scan .pk-limit-g { display: none; }
+  .scene-svg .plugado { opacity: 0; transition: opacity .6s ease; }
+  .scene-svg.is-connected .plugado { opacity: 1; }
+  .scene-svg.is-connected .plug { opacity: 0; }
+  .no-anim .scene-svg *, .no-anim .live::after, .no-anim .pd::after { animation: none !important; }
+  @media (prefers-reduced-motion: reduce) { .scene-svg *, .live::after, .pd::after { animation: none !important; } }
+
+  /* ---------- controles ---------- */
+  .controls { width: 300px; background: var(--card); border-radius: 22px; padding: 22px; box-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset, 0 20px 40px -24px rgba(16, 32, 24, .3); border: 1px solid var(--hair); position: sticky; top: 24px; margin-top: 44px; }
+  .controls h3 { margin: 0 0 4px; font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+  .controls .hint { font-size: 13px; color: var(--ink-3); line-height: 1.45; margin: 0 0 18px; }
+  .ctl { margin-bottom: 18px; }
+  .ctl label, .ctl .lbl { display: flex; justify-content: space-between; font-size: 13px; font-weight: 500; color: var(--ink-2); margin-bottom: 8px; }
+  .ctl output { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; }
+  .ctl .sub { font-size: 12px; color: var(--ink-3); line-height: 1.4; margin: 6px 2px 0; }
+  input[type=range] { width: 100%; accent-color: var(--brand); }
+  .seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: #eef1ef; border-radius: 12px; padding: 3px; gap: 3px; }
+  .seg button { border: 0; background: transparent; height: 34px; border-radius: 9px; font-size: 13px; font-weight: 500; color: var(--ink-2); }
+  .seg button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(0, 0, 0, .08), 0 0 0 1px rgba(0, 0, 0, .04); }
+  .seg button:disabled { color: #a3aaa6; cursor: not-allowed; }
+  .molde-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .molde-grid button { border: 1px solid var(--hair); background: #fff; border-radius: 10px; height: 36px; font-size: 12.5px; font-weight: 500; color: var(--ink-2); text-align: left; padding: 0 10px; display: flex; align-items: center; gap: 7px; white-space: nowrap; overflow: hidden; }
+  .molde-grid button i { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--brand); }
+  .molde-grid button i.mini { background: #2aa6d6; }
+  .molde-grid button i.code { background: #1f9e8a; }
+  .molde-grid button[aria-pressed="true"] { border-color: var(--brand); color: var(--ink); box-shadow: 0 0 0 1px var(--brand) inset; }
+  .sw { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 500; color: var(--ink-2); padding: 6px 0; }
+  .sw input { width: 18px; height: 18px; accent-color: var(--brand); }
+  .act { width: 100%; height: 42px; border-radius: 12px; border: 1px solid var(--hair); background: var(--brand); color: #fff; font-size: 13px; font-weight: 600; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .act.alt { background: #fff; color: var(--ink); }
+
+  /* ---------- galeria ---------- */
+  section.doc { margin-top: 88px; }
+  .sec-head { max-width: 720px; margin-bottom: 24px; }
+  .sec-head .eyebrow { display: block; margin-bottom: 8px; }
+  .sec-head h2 { font-size: 28px; line-height: 1.15; letter-spacing: -.025em; margin: 0 0 10px; font-weight: 600; }
+  .sec-head p { font-size: 15px; line-height: 1.6; color: var(--ink-2); margin: 0; }
+  .gallery { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+  .mcard { text-align: left; border: 0; padding: 0; border-radius: 20px; overflow: hidden; background: var(--verde-bg); color: #f2f7f3; box-shadow: 0 0 0 1px rgba(0, 0, 0, .06); transition: transform .2s, box-shadow .2s; isolation: isolate; }
+  .mcard:hover { transform: translateY(-2px); }
+  .mcard[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--brand), 0 16px 32px -16px rgba(16, 24, 20, .35); }
+  .mprev { padding: 10px 4px 0; }
+  .mmeta { padding: 10px 14px 14px; }
+  .mmeta div { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .mmeta b { font-size: 14px; font-weight: 600; }
+  .mmeta p { margin: 6px 0 0; font-size: 12.5px; line-height: 1.45; color: rgba(242, 247, 243, .7); }
+  .mtag { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+  .mtag.foto { background: rgba(158, 227, 177, .14); color: #9ee3b1; }
+  .mtag.mini { background: rgba(56, 178, 226, .16); color: #7fd3f2; }
+  .mtag.code { background: rgba(79, 214, 190, .16); color: #8be8d6; }
+
+  .legend { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .lg { background: var(--card); border: 1px solid var(--hair); border-radius: 18px; padding: 16px 18px; font-size: 13.5px; line-height: 1.55; color: var(--ink-2); }
+  .lg h4 { margin: 10px 0 4px; font-size: 14px; color: var(--ink); }
+  .lg svg { display: block; width: 100%; height: 34px; }
+  .notes { margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .note { background: var(--card); border: 1px solid var(--hair); border-radius: 20px; padding: 18px 20px; font-size: 14px; line-height: 1.6; color: var(--ink-2); }
+  .note h4 { margin: 0 0 6px; font-size: 14px; color: var(--ink); }
+  .note ul { margin: 0; padding-left: 18px; }
+  .note code { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12px; background: #eef1ef; padding: 1px 5px; border-radius: 5px; }
+
+  @media (max-width: 1100px) {
+    .gallery, .legend { grid-template-columns: repeat(2, 1fr); }
+    .notes { grid-template-columns: 1fr; }
+    .controls { position: static; margin-top: 0; }
+  }
+  @media (max-width: 460px) {
+    .wrap { padding: 32px 16px 80px; }
+    .phone { zoom: .84; }
+    .controls { width: 100%; }
+    .gallery, .legend { grid-template-columns: 1fr; }
+    .page-head h1 { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page-head">
+    <div class="eyebrow">iGreen Mob · Recarga em eletroposto</div>
+    <h1>Fluxo de recarga com 5 moldes</h1>
+    <p>Sedã vidro verde, Minimal SUV, Minimal raio-x, SUV vidro e SUV 3/4. A bateria mostra o que já está carregado, até onde vai carregar e o trecho que está enchendo. Os outros estudos seguem em <a href="recarga-ev-moldes.html">recarga-ev-moldes.html</a> e <a href="recarga-ev-moldes-verde.html">recarga-ev-moldes-verde.html</a>.</p>
+  </header>
+
+  <div class="stage">
+    <section class="phones t-verde" id="phones" aria-label="Telas do fluxo">
+      <div class="theme-head"><span class="swatch"></span><b id="themeName">Tela verde</b><span id="themeDesc"></span></div>
+      <div class="pair">
+
+        <!-- ================= TELA 1 ================= -->
+        <div class="phone-col">
+          <div class="phone">
+            <div class="island"></div>
+            <div class="screen" id="screen1">
+              <div class="statusbar"><span>9:41</span><span class="sb-icons" data-sb></span></div>
+              <div class="topbar">
+                <button class="icon-btn" aria-label="Cancelar"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+                <div class="topbar-mid"><span class="chip"><span class="d"></span>Shell Paulista · C-01</span></div>
+                <button class="icon-btn" aria-label="Ajuda"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.3-2.5 3.6"/><path d="M12 17h.01"/></svg></button>
+              </div>
+              <div class="body">
+                <div class="s1-head">
+                  <h1>Conecte o cabo no carro</h1>
+                  <p>Encaixe o conector <b>CCS2</b> na entrada de recarga até travar. A recarga começa sozinha.</p>
+                </div>
+                <div class="scene sc1" id="scene1"></div>
+                <div class="detect" id="s1detect"><span class="pd"></span><span id="s1status">Aguardando o carro ser conectado…</span></div>
+                <div class="card connector">
+                  <div class="conn-ico">
+                    <svg viewBox="0 0 28 34" width="24" height="30" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M6 4H22A10.5 10.5 0 1 1 6 4Z"/>
+                      <circle cx="11" cy="7.4" r="1.1"/><circle cx="17" cy="7.4" r="1.1"/>
+                      <circle cx="8.3" cy="11.8" r="1.6"/><circle cx="14" cy="11.8" r="1.6"/><circle cx="19.7" cy="11.8" r="1.6"/>
+                      <circle cx="11" cy="16.4" r="1.6"/><circle cx="17" cy="16.4" r="1.6"/>
+                      <rect x="5" y="24" width="18" height="8.5" rx="4.25"/>
+                      <circle cx="10" cy="28.25" r="2"/><circle cx="18" cy="28.25" r="2"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="conn-t">CCS2 · Conector C-01</div>
+                    <div class="conn-s">DC · até 150 kW</div>
+                  </div>
+                  <span class="tag">Liberado</span>
+                </div>
+                <button class="help">O conector não encaixa no carro?<svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+              </div>
+              <div class="bottom">
+                <div class="timer">
+                  <div class="timer-row"><span>Conecte em até</span><b id="s1timer">2:00</b></div>
+                  <div class="bar"><i id="s1bar"></i></div>
+                </div>
+                <button class="btn btn-quiet">Cancelar</button>
+              </div>
+              <div class="home"></div>
+            </div>
+          </div>
+          <div class="phone-cap"><b>1</b>Conectar o cabo</div>
+        </div>
+
+        <!-- ================= TELA 2 ================= -->
+        <div class="phone-col">
+          <div class="phone">
+            <div class="island"></div>
+            <div class="screen" id="screen2">
+              <div class="statusbar"><span>9:41</span><span class="sb-icons" data-sb></span></div>
+              <div class="topbar">
+                <button class="icon-btn" aria-label="Minimizar"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div class="topbar-mid">
+                  <div class="tb-title"><span class="live"></span><span id="s2title">Carregando</span></div>
+                  <div class="tb-sub">Shell Paulista · C-01 · <span id="s2plug">CCS2</span></div>
+                </div>
+                <button class="icon-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg></button>
+              </div>
+              <div class="body">
+                <div class="hero">
+                  <div class="big num"><span id="s2big">68</span><small id="s2unit">%</small></div>
+                  <div class="hero-sub" id="s2sub"></div>
+                  <span class="chip ac-chip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>Em recarga AC o carro não informa a %</span>
+                </div>
+                <div class="scene sc2" id="scene2"></div>
+                <div class="metrics num">
+                  <div class="metric"><b id="m1"></b><span>Potência</span></div>
+                  <div class="metric"><b id="m2"></b><span id="m2l">Energia</span></div>
+                  <div class="metric"><b id="m3"></b><span>Autonomia*</span></div>
+                  <div class="metric"><b id="m4"></b><span>Decorrido</span></div>
+                </div>
+                <div class="card cost">
+                  <div class="row"><span>Custo até agora</span><span class="num" id="tariff">R$ 1,30/kWh</span></div>
+                  <div class="cost-val num" id="costVal">R$ 35,10</div>
+                  <div class="bar"><i id="costBar"></i></div>
+                  <div class="row cost-foot"><span id="costFoot"></span><button class="link">Alterar</button></div>
+                </div>
+                <div class="card list">
+                  <div class="li">
+                    <svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                    <span class="grow" id="notifyLabel">Avisar quando chegar em 80%</span>
+                    <button class="toggle" role="switch" aria-checked="true" aria-label="Avisar"></button>
+                  </div>
+                  <div class="li">
+                    <svg viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+                    <span class="grow">Detalhes da recarga</span>
+                    <svg class="chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="bottom">
+                <button class="btn btn-quiet when-charging"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg>Encerrar recarga</button>
+                <button class="btn btn-primary when-complete">Desconectar e ver recibo</button>
+              </div>
+              <div class="home"></div>
+            </div>
+          </div>
+          <div class="phone-cap"><b>2</b>Acompanhar a recarga</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= CONTROLES ================= -->
+    <aside class="controls">
+      <h3>Simular estados</h3>
+      <p class="hint">Troque o molde e mexa na bateria: a ilustração reage aos dados como reagiria no app.</p>
+      <div class="ctl">
+        <div class="lbl">Molde</div>
+        <div class="molde-grid" id="moldePick"></div>
+      </div>
+      <div class="ctl">
+        <div class="lbl">Fundo da tela</div>
+        <div class="seg" id="temaSeg">
+          <button aria-pressed="true" data-v="verde">Verde</button>
+          <button aria-pressed="false" data-v="branco">Branco</button>
+        </div>
+        <p class="sub" id="temaSub"></p>
+      </div>
+      <div class="ctl">
+        <div class="lbl">Tela 1</div>
+        <div class="seg" id="cenaSeg">
+          <button aria-pressed="true" data-v="carregador">Carro + carregador</button>
+          <button aria-pressed="false" data-v="fantasma">Carro fantasma</button>
+        </div>
+        <p class="sub" id="cenaSub"></p>
+      </div>
+      <div class="ctl">
+        <label for="soc">Bateria do carro <output id="socOut">68%</output></label>
+        <input type="range" id="soc" min="5" max="100" value="68">
+      </div>
+      <div class="ctl">
+        <div class="lbl">Limite da recarga</div>
+        <div class="seg" id="limitSeg">
+          <button aria-pressed="true" data-v="80">80%</button>
+          <button aria-pressed="false" data-v="90">90%</button>
+          <button aria-pressed="false" data-v="100">100%</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="lbl">% do limite</div>
+        <div class="seg" id="rotuloSeg">
+          <button aria-pressed="true" data-v="cima">Em cima</button>
+          <button aria-pressed="false" data-v="baixo">Embaixo</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="lbl">Tipo de carregador</div>
+        <div class="seg" id="modeSeg">
+          <button aria-pressed="true" data-v="dc">DC · informa %</button>
+          <button aria-pressed="false" data-v="ac">AC · sem %</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="sw">Animações <input type="checkbox" id="optAnim" checked></div>
+      </div>
+      <button class="act" id="btnConnect">▶ Simular conexão (tela 1)</button>
+      <button class="act alt" id="btnCharge">▶ Carregar até o limite (tela 2)</button>
+    </aside>
+  </div>
+
+  <!-- ================= GALERIA ================= -->
+  <section class="doc">
+    <div class="sec-head">
+      <span class="eyebrow">Os 5 moldes</span>
+      <h2>Na mesma %, lado a lado</h2>
+      <p>Clique em um molde para vê-lo nas telas. Todos seguem a bateria acima, o limite e a recarga em andamento.</p>
+    </div>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <!-- ================= BATERIA ================= -->
+  <section class="doc">
+    <div class="sec-head">
+      <span class="eyebrow">Como a bateria se comporta</span>
+      <h2>Carregado, carregando e limite</h2>
+      <p>As mesmas quatro camadas valem para os 5 moldes. No SUV vidro e no SUV 3/4 elas são desenhadas por código em cima das células da imagem.</p>
+    </div>
+    <div class="legend">
+      <div class="lg">
+        <svg viewBox="0 0 200 34" aria-hidden="true"><defs><linearGradient id="lgNeon" x1="0" x2="1"><stop offset="0" stop-color="#1d5a38" stop-opacity=".5"/><stop offset=".55" stop-color="#2f9c5c" stop-opacity=".8"/><stop offset=".9" stop-color="#3cf08e"/><stop offset="1" stop-color="#9dffc9"/></linearGradient></defs><rect x="1" y="5" width="198" height="24" rx="6" fill="#2b3034"/><rect x="1" y="5" width="96" height="24" rx="6" fill="url(#lgNeon)"/></svg>
+        <h4>Já carregado</h4>
+        Um caminho neon até a % atual: fraco no início da bateria, forte na ponta da carga.
+      </div>
+      <div class="lg">
+        <svg viewBox="0 0 200 34" aria-hidden="true"><rect x="1" y="5" width="198" height="24" rx="6" fill="#2b3034"/><rect x="1" y="5" width="96" height="24" rx="6" fill="url(#lgNeon)"/><path d="M96 3v28" stroke="#d8ffe9" stroke-width="3" stroke-linecap="round"/></svg>
+        <h4>Linha da carga</h4>
+        Marca a ponta do preenchimento e acompanha a % enquanto sobe.
+      </div>
+      <div class="lg">
+        <svg viewBox="0 0 200 34" aria-hidden="true"><defs><linearGradient id="lgSh" x1="0" x2="1"><stop offset="0" stop-color="#4fd18a" stop-opacity=".05"/><stop offset=".58" stop-color="#6fe0a0" stop-opacity=".4"/><stop offset="1" stop-color="#4fd18a" stop-opacity=".05"/></linearGradient></defs><rect x="1" y="5" width="198" height="24" rx="6" fill="#2b3034"/><rect x="1" y="5" width="96" height="24" rx="6" fill="url(#lgNeon)"/><rect x="96" y="5" width="64" height="24" fill="#3aa35e" fill-opacity=".13"/><rect x="96" y="5" width="64" height="24" fill="url(#lgSh)"/></svg>
+        <h4>Carregando</h4>
+        Da carga atual até o limite, com um brilho que corre como um carregamento.
+      </div>
+      <div class="lg">
+        <svg viewBox="0 0 200 34" aria-hidden="true"><rect x="1" y="5" width="198" height="24" rx="6" fill="#2b3034"/><rect x="1" y="5" width="96" height="24" rx="6" fill="url(#lgNeon)"/><rect x="160" y="5" width="39" height="24" rx="6" fill="#000" fill-opacity=".38"/><path d="M160 3v28" stroke="#fff" stroke-width="2.5" stroke-dasharray="5 4"/></svg>
+        <h4>Limite</h4>
+        Tracejado com a %: até onde a recarga vai (80, 90 ou 100%). A % fica em cima, com ▼ e um halo atrás, ou embaixo, com ▲. Depois do limite, a bateria fica escurecida.
+      </div>
+    </div>
+    <div class="notes">
+      <div class="note">
+        <h4>Fundo de cada molde</h4>
+        <ul>
+          <li>Sedã vidro verde e os dois minimalistas foram feitos para fundo escuro: aparecem na tela verde, com as cópias de <code>ilustracoes/verde/</code> somadas ao fundo.</li>
+          <li>SUV vidro vem com fundo transparente: funciona no verde e no branco, sem vitrine. Está em <code>ilustracoes/carro-u28-vazio.webp</code>.</li>
+          <li>SUV 3/4 também tem fundo transparente. A imagem veio com metade das células em ciano; <code>ilustracoes/processar-u29.mjs</code> gera a base com todas no cinza (<code>carro-u29-vazio.webp</code>), e a original fica em <code>ref/u29.webp</code>.</li>
+          <li>Não existe ilustração de carregador em fundo claro, então no SUV vidro e no SUV 3/4 a tela 1 usa o carro com o guia até a entrada.</li>
+        </ul>
+      </div>
+      <div class="note">
+        <h4>Em React Native</h4>
+        <ul>
+          <li>As camadas são <code>Path</code> sobre a face do pack, calculadas por homografia dos 4 cantos a partir da %.</li>
+          <li>O brilho do trecho "carregando" é um degradê que desliza entre a carga atual e o limite, animado num worklet (Reanimated) ou no Skia.</li>
+          <li>No SUV vidro (8 módulos) e no SUV 3/4 (14 células) as divisões são linhas desenhadas por cima do preenchimento, então a imagem não precisa de versão cheia.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  /* ============ moldes (geometria em pixels de cada imagem) ============ */
+  // temas: fundos em que o molde funciona · tipo: foto (par cheio/vazio), mini (blocos por código), code (preenchimento contínuo por código)
+  const MOLDES = {
+    s21: { nome: 'Sedã vidro verde', tag: 'foto', desc: 'Carroceria em vidro verde com contorno luminoso.', tipo: 'foto', temas: ['verde'], full: true, w: 1600, h: 735, quad: [[562, 293.4], [1056.8, 293.4], [1084.5, 454.2], [523.7, 452.4]], port: [1354.9, 327.5], bg: [14, 18, 19], spill: { cx: 804.1, cy: 548.5, rx: 470.1, ry: 153.2 } },
+    m25: { nome: 'Minimal SUV', tag: 'mini', desc: 'Silhueta limpa, 8 blocos e anéis no chão.', tipo: 'mini', temas: ['verde'], full: true, w: 1600, h: 787, quad: [[575, 335.1], [1054.5, 335.1], [1067.6, 436.3], [558.6, 437.7]], port: [1355.4, 303.7], bg: [8, 18, 28], cells: 8 },
+    m27: { nome: 'Minimal raio-x', tag: 'mini', desc: 'Bancos à mostra, 11 blocos em perspectiva.', tipo: 'mini', temas: ['verde'], full: true, w: 1600, h: 757, quad: [[568.2, 329.8], [1043.7, 329.8], [1078.1, 411.5], [525.4, 411.5]], port: [1334.2, 292.3], bg: [6, 17, 30], cells: 11 },
+    u28: { nome: 'SUV vidro', tag: 'code', desc: 'Imagem nova, fundo transparente. A carga é desenhada sobre os 8 módulos.', tipo: 'code', temas: ['verde', 'branco'], semCarregador: true, full: true, w: 1672, h: 941, cropY: [120, 860], quad: [[600, 504], [1129, 504], [1136, 620], [578, 621]], port: [1392, 478], divs: [0, .125, .246, .364, .481, .6, .722, .839, 1] },
+    // base vazia gerada por ilustracoes/processar-u29.mjs (a imagem original vem com metade das células em ciano)
+    u29: { nome: 'SUV 3/4', tag: 'code', desc: 'Imagem nova em 3/4, fundo transparente. A carga é desenhada sobre as 14 células.', tipo: 'code', temas: ['verde', 'branco'], semCarregador: true, full: true, w: 1536, h: 1024, cropY: [190, 870], quad: [[556, 571], [998, 571], [1013, 646.5], [534, 646.5]], port: [1310, 522], divs: Array.from({ length: 15 }, (_, i) => i / 14) }
+  };
+  const ORDEM = ['s21', 'm25', 'm27', 'u28', 'u29'];
+  const TEMA_TXT = {
+    verde: ['Tela verde', 'fundo em #338449 escurecido · textos claros'],
+    branco: ['Tela branca', 'fundo branco · ilustração sem vitrine']
+  };
+  const GC = '#d6ece2';
+  const C0 = [30, 88, 56], C1 = [61, 240, 142]; // blocos minimalistas: verde apagado no início → neon na ponta da carga
+
+  // cores dos traços por cima da ilustração: escuro (fundo escuro), soma (tela verde com screen), claro (tela branca)
+  const PAL = {
+    escuro: { guide: '#e8fff3', pill: '#0d1612', pillTx: '#e8fff3', pillBd: '#e8fff3', core: '#0b0f0d', out: GC, outOp: .26, plug: '#0d1210', port: '#07100b', flow: '#4be6a0', mark: '#fff' },
+    soma:{ guide: '#e8fff3', pill: '#27513a', pillTx: '#e8fff3', pillBd: '#e8fff3', core: '#27513a', out: GC, outOp: .26, plug: '#27513a', port: '#27513a', flow: '#4be6a0', mark: '#fff' },
+    claro:{ guide: '#2d7641', pill: '#ffffff', pillTx: '#1f5a31', pillBd: '#338449', core: '#33403a', out: '#338449', outOp: .3, plug: '#ffffff', port: '#ffffff', flow: '#338449', mark: '#102016' }
+  };
+
+  // homografia do quadrado unitário para a face do pack (u: frente → trás, v: lado de longe → perto)
+  function homography(q) {
+    const [[x0, y0], [x1, y1], [x2, y2], [x3, y3]] = q;
+    const dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3;
+    const dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3;
+    const det = dx1 * dy2 - dx2 * dy1;
+    const g = (dx3 * dy2 - dx2 * dy3) / det, h = (dx1 * dy3 - dx3 * dy1) / det;
+    const a = x1 - x0 + g * x1, b = x3 - x0 + h * x3, d = y1 - y0 + g * y1, e = y3 - y0 + h * y3;
+    return (u, v) => { const w = g * u + h * v + 1; return [(a * u + b * v + x0) / w, (d * u + e * v + y0) / w]; };
+  }
+  const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+  const rgb = c => `rgb(${c[0]},${c[1]},${c[2]})`;
+  const plugP = (cls, extra, P) => `<g class="${cls}" ${extra}><circle r="24" fill="${P.plug}" stroke="${P.out}" stroke-opacity=".6" stroke-width="3.5"/><circle r="14" fill="none" stroke="#3fe394" stroke-width="3.5"/><circle r="4.5" fill="#3fe394"/></g>`;
+
+  /* ============ cena ============ */
+  // o = { id, molde, variant: 'plug'|'charging', crop: 's1'|'s2', blend, pal }
+  function createScene(host, o) {
+    const G = MOLDES[o.molde], id = o.id, H = homography(G.quad), P = o.pal;
+    const mini = G.tipo === 'mini', code = G.tipo === 'code', blend = !!o.blend;
+    host.classList.toggle('blend', blend);
+    const S1 = p => p[0].toFixed(1) + ' ' + p[1].toFixed(1);
+    const region = (u0, u1) => u1 - u0 < .002 ? 'M0 0' : 'M' + [H(u0, 0), H(u1, 0), H(u1, 1), H(u0, 1)].map(S1).join(' L') + ' Z';
+    const edge = u => 'M' + S1(H(u, 0)) + ' L' + S1(H(u, 1));
+    const [px, py] = G.port;
+    const x0 = Math.max(0, Math.min(G.quad[0][0], G.quad[3][0]) - 120);
+    // cropY: corta a margem vazia de cima e de baixo (SUV vidro vem com muito respiro)
+    const [cy0, cy1] = G.cropY || [0, G.h];
+    const vb = o.crop === 's1' ? `${x0.toFixed(0)} ${cy0} ${(G.w - x0).toFixed(0)} ${cy1 - cy0}` : `0 ${cy0} ${G.w} ${cy1 - cy0}`;
+    const src = n => code ? `ilustracoes/carro-${o.molde}-${n}.webp` : `ilustracoes/${blend ? 'verde/' : ''}carro-${o.molde}-${n}.webp`;
+    // divisões do pack: medidas na imagem (SUV vidro) ou iguais
+    const N = mini ? G.cells : code ? G.divs.length - 1 : 8, GAP = mini ? .014 : 0, frame = mini ? 24 : 34;
+    const bounds = G.divs || [...Array(N + 1)].map((_, i) => i / N);
+    const cu = i => [bounds[i] + GAP / 2, bounds[i + 1] - GAP / 2];
+    let scan = '', emptyCells = '', fillCells = '', cellClip = '', divs = '';
+    for (let i = 0; i < N; i++) {
+      const [u0, u1] = cu(i);
+      scan += `<path class="cell" style="--i:${i}" d="${region(u0, u1)}"/>`;
+      if (mini) {
+        cellClip += `<path d="${region(u0, u1)}"/>`;
+        emptyCells += `<path d="${region(u0, u1)}" fill="url(#${id}-ce)" stroke="#fff" stroke-opacity=".09" stroke-width="1.5" stroke-linejoin="round"/>`;
+        fillCells += `<path class="fc" d="M0 0" stroke-width="1.6" stroke-linejoin="round"/><path class="fh" d="M0 0" fill="url(#${id}-hi)"/>`;
+      }
+      if (code && i > 0) divs += `<path d="${edge(bounds[i])}" stroke="#06180d" stroke-opacity=".55" stroke-width="4"/>`;
+    }
+    const guide = { a: { x: G.w + 40, y: py + 300 }, c: { x: px + 300, y: py - 40 }, b: { x: px, y: py } };
+    const approach = { x: px + 34, y: py - 6 };
+    const EXITP = { x: G.w + 80, y: G.h + 20 };
+    // a luz no chão só aparece abaixo da borda de perto do pack (senão revelaria o pack cheio)
+    const A = H(0, 1), B = H(1, 1), yAt = x => A[1] + (B[1] - A[1]) * (x - A[0]) / (B[0] - A[0]) + 6;
+    const below = `M0 ${yAt(0).toFixed(1)} L${G.w} ${yAt(G.w).toFixed(1)} L${G.w} ${G.h + 50} L0 ${G.h + 50} Z`;
+    const cableCore = mini ? `stroke="#bfffe0" stroke-width="5"` : `stroke="${P.core}" stroke-width="14"`;
+    const cableOut = mini ? `stroke="#4be6a0" stroke-opacity=".3" stroke-width="16"` : `stroke="${P.out}" stroke-opacity="${P.outOp}" stroke-width="20"`;
+    let energy;
+    if (o.variant === 'plug') {
+      energy = `
+        <g class="fx-guide">
+          <path d="M${guide.a.x} ${guide.a.y} Q ${guide.c.x} ${guide.c.y} ${approach.x} ${approach.y}" fill="none" stroke="${P.guide}" stroke-opacity=".5" stroke-width="3.5" stroke-linecap="round" class="marchp"/>
+          <circle cx="${px}" cy="${py}" r="46" fill="url(#${id}-portw)" class="breathe"/>
+          <circle cx="${px}" cy="${py}" r="22" fill="none" stroke="${P.guide}" stroke-width="3.5" class="ping"/>
+          <path d="M${px} ${py - 30} V${py - 112}" stroke="${P.guide}" stroke-opacity=".5" stroke-width="2.5" stroke-dasharray="6 7"/>
+          <g transform="translate(${px} ${py - 144})"><rect x="-92" y="-30" width="184" height="60" rx="30" fill="${P.pill}" fill-opacity=".85" stroke="${P.pillBd}" stroke-opacity=".45" stroke-width="2"/><text y="14" font-size="40" font-weight="600" text-anchor="middle" fill="${P.pillTx}">Entrada</text></g>
+        </g>
+        <g class="fx-connected"><circle cx="${px}" cy="${py}" r="60" fill="url(#${id}-port)" class="breathe"/></g>
+        <circle cx="${px}" cy="${py}" r="17" fill="${P.port}" stroke="${P.out}" stroke-opacity=".7" stroke-width="3"/>
+        <path class="cable-o" d="M0 0" fill="none" ${cableOut} stroke-linecap="round"/>
+        <path class="cable" d="M0 0" fill="none" ${cableCore} stroke-linecap="round"/>
+        ${plugP('plug', '', P)}${plugP('ghost', 'opacity="0"', P)}`;
+    } else {
+      const C = `M${px + 12} ${py + 16} C ${px + 120} ${py + 50} ${px + 180} ${py + 280} ${G.w + 60} ${G.h - 40}`;
+      energy = `
+        <path d="${C}" fill="none" ${cableOut} stroke-linecap="round"/>
+        <path d="${C}" fill="none" ${cableCore} stroke-linecap="round"/>
+        <path d="${C}" class="flowp fx-charging" fill="none" stroke="${P.flow}" stroke-width="6" stroke-linecap="round"/>
+        <circle class="breathe fx-charging" cx="${px}" cy="${py}" r="62" fill="url(#${id}-port)"/>
+        <circle cx="${px}" cy="${py}" r="22" fill="${P.plug}" stroke="${P.out}" stroke-opacity=".55" stroke-width="3"/>
+        <circle cx="${px}" cy="${py}" r="13" fill="none" stroke="#3fe394" stroke-width="4"/>
+        <circle cx="${px}" cy="${py}" r="4" fill="#3fe394"/>`;
+    }
+    // camada "já carregado"
+    let charge;
+    if (mini) charge = `<g>${emptyCells}</g><g class="fills">${fillCells}</g>`;
+    else if (code) charge = `<g clip-path="url(#${id}-fill)">
+        <path d="${region(0, 1)}" fill="url(#${id}-neon)"/>
+        <path d="${region(0, 1)}" fill="url(#${id}-hi)"/>
+        ${divs}
+      </g>`;
+    else charge = `<g class="fx-charging" clip-path="url(#${id}-below)"><image href="${src('cheio')}" width="${G.w}" height="${G.h}" clip-path="url(#${id}-spill)" class="breathe"/></g>
+        <image href="${src('cheio')}" width="${G.w}" height="${G.h}" clip-path="url(#${id}-fill)" mask="url(#${id}-nmask)"/>`;
+    host.innerHTML = `<div class="art-wrap"><div class="art"><svg viewBox="${vb}" class="scene-svg" aria-hidden="true">
+      <defs>
+        <clipPath id="${id}-fill"><path class="c-fill" d="M0 0"/></clipPath>
+        ${mini ? `<clipPath id="${id}-cells">${cellClip}</clipPath>` : ''}
+        ${G.spill ? `<clipPath id="${id}-spill"><ellipse cx="${G.spill.cx}" cy="${G.spill.cy}" rx="${G.spill.rx}" ry="${G.spill.ry}"/></clipPath>` : ''}
+        <clipPath id="${id}-below"><path d="${below}"/></clipPath>
+        <radialGradient id="${id}-port"><stop offset="0" stop-color="#4be6a0" stop-opacity=".85"/><stop offset="1" stop-color="#4be6a0" stop-opacity="0"/></radialGradient>
+        <radialGradient id="${id}-portw"><stop offset="0" stop-color="${P.guide}" stop-opacity=".5"/><stop offset="1" stop-color="${P.guide}" stop-opacity="0"/></radialGradient>
+        <linearGradient id="${id}-ce" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a5257"/><stop offset="1" stop-color="#2b3034"/></linearGradient>
+        <linearGradient id="${id}-hi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".32"/><stop offset=".45" stop-color="#fff" stop-opacity=".06"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <clipPath id="${id}-pack"><path d="${region(0, 1)}"/></clipPath>
+        <!-- carga como caminho: fraca no início da bateria, neon na ponta (o degradê acompanha a % em set) -->
+        <linearGradient id="${id}-neon" class="neon" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#1d5a38" stop-opacity=".5"/><stop offset=".55" stop-color="#2f9c5c" stop-opacity=".8"/><stop offset=".9" stop-color="#3cf08e"/><stop offset="1" stop-color="#9dffc9"/>
+        </linearGradient>
+        <linearGradient id="${id}-nmask-g" class="neon" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#fff" stop-opacity=".3"/><stop offset=".7" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff"/>
+        </linearGradient>
+        <mask id="${id}-nmask" maskUnits="userSpaceOnUse" x="0" y="0" width="${G.w}" height="${G.h}"><path d="${region(0, 1)}" fill="url(#${id}-nmask-g)"/></mask>
+        <linearGradient id="${id}-edge" class="neon" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#b9ffd8" stop-opacity="0"/><stop offset=".75" stop-color="#b9ffd8" stop-opacity=".35"/><stop offset="1" stop-color="#eafff3" stop-opacity=".95"/>
+        </linearGradient>
+        <filter id="${id}-blur" filterUnits="userSpaceOnUse" x="0" y="0" width="${G.w}" height="${G.h}"><feGaussianBlur stdDeviation="${mini ? 8 : 12}"/></filter>
+        <linearGradient id="${id}-sh" class="sh" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#4fd18a" stop-opacity="0"/><stop offset=".3" stop-color="#4fd18a" stop-opacity=".07"/><stop offset=".58" stop-color="#6fe0a0" stop-opacity=".28"/><stop offset=".8" stop-color="#4fd18a" stop-opacity=".08"/><stop offset="1" stop-color="#4fd18a" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <image href="${src('vazio')}" width="${G.w}" height="${G.h}"/>
+      ${charge}
+      <g>${scan}</g>
+      <g clip-path="url(#${id}-pack)"><path class="lead-glow" d="M0 0" stroke="#3cf08e" stroke-width="${mini ? 22 : 30}" stroke-opacity=".55" stroke-linecap="round" filter="url(#${id}-blur)"/></g>
+      <path class="edge-l" d="M0 0" stroke="url(#${id}-edge)" stroke-width="${mini ? 3 : 4}" stroke-linecap="round"/>
+      <g class="pk-limit-g"><path class="beyond" d="M0 0" fill="#000" fill-opacity="${mini ? .3 : .38}"/></g>
+      <g class="pk-limit-g fx-charging" ${mini ? `clip-path="url(#${id}-cells)"` : ''}>
+        <path class="pend" d="M0 0" fill="#3aa35e" fill-opacity=".13"/>
+        <path class="pend-sh" d="M0 0" fill="url(#${id}-sh)"/>
+      </g>
+      <path class="lead" d="M0 0" stroke="#d8ffe9" stroke-width="${mini ? 4 : 5}" stroke-linecap="round"/>
+      <g class="pk-limit-g">
+        <path class="lim" d="M0 0" stroke="#fff" stroke-opacity=".9" stroke-width="4" stroke-dasharray="14 10"/>
+      </g>
+      ${energy}
+    </svg></div>
+    <svg viewBox="${vb}" class="lbl-layer" aria-hidden="true">
+      <defs>
+        <!-- halo escuro atrás do rótulo de cima: ele fica sobre a lataria do carro, que é escura nos dois temas -->
+        <filter id="${id}-halo" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="10" result="b"/>
+          <feFlood flood-color="#021008" flood-opacity=".85"/>
+          <feComposite in2="b" operator="in" result="h"/>
+          <feMerge><feMergeNode in="h"/><feMergeNode in="h"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <g class="pk-limit-g lbl">
+        <path class="tri" d="M0 0" fill="${P.mark}" fill-opacity=".92"/>
+        <text class="lim-t" font-size="42" font-weight="600" fill="${P.mark}" fill-opacity=".85">80%</text>
+      </g>
+    </svg></div>`;
+    const svg = host.querySelector('.scene-svg'), q = s => host.querySelector(s);
+    const neon = [...svg.querySelectorAll('.neon')];
+    const el = { cf: q('.c-fill'), lead: q('.lead'), glow: q('.lead-glow'), edgeL: q('.edge-l'), lim: q('.lim'), tri: q('.tri'), limT: q('.lim-t'), beyond: q('.beyond'), pend: q('.pend'), pendSh: q('.pend-sh'), sh: q('.sh'), plug: q('.plug'), ghost: q('.ghost'), cable: q('.cable'), cableO: q('.cable-o') };
+    const fc = [...svg.querySelectorAll('.fc')], fh = [...svg.querySelectorAll('.fh')];
+    const api = { svg, f: 0, lim: null, raf: 0, el, guide, approach };
+    // trecho "carregando": da carga atual até o limite
+    const pending = () => {
+      const on = api.lim != null && api.lim - api.f > .004;
+      const d = on ? region(api.f, api.lim) : 'M0 0';
+      el.pend.setAttribute('d', d); el.pendSh.setAttribute('d', d);
+    };
+    api.set = f => {
+      api.f = f;
+      el.cf.setAttribute('d', f > .004 ? region(0, f) : 'M0 0');
+      el.lead.setAttribute('d', f > .004 && f < .998 ? edge(f) : 'M0 0');
+      // caminho neon: o degradê vai do início do pack até a ponta da carga
+      const on = f > .004;
+      if (on) {
+        const a = H(0, .5), b = H(f, .5);
+        neon.forEach(g => { g.setAttribute('x1', a[0].toFixed(1)); g.setAttribute('y1', a[1].toFixed(1)); g.setAttribute('x2', b[0].toFixed(1)); g.setAttribute('y2', b[1].toFixed(1)); });
+      }
+      el.glow.setAttribute('d', on ? edge(Math.min(f, .995)) : 'M0 0');
+      el.edgeL.setAttribute('d', on ? `M${S1(H(0, 1))} L${S1(H(f, 1))}` : 'M0 0');
+      if (mini) for (let i = 0; i < N; i++) {
+        const [u0, u1] = cu(i);
+        if (f <= u0 + .003) { fc[i].setAttribute('d', 'M0 0'); fh[i].setAttribute('d', 'M0 0'); continue; }
+        const d = region(u0, Math.min(u1, f)), t = Math.min(1, ((u0 + u1) / 2) / f), c = mix(C0, C1, t * t);
+        fc[i].setAttribute('d', d); fh[i].setAttribute('d', d);
+        fc[i].setAttribute('fill', rgb(c)); fc[i].setAttribute('fill-opacity', (.55 + .45 * t).toFixed(2));
+        fc[i].setAttribute('stroke', rgb(mix(c, [255, 255, 255], .3)));
+      }
+      pending();
+    };
+    api.tween = (to, dur = 700, onFrame) => {
+      cancelAnimationFrame(api.raf);
+      const from = api.f, t0 = performance.now();
+      const step = now => {
+        const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+        api.set(from + (to - from) * e);
+        onFrame && onFrame(api.f);
+        if (k < 1) api.raf = requestAnimationFrame(step);
+      };
+      api.raf = requestAnimationFrame(step);
+    };
+    const lbl = q('.lbl');
+    api.setLimit = l => {
+      api.lim = l;
+      host.querySelectorAll('.pk-limit-g').forEach(n => n.style.display = l == null ? 'none' : '');
+      pending();
+      if (l == null) return;
+      el.lim.setAttribute('d', edge(l));
+      el.beyond.setAttribute('d', l < .998 ? region(l, 1) : 'M0 0');
+      el.limT.textContent = Math.round(l * 100) + '%';
+      if (state.rotulo === 'cima') {
+        // em cima: % centralizada sobre o ▼, que aponta para o topo do tracejado; halo atrás para destacar do carro
+        const [x, y] = H(l, 0), tip = y - 12;
+        el.tri.setAttribute('d', `M${(x - 20).toFixed(1)} ${(tip - 28).toFixed(1)} L${(x + 20).toFixed(1)} ${(tip - 28).toFixed(1)} L${x.toFixed(1)} ${tip.toFixed(1)} Z`);
+        el.limT.setAttribute('text-anchor', 'middle');
+        el.limT.setAttribute('font-size', '48');
+        el.limT.setAttribute('x', x.toFixed(1));
+        el.limT.setAttribute('y', (tip - 44).toFixed(1));
+        el.limT.setAttribute('fill', '#fff'); el.tri.setAttribute('fill', '#fff');
+        lbl.setAttribute('filter', `url(#${id}-halo)`);
+      } else {
+        const [x, y] = H(l, 1), y0 = y + frame + 10;
+        el.tri.setAttribute('d', `M${(x - 22).toFixed(1)} ${(y0 + 30).toFixed(1)} L${(x + 22).toFixed(1)} ${(y0 + 30).toFixed(1)} L${x.toFixed(1)} ${y0.toFixed(1)} Z`);
+        // no 100% o rótulo vai para a esquerda do ▲ para não sair do carro
+        el.limT.setAttribute('text-anchor', l > .9 ? 'end' : 'start');
+        el.limT.setAttribute('font-size', '42');
+        el.limT.setAttribute('x', (l > .9 ? x - 32 : x + 32).toFixed(1));
+        el.limT.setAttribute('y', (y0 + 31).toFixed(1));
+        el.limT.setAttribute('fill', P.mark); el.tri.setAttribute('fill', P.mark);
+        lbl.removeAttribute('filter');
+      }
+    };
+    api.placePlug = p => {
+      if (!el.plug) return;
+      el.plug.setAttribute('transform', `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})`);
+      const cx = (EXITP.x + p.x) / 2, cy = Math.max(EXITP.y, p.y) + 40;
+      const d = `M${EXITP.x} ${EXITP.y} Q ${cx.toFixed(1)} ${cy.toFixed(1)} ${p.x.toFixed(1)} ${(p.y + 12).toFixed(1)}`;
+      el.cable.setAttribute('d', d);
+      el.cableO.setAttribute('d', d);
+    };
+    // brilho de carregamento: desliza da carga atual até o limite e recomeça, devagar e com aceleração suave
+    api.tick = now => {
+      if (api.lim == null || api.lim - api.f <= .004) return;
+      const span = api.lim - api.f, w = Math.max(.1, span * .75), t = ease((now % 2600) / 2600);
+      const s = api.f - w + t * (span + w);
+      const a = H(s, .5), b = H(s + w, .5);
+      el.sh.setAttribute('x1', a[0].toFixed(1)); el.sh.setAttribute('y1', a[1].toFixed(1));
+      el.sh.setAttribute('x2', b[0].toFixed(1)); el.sh.setAttribute('y2', b[1].toFixed(1));
+    };
+    return api;
+  }
+
+  /* ============ tela 1: carro + carregador ============ */
+  // Par solto/plugado com o mesmo enquadramento (o plugado é uma edição do solto). O plugue faz o
+  // caminho do suporte até a porta; ao conectar, a imagem plugada aparece por cima.
+  const CARREGADOR = {
+    foto: { w: 1400, h: 974, port: [538.7, 421.2], holster: [1174.8, 347] },
+    mini: { w: 1400, h: 974, port: [451, 404.8], holster: [967.8, 420] }
+  };
+  function createChargerScene(host, o) {
+    const C = CARREGADOR[o.estilo], id = o.id, [px, py] = C.port, [hx, hy] = C.holster, P = o.pal;
+    host.classList.toggle('blend', true);
+    const src = n => `ilustracoes/verde/carregador-${o.estilo}-${n}.webp`;
+    const guide = { a: { x: hx - 16, y: hy + 34 }, c: { x: (hx + px) / 2, y: Math.max(hy, py) + 190 }, b: { x: px, y: py } };
+    const approach = { x: px + 44, y: py + 14 };
+    host.innerHTML = `<div class="art-wrap"><div class="art"><svg viewBox="0 0 ${C.w} ${C.h}" class="scene-svg" aria-hidden="true">
+      <defs>
+        <radialGradient id="${id}-port"><stop offset="0" stop-color="#4be6a0" stop-opacity=".85"/><stop offset="1" stop-color="#4be6a0" stop-opacity="0"/></radialGradient>
+        <radialGradient id="${id}-portw"><stop offset="0" stop-color="#e8fff3" stop-opacity=".45"/><stop offset="1" stop-color="#e8fff3" stop-opacity="0"/></radialGradient>
+      </defs>
+      <image href="${src('solto')}" width="${C.w}" height="${C.h}"/>
+      <image class="plugado" href="${src('plugado')}" width="${C.w}" height="${C.h}"/>
+      <g class="fx-guide">
+        <path d="M${guide.a.x} ${guide.a.y} Q ${guide.c.x} ${guide.c.y} ${approach.x} ${approach.y}" fill="none" stroke="#e8fff3" stroke-opacity=".45" stroke-width="3.5" stroke-linecap="round" class="marchp"/>
+        <circle cx="${hx}" cy="${hy + 20}" r="44" fill="url(#${id}-portw)" class="breathe"/>
+        <circle cx="${px}" cy="${py}" r="54" fill="url(#${id}-portw)" class="breathe"/>
+        <circle cx="${px}" cy="${py}" r="26" fill="none" stroke="#e8fff3" stroke-width="3.5" class="ping"/>
+        <path d="M${px} ${py - 34} V${py - 118}" stroke="#e8fff3" stroke-opacity=".45" stroke-width="2.5" stroke-dasharray="6 7"/>
+        <g transform="translate(${px} ${py - 150})"><rect x="-92" y="-30" width="184" height="60" rx="30" fill="${P.pill}" fill-opacity=".8" stroke="#e8fff3" stroke-opacity=".35" stroke-width="2"/><text y="14" font-size="40" font-weight="600" text-anchor="middle" fill="#e8fff3">Entrada</text></g>
+      </g>
+      <g class="fx-connected"><circle cx="${px}" cy="${py}" r="80" fill="url(#${id}-port)" class="breathe"/></g>
+      ${plugP('plug', 'opacity="0"', P)}${plugP('ghost', 'opacity="0"', P)}
+    </svg></div></div>`;
+    const svg = host.querySelector('.scene-svg');
+    const el = { plug: svg.querySelector('.plug'), ghost: svg.querySelector('.ghost') };
+    const noop = () => {};
+    return {
+      svg, el, guide, approach, f: 0, set: noop, tween: noop, setLimit: noop, tick: noop,
+      // o plugue só aparece enquanto está a caminho; parado no suporte ele já está na imagem
+      placePlug: p => {
+        el.plug.setAttribute('transform', `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})`);
+        el.plug.setAttribute('opacity', Math.hypot(p.x - guide.a.x, p.y - guide.a.y) > 2 ? 1 : 0);
+      }
+    };
+  }
+
+  /* ============ util ============ */
+  const qb = (a, c, b, t) => { const u = 1 - t; return { x: u * u * a.x + 2 * u * t * c.x + t * t * b.x, y: u * u * a.y + 2 * u * t * c.y + t * t * b.y }; };
+  const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  const nf1 = n => n.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const brl = n => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const dur = m => m < 60 ? `${Math.max(1, Math.round(m))} <small>min</small>` : `${Math.floor(m / 60)}h${String(Math.round(m % 60)).padStart(2, '0')}`;
+  const $ = s => document.querySelector(s);
+
+  document.querySelectorAll('[data-sb]').forEach(n => n.innerHTML =
+    '<svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>' +
+    '<svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 11.6 5.6 9.2a3.4 3.4 0 0 1 4.8 0L8 11.6ZM2.8 6.4a7.4 7.4 0 0 1 10.4 0l-1.4 1.4a5.4 5.4 0 0 0-7.6 0L2.8 6.4ZM0 3.6a11.3 11.3 0 0 1 16 0l-1.4 1.4a9.3 9.3 0 0 0-13.2 0L0 3.6Z"/></svg>' +
+    '<svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.6" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2" y="2" width="20" height="9" rx="2.2"/><path d="M25 4.5v4a2 2 0 0 0 0-4Z" fill-opacity=".4"/></svg>');
+
+  /* ============ estado ============ */
+  const START = 23, CAP = 60, CAP_BRL = 60;
+  const state = { soc: 68, limit: 80, mode: 'dc', molde: 's21', cena: 'carregador', tema: 'verde', rotulo: 'cima' };
+  let s1, s2;
+  const cards = {};
+  const tickers = () => [s1, s2, ...Object.values(cards)].filter(Boolean);
+  // como a ilustração entra em cada tema: somada ao verde (renders escuros) ou direta (SUV vidro, transparente)
+  const look = (k, tema) => {
+    const code = MOLDES[k].tipo === 'code';
+    return { blend: !code && tema === 'verde', pal: tema === 'branco' ? PAL.claro : code ? PAL.escuro : PAL.soma };
+  };
+
+  function buildScenes() {
+    const M = MOLDES[state.molde], L = look(state.molde, state.tema);
+    const carregador = state.cena === 'carregador' && !M.semCarregador;
+    s1 = carregador
+      ? createChargerScene($('#scene1'), { id: 'c1', estilo: M.tipo === 'mini' ? 'mini' : 'foto', pal: PAL.soma })
+      : createScene($('#scene1'), { id: 'p1', molde: state.molde, variant: 'plug', crop: 's1', ...L });
+    $('#scene1').classList.toggle('cena-carregador', carregador);
+    s2 = createScene($('#scene2'), { id: 'p2', molde: state.molde, variant: 'charging', crop: 's2', ...L });
+    s1.setLimit(null); s1.set(0); s1.placePlug(s1.guide.a);
+    s2.svg.classList.add('is-charging');
+  }
+
+  // tema e opções que dependem do molde
+  function syncOptions() {
+    const M = MOLDES[state.molde];
+    if (!M.temas.includes(state.tema)) state.tema = 'verde';
+    $('#phones').classList.toggle('t-verde', state.tema === 'verde');
+    $('#phones').classList.toggle('t-branco', state.tema === 'branco');
+    $('#themeName').textContent = TEMA_TXT[state.tema][0];
+    $('#themeDesc').textContent = TEMA_TXT[state.tema][1];
+    $('#temaSeg').querySelectorAll('button').forEach(b => {
+      b.setAttribute('aria-pressed', b.dataset.v === state.tema);
+      b.disabled = !M.temas.includes(b.dataset.v);
+    });
+    $('#temaSub').textContent = M.temas.length > 1 ? `${M.nome} tem fundo transparente e funciona nos dois.` : `${M.nome} foi feito para fundo escuro: só na tela verde.`;
+    const carBtn = $('#cenaSeg [data-v=carregador]');
+    carBtn.disabled = !!M.semCarregador;
+    const cena = M.semCarregador ? 'fantasma' : state.cena;
+    $('#cenaSeg').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === cena));
+    $('#cenaSub').textContent = M.semCarregador ? `Ainda não há ilustração de carregador para o ${M.nome}.` : '';
+  }
+
+  /* ---- tela 2 ---- */
+  const powerAt = soc => soc < 50 ? 78 : Math.max(16, 78 - (soc - 50) * 2.2);
+  function renderS2(soc) {
+    const scr = $('#screen2'), dc = state.mode === 'dc';
+    const complete = dc && soc >= state.limit - 0.01;
+    scr.classList.toggle('ac', !dc);
+    scr.classList.toggle('complete', complete);
+    s2.svg.classList.toggle('is-complete', complete);
+    s2.svg.classList.toggle('is-scan', !dc);
+    $('#s2title').textContent = complete ? 'Recarga concluída' : 'Carregando';
+    $('#s2plug').textContent = dc ? 'CCS2' : 'Tipo 2';
+    let kwh, power, elapsed, price;
+    if (dc) {
+      kwh = Math.max(0, soc - START) / 100 * CAP;
+      power = complete ? 0 : powerAt(soc);
+      price = 1.3;
+      elapsed = kwh / 62 * 60;
+      const remain = Math.max(0, state.limit - soc) / 100 * CAP;
+      const minLeft = remain / ((powerAt(soc) + powerAt(state.limit)) / 2) * 60;
+      $('#s2big').textContent = Math.floor(soc);
+      $('#s2unit').textContent = '%';
+      $('#s2sub').innerHTML = complete ? `Limite de ${state.limit}% atingido`
+        : `<b>~${Math.max(1, Math.round(minLeft))} min</b> para ${state.limit === 100 ? 'completar' : 'chegar em ' + state.limit + '%'}`;
+      $('#m2').innerHTML = `${nf1(kwh)} <small>kWh</small>`;
+      $('#m2l').textContent = 'Energia';
+      $('#costFoot').textContent = `Encerra sozinha em ${state.limit}% ou ${brl(CAP_BRL)}`;
+      $('#notifyLabel').textContent = `Avisar quando chegar em ${state.limit}%`;
+    } else {
+      kwh = soc / 100 * 30;
+      power = 7.2;
+      price = 1.1;
+      elapsed = kwh / 7.2 * 60;
+      $('#s2big').textContent = nf1(kwh);
+      $('#s2unit').textContent = 'kWh';
+      $('#s2sub').innerHTML = `entregues em ${dur(elapsed).replace(/<\/?small>/g, '')}`;
+      $('#m2').innerHTML = `<small>R$</small> ${price.toFixed(2).replace('.', ',')}`;
+      $('#m2l').textContent = 'Tarifa/kWh';
+      $('#costFoot').textContent = `Encerra sozinha ao atingir ${brl(CAP_BRL)}`;
+      $('#notifyLabel').textContent = 'Avisar quando encerrar';
+    }
+    const cost = kwh * price;
+    $('#m1').innerHTML = `${power ? (power % 1 ? nf1(power) : Math.round(power)) : '0'} <small>kW</small>`;
+    $('#m3').innerHTML = `+${Math.round(kwh * 6.3)} <small>km</small>`;
+    $('#m4').innerHTML = dur(elapsed);
+    $('#tariff').textContent = `${brl(price)}/kWh`;
+    $('#costVal').textContent = brl(cost);
+    $('#costBar').style.transform = `scaleX(${Math.min(1, cost / CAP_BRL)})`;
+  }
+
+  function applyAll(animate) {
+    const dc = state.mode === 'dc', f = dc ? state.soc / 100 : 0, lim = dc ? state.limit / 100 : null;
+    s2.setLimit(lim);
+    if (animate) s2.tween(f, 700, v => renderS2(dc ? v * 100 : state.soc));
+    else { s2.set(f); renderS2(state.soc); }
+    Object.values(cards).forEach(sc => { sc.setLimit(lim); sc.set(f); sc.svg.classList.toggle('is-scan', !dc); sc.svg.classList.toggle('is-complete', dc && state.soc >= state.limit); });
+    $('#socOut').textContent = dc ? Math.round(state.soc) + '%' : nf1(state.soc / 100 * 30) + ' kWh';
+  }
+
+  /* ---- escolha de molde ---- */
+  const pick = $('#moldePick'), gal = $('#gallery');
+  ORDEM.forEach(k => {
+    const M = MOLDES[k];
+    pick.insertAdjacentHTML('beforeend', `<button data-m="${k}" aria-pressed="false"><i class="${M.tag}"></i>${M.nome}</button>`);
+    const card = document.createElement('button');
+    card.className = 'mcard'; card.dataset.m = k; card.setAttribute('aria-pressed', 'false');
+    const tag = { foto: 'Foto IA', mini: 'Minimal', code: 'Nova' }[M.tag];
+    card.innerHTML = `<div class="mprev"></div><div class="mmeta"><div><b>${M.nome}</b><span class="mtag ${M.tag}">${tag}</span></div><p>${M.desc}</p></div>`;
+    gal.appendChild(card);
+    cards[k] = createScene(card.querySelector('.mprev'), { id: 'g' + k, molde: k, variant: 'charging', crop: 's2', ...look(k, 'verde') });
+    cards[k].svg.classList.add('is-charging');
+  });
+  const setMolde = k => {
+    state.molde = k;
+    document.querySelectorAll('[data-m]').forEach(b => b.setAttribute('aria-pressed', b.dataset.m === k));
+    syncOptions();
+    buildScenes();
+    resetS1();
+    applyAll(false);
+  };
+  pick.addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (b) setMolde(b.dataset.m); });
+  gal.addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (b) { setMolde(b.dataset.m); $('.stage').scrollIntoView({ behavior: 'smooth', block: 'start' }); } });
+
+  /* ---- controles ---- */
+  const soc = $('#soc');
+  soc.addEventListener('input', () => { clearInterval(simT); state.soc = +soc.value; applyAll(false); });
+  const segs = (sel, fn) => $(sel).addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b || b.disabled) return;
+    $(sel).querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    fn(b.dataset.v);
+  });
+  segs('#limitSeg', v => { state.limit = +v; if (state.soc > state.limit) { state.soc = state.limit; soc.value = state.soc; } applyAll(false); });
+  segs('#modeSeg', v => { state.mode = v; applyAll(true); });
+  segs('#rotuloSeg', v => { state.rotulo = v; applyAll(false); });
+  segs('#cenaSeg', v => { state.cena = v; syncOptions(); buildScenes(); resetS1(); applyAll(false); });
+  segs('#temaSeg', v => { state.tema = v; syncOptions(); buildScenes(); resetS1(); applyAll(false); });
+  $('#optAnim').addEventListener('change', e => document.body.classList.toggle('no-anim', !e.target.checked));
+
+  let simT = 0;
+  $('#btnCharge').addEventListener('click', () => {
+    if (state.mode !== 'dc') $('#modeSeg [data-v=dc]').click();
+    clearInterval(simT);
+    if (state.soc >= state.limit - 1) state.soc = Math.max(START, state.limit - 16);
+    applyAll(false);
+    simT = setInterval(() => {
+      state.soc = Math.min(state.limit, state.soc + .25);
+      soc.value = state.soc;
+      applyAll(false);
+      if (state.soc >= state.limit) clearInterval(simT);
+    }, 60);
+  });
+
+  /* ---- tela 1 ---- */
+  let s1Mode = 'guide', s1Timers = [];
+  const detect = $('#s1detect'), status = $('#s1status');
+
+  function loop(now) {
+    const g = s1.el.ghost, anim = !document.body.classList.contains('no-anim');
+    if (s1Mode === 'guide' && anim) {
+      const t = (now % 2800) / 2800;
+      let k, a;
+      if (t < .55) { k = ease(t / .55); a = Math.min(1, t / .08); }
+      else if (t < .8) { k = 1; a = 1; }
+      else { k = 1; a = 1 - (t - .8) / .2; }
+      const p = qb(s1.guide.a, s1.guide.c, s1.approach, k);
+      g.setAttribute('transform', `translate(${p.x.toFixed(1)} ${p.y.toFixed(1)})`);
+      g.setAttribute('opacity', (a * .7).toFixed(3));
+    } else g.setAttribute('opacity', 0);
+    if (anim) tickers().forEach(s => s.tick(now));
+    requestAnimationFrame(loop);
+  }
+
+  function connect() {
+    if (s1Mode !== 'guide') return;
+    s1Mode = 'moving';
+    const t0 = performance.now();
+    const step = now => {
+      const k = Math.min(1, (now - t0) / 1000);
+      s1.placePlug(qb(s1.guide.a, s1.guide.c, s1.guide.b, ease(k)));
+      if (k < 1) requestAnimationFrame(step); else connected();
+    };
+    requestAnimationFrame(step);
+  }
+  function connected() {
+    s1Mode = 'connected';
+    s1.svg.classList.add('is-connected', 'wake');
+    detect.classList.add('ok');
+    status.textContent = 'Carro conectado · lendo a bateria…';
+    s1Timers.push(setTimeout(() => {
+      s1.svg.classList.remove('wake');
+      s1.tween(START / 100, 900);
+      status.textContent = `Bateria em ${START}% · iniciando a recarga`;
+    }, 1150));
+    s1Timers.push(setTimeout(resetS1, 5600));
+  }
+  function resetS1() {
+    s1Timers.forEach(clearTimeout); s1Timers = [];
+    s1.svg.classList.remove('is-connected', 'wake');
+    s1.set(0);
+    s1.placePlug(s1.guide.a);
+    detect.classList.remove('ok');
+    status.textContent = 'Aguardando o carro ser conectado…';
+    s1Mode = 'guide';
+  }
+  $('#btnConnect').addEventListener('click', connect);
+
+  let left = 120;
+  setInterval(() => {
+    left = left <= 0 ? 120 : left - 1;
+    $('#s1timer').textContent = `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`;
+    $('#s1bar').style.transform = `scaleX(${left / 120})`;
+  }, 1000);
+
+  setMolde('s21');
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

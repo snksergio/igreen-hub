@@ -1,17 +1,27 @@
 // Cena "carro + carregador" da tela de conectar: par solto/plugado (a versão plugada é uma edição
 // da solta, com o mesmo enquadramento), recortado, com borda transparente e as posições em JSON.
-import sharp from 'sharp';
+// Uso: node processar-carregador.mjs            (todos)
+//      node processar-carregador.mjs minisuv    (só alguns; os demais ficam como estão no JSON)
 import fs from 'fs';
+import { createRequire } from 'module';
+
+let sharp;
+try { sharp = (await import('sharp')).default; }
+catch { sharp = createRequire(process.env.SHARP_FROM || 'C:/Users/sergi/OneDrive/Área de Trabalho/Mob/package.json')('sharp'); }
 
 const CENAS = {
   foto: { solto: 'ia/c-foto1.png', plugado: 'ia/c-foto1-plug.png', port: [985, 822], holster: [2030, 700], crop: { left: 100, top: 130, width: 2300, height: 1600 } },
   mini: { solto: 'ia/c-mini1.png', plugado: 'ia/c-mini1-plug.png', port: [841, 805], holster: [1690, 830], crop: { left: 100, top: 140, width: 2300, height: 1600 } },
+  // Minimal SUV: o "mini" editado com IA nas cores do carro (verde menta, sem azul), mesmo enquadramento
+  minisuv: { solto: 'ia/c-minisuv.png', plugado: 'ia/c-minisuv-plug.png', port: [841, 805], holster: [1690, 830], crop: { left: 100, top: 140, width: 2300, height: 1600 } },
 };
 const OUT_W = 1400;
 const ss = t => t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t);
 
-const geo = {};
+const alvo = process.argv.slice(2);
+const geo = fs.existsSync('carregador.json') ? JSON.parse(fs.readFileSync('carregador.json', 'utf8')) : {};
 for (const [id, C] of Object.entries(CENAS)) {
+  if (alvo.length && !alvo.includes(id)) continue;
   const sc = OUT_W / C.crop.width, OUT_H = Math.round(C.crop.height * sc);
   // esquerda longa (o carro sai de quadro), demais lados curtos
   const alpha = Buffer.alloc(OUT_W * OUT_H);

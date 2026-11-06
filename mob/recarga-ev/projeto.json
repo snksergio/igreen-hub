@@ -1,28 +1,68 @@
 {
   "nome": "Recarga EV",
-  "descricao": "As telas de recarga em eletroposto do iGreen Mob: conectar o cabo e acompanhar a recarga, com a cena do carro e da bateria. Inclui o protótipo com a análise de mercado e os moldes de carro.",
+  "descricao": "As telas de recarga em eletroposto do iGreen Mob: conectar o cabo e acompanhar a recarga. A versão final tem dois carros (Minimal SUV e Minimal raio-x), a bateria desenhada por código e o pacote para o dev implementar no app, com as imagens prontas para React Native. Inclui a apresentação, os fluxos e os moldes explorados.",
   "tipo": "prototipo",
   "atualizado": "2026-11-06",
   "paginas": [
     {
-      "nome": "Referência das duas telas",
-      "arquivo": "handoff/recarga-ev/index.html"
+      "nome": "Mockup final das duas telas",
+      "arquivo": "entrega/mockup.html"
     },
     {
-      "nome": "Telas e análise",
-      "arquivo": "prototipos/recarga-ev.html"
+      "nome": "Apresentação",
+      "arquivo": "prototipos/recarga-ev-apresentacao.html"
+    }
+  ],
+  "versoes": [
+    {
+      "nome": "Pacote final · 2 carros",
+      "arquivo": "entrega/mockup.html",
+      "data": "2026-09-28"
+    },
+    {
+      "nome": "Referência com 8 moldes · pacote interrompido",
+      "arquivo": "handoff/recarga-ev/index.html",
+      "data": "2026-09-28"
     }
   ],
   "acervo": {
     "nome": "Variações",
     "grupos": [
       {
+        "nome": "Fluxos",
+        "prints": "fluxos",
+        "paginas": [
+          {
+            "nome": "Fluxo com os moldes escolhidos",
+            "arquivo": "prototipos/recarga-ev-fluxo.html"
+          },
+          {
+            "nome": "Fluxo com 5 moldes",
+            "arquivo": "prototipos/recarga-ev-fluxo-5-moldes.html"
+          }
+        ]
+      },
+      {
         "nome": "Moldes de carro",
         "prints": "moldes",
         "paginas": [
           {
+            "nome": "Moldes no fundo verde e no branco",
+            "arquivo": "prototipos/recarga-ev-moldes-verde.html"
+          },
+          {
             "nome": "Escolher um molde e ver nas duas telas",
             "arquivo": "prototipos/recarga-ev-moldes.html"
+          }
+        ]
+      },
+      {
+        "nome": "Primeira proposta",
+        "prints": "primeira",
+        "paginas": [
+          {
+            "nome": "Telas e análise de mercado",
+            "arquivo": "prototipos/recarga-ev.html"
           }
         ]
       }
@@ -33,6 +73,8 @@
     "ev",
     "eletroposto",
     "carregador",
-    "app"
+    "app",
+    "react-native",
+    "handoff"
   ]
 }
