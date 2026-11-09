@@ -2,7 +2,7 @@
   "nome": "Painel do eletroposto",
   "descricao": "Painel do dono de eletroposto, versão final (V3): maquete 3D e planta 2D ao vivo, construtor do posto e primeiro acesso, com a maquete montada no navegador. Inclui o POC (V1), com a maquete feita no Blender, e o protótipo do construtor.",
   "tipo": "prototipo",
-  "atualizado": "2026-11-06",
+  "atualizado": "2026-11-09",
   "link": "https://snksergio.github.io/mob-dashboard-interativo/final/online/",
   "repo": "https://github.com/snksergio/mob-dashboard-interativo/tree/main/final",
   "paginas": [
