@@ -1,6 +1,6 @@
 {
   "nome": "Painel do eletroposto",
-  "descricao": "Painel do dono de eletroposto, versão final (V3): maquete 3D e planta 2D ao vivo, construtor do posto e primeiro acesso, com a maquete montada no navegador. Inclui o POC (V1), com a maquete feita no Blender, e o protótipo do construtor.",
+  "descricao": "Painel do dono de eletroposto, versão final (V3): maquete 3D e planta 2D ao vivo, construtor do posto e primeiro acesso, com a maquete montada no navegador. Dois formatos de posto: bombas de frente e vagas paralelas (o carro para ao lado da ilha, em linha). Inclui o POC (V1), com a maquete feita no Blender, e o protótipo do construtor.",
   "tipo": "prototipo",
   "atualizado": "2026-11-09",
   "link": "https://snksergio.github.io/mob-dashboard-interativo/final/online/",
@@ -23,6 +23,18 @@
       "arquivo": "construtor.html?posto=shopping-norte"
     },
     {
+      "nome": "Vagas paralelas · 2 ilhas",
+      "arquivo": "painel.html?posto=shopping-norte&maquete=m-998add47&visao=3d"
+    },
+    {
+      "nome": "Vagas paralelas · 3 ilhas",
+      "arquivo": "painel.html?posto=shopping-norte&maquete=m-4274c59f&visao=3d"
+    },
+    {
+      "nome": "Construtor · vagas paralelas",
+      "arquivo": "construtor-lateral.html?posto=shopping-norte"
+    },
+    {
       "nome": "Primeiro acesso",
       "arquivo": "primeiro-acesso/"
     },
@@ -36,6 +48,7 @@
     "3d",
     "dashboard",
     "construtor",
+    "vagas-paralelas",
     "maquete",
     "three.js",
     "ocpp",
