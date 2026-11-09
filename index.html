@@ -114,6 +114,8 @@ button{font:inherit;color:inherit}
 /* Abertura: título, busca e categorias */
 .abertura{background:radial-gradient(1100px 380px at 20% -10%,var(--hero),transparent 70%),linear-gradient(180deg,var(--hero),var(--paper) 92%);padding:104px 0 24px}
 .resumo{margin:0 0 10px;font-size:12.5px;font-weight:500;color:var(--green-text);font-variant-numeric:tabular-nums}
+/* Bolinha com espaço duplo dos dois lados: a margem soma um espaço a mais (dois espaços seguidos no texto viram um só) */
+.resumo .sep{margin:0 .2em}
 .abertura h1{margin:0;font-size:clamp(28px,3.6vw,44px);font-weight:500;line-height:1.04;letter-spacing:-.04em;max-width:15em;text-wrap:balance}
 .abertura h1 span{color:var(--muted)}
 .busca{margin-top:22px;max-width:640px;display:flex;align-items:center;gap:10px;height:48px;padding:0 8px 0 16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--sombra);transition:box-shadow .2s,border-color .2s}
@@ -517,8 +519,7 @@ button{font:inherit;color:inherit}
   const ativos = C.projetos.filter((p) => p.status !== 'arquivado');
   const arquivados = C.projetos.filter((p) => p.status === 'arquivado');
 
-  $('#resumo').textContent = `${ativos.length} projetos · ${new Set(ativos.map((p) => p.categoria)).size} categorias` +
-    (ativos[0] ? ` · atualizado em ${data(ativos[0].atualizado)}` : '');
+  $('#resumo').innerHTML = `${ativos.length} projetos <span class="sep">·</span> ${new Set(ativos.map((p) => p.categoria)).size} categorias`;
   $('#gerado').textContent = `Catálogo gerado em ${data(C.gerado.slice(0, 10))}`;
 
   // Filtros
