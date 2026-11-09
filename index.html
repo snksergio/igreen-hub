@@ -220,7 +220,9 @@ button{font:inherit;color:inherit}
 .ficha-cab{flex:none;padding:26px 80px 22px 32px;border-bottom:1px solid var(--line)}
 .ficha-cab .discreto{margin:0 0 8px}
 .ficha-cab h2{margin:0;font-size:clamp(26px,3vw,36px);font-weight:500;line-height:1.05;letter-spacing:-.04em}
-.ficha-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
+.ficha-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;max-height:120px;overflow:hidden;transition:max-height .24s cubic-bezier(.2,.8,.2,1),margin-top .24s cubic-bezier(.2,.8,.2,1),opacity .16s}
+/* Ao rolar a ficha, os selos e a data saem e o cabeçalho fica só com o caminho e o nome; voltam quando a rolagem volta ao topo */
+.ficha-cab.compacta .ficha-meta{max-height:0;margin-top:0;opacity:0}
 /* As duas colunas rolam cada uma por si. A lateral não dita a altura da janela (contain:size):
    ela acompanha a coluna das telas e rola por dentro quando cresce (abas, acervo, muitas páginas). */
 .ficha-grade{display:grid;grid-template-columns:minmax(0,1fr) 320px;grid-template-rows:minmax(0,1fr);overflow:hidden}
@@ -356,9 +358,14 @@ button{font:inherit;color:inherit}
 }
 @media (max-width:900px){
   /* Uma coluna: a ficha inteira rola, como antes */
-  .ficha-grade{grid-template-columns:1fr;grid-template-rows:none;overflow-y:auto}
+  .ficha-grade{grid-template-columns:1fr;grid-template-rows:none;grid-auto-rows:max-content;overflow-y:auto}
   .ficha-principal,.lado-corpo{overflow:visible}
-  .ficha-lado{contain:none;min-height:0;border-left:0;border-top:1px solid var(--line)}
+  .ficha-lado{contain:none;min-height:auto;border-left:0;border-top:1px solid var(--line);padding-bottom:calc(67px + env(safe-area-inset-bottom))}
+  /* Linhas com a altura do conteúdo: sem isso a lateral encolhia até caber na tela e a lista passava por baixo dos botões */
+  .lado-corpo{flex:none}
+  /* Os botões viram o rodapé da ficha: presos embaixo, fora da rolagem, lado a lado */
+  .lado-acoes{position:absolute;left:0;right:0;bottom:0;z-index:2;grid-template-columns:1fr 1fr;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--surface);border-top:1px solid var(--line)}
+  .lado-acoes .btn{padding:0 10px}
   .grupo-cab{top:0}
 }
 @media (max-width:760px){
@@ -386,7 +393,6 @@ button{font:inherit;color:inherit}
   .galeria .seta{display:none}
   .lado-corpo{padding:18px 16px 20px}
   .abas,.filtro-acervo{margin-left:16px;margin-right:16px}
-  .lado-acoes{padding:14px 16px 28px}
   .guia{padding:16px 16px 32px}
   .rodape-card{padding:16px 18px}
   .rodape-card p{flex-basis:100%;padding-left:0;border-left:0}
@@ -996,6 +1002,18 @@ button{font:inherit;color:inherit}
       fechar();
     }
   }
+
+  // Cabeçalho compacto: ao rolar a ficha (as colunas no computador, a ficha inteira no celular), saem os selos e a data.
+  // Só encolhe quando há rolagem de sobra, para não ficar abrindo e fechando em ficha que quase cabe na tela.
+  ficha.addEventListener('scroll', () => {
+    const cab = ficha.querySelector('.ficha-cab');
+    const rolaveis = ficha.querySelectorAll('.ficha-grade, .ficha-principal, .lado-corpo');
+    if (!cab || !rolaveis.length) return;
+    let topo = 0, sobra = 0;
+    for (const el of rolaveis) { topo = Math.max(topo, el.scrollTop); sobra = Math.max(sobra, el.scrollHeight - el.clientHeight); }
+    if (!cab.classList.contains('compacta') && topo > 24 && sobra > 160) cab.classList.add('compacta');
+    else if (cab.classList.contains('compacta') && topo < 4) cab.classList.remove('compacta');
+  }, true);
 
   ficha.addEventListener('input', (e) => {
     if (e.target.matches('[data-filtro-acervo]')) filtrarAcervo(e.target.value);
