@@ -2,9 +2,7 @@
   "nome": "Faturas de energia",
   "descricao": "As faturas de energia no app: ver as faturas da Casa, pagar no Pix e no boleto, boleto em emissão, consulta fora do ar, Pix expirado e troca de unidade.",
   "tipo": "prototipo",
-  "atualizado": "2026-10-29",
-  "link": "https://snksergio.github.io/pagar-fatura-igreen/",
-  "repo": "https://github.com/snksergio/pagar-fatura-igreen",
+  "atualizado": "2026-11-10",
   "paginas": [
     {
       "nome": "Faturas de energia v2",
@@ -41,8 +39,19 @@
       "nome": "v1 · padrão do app (Figma V1)",
       "arquivo": "faturas-energia.html",
       "data": "2026-10-28"
+    },
+    {
+      "nome": "Rascunho de 27/10 · terceira versão",
+      "arquivo": "faturas-energia-fluxo-v3.html",
+      "data": "2026-10-27"
+    },
+    {
+      "nome": "Rascunho de 27/10 · primeira versão",
+      "arquivo": "faturas-energia-fluxo.html",
+      "data": "2026-10-27"
     }
   ],
+  "repo": "https://github.com/snksergio/pagar-fatura-igreen",
   "tags": [
     "fatura",
     "energia",
