@@ -12,7 +12,8 @@
 <style>
 /* Vitrine do hub: lê window.CATALOGO (catalogo.js, gerado por scripts/gerar-catalogo.mjs).
    Na página inicial cada categoria é um carrossel (arrasta com o mouse ou usa as setas);
-   filtro e busca mostram grade. Card abre a ficha do projeto: slider de telas à esquerda,
+   filtro mostra grade. A busca mostra os projetos num carrossel e, embaixo, as páginas, versões e itens
+   do acervo que batem com ela, com o link direto, agrupados por projeto. Card abre a ficha do projeto: slider de telas à esquerda,
    detalhes e ações na barra lateral, que rola por conta própria. Projeto com acervo (variações em grupos)
    ganha abas na lateral: Projeto e o acervo, com grupos colapsáveis que trocam os prints da galeria. Uma fonte só, a do hotsite iGreen MOB (Instrument Sans);
    números com algarismos tabulares. Tema escuro por padrão; a escolha no topo fica salva neste navegador. */
@@ -158,6 +159,24 @@ button{font:inherit;color:inherit}
 /* Carrossel: uma linha por categoria */
 .trilho{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 60px) / 4);gap:20px;scroll-padding-inline:var(--lado);margin:-8px calc(-1 * var(--lado)) -28px;padding:8px var(--lado) 28px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 var(--lado),#000 calc(100% - var(--lado)),transparent);mask-image:linear-gradient(90deg,transparent,#000 var(--lado),#000 calc(100% - var(--lado)),transparent)}
 .grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+
+/* Busca detalhada: as páginas e links que batem com a busca, agrupados por projeto, um abaixo do outro */
+.achados{display:grid;gap:16px}
+.achado{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sombra);padding:10px}
+.achado-cab{display:flex;align-items:center;gap:12px;padding:2px 4px 10px 2px;text-decoration:none;border-radius:10px}
+.achado-cab .capa{flex:none;width:72px;border-radius:8px}
+.achado-cab .capa.vazia b{font-size:18px}
+.achado-nome{flex:1;min-width:0}
+.achado-nome b{display:block;font-size:14.5px;font-weight:600;letter-spacing:-.015em;line-height:1.25}
+.achado-nome small{display:block;margin-top:2px;font-size:12px;color:var(--muted)}
+.achado-ver{flex:none;font-size:12.5px;color:var(--soft);white-space:nowrap}
+.achado-cab:hover .achado-ver{color:var(--green-text)}
+.achado .paginas{font-size:13.5px;font-weight:500}
+.achado-txt{min-width:0}
+.achado-txt small{display:block;margin-top:1px;font-size:12px;font-weight:400;color:var(--soft)}
+.achado mark{background:var(--leaf);color:var(--green-text);border-radius:3px}
+.achado .mais button{width:100%;padding:9px 12px;border:0;background:none;text-align:left;font-size:13px;font-weight:500;color:var(--green-text);cursor:pointer}
+.achado .mais button:hover{background:var(--neutro)}
 
 /* Card do projeto */
 .card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sombra);padding:12px;text-decoration:none;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s}
@@ -557,7 +576,8 @@ button{font:inherit;color:inherit}
       if (estado.categoria !== 'todos' && p.categoria !== estado.categoria) return false;
       if (!palavras.length) return true;
       const acervo = (p.acervo?.grupos ?? []).flatMap((g) => [g.nome, ...g.paginas.map((pg) => pg.nome)]);
-      const texto = norm([p.nome, p.descricao, tipo(p), categorias.get(p.categoria)?.nome, p.id, ...p.tags, ...p.paginas.map((pg) => pg.nome), ...p.versoes.map((v) => v.nome), ...acervo].join(' '));
+      const outras = (p.outras ?? []).map((o) => o.nome);
+      const texto = norm([p.nome, p.descricao, tipo(p), categorias.get(p.categoria)?.nome, p.id, ...p.tags, ...p.paginas.map((pg) => pg.nome), ...p.versoes.map((v) => v.nome), ...acervo, ...outras].join(' '));
       return palavras.every((w) => texto.includes(w));
     });
   }
@@ -580,6 +600,72 @@ button{font:inherit;color:inherit}
 
   const seta = (dir, rotulo, classe = '') =>
     `<button class="seta ${classe}" type="button" data-rolar="${dir}" aria-label="${rotulo}">${icone(dir < 0 ? ESQ : DIR)}</button>`;
+
+  // Busca detalhada: as páginas, versões e itens do acervo que batem com a busca, com o link direto.
+  // Cada palavra precisa aparecer no item ou no nome do projeto dele: "fatura" traz todas as páginas dos
+  // projetos de fatura e as dos outros projetos que falam de fatura; "pix fatura" traz o Pix dos projetos de fatura.
+  // Dentro de cada projeto, o que fala direto da busca vem primeiro; o resto fica atrás do "Mostrar mais".
+  // As outras telas da pasta (as que não estão na ficha, achadas pelo título) só entram quando o próprio título
+  // fala da busca: um app com 200 telas não despeja todas só porque o nome do projeto bateu.
+  const LIMITE_ACHADOS = 5;
+
+  function achadosDe(p, palavras) {
+    const contexto = norm(p.nome);
+    const vistos = new Set();
+    const achados = [];
+    const juntar = (nome, url, extra, grupo = '', soDireto = false) => {
+      const proprio = norm(`${nome} ${grupo}`);
+      const direto = palavras.some((w) => proprio.includes(w));
+      if (vistos.has(url) || (soDireto && !direto) || !palavras.every((w) => proprio.includes(w) || contexto.includes(w))) return;
+      vistos.add(url);
+      achados.push({ nome, url, extra, direto });
+    };
+    for (const pg of p.paginas) juntar(pg.nome, pg.url, '');
+    p.versoes.forEach((v, i) => juntar(v.nome, v.url, `Versão${i === 0 ? ' atual' : ''}${v.data ? ` · ${data(v.data)}` : ''}`));
+    for (const g of p.acervo?.grupos ?? []) for (const pg of g.paginas) juntar(pg.nome, pg.url, `${p.acervo.nome} · ${g.nome}`, g.nome);
+    for (const o of p.outras ?? []) juntar(o.nome, o.url, 'Outras telas da pasta', '', true);
+    return achados.sort((a, b) => b.direto - a.direto);
+  }
+
+  // Marca as palavras buscadas no texto, sem ligar para acento e maiúscula
+  function marcar(texto, palavras) {
+    const letras = [...String(texto)];
+    let normal = '';
+    const origem = [];
+    letras.forEach((ch, i) => {
+      for (const c of norm(ch)) {
+        normal += c;
+        origem.push(i);
+      }
+    });
+    const marcada = letras.map(() => false);
+    for (const w of palavras) {
+      for (let k = normal.indexOf(w); k !== -1; k = normal.indexOf(w, k + w.length)) {
+        for (let j = k; j < k + w.length; j++) marcada[origem[j]] = true;
+      }
+    }
+    let html = '';
+    letras.forEach((ch, i) => {
+      if (marcada[i] && !marcada[i - 1]) html += '<mark>';
+      html += esc(ch);
+      if (marcada[i] && !marcada[i + 1]) html += '</mark>';
+    });
+    return html;
+  }
+
+  const achado = ({ p, achados }, palavras) => {
+    const sobra = achados.length - LIMITE_ACHADOS;
+    const linha = (a, i) => `<li${i >= LIMITE_ACHADOS ? ' hidden' : ''}><a href="${esc(a.url)}" target="_blank" rel="noopener">
+      <span class="achado-txt"><span>${marcar(a.nome, palavras)}</span>${a.extra ? `<small>${marcar(a.extra, palavras)}</small>` : ''}</span>${icone(FORA, 14)}</a></li>`;
+    return `<article class="achado">
+      <a class="achado-cab" href="#${esc(p.id)}">
+        ${capa(p)}
+        <span class="achado-nome"><b>${esc(p.nome)}</b><small>${esc(categorias.get(p.categoria)?.nome)} · ${esc(tipo(p))}</small></span>
+        <span class="achado-ver">Ver projeto</span>
+      </a>
+      <ul class="paginas">${achados.map(linha).join('')}${sobra > 0 ? `<li class="mais"><button type="button" data-mais>Mostrar mais ${sobra}</button></li>` : ''}</ul>
+    </article>`;
+  };
 
   function render() {
     filtros();
@@ -628,11 +714,31 @@ button{font:inherit;color:inherit}
       return;
     }
 
-    const titulo = estado.busca
-      ? `${itens.length} ${itens.length === 1 ? 'resultado' : 'resultados'} para “${esc(estado.busca)}”`
-      : estado.arquivados ? 'Arquivados' : esc(categorias.get(estado.categoria)?.nome);
+    // Busca: os projetos num carrossel, como na página inicial, e embaixo as páginas e links que batem com ela
+    if (estado.busca) {
+      const palavras = norm(estado.busca).split(/\s+/).filter(Boolean);
+      const grupos = itens.map((p) => ({ p, achados: achadosDe(p, palavras) })).filter((g) => g.achados.length);
+      const total = grupos.reduce((n, g) => n + g.achados.length, 0);
+      lista.innerHTML = `
+        <section class="secao" data-carrossel>
+          <div class="secao-topo">
+            <h2>Projetos</h2><span class="num">${itens.length}</span>
+            <div class="secao-acoes">${seta(-1, 'Projetos: anteriores')}${seta(1, 'Projetos: próximos')}</div>
+          </div>
+          <div class="trilho" data-arrasta>${itens.map((p) => card(p, estado.categoria === 'todos')).join('')}</div>
+        </section>
+        ${total ? `<section class="secao">
+          <div class="secao-topo"><h2>Páginas e links</h2><span class="num">${total}</span></div>
+          <div class="achados">${grupos.map((g) => achado(g, palavras)).join('')}</div>
+        </section>` : ''}`;
+      const carrossel = lista.querySelector('[data-carrossel]');
+      ligarSetas(carrossel, carrossel.querySelector('.trilho'));
+      return;
+    }
+
+    const titulo = estado.arquivados ? 'Arquivados' : esc(categorias.get(estado.categoria)?.nome);
     lista.innerHTML = `<section class="secao">
-      <div class="secao-topo"><h2>${titulo}</h2>${estado.busca ? '' : `<span class="num">${itens.length}</span>`}</div>
+      <div class="secao-topo"><h2>${titulo}</h2><span class="num">${itens.length}</span></div>
       <div class="grade">${itens.map((p) => card(p, estado.categoria === 'todos')).join('')}</div>
     </section>`;
   }
@@ -708,6 +814,13 @@ button{font:inherit;color:inherit}
     if (ver) {
       filtrar(ver.dataset.ver);
       $('#filtros').scrollIntoView({ block: 'start', behavior: suave() });
+    }
+    const mais = e.target.closest('[data-mais]');
+    if (mais) {
+      const escondidas = mais.closest('ul').querySelectorAll('li[hidden]');
+      for (const li of escondidas) li.hidden = false;
+      escondidas[0]?.querySelector('a').focus();
+      mais.closest('li').remove();
     }
   });
 

@@ -22,6 +22,27 @@ const ehPasta = (p) => existsSync(p) && statSync(p).isDirectory();
 const avisos = [];
 const projetos = [];
 
+// Outras páginas: os .html da pasta do projeto que não estão na ficha, lidas pelo <title>. Só a busca da vitrine
+// usa, para achar telas soltas (um app com um arquivo por tela, por exemplo). Ficam de fora o builder/ (código e
+// versões de trabalho, que não aparecem na vitrine), o _vitrine/, páginas que só redirecionam e título repetido.
+const NAO_ENTRAM_NA_BUSCA = new Set(['builder', '_vitrine', 'node_modules']);
+const ENTIDADES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', mdash: '—', ndash: '–', middot: '·', bull: '•' };
+const textoPuro = (s) =>
+  s
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e) =>
+      e[0] === '#' ? String.fromCodePoint(/x/i.test(e[1]) ? parseInt(e.slice(2), 16) : Number(e.slice(1))) : ENTIDADES[e.toLowerCase()] ?? m,
+    )
+    .replace(/\s+/g, ' ')
+    .trim();
+const paginasHtml = (dir, rel = '') =>
+  readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
+    if (e.name.startsWith('.')) return [];
+    const caminho = rel ? `${rel}/${e.name}` : e.name;
+    if (e.isDirectory()) return NAO_ENTRAM_NA_BUSCA.has(e.name) ? [] : paginasHtml(join(dir, e.name), caminho);
+    return /\.html?$/i.test(e.name) ? [caminho] : [];
+  });
+
 for (const nome of readdirSync(raiz)) {
   if (nome.startsWith('.') || NAO_SAO_CATEGORIA.has(nome) || !ehPasta(join(raiz, nome))) continue;
   if (!categorias.some((c) => c.id === nome)) avisos.push(`${nome}/: pasta na raiz que não está em categorias.json`);
@@ -120,6 +141,33 @@ for (const categoria of categorias) {
       };
     }
 
+    const semAncora = (arquivo) => {
+      const s = arquivo.split(/[?#]/)[0];
+      return !s || s.endsWith('/') ? `${s}index.html` : s;
+    };
+    const naFicha = new Set(
+      [...paginas, ...versoes, ...(p.acervo?.grupos ?? []).flatMap((g) => [g, ...(Array.isArray(g.paginas) ? g.paginas : [])])]
+        .map((x) => x?.arquivo)
+        .filter((a) => typeof a === 'string' && !externo(a))
+        .map(semAncora),
+    );
+    const titulosVistos = new Set();
+    const outras = p.link
+      ? []
+      : paginasHtml(pasta)
+          .filter((rel) => !naFicha.has(rel))
+          .sort((a, b) => a.localeCompare(b, 'pt-BR', { numeric: true }))
+          .flatMap((rel) => {
+            const html = readFileSync(join(pasta, rel), 'utf8');
+            if (/http-equiv=["']?refresh/i.test(html)) return [];
+            const nome =
+              textoPuro(html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] ?? '') ||
+              rel.split('/').pop().replace(/\.html?$/i, '').replace(/[-_]+/g, ' ');
+            if (titulosVistos.has(nome)) return [];
+            titulosVistos.add(nome);
+            return [{ nome, url: url(rel) }];
+          });
+
     projetos.push({
       id,
       categoria: categoria.id,
@@ -131,6 +179,7 @@ for (const categoria of categorias) {
       paginas: paginas.map((pg) => ({ nome: pg.nome, url: url(pg.arquivo) })),
       versoes: versoes.map((v) => ({ nome: v.nome, url: url(v.arquivo), data: v.data ?? null })),
       acervo,
+      outras,
       externo: Boolean(p.link),
       repo: p.repo ?? null,
       tags: p.tags ?? [],
