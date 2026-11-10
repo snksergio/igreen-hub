@@ -2,8 +2,36 @@
   "nome": "Login do Super App",
   "descricao": "O fluxo completo de login: biometria, boas-vindas, CPF, primeiro acesso, cadastro do Eletroposto, aparelho novo e ajuda de segurança.",
   "tipo": "prototipo",
-  "atualizado": "2026-10-09",
-  "link": "https://snksergio.github.io/login-superapp/",
+  "atualizado": "2026-11-10",
+  "paginas": [
+    {
+      "nome": "Fluxo completo",
+      "arquivo": "index.html"
+    }
+  ],
+  "acervo": {
+    "nome": "Explorações",
+    "grupos": [
+      {
+        "nome": "Login por biometria",
+        "prints": "biometria",
+        "paginas": [
+          {
+            "nome": "Carrossel iGreen",
+            "arquivo": "login-biometria-carrossel.html"
+          },
+          {
+            "nome": "Carrossel de objetos",
+            "arquivo": "login-biometria-carrossel-objetos.html"
+          },
+          {
+            "nome": "Animação da biometria",
+            "arquivo": "login-biometria-motion.html"
+          }
+        ]
+      }
+    ]
+  },
   "repo": "https://github.com/snksergio/login-superapp",
   "tags": [
     "login",
