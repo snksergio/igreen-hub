@@ -39,6 +39,30 @@
     {
       "nome": "Descartadas",
       "arquivo": "descartadas.html"
+    },
+    {
+      "nome": "Protótipo · App Eletroposto: home, veículos e pagamento",
+      "arquivo": "https://igreen-hub.pages.dev/mob/app-eletroposto/Eletroposto%20-%20home.html"
+    },
+    {
+      "nome": "Protótipo · Login do Super App",
+      "arquivo": "https://igreen-hub.pages.dev/super-app/login/"
+    },
+    {
+      "nome": "Protótipo · Pagar fatura: Home iGreen, Telecom e pagamento",
+      "arquivo": "https://igreen-hub.pages.dev/super-app/pagar-fatura/"
+    },
+    {
+      "nome": "Protótipo · Faturas de energia",
+      "arquivo": "https://igreen-hub.pages.dev/super-app/faturas-energia/faturas-energia-v2.html"
+    },
+    {
+      "nome": "Protótipo · Pagar e negociar faturas",
+      "arquivo": "https://igreen-hub.pages.dev/super-app/pagar-negociar/faturas-negociar.html"
+    },
+    {
+      "nome": "Protótipo · Cadastro iGreen Pay",
+      "arquivo": "https://igreen-hub.pages.dev/super-app/cadastro-pay/"
     }
   ],
   "acervo": {

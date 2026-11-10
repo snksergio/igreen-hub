@@ -25,3 +25,16 @@ Cada página mostra as telas nas posições do canvas, em fundo escuro: arraste 
 | Versões anteriores · Descartadas | https://igreen-hub.pages.dev/super-app/canvas-app/anteriores-descartadas.html |
 
 As imagens das telas estão em `assets/`, com o nome do arquivo igual ao do canvas. As notas de bastidor do canvas (os post-its) não vieram; os títulos das linhas vieram.
+
+## Protótipos
+
+Os protótipos navegáveis feitos a partir deste canvas. Também têm card próprio na vitrine; os links ficam aqui e na ficha para quem chega pelo canvas.
+
+| Protótipo | Endereço |
+|---|---|
+| App Eletroposto: home, veículos e pagamento | https://igreen-hub.pages.dev/mob/app-eletroposto/Eletroposto%20-%20home.html |
+| Login do Super App | https://igreen-hub.pages.dev/super-app/login/ |
+| Pagar fatura: Home iGreen, Telecom e pagamento | https://igreen-hub.pages.dev/super-app/pagar-fatura/ |
+| Faturas de energia | https://igreen-hub.pages.dev/super-app/faturas-energia/faturas-energia-v2.html |
+| Pagar e negociar faturas | https://igreen-hub.pages.dev/super-app/pagar-negociar/faturas-negociar.html |
+| Cadastro iGreen Pay | https://igreen-hub.pages.dev/super-app/cadastro-pay/ |
