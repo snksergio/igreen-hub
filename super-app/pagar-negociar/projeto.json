@@ -2,9 +2,7 @@
   "nome": "Pagar e negociar faturas",
   "descricao": "As faturas em aberto da Casa no padrão do app: pagar no Pix da energia ou com desconto, parcelar, agrupar e desmembrar, e as seis variações do destaque do Pix.",
   "tipo": "prototipo",
-  "atualizado": "2026-10-30",
-  "link": "https://snksergio.github.io/pagar-fatura-igreen/",
-  "repo": "https://github.com/snksergio/pagar-fatura-igreen",
+  "atualizado": "2026-11-10",
   "paginas": [
     {
       "nome": "Pagar e negociar",
@@ -35,6 +33,19 @@
       "arquivo": "faturas-variacoes.html"
     }
   ],
+  "versoes": [
+    {
+      "nome": "Atual · Pix da energia com a régua do prazo (variação C)",
+      "arquivo": "faturas-negociar.html",
+      "data": "2026-11-04"
+    },
+    {
+      "nome": "Antes da escolha da C · com as variações da fatura",
+      "arquivo": "faturas-energia-fluxo-negociar-variacoes.html",
+      "data": "2026-10-30"
+    }
+  ],
+  "repo": "https://github.com/snksergio/pagar-fatura-igreen",
   "tags": [
     "fatura",
     "parcelar",
