@@ -3,7 +3,6 @@
   "descricao": "A tela Minha jornada do app do licenciado: a trilha das graduações, de Consultor a Acionista, com metas, qualificação e histórico. Com a documentação e a proposta navegável.",
   "tipo": "proposta",
   "atualizado": "2026-10-20",
-  "link": "https://snksergio.github.io/app-licenciado-card/",
   "repo": "https://github.com/snksergio/app-licenciado-card",
   "paginas": [
     {
@@ -21,6 +20,9 @@
     "graduação",
     "meta",
     "qualificação",
-    "histórico"
+    "histórico",
+    "dias qualificados",
+    "pré-qualificação",
+    "trilha"
   ]
 }

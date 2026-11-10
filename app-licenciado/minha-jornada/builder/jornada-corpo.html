@@ -1,0 +1,282 @@
+<body>
+<main class="palco">
+  <aside class="lateral esq" aria-label="Fluxos">
+    <div class="titulo-doc">
+      <h1>Minha jornada no app do licenciado</h1>
+      <p>Proposta pra tela de histórico de graduações do Figma, com o que veio das versões 1 e 2. Números de exemplo.</p>
+      <nav class="docs" aria-label="Documentações">
+        <a href="../reconhecimento/documentacao.html">Reconhecimento</a>
+        <a href="documentacao-jornada.html" aria-current="page">Minha jornada</a>
+      </nav>
+    </div>
+    <nav id="lista"></nav>
+  </aside>
+
+  <section class="centro" aria-label="Protótipo">
+    <div class="moldura" id="moldura">
+      <div class="aparelho">
+        <div class="raiz">
+          <iframe id="f-jornada" title="Protótipo da Minha jornada"></iframe>
+          <span class="camera" aria-hidden="true"></span>
+          <span class="gestos" aria-hidden="true"></span>
+        </div>
+      </div>
+    </div>
+    <article class="doc" id="doc" hidden></article>
+
+    <div class="simular" id="simular">
+      <span class="rot">Simular</span>
+      <button type="button" data-cen="dias" data-v="andamento" class="destaque" title="Dias qualificados em andamento"><span class="ms">schedule</span>62 de 90 dias</button>
+      <button type="button" data-cen="dias" data-v="batida" title="Meta de 90 dias batida"><span class="ms">task_alt</span>Meta batida</button>
+      <button type="button" id="recomecar"><span class="ms">replay</span>Recomeçar</button>
+    </div>
+
+    <div class="nota-ux" id="nota" aria-live="polite">
+      <div class="rot"><span class="ms" id="nota-ic">lightbulb</span><span id="nota-rot">Decisão de desenho</span></div>
+      <p id="nota-p"></p>
+    </div>
+  </section>
+
+  <aside class="lateral dir" aria-label="Telas do fluxo">
+    <div class="telas-fluxo">
+      <span class="tag" id="tf-tag"></span>
+      <h2 id="tf-titulo"></h2>
+      <p class="desc" id="tf-desc"></p>
+      <ol class="passos" id="tf-passos"></ol>
+      <div class="cen" id="tf-cen"></div>
+    </div>
+  </aside>
+</main>
+
+<!-- Protótipo da jornada embutido (base64). Gerado a partir de prototipo-jornada.html. -->
+<script>
+/*PROTOS-INICIO*/
+/*PROTOS-FIM*/
+</script>
+<script>
+/* ---------- Considerações ---------- */
+const DOC_MUDA = `
+  <h2>O que muda em relação ao Figma</h2>
+  <p class="lead">A estrutura do Figma continua: abas Pré-qualificação e Qualificação, e as seções Em progresso, Próximas metas e Concluídos. O que entra é o que faltava pra ler a jornada.</p>
+  <h3 id="j-topo">Topo</h3>
+  <ul>
+    <li><b>Trilha das graduações:</b> Consultor, Sênior, Gestor, Executivo, Diretor e Acionista em sequência. Só a atual fica maior e com anel.</li>
+    <li><b>Traços entre os selos:</b> verdes até onde ele chegou, tracejados até a próxima e cinza depois. Nenhum passa por trás dos selos.</li>
+    <li><b>Uma linha de contexto:</b> "Você é Gestor desde Jun/2026 · rumo a Executivo".</li>
+  </ul>
+  <h3 id="j-cards">Cards</h3>
+  <ul>
+    <li><b>Resumo do progresso:</b> "1 de 5 requisitos" com barra segmentada, e uma barra fina em cada requisito.</li>
+    <li><b>Dias qualificados com a regra:</b> "62 de 90" e "Dias seguidos · faltam 28". O toque abre a meia-lua, igual às versões 1 e 2.</li>
+    <li><b>Concluídos com histórico:</b> quando cada graduação foi conquistada e quanto tempo levou.</li>
+    <li><b>Próximas metas abrem:</b> mostram o que vai ser pedido, ainda sem progresso.</li>
+    <li><b>O (i) explica a jornada:</b> qualificação, dias qualificados e pré-qualificação. Onde a regra não está confirmada, o texto avisa.</li>
+  </ul>`;
+
+const DOC_VALIDAR_J = `
+  <h2>Para validar antes de enviar</h2>
+  <p class="lead">Perguntas que travam a versão final da jornada.</p>
+  <h3 id="j-regras">Regras de negócio</h3>
+  <ul>
+    <li><b>Meta dos dias qualificados:</b> o Figma mostra "3 de 10", e o escritório virtual mostra meta de 90 dias. Qual vale? A meta muda por graduação?</li>
+    <li><b>Os dias zeram</b> se a qualificação cair?</li>
+    <li><b>Pré-qualificação:</b> o que é, e quem vê essa aba? A proposta não inventa a regra.</li>
+  </ul>
+  <h3 id="j-figma">No Figma</h3>
+  <ul>
+    <li><b>Aba Pré-qualificação:</b> "Minha pré-qualificação" mostra E-Expansão, o mesmo nome do card em progresso. Na aba Qualificação, a "minha" é a graduação anterior. Qual é o certo?</li>
+    <li><b>Datas das conquistas:</b> o app tem a data de cada graduação concluída? O frame do Figma se chama "Versão sem histórico".</li>
+  </ul>`;
+
+const DOC_LIGA = `
+  <h2>Ligação com as versões 1 e 2</h2>
+  <p class="lead">A jornada e o card de reconhecimento falam do mesmo licenciado. Estes pontos evitam que as telas se repitam ou se contradigam.</p>
+  <h3 id="j-repete">O que se repete</h3>
+  <ul>
+    <li>O sheet de dias qualificados (Versão 1) e "Rumo a Executivo" (Versão 2) mostram a mesma lista de requisitos desta tela. Sugestão: lá fica um link "Ver minha jornada", e esta tela vira a fonte completa.</li>
+    <li>O exemplo é o mesmo nas três propostas: Gestor, rumo a Executivo, com 62 de 90 dias qualificados.</li>
+  </ul>
+  <h3 id="j-nomes">Nomes e caminhos</h3>
+  <ul>
+    <li><b>Nome repetido:</b> na Versão 2, o painel também se chama "Minha jornada". Um dos dois precisa de outro nome.</li>
+    <li><b>"Ver toda jornada"</b>, na home, leva pra esta tela ou pro Histórico de Green Points? O pedido original falava em "Consultar Histórico".</li>
+  </ul>`;
+
+/* ---------- Fluxos ---------- */
+const T = 'Minha jornada';
+const FLUXOS = [
+  { grupo:'Proposta', versao:'jornada' },
+  { id:'trilha', proto:'jornada', tag:T, titulo:'Topo e trilha',
+    desc:'O topo mostra as seis graduações em sequência, onde ele está e o que vem a seguir.',
+    passos:[
+      { t:'Trilha das graduações', cmd:{ action:'aba', aba:'qual' },
+        nota:{ tipo:'info', p:'Só a graduação atual fica maior e com anel. Os traços são verdes até onde ele chegou, tracejados até a próxima e cinza depois. Cada selo leva ao card daquela graduação.' } },
+    ] },
+  { id:'progresso', proto:'jornada', tag:T, titulo:'Em progresso',
+    desc:'O card da próxima graduação, com o resumo dos requisitos e o que falta em cada um.',
+    passos:[
+      { t:'Rumo a Executivo', cmd:{ action:'ir', id:'executivo' },
+        nota:{ tipo:'info', p:'"1 de 5 requisitos" com barra segmentada, e uma barra fina em cada requisito. O caminho vai de "Minha qualificação" até "Próxima qualificação", como no Figma.' } },
+      { t:'Dias qualificados', cmd:{ action:'sheet', kind:'dias' },
+        nota:{ tipo:'atencao', p:'O Figma mostra meta de 10 dias, e o escritório virtual, de 90. Qual vale? A meta muda por graduação?' } },
+    ] },
+  { id:'proximas', proto:'jornada', tag:T, titulo:'Próximas metas',
+    desc:'As graduações seguintes abrem e mostram o que vai ser pedido.',
+    passos:[
+      { t:'Diretor', cmd:{ action:'ir', id:'diretor' },
+        nota:{ tipo:'info', p:'Mostra os requisitos de Diretor que estão no Figma, ainda sem progresso. Acionista avisa que os requisitos aparecem depois.' } },
+    ] },
+  { id:'concluidos', proto:'jornada', tag:T, titulo:'Concluídos',
+    desc:'Cada graduação conquistada mostra quando foi e quanto tempo levou.',
+    passos:[
+      { t:'Gestor', cmd:{ action:'ir', id:'gestor' },
+        nota:{ tipo:'atencao', p:'O app tem a data de cada graduação? O frame do Figma se chama "Versão sem histórico". As datas do protótipo são de exemplo.' } },
+    ] },
+  { id:'pre', proto:'jornada', tag:T, titulo:'Pré-qualificação',
+    desc:'A aba com os dados do Figma e as mesmas melhorias de leitura.',
+    passos:[
+      { t:'Aba Pré-qualificação', cmd:{ action:'aba', aba:'pre' },
+        nota:{ tipo:'atencao', p:'"Minha pré-qualificação" repete o nome do card em progresso (E-Expansão). E o que é a pré-qualificação, e quem vê essa aba?' } },
+    ] },
+  { id:'como', proto:'jornada', tag:T, titulo:'Como funciona',
+    desc:'O (i) do topo explica qualificação, dias qualificados e pré-qualificação.',
+    passos:[
+      { t:'Como funciona', cmd:{ action:'sheet', kind:'como' },
+        nota:{ tipo:'info', p:'Onde a regra ainda não está confirmada, o texto avisa em vez de inventar.' } },
+    ] },
+
+  { grupo:'Considerações' },
+  { id:'muda', doc:DOC_MUDA, icon:'edit_note', tag:'Considerações', titulo:'O que muda em relação ao Figma',
+    desc:'O que entrou na tela e por quê.',
+    passos:[ { t:'Topo', a:'j-topo' }, { t:'Cards', a:'j-cards' } ] },
+  { id:'validar', doc:DOC_VALIDAR_J, icon:'help', tag:'Considerações', titulo:'Para validar antes de enviar',
+    desc:'Perguntas que travam a versão final.',
+    passos:[ { t:'Regras de negócio', a:'j-regras' }, { t:'No Figma', a:'j-figma' } ] },
+  { id:'ligacao', doc:DOC_LIGA, icon:'link', tag:'Considerações', titulo:'Ligação com as versões 1 e 2',
+    desc:'Pra a jornada e o card de reconhecimento não se repetirem.',
+    passos:[ { t:'O que se repete', a:'j-repete' }, { t:'Nomes e caminhos', a:'j-nomes' } ] },
+];
+
+/* ---------- Estado ---------- */
+const $ = s => document.querySelector(s);
+const frames = { jornada: $('#f-jornada') };
+const pronto = { jornada:false };
+const cen = { dias:'andamento' };
+let atual = null, passoAtual = 0, versao = 'jornada';
+
+function enviar(proto, msg){ if (pronto[proto]) frames[proto].contentWindow.postMessage({ type:'proto', ...msg }, '*'); }
+
+/* ---------- Lista da esquerda ---------- */
+function renderLista(){
+  let html = '', aberto = false, n = 0;
+  FLUXOS.forEach(f => {
+    if (f.grupo){
+      if (aberto) html += '</div>';
+      html += `<div class="grupo">${f.grupo}</div><div class="lista-fluxos">`;
+      aberto = true; return;
+    }
+    n++;
+    const marca = f.icon ? `<span class="ms">${f.icon}</span>` : n;
+    html += `<button type="button" class="fluxo" data-fluxo="${f.id}"><span class="num">${marca}</span>${f.titulo}</button>`;
+  });
+  if (aberto) html += '</div>';
+  $('#lista').innerHTML = html;
+}
+
+/* ---------- Abrir fluxo e passo ---------- */
+function abrirFluxo(id, passo = 0){
+  atual = FLUXOS.find(f => f.id === id) || FLUXOS.find(f => f.id);
+  document.querySelectorAll('.fluxo').forEach(b => b.setAttribute('aria-current', b.dataset.fluxo === atual.id));
+  $('#tf-tag').textContent = atual.tag;
+  $('#tf-titulo').textContent = atual.titulo;
+  $('#tf-desc').textContent = atual.desc;
+  $('#tf-passos').innerHTML = atual.passos.map((p, i) =>
+    `<li><button type="button" class="passo" data-passo="${i}"><span class="n">${i + 1}</span>${p.t}</button></li>`).join('');
+  const ehDoc = !!atual.doc;
+  $('#moldura').hidden = ehDoc;
+  $('#doc').hidden = !ehDoc;
+  $('#simular').hidden = ehDoc;
+  $('#nota').hidden = ehDoc;
+  if (ehDoc){ $('#doc').innerHTML = atual.doc; $('#doc').scrollTop = 0; }
+  atualizarCenario();
+  if (location.hash.slice(1) !== atual.id) history.replaceState(null, '', '#' + atual.id);
+  irPasso(passo);
+}
+function marcarPasso(){
+  document.querySelectorAll('.passo').forEach(b => {
+    if (+b.dataset.passo === passoAtual) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+  });
+}
+function mostrarNota(n){
+  if (!n) return;
+  const info = n.tipo === 'info';
+  $('#nota').dataset.tipo = info ? 'info' : '';
+  $('#nota-ic').textContent = info ? 'lightbulb' : 'help';
+  $('#nota-rot').textContent = info ? 'Decisão de desenho' : 'A validar';
+  $('#nota-p').textContent = n.p;
+}
+function irPasso(i){
+  passoAtual = i;
+  const p = atual.passos[i];
+  marcarPasso();
+  if (atual.doc){
+    const alvo = document.getElementById(p.a);
+    if (alvo) $('#doc').scrollTo({ top: alvo.offsetTop - 16, behavior: 'smooth' });
+    return;
+  }
+  enviar(atual.proto, p.cmd);
+  mostrarNota(p.nota);
+}
+
+/* ---------- Simular ---------- */
+function atualizarCenario(){
+  document.querySelectorAll('[data-cen]').forEach(b => b.classList.toggle('destaque', cen[b.dataset.cen] === b.dataset.v));
+  const dias = cen.dias === 'batida' ? '195 dias, meta batida' : '62 de 90 dias';
+  $('#tf-cen').innerHTML = atual && atual.doc ? 'Vale pra proposta da jornada.' : `Cenário: <b>Gestor</b> · rumo a Executivo · ${dias}`;
+}
+document.addEventListener('click', e => {
+  const f = e.target.closest('[data-fluxo]');
+  if (f) return abrirFluxo(f.dataset.fluxo);
+  const p = e.target.closest('[data-passo]');
+  if (p) return irPasso(+p.dataset.passo);
+  const c = e.target.closest('[data-cen]');
+  if (c){
+    cen[c.dataset.cen] = c.dataset.v;
+    enviar('jornada', { action:'set', ctl:c.dataset.cen, v:c.dataset.v });
+    return atualizarCenario();
+  }
+  if (e.target.closest('#recomecar')){
+    cen.dias = 'andamento';
+    enviar('jornada', { action:'set', ctl:'dias', v:'andamento' });
+    atualizarCenario();
+    irPasso(0);
+  }
+});
+
+/* Quando o protótipo avisa que está pronto, recebe o cenário e o passo atual */
+window.addEventListener('message', e => {
+  const m = e.data;
+  if (!m || m.type !== 'proto-ready' || !frames[m.proto]) return;
+  pronto[m.proto] = true;
+  enviar(m.proto, { action:'set', ctl:'dias', v:cen.dias });
+  if (atual && atual.proto === m.proto) enviar(m.proto, atual.passos[passoAtual].cmd);
+});
+const decodificar = b64 => new TextDecoder().decode(Uint8Array.from(atob(b64), c => c.charCodeAt(0)));
+Object.entries(frames).forEach(([k, f]) => { f.srcdoc = decodificar(PROTO_SRC[k]); });
+
+/* ---------- Escala do celular pra caber na tela ---------- */
+function ajustarEscala(){
+  const W = 384, H = 804;
+  const estreito = innerWidth <= 980;
+  // abaixo do celular: simular (~50) e nota (~90), com os espaços
+  const s = estreito ? Math.min(1, (innerWidth - 32) / W) : Math.min(1, Math.max(.6, (innerHeight - 32 - 200) / H));
+  document.documentElement.style.setProperty('--s', s.toFixed(3));
+}
+addEventListener('resize', ajustarEscala);
+
+renderLista();
+ajustarEscala();
+abrirFluxo(location.hash.slice(1) || 'trilha');
+</script>
+</body>
+</html>

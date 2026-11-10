@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minha jornada · proposta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- Tokens ---------- */
+:root{
+  color-scheme:light;
+  --page:#E6E9EB; --page-ink:#15191B; --page-muted:#5E666B; --page-line:#D2D8DB; --page-card:#FFFFFF; --page-chip:#EEF1F2;
+  --app-bg:#EFF1F2; --surface:#FFFFFF; --ink:#0D0F0F; --muted:#6A6E71; --line:#ECEEEF; --soft:#F1F2F3;
+  --primary:#338449; --accent:#EBF3ED; --base:#22A45A; --lime:#B6E36B;
+  --blue-bg:#E4F0FC; --blue-ink:#1F6FB8; --warn-bg:#FFF4E5; --warn-ink:#A75A05;
+  --font:"Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--page);color:var(--page-ink);font-family:var(--font);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:6px}
+h1,h2,h3,h4,h5,p,ul{margin:0}
+
+/* ---------- Palco ---------- */
+.stage{min-height:100vh;display:flex;gap:40px;align-items:flex-start;justify-content:center;padding:32px 24px 48px}
+.panel{width:340px;flex:none;display:flex;flex-direction:column;gap:24px;padding-top:8px}
+.panel h1{font-size:22px;font-weight:600;line-height:1.2}
+.panel .lead{font-size:14px;line-height:1.5;color:var(--page-muted);margin-top:8px}
+.pblock{display:flex;flex-direction:column;gap:10px}
+.pblock h2{font-size:14px;font-weight:600}
+.seg{display:flex;background:var(--page-chip);border-radius:10px;padding:3px;gap:3px}
+.seg button{flex:1;padding:8px 10px;border-radius:8px;font-size:13px;font-weight:500;color:var(--page-muted);text-align:center}
+.seg button[aria-pressed="true"]{background:var(--page-card);color:var(--page-ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.seg-label{font-size:12px;color:var(--page-muted)}
+.jumps{display:flex;flex-wrap:wrap;gap:6px}
+.jumps button{font-size:12.5px;padding:6px 10px;border:1px solid var(--page-line);border-radius:999px;background:var(--page-card)}
+.todo{padding-left:18px;margin:0;display:flex;flex-direction:column;gap:7px;font-size:13px;line-height:1.45}
+.todo li::marker{color:var(--page-muted)}
+
+/* ---------- Celular (tela de 360) ---------- */
+.device{position:relative;width:376px;height:790px;flex:none;border-radius:48px;background:#0B0D0E;padding:8px;box-shadow:0 30px 60px -20px rgba(0,0,0,.45)}
+.viewport{position:relative;width:100%;height:100%;border-radius:40px;overflow:hidden;background:var(--app-bg);color:var(--ink);isolation:isolate;container-type:inline-size}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;overflow-anchor:none;scrollbar-width:none}
+.screen::-webkit-scrollbar{display:none}
+.statusbar{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 26px 0 32px;font-size:15px;font-weight:600;color:#fff;position:relative;z-index:1}
+.statusbar .icons{display:flex;gap:6px;align-items:center}
+
+/* ---------- Topo: título e trilha das graduações ---------- */
+.jtop{position:relative;color:#fff;padding-bottom:44px;overflow:hidden;
+  background:radial-gradient(70% 60% at 90% 10%,rgba(51,132,73,.35) 0%,rgba(51,132,73,0) 70%),linear-gradient(180deg,#111614 0%,#0A0D0C 100%)}
+.deco{position:absolute;right:-34px;top:6px;width:200px;height:180px;pointer-events:none;opacity:.38}
+.deco span{position:absolute}
+.deco span svg{display:block;width:100%;height:100%}
+.deco .barra{position:absolute;bottom:20px;width:34px;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,#2E8F4D,#14472A)}
+.jtop > *{position:relative}
+.jtop > .deco{position:absolute}
+.trow{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 0}
+.back{width:32px;height:32px;border-radius:50%;background:#fff;color:var(--ink);display:grid;place-items:center}
+.info{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;color:#fff}
+.jtop h1{font-size:24px;font-weight:600;line-height:28px;padding:18px 24px 0}
+.jtop .sub{display:block;font-size:13px;opacity:.75;padding:4px 24px 0}
+.jtop .sub b{color:var(--lime);font-weight:600;opacity:1}
+
+/* trilha: Consultor → Acionista */
+.trilha{--rp:14px;--ra:24px;position:relative;display:grid;grid-template-columns:repeat(6,1fr);margin:18px 16px 0;padding:8px 4px 10px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
+/* cada selo numa área de 48 px; os traços ligam a borda de um selo à do próximo, sem passar por trás */
+.lv{--a:48px;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.lv .bw{height:var(--a);display:grid;place-items:center}
+.lv svg{width:28px;height:28px;border-radius:50%;transition:transform .15s}
+.lv.atual svg{width:40px;height:40px;box-shadow:0 0 0 2px #0A0D0C,0 0 0 4px var(--lime)}
+.lv.futuro svg{opacity:.4;filter:grayscale(.6)}
+.lv:not(:last-child)::after{content:"";position:absolute;top:calc(var(--a) / 2 - 1px);height:2px;border-radius:2px;
+  left:calc(50% + var(--r) + 3px);width:calc(100% - var(--r) - var(--rn) - 6px);background:rgba(255,255,255,.16)}
+.lv.lig-feita::after{background:var(--lime)}
+.lv.lig-andando::after{background:repeating-linear-gradient(90deg,var(--lime) 0 3px,transparent 3px 6px);opacity:.75}
+.lv span{font-size:10.5px;line-height:13px;opacity:.7;white-space:nowrap}
+.lv.atual span{opacity:1;font-weight:600;color:var(--lime)}
+.lv:hover svg{transform:translateY(-2px)}
+
+/* ---------- Corpo ---------- */
+.jbody{position:relative;background:var(--app-bg);border-radius:24px 24px 0 0;margin-top:-24px;min-height:500px;padding-bottom:28px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #E1E4E6;padding-top:6px}
+.tabs button{position:relative;padding:14px 0 13px;text-align:center;font-size:15px;font-weight:500;color:#8A8F92}
+.tabs button[aria-selected="true"]{color:var(--primary);font-weight:600}
+.tabs button[aria-selected="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:var(--primary)}
+.painel{padding:0 24px}
+.painel[hidden]{display:none}
+.jsec{padding-top:26px}
+.jsec > h3{font-size:17px;font-weight:600;line-height:24px;margin-bottom:12px}
+.jcard{background:#fff;border-radius:20px;box-shadow:0 1px 3px rgba(13,15,15,.05)}
+.jcard + .jcard{margin-top:14px}
+.jhead{display:flex;align-items:center;gap:10px;width:100%;padding:18px 18px}
+.jhead svg.b{width:28px;height:28px;flex:none}
+.jhead .jt{flex:1;min-width:0;font-size:16px;font-weight:600;line-height:20px}
+.jhead .jt small{display:block;font-size:12px;font-weight:400;color:var(--muted);margin-top:1px}
+.jhead .cv{color:var(--ink);transition:transform .2s;flex:none}
+.jcard.open .jhead .cv{transform:rotate(180deg)}
+.chip{font-size:11.5px;font-weight:600;line-height:15px;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.chip.and{background:var(--blue-bg);color:var(--blue-ink)}
+.chip.nao{background:var(--soft);color:var(--muted)}
+.chip.ok{background:var(--accent);color:var(--primary)}
+.jcont{display:none;border-top:1px solid var(--line);padding:16px 16px 18px 18px}
+.jcard.open .jcont{display:block}
+
+/* resumo de requisitos */
+.resumo{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.resumo .txt{font-size:13px;color:var(--muted);white-space:nowrap}
+.resumo .txt b{color:var(--ink);font-weight:600}
+.segs{flex:1;display:grid;gap:4px}
+.segs i{display:block;height:6px;border-radius:9px;background:#E3E6E8}
+.segs i.ok{background:var(--primary)}
+.segs i.and{background:#9FDCB2}
+
+/* caminho: minha qualificação → requisitos → próxima */
+.cam{position:relative}
+.cam::before{content:"";position:absolute;left:8px;top:28px;bottom:28px;border-left:1.5px dashed #CDD2D5}
+.marco{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.marco .ic{width:18px;height:18px;display:grid;place-items:center;flex:none;color:var(--muted)}
+.marco .q{flex:1}
+.marco .r{display:flex;align-items:center;gap:8px;color:var(--muted)}
+.marco .r svg{width:24px;height:24px}
+.reqs{list-style:none;padding:6px 0 6px 20px}
+.req{display:grid;grid-template-columns:18px 1fr auto;grid-template-rows:auto auto;column-gap:8px;row-gap:6px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.req:last-child{border-bottom:0}
+.req.toca{cursor:pointer}
+.st{grid-row:1 / span 2;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;border:1.5px solid #C4C9CC}
+.st.ok{background:var(--primary);border-color:var(--primary);color:#fff}
+.st.and{border-color:var(--primary)}
+.st.and::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--primary)}
+.req .l{font-size:14px;line-height:18px;display:flex;align-items:center;gap:4px;min-width:0}
+.req .l svg{color:var(--muted)}
+.req .v{font-size:13px;color:var(--muted);text-align:right;white-space:nowrap}
+.req .v b{font-weight:600;color:var(--primary)}
+.req .v.zero b{color:var(--muted);font-weight:500}
+.req .v.ok{color:var(--primary);font-weight:600}
+.req .bar{grid-column:2 / -1;display:block;height:4px;border-radius:9px;background:#E7EAEC;overflow:hidden}
+.req .bar i{display:block;height:100%;border-radius:inherit;background:var(--primary)}
+.req .nota{grid-column:2 / -1;font-size:12px;line-height:16px;color:var(--muted);margin-top:-2px}
+.req .nota.ok{color:var(--primary);font-weight:500}
+
+/* concluído e próxima meta */
+.feito-info{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.feito-info div{background:var(--soft);border-radius:12px;padding:10px 12px}
+.feito-info span{display:block;font-size:12px;color:var(--muted)}
+.feito-info b{display:block;font-size:14px;font-weight:600;margin-top:2px}
+.todos{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--primary);font-weight:500}
+.prox-nota{font-size:13px;line-height:18px;color:var(--muted);margin-bottom:6px}
+
+/* ---------- Sheets ---------- */
+.scrim{position:absolute;inset:0;background:rgba(13,15,15,.55);opacity:0;transition:opacity .25s;z-index:10}
+.scrim.open{opacity:1}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:88%;background:#fff;border-radius:24px 24px 0 0;z-index:11;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+.sheet.open{transform:none}
+.sheet:focus{outline:none}
+.sheet-handle{display:block;width:100%;padding:12px 0 8px;flex:none}
+.sheet-handle::before{content:"";display:block;width:38px;height:4px;border-radius:9px;background:#D6DADC;margin:0 auto}
+.sheet-body{overflow-y:auto;padding:4px 24px 32px;scrollbar-width:none}
+.sheet-body::-webkit-scrollbar{display:none}
+.sh-head{display:grid;grid-template-columns:32px 1fr 32px;align-items:center;gap:8px;margin:4px 0 18px}
+.sh-head h3{font-size:20px;font-weight:600;text-align:center;line-height:24px}
+.close-x{width:32px;height:32px;border-radius:50%;border:1px solid #D9DDE0;display:grid;place-items:center}
+.box{border:1px solid var(--line);border-radius:20px;background:#fff}
+.rg{display:flex;flex-direction:column;align-items:center;text-align:center;padding:22px 18px 20px}
+.gauge{position:relative;width:min(220px,100%)}
+.gauge svg{display:block;width:100%;height:auto}
+.g-center{position:absolute;left:0;right:0;bottom:4px;display:flex;flex-direction:column;align-items:center}
+.g-center b{font-size:36px;font-weight:600;line-height:40px}
+.g-center span{font-size:12.5px;color:var(--muted);line-height:16px}
+.g-min,.g-max{position:absolute;bottom:-18px;font-size:11px;color:var(--muted)}
+.g-min{left:6%} .g-max{right:5%}
+.tag{display:inline-flex;align-items:center;gap:4px;margin-top:26px;font-size:12px;font-weight:600;line-height:16px;padding:4px 10px;border-radius:99px;background:var(--warn-bg);color:var(--warn-ink)}
+.tag.ok{background:var(--accent);color:var(--primary)}
+.g-sub{font-size:12.5px;line-height:17px;color:var(--muted);margin-top:10px;max-width:250px}
+.regra{margin-top:22px}
+.regra h4{font-size:15px;font-weight:600;line-height:20px;margin-bottom:8px}
+.regra ul{padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.regra li{font-size:13.5px;line-height:19px;color:#3E4541}
+.regra li::marker{color:#A9AEB1}
+.regra p{font-size:13.5px;line-height:19px;color:#3E4541}
+.regra .pend{display:inline-block;margin-top:6px;font-size:12px;font-weight:600;color:var(--warn-ink);background:var(--warn-bg);border-radius:6px;padding:2px 7px}
+
+@container (max-width: 340px){
+  .painel{padding:0 20px}
+  .trilha{--rp:12px;--ra:21px;margin:16px 10px 0;padding:6px 0 8px}
+  .lv{--a:42px}
+  .lv svg{width:24px;height:24px}
+  .lv.atual svg{width:34px;height:34px}
+  .lv span{font-size:9.5px}
+  .req .l{font-size:13px;white-space:normal}
+  .req .v{font-size:12.5px}
+  .resumo .txt{font-size:12.5px}
+}
+@media (max-width:860px){
+  .stage{flex-direction:column;align-items:center;padding:16px 16px 40px;gap:28px}
+  .panel{width:100%;max-width:420px;order:2}
+  .device{order:1;width:min(100%,376px);border-radius:42px;padding:6px}
+  .viewport{border-radius:36px}
+}
+@media (prefers-reduced-motion:reduce){ *{transition:none !important} }
+/* Modo embutido (documentação) */
+body.embed{background:var(--app-bg)}
+body.embed .stage{display:block;padding:0;min-height:0}
+body.embed .panel{display:none}
+body.embed .device{width:100vw;height:100vh;padding:0;border-radius:0;background:none;box-shadow:none}
+body.embed .viewport{border-radius:0}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="device">
+    <div class="viewport" id="viewport">
+      <section class="screen" id="tela" aria-label="Minha jornada">
+        <header class="jtop">
+          <div class="deco" id="deco" aria-hidden="true"></div>
+          <div class="statusbar"><span>9:41</span><span class="icons" aria-hidden="true">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x=".5" y=".5" width="22" height="11" rx="3.5" stroke="#fff" opacity=".5"/><rect x="2" y="2" width="19" height="8" rx="2" fill="#fff"/></svg>
+          </span></div>
+          <div class="trow">
+            <button type="button" class="back" data-toast="Volta pra tela anterior" aria-label="Voltar"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10 3-5 5 5 5"/></svg></button>
+            <button type="button" class="info" data-sheet="como" aria-label="Como funciona a jornada"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 11v6" stroke-linecap="round"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></svg></button>
+          </div>
+          <h1>Minha jornada</h1>
+          <span class="sub" id="sub"></span>
+          <nav class="trilha" id="trilha" aria-label="Graduações"></nav>
+        </header>
+
+        <div class="jbody">
+          <div class="tabs" role="tablist">
+            <button type="button" role="tab" data-aba="pre" aria-selected="false">Pré-qualificação</button>
+            <button type="button" role="tab" data-aba="qual" aria-selected="true">Qualificação</button>
+          </div>
+          <div class="painel" id="aba-qual"></div>
+          <div class="painel" id="aba-pre" hidden></div>
+        </div>
+      </section>
+
+      <div class="scrim" id="scrim" hidden></div>
+      <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabindex="-1" hidden>
+        <button type="button" class="sheet-handle" data-close aria-label="Fechar"></button>
+        <div class="sheet-body" id="sheet-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="panel" aria-label="Controles do protótipo">
+    <div>
+      <h1>Minha jornada · proposta</h1>
+      <p class="lead">A tela do Figma, revisada com o que veio das versões 1 e 2. A estrutura continua a mesma: abas, Em progresso, Próximas metas e Concluídos. Os números são de exemplo.</p>
+    </div>
+
+    <div class="pblock">
+      <h2>Cenário</h2>
+      <span class="seg-label">Dias qualificados</span>
+      <div class="seg" data-ctl="dias">
+        <button type="button" data-v="andamento" aria-pressed="true">Em andamento</button>
+        <button type="button" data-v="batida" aria-pressed="false">Meta batida</button>
+      </div>
+    </div>
+
+    <div class="pblock">
+      <h2>Ir direto para</h2>
+      <div class="jumps">
+        <button type="button" data-aba="qual">Qualificação</button>
+        <button type="button" data-aba="pre">Pré-qualificação</button>
+        <button type="button" data-sheet="dias">Dias qualificados</button>
+        <button type="button" data-sheet="como">Como funciona</button>
+      </div>
+    </div>
+
+    <div class="pblock">
+      <h2>O que muda em relação ao Figma</h2>
+      <ul class="todo">
+        <li><b>Trilha no topo:</b> as seis graduações em sequência, com onde você está e qual vem a seguir. Cada selo leva ao card daquela graduação.</li>
+        <li><b>Resumo do progresso:</b> "1 de 5 requisitos" com barra segmentada, e uma barra fina em cada requisito.</li>
+        <li><b>Dias qualificados com a regra:</b> "62 de 90 dias seguidos" e "Faltam 28 dias". O toque abre a meia-lua, igual às versões 1 e 2.</li>
+        <li><b>Concluídos com histórico:</b> quando cada graduação foi conquistada e quanto tempo levou.</li>
+        <li><b>Próximas metas abrem:</b> mostram o que vai ser pedido, ainda sem progresso.</li>
+        <li><b>O (i) explica a jornada:</b> qualificação, dias qualificados e pré-qualificação.</li>
+      </ul>
+    </div>
+
+    <div class="pblock">
+      <h2>Para validar antes de enviar</h2>
+      <ul class="todo">
+        <li><b>Meta dos dias qualificados:</b> o Figma mostra "3 de 10", e o escritório virtual mostra meta de 90 dias. Qual vale? A meta muda por graduação?</li>
+        <li><b>Aba Pré-qualificação:</b> "Minha pré-qualificação" mostra E-Expansão, o mesmo nome do card em progresso. Na aba Qualificação, a "minha" é a graduação anterior. Qual é o certo?</li>
+        <li><b>Pré-qualificação:</b> o que é, e quem vê essa aba? O protótipo não inventa a regra.</li>
+        <li><b>Datas das conquistas:</b> o app tem a data de cada graduação concluída? O frame do Figma se chama "Versão sem histórico".</li>
+        <li><b>"Ver toda jornada"</b>, na home, leva pra esta tela ou pro Histórico de Green Points? O pedido original falava em "Consultar Histórico".</li>
+        <li><b>Nome repetido:</b> na Versão 2, o painel também se chama "Minha jornada". Um dos dois precisa de outro nome.</li>
+      </ul>
+    </div>
+
+    <div class="pblock">
+      <h2>Ligação com as versões 1 e 2</h2>
+      <ul class="todo">
+        <li>O sheet de dias qualificados (Versão 1) e "Rumo a Executivo" (Versão 2) repetem a lista de requisitos desta tela. Sugestão: lá fica um link "Ver minha jornada", e esta tela vira a fonte completa.</li>
+      </ul>
+    </div>
+  </aside>
+</div>
+
+<script>
+/* ---------- Dados de exemplo ---------- */
+const GRAD = [
+  { id:'consultor', nome:'Consultor', cor:'#2FB98A', status:'feito', em:'Jan/2026', tempo:'Primeira graduação' },
+  { id:'senior',    nome:'Sênior',    cor:'#22A45A', status:'feito', em:'Mar/2026', tempo:'2 meses como Consultor' },
+  { id:'gestor',    nome:'Gestor',    cor:'#F29A1F', status:'feito', em:'Jun/2026', tempo:'3 meses como Sênior' },
+  { id:'executivo', nome:'Executivo', cor:'#2B7BE4', status:'alvo' },
+  { id:'diretor',   nome:'Diretor',   cor:'#A7ADB2', status:'futuro' },
+  { id:'acionista', nome:'Acionista', cor:'#E8B33A', status:'futuro' },
+];
+const ATUAL = 'gestor', ALVO = 'executivo';
+const REQ_EXEC = [
+  { l:'Clientes diretos', a:24, m:20 },
+  { l:'Licenciados diretos ativos', a:8, m:10 },
+  { l:'kWh qualificáveis', a:152340, m:300000 },
+  { l:'Linhas de gestores', a:1, m:2 },
+];
+const REQ_DIRETOR = [ // os requisitos que o Figma mostra pra Diretor
+  { l:'Clientes diretos', m:40 }, { l:'Licenciados diretos ativos', m:10 }, { l:'kWh qualificáveis', m:500000 },
+  { l:'Linhas de gestores', m:2 }, { l:'Linhas de executivos', m:2 }, { l:'Dias qualificados', m:90 },
+];
+/* Pré-qualificação: os dados do Figma, sem regra inventada */
+const PRE = {
+  minha:'E-Expansão', alvo:'E-Expansão', proxima:'D-Expansão',
+  reqs:[ { l:'Clientes diretos', a:40, m:40 }, { l:'Licenciados diretos ativos', a:2, m:10 },
+         { l:'Linhas de G-Expansão', a:0, m:2 }, { l:'Linhas de E-Expansão', a:0, m:2 }, { l:'Dias qualificados', a:3, m:10 } ],
+  concluidos:['S-Expansão','G-Expansão'], proximas:['Acionista'],
+};
+const DIAS = { andamento:62, batida:195, meta:90 };
+const state = { dias:'andamento', aba:'qual', abertos:new Set(['executivo','pre-alvo']), sheet:null, lastFocus:null };
+
+/* ---------- Utilitários ---------- */
+const $ = s => document.querySelector(s);
+const num = v => v.toLocaleString('pt-BR');
+const G = id => GRAD.find(g => g.id === id);
+const ICON = {
+  chev:'<svg class="cv" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg>',
+  chevR:'<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 3 5 5-5 5"/></svg>',
+  check:'<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m2.5 6.2 2.3 2.3 4.7-5"/></svg>',
+  pin:'<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="7.5"/><circle cx="10" cy="10" r="3"/></svg>',
+  flag:'<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4.5 17.5V3M4.5 3.5h10l-2 3.5 2 3.5h-10"/></svg>',
+  x:'<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l8 8M11 3l-8 8"/></svg>',
+};
+/* Selo ilustrativo: não é a marca real */
+function badge(ring, cls){
+  let rays = '';
+  for (let i = 0; i < 24; i++){
+    const a = i * Math.PI / 12, x1 = 50 + Math.cos(a)*24, y1 = 50 + Math.sin(a)*24, x2 = 50 + Math.cos(a)*35, y2 = 50 + Math.sin(a)*35;
+    rays += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${ring}" stroke-opacity=".45" stroke-width="1.2"/>`;
+  }
+  return `<svg class="${cls||''}" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48" fill="${ring}"/><circle cx="50" cy="50" r="41" fill="#0D0F0F"/>${rays}<circle cx="50" cy="50" r="19" fill="#0D0F0F"/><text x="50" y="61" text-anchor="middle" font-family="Outfit, sans-serif" font-size="31" font-weight="700" fill="${ring}">G</text></svg>`;
+}
+const diasInfo = () => { const d = DIAS[state.dias]; return { d, ok: d >= DIAS.meta, pct: Math.min(100, d / DIAS.meta * 100) }; };
+
+/* ---------- Topo ---------- */
+function renderTopo(){
+  /* decoração do topo, no espírito da imagem do Figma: selos e barras verdes */
+  $('#deco').innerHTML =
+    [['#A7ADB2',112,0,56],['#2B7BE4',60,34,50],['#F29A1F',22,80,44],['#22A45A',84,96,40]]
+      .map(([c,x,y,s]) => `<span style="left:${x}px;top:${y}px;width:${s}px;height:${s}px">${badge(c)}</span>`).join('') +
+    `<i class="barra" style="right:62px;height:56px"></i><i class="barra" style="right:22px;height:92px"></i>`;
+
+  const g = G(ATUAL), alvo = G(ALVO);
+  $('#sub').innerHTML = `Você é <b>${g.nome}</b> desde ${g.em} · rumo a ${alvo.nome}`;
+  const iAtual = GRAD.findIndex(x => x.id === ATUAL);
+  /* raio visual de cada selo (o atual é maior e tem o anel), pra o traço começar e terminar na borda */
+  const raio = i => i === iAtual ? 'var(--ra)' : 'var(--rp)';
+  $('#trilha').innerHTML = GRAD.map((x, i) => {
+    const cls = x.id === ATUAL ? 'atual' : x.status === 'futuro' || x.status === 'alvo' ? (x.status === 'alvo' ? 'alvo' : 'futuro') : 'conc';
+    const lig = i < iAtual ? 'lig-feita' : i === iAtual ? 'lig-andando' : '';
+    const rot = x.id === ATUAL ? 'Você está aqui' : x.status === 'alvo' ? 'Em progresso' : x.status === 'futuro' ? 'Próxima meta' : 'Concluída';
+    return `<button type="button" class="lv ${cls} ${lig}" style="--r:${raio(i)};--rn:${raio(i + 1)}" data-ir="${x.id}" aria-label="${x.nome}: ${rot}"><span class="bw">${badge(x.cor)}</span><span>${x.nome}</span></button>`;
+  }).join('');
+}
+
+/* ---------- Linhas de requisito ---------- */
+function linhaReq(r){
+  const ok = r.a >= r.m, zero = r.a === 0;
+  const st = ok ? `<span class="st ok">${ICON.check}</span>` : zero ? '<span class="st"></span>' : '<span class="st and"></span>';
+  const v = ok ? `<span class="v ok">${num(r.a)} de ${num(r.m)}</span>` : `<span class="v ${zero ? 'zero' : ''}"><b>${num(r.a)}</b> de ${num(r.m)}</span>`;
+  return `<li class="req">${st}<span class="l">${r.l}</span>${v}<span class="bar"><i style="width:${Math.min(100, r.a / r.m * 100).toFixed(0)}%"></i></span></li>`;
+}
+function linhaDias(){
+  const di = diasInfo();
+  const st = di.ok ? `<span class="st ok">${ICON.check}</span>` : '<span class="st and"></span>';
+  const v = di.ok ? `<span class="v ok">${di.d} dias</span>` : `<span class="v"><b>${di.d}</b> de ${DIAS.meta}</span>`;
+  const nota = di.ok ? '<span class="nota ok">Meta de 90 dias seguidos batida</span>' : `<span class="nota">Dias seguidos · faltam ${DIAS.meta - di.d}</span>`;
+  return `<li class="req toca" data-sheet="dias" role="button" tabindex="0" aria-label="Dias qualificados: ${di.ok ? di.d + ' dias, meta batida' : di.d + ' de 90'}. Ver detalhes">${st}<span class="l">Dias qualificados ${ICON.chevR}</span>${v}<span class="bar"><i style="width:${di.pct.toFixed(0)}%"></i></span>${nota}</li>`;
+}
+function resumo(total, feitos, andando){
+  const segs = Array.from({ length: total }, (_, i) => `<i class="${i < feitos ? 'ok' : i < feitos + andando ? 'and' : ''}"></i>`).join('');
+  return `<div class="resumo"><span class="txt"><b>${feitos} de ${total}</b> requisitos</span><span class="segs" style="grid-template-columns:repeat(${total},1fr)">${segs}</span></div>`;
+}
+function card(id, titulo, chip, corpo, cor){
+  const aberto = state.abertos.has(id);
+  return `<div class="jcard ${aberto ? 'open' : ''}" id="c-${id}">
+    <button type="button" class="jhead" data-acc="${id}" aria-expanded="${aberto}">${cor ? badge(cor, 'b') : ''}<span class="jt">${titulo}</span>${chip}${ICON.chev}</button>
+    <div class="jcont">${corpo}</div></div>`;
+}
+
+/* ---------- Aba Qualificação ---------- */
+function renderQual(){
+  const di = diasInfo(), alvo = G(ALVO), atual = G(ATUAL);
+  const feitos = REQ_EXEC.filter(r => r.a >= r.m).length + (di.ok ? 1 : 0);
+  const andando = REQ_EXEC.filter(r => r.a > 0 && r.a < r.m).length + (di.ok ? 0 : 1);
+  const corpoAlvo = resumo(REQ_EXEC.length + 1, feitos, andando) + `
+    <div class="cam">
+      <div class="marco"><span class="ic">${ICON.pin}</span><span class="q">Minha qualificação</span><span class="r">${atual.nome}${badge(atual.cor)}</span></div>
+      <ul class="reqs">${REQ_EXEC.map(linhaReq).join('')}${linhaDias()}</ul>
+      <div class="marco"><span class="ic">${ICON.flag}</span><span class="q">Próxima qualificação</span><span class="r">${alvo.nome}${badge(alvo.cor)}</span></div>
+    </div>`;
+
+  const proximas = GRAD.filter(g => g.status === 'futuro').map(g => {
+    const corpo = g.id === 'diretor'
+      ? `<p class="prox-nota">Começa quando você chegar a Executivo. É isto que vai ser pedido:</p><ul class="reqs" style="padding-left:0">${REQ_DIRETOR.map(r => linhaReq({ ...r, a:0 })).join('')}</ul>`
+      : `<p class="prox-nota">Os requisitos aparecem quando você chegar a Diretor.</p>`;
+    return card(g.id, g.nome, '<span class="chip nao">Não iniciado</span>', corpo, g.cor);
+  }).join('');
+
+  const concluidos = GRAD.filter(g => g.status === 'feito').map(g => card(g.id, g.nome, '<span class="chip ok">Concluído</span>',
+    `<div class="feito-info"><div><span>Conquistada em</span><b>${g.em}</b></div><div><span>Levou</span><b>${g.tempo}</b></div></div>
+     <div class="todos">${ICON.check}Todos os requisitos cumpridos</div>`, g.cor)).join('');
+
+  $('#aba-qual').innerHTML = `
+    <section class="jsec"><h3>Em progresso</h3>${card(alvo.id, alvo.nome, '<span class="chip and">Em andamento</span>', corpoAlvo, alvo.cor)}</section>
+    <section class="jsec"><h3>Próximas metas</h3>${proximas}</section>
+    <section class="jsec"><h3>Concluídos</h3>${concluidos}</section>`;
+}
+
+/* ---------- Aba Pré-qualificação (dados do Figma) ---------- */
+function renderPre(){
+  const feitos = PRE.reqs.filter(r => r.a >= r.m).length, andando = PRE.reqs.filter(r => r.a > 0 && r.a < r.m).length;
+  const corpo = resumo(PRE.reqs.length, feitos, andando) + `
+    <div class="cam">
+      <div class="marco"><span class="ic">${ICON.pin}</span><span class="q">Minha pré-qualificação</span><span class="r">${PRE.minha}</span></div>
+      <ul class="reqs">${PRE.reqs.map(linhaReq).join('')}</ul>
+      <div class="marco"><span class="ic">${ICON.flag}</span><span class="q">Próxima pré-qualificação</span><span class="r">${PRE.proxima}</span></div>
+    </div>`;
+  $('#aba-pre').innerHTML = `
+    <section class="jsec"><h3>Em progresso</h3>${card('pre-alvo', PRE.alvo, '<span class="chip and">Em andamento</span>', corpo)}</section>
+    <section class="jsec"><h3>Próximas metas</h3>${PRE.proximas.map(n => card('pre-' + n, n, '<span class="chip nao">Não iniciado</span>', '<p class="prox-nota">Regras da pré-qualificação a confirmar.</p>')).join('')}</section>
+    <section class="jsec"><h3>Concluídos</h3>${PRE.concluidos.map(n => card('pre-' + n, n, '<span class="chip ok">Concluído</span>', '<div class="todos">' + ICON.check + 'Todos os requisitos cumpridos</div>')).join('')}</section>`;
+}
+
+/* ---------- Sheets ---------- */
+function sheetDias(){
+  const di = diasInfo(), f = di.pct / 100;
+  const R = 90, cx = 110, cy = 112, len = Math.PI * R;
+  const kx = cx - R * Math.cos(Math.PI * f), ky = cy - R * Math.sin(Math.PI * f);
+  const arc = `M ${cx - R} ${cy} A ${R} ${R} 0 0 1 ${cx + R} ${cy}`;
+  return `<div class="sh-head"><span></span><h3 id="sheet-title">Dias qualificados</h3><button type="button" class="close-x" data-close aria-label="Fechar">${ICON.x}</button></div>
+    <div class="box rg">
+      <div class="gauge" role="img" aria-label="Dias qualificados: ${di.d} de ${DIAS.meta}">
+        <svg viewBox="0 0 220 124" aria-hidden="true">
+          <defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9FDCB2"/><stop offset="1" stop-color="#338449"/></linearGradient></defs>
+          <path d="${arc}" fill="none" stroke="#E6E9EB" stroke-width="14" stroke-linecap="round"/>
+          <path d="${arc}" fill="none" stroke="url(#gg)" stroke-width="14" stroke-linecap="round" stroke-dasharray="${(len * f).toFixed(1)} ${len.toFixed(1)}"/>
+          <circle cx="${kx.toFixed(1)}" cy="${ky.toFixed(1)}" r="9" fill="#fff" stroke="#338449" stroke-width="4"/>
+        </svg>
+        <div class="g-center"><b>${di.d}</b><span>${di.ok ? 'dias seguidos' : `de ${DIAS.meta} dias`}</span></div>
+        <span class="g-min">0</span><span class="g-max">${DIAS.meta}</span>
+      </div>
+      ${di.ok ? `<span class="tag ok">${ICON.check}Meta de 90 dias batida</span>` : `<span class="tag">Faltam ${DIAS.meta - di.d} dias para a meta</span>`}
+      <p class="g-sub">Dias seguidos em que você se manteve qualificado como Gestor.</p>
+    </div>
+    <div class="regra"><h4>Como conta</h4>
+      <ul><li>Cada dia em que você cumpre os requisitos de Gestor soma um dia.</li>
+          <li>A meta de 90 dias é um dos requisitos pra subir pra Executivo.</li></ul>
+      <span class="pend">A validar: os dias zeram se a qualificação cair?</span></div>`;
+}
+function sheetComo(){
+  return `<div class="sh-head"><span></span><h3 id="sheet-title">Como funciona</h3><button type="button" class="close-x" data-close aria-label="Fechar">${ICON.x}</button></div>
+    <div class="regra" style="margin-top:4px"><h4>Qualificação</h4>
+      <p>São seis graduações: Consultor, Sênior, Gestor, Executivo, Diretor e Acionista. Pra subir, você cumpre todos os requisitos da próxima.</p></div>
+    <div class="regra"><h4>Dias qualificados</h4>
+      <p>Conta os dias seguidos em que você se manteve na sua graduação atual. A meta é de 90 dias.</p>
+      <span class="pend">A validar: o Figma mostra meta de 10</span></div>
+    <div class="regra"><h4>Pré-qualificação</h4>
+      <p>Texto a definir com o time de negócio.</p>
+      <span class="pend">A validar: o que é e quem vê</span></div>`;
+}
+function openSheet(kind){
+  if ($('#sheet').hidden) state.lastFocus = document.activeElement;
+  state.sheet = kind;
+  $('#sheet-body').innerHTML = kind === 'dias' ? sheetDias() : sheetComo();
+  $('#sheet-body').scrollTop = 0;
+  const sheet = $('#sheet'), scrim = $('#scrim');
+  sheet.hidden = false; scrim.hidden = false;
+  requestAnimationFrame(() => { sheet.classList.add('open'); scrim.classList.add('open'); sheet.focus(); });
+}
+function closeSheet(){
+  const sheet = $('#sheet'), scrim = $('#scrim');
+  if (sheet.hidden) return;
+  sheet.classList.remove('open'); scrim.classList.remove('open'); state.sheet = null;
+  setTimeout(() => { if (!state.sheet){ sheet.hidden = true; scrim.hidden = true; } }, 300);
+  if (state.lastFocus && document.contains(state.lastFocus)) state.lastFocus.focus();
+}
+
+/* ---------- Navegação ---------- */
+function setAba(aba){
+  state.aba = aba;
+  document.querySelectorAll('.tabs [data-aba]').forEach(b => b.setAttribute('aria-selected', b.dataset.aba === aba));
+  $('#aba-qual').hidden = aba !== 'qual';
+  $('#aba-pre').hidden = aba !== 'pre';
+}
+function irPara(id){
+  setAba('qual');
+  state.abertos.add(id); renderQual();
+  const el = document.getElementById('c-' + id), tela = $('#tela');
+  if (el) tela.scrollTo({ top: el.getBoundingClientRect().top - tela.getBoundingClientRect().top + tela.scrollTop - 16, behavior:'smooth' });
+}
+function render(){ renderTopo(); renderQual(); renderPre(); setAba(state.aba); }
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-aba],[data-acc],[data-ir],[data-sheet],[data-close],#scrim,[data-ctl] button,[data-toast]');
+  if (!el) return;
+  if (el.id === 'scrim' || el.hasAttribute('data-close')) return closeSheet();
+  if (el.closest('[data-ctl]')){
+    const ctl = el.closest('[data-ctl]').dataset.ctl;
+    state[ctl] = el.dataset.v;
+    el.parentElement.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b === el));
+    renderQual(); if (state.sheet === 'dias') $('#sheet-body').innerHTML = sheetDias();
+    return;
+  }
+  if (el.dataset.aba) return setAba(el.dataset.aba);
+  if (el.dataset.acc){
+    const id = el.dataset.acc;
+    state.abertos.has(id) ? state.abertos.delete(id) : state.abertos.add(id);
+    const c = document.getElementById('c-' + id);
+    c.classList.toggle('open'); el.setAttribute('aria-expanded', c.classList.contains('open'));
+    return;
+  }
+  if (el.dataset.ir) return irPara(el.dataset.ir);
+  if (el.dataset.sheet) return openSheet(el.dataset.sheet);
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeSheet();
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.req.toca')){ e.preventDefault(); openSheet('dias'); }
+});
+
+render();
+
+/* ---------- Modo embutido (documentação) ---------- */
+if (new URLSearchParams(location.search).has('embed') || location.protocol === 'about:') document.body.classList.add('embed');
+if (parent !== window) parent.postMessage({ type:'proto-ready', proto:'jornada' }, '*');
+window.addEventListener('message', e => {
+  const m = e.data;
+  if (!m || m.type !== 'proto') return;
+  if (m.action === 'set' && m.ctl === 'dias'){ const b = document.querySelector(`[data-ctl="dias"] [data-v="${m.v}"]`); if (b) b.click(); }
+  if (m.action === 'aba'){ closeSheet(); setAba(m.aba); $('#tela').scrollTop = 0; }
+  if (m.action === 'sheet') openSheet(m.kind);
+  if (m.action === 'ir'){ closeSheet(); irPara(m.id); }
+});
+</script>
+</body>
+</html>
