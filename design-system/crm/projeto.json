@@ -1,0 +1,24 @@
+{
+  "nome": "Design System do CRM",
+  "descricao": "O design system oficial do CRM e dos SaaS internos da iGreen: tokens, temas de marca, mais de 60 componentes, gráficos, tabelas de dados e blocos prontos para montar telas.",
+  "tipo": "documentacao",
+  "atualizado": "2026-11-05",
+  "link": "https://igreen-desingsystem-admin.vercel.app/",
+  "paginas": [
+    {
+      "nome": "Documentação e componentes",
+      "arquivo": ""
+    }
+  ],
+  "tags": [
+    "crm",
+    "saas",
+    "admin",
+    "componentes",
+    "tokens",
+    "temas",
+    "gráficos",
+    "tabela",
+    "blocos"
+  ]
+}
