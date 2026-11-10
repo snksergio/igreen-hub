@@ -1,0 +1,66 @@
+    el.innerHTML = `<div class="bar"><button class="icon-btn" type="button" aria-label="Voltar">${svg(I.voltar,24,2.2)}</button></div>
+      <div class="hero3">
+        <div class="h-top">
+          <h3 class="titulo">A iGreen já te devolveu</h3>
+          <button type="button" class="ic-graf" aria-label="Ver análise completa" data-hub-ir="economia">${svg('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',20)}</button>
+        </div>
+        <div class="h-corpo">
+          <div class="txt">
+            <div class="s">Economia e cashback desde maio de 2026</div>
+            <div class="v num">${brl(h.total)}</div>
+            <span class="selo num">${svg(I.eco,14)} + ${brl(h.meses[5][1])} em outubro</span>
+          </div>
+          <svg class="ilustra" width="76" height="76" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="42" r="38" fill="#E2F2E7"/><ellipse cx="29" cy="68" rx="14" ry="5" fill="#B8912A"/><ellipse cx="29" cy="64" rx="14" ry="5" fill="#E6C14F"/><ellipse cx="58" cy="71" rx="12" ry="4.5" fill="#B8912A"/><ellipse cx="58" cy="67" rx="12" ry="4.5" fill="#E6C14F"/><path d="M49 12 30 45h12l-4 23 20-33H47z" fill="#1C7443"/></svg>
+        </div>
+      </div>
+
+      <div class="saldo3" style="margin-top:14px">
+        <span class="bolinha">${svg(I.cb,20)}</span>
+        <span class="txt"><span>Saldo de cashback</span><b class="num">${brl(h.disp)}</b></span>
+        <button type="button" class="btn" data-hub-ir="cashback">Ver cashback ${svg(I.seta,16)}</button>
+      </div>
+      ${h.caminho ? `<div class="faixa num" style="margin-top:8px">${svg(I.relogio,16)}<span class="t">${brl(h.caminho)} a receber · cai até ${CAI_ATE}</span><button type="button" class="acao" data-hub-ir="cashback">Ver</button></div>` : ""}
+
+      <h4 class="titulo-sec">Seus ganhos</h4>
+      <div class="mosaico num">
+        <div class="m-card m-grande">
+          <span class="m-ilustra" aria-hidden="true">${svg(I.energia,26)}</span>
+          <b class="v">${brl(h.ecoTotal)}</b>
+          <span class="t">nas suas contas</span>
+          <span class="m-mini"><span class="k">Energia limpa</span><b>${h.kwh.toLocaleString("pt-BR")} kWh</b></span>
+          <button type="button" class="m-cta" data-hub-ir="economia">Ver economia ${svg(I.seta,14)}</button>
+        </div>
+        <div class="m-card">
+          <b class="v">${brl(h.cbRecebido)}</b>
+          <span class="t">em cashback</span>
+          <button type="button" class="m-cta" data-ganhe4>Ganhe mais ${svg(I.seta,14)}</button>
+        </div>
+        <div class="m-card">
+          <b class="v neutro">5 cupons</b>
+          <span class="t">no Club</span>
+          <button type="button" class="m-cta" data-club4>Ver cupons ${svg(I.seta,14)}</button>
+        </div>
+      </div>
+
+      <h4 class="titulo-sec">Origem dos seus ganhos</h4>
+      <div class="hscroll num">
+        ${[
+          [I.energia, "Energia", h.ecoEnergia + 30.30, `${h.kwh.toLocaleString("pt-BR")} kWh de energia limpa`],
+          [I.telecom, "Telecom", h.ecoTelecom + 9.40, "+5 GB por mês no plano"],
+          [I.seguro, "Seguros", 6.80, "Cashback de indicação"]
+        ].map(([ic, nome, total, cap]) => `
+        <div class="orig4">
+          <div class="o4-cab"><span class="ic" aria-hidden="true">${svg(ic,20)}</span><b>${nome}</b><span class="o4-pct">${pct(total, h.total)}%</span></div>
+          <b class="o4-v">${brl(total)}</b>
+          <span class="o4-barra" aria-hidden="true"><i style="width:${pct(total, h.total)}%"></i></span>
+          <span class="o4-cap">${cap}</span>
+        </div>`).join("")}
+      </div>
+
+      <h4 class="titulo-sec">Dá pra ganhar mais</h4>
+      <div class="card">
+        <button type="button" class="linha-acao" data-mais="pay"><span class="ic" aria-hidden="true">${svg(I.pay,18)}</span><span class="txt"><b>Pague com o saldo Pay</b><span>1% de cashback por fatura</span></span>${svg(I.seta,18)}</button>
+        <button type="button" class="linha-acao" data-ind4><span class="ic" aria-hidden="true">${svg(I.amigo,18)}</span><span class="txt"><b>Indique e ganhe</b><span>Cashback a cada fatura paga</span></span>${svg(I.seta,18)}</button>
+        <button type="button" class="linha-acao" data-auto4><span class="ic" aria-hidden="true">${svg(I.cb,18)}</span><span class="txt"><b>Cashback automático</b><span>${st.auto ? "Ligado nas faturas escolhidas" : "Abate suas faturas sozinho"}</span></span>${svg(I.seta,18)}</button>
+        ${h.p ? "" : `<button type="button" class="linha-acao" data-mais="emdia"><span class="ic" aria-hidden="true">${svg(I.relogio,18)}</span><span class="txt"><b>Pague em dia</b><span>Mantenha os 15% de desconto</span></span>${svg(I.seta,18)}</button>`}
+      </div>`;

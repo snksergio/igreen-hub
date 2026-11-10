@@ -1,0 +1,29 @@
+  if (v === "economia"){
+    const serie = ECO_MESES(), max = Math.max(...serie.map(x => x[1])), melhor = serie.reduce((a, b) => b[1] > a[1] ? b : a);
+    const NOME = {Mai:"maio", Jun:"junho", Jul:"julho", Ago:"agosto", Set:"setembro", Out:"outubro"};
+    const prodCard = (ic, nome, valor, p, dado) => `<div class="prodx"><div class="prodx-cab"><span class="ic" aria-hidden="true">${svg(ic,18)}</span><b>${nome}</b><span class="pct">${p}%</span></div><div class="prodx-valor"><div class="v">${brl(valor)}</div><span class="trilho" aria-hidden="true"><i style="width:${p}%"></i></span></div><span class="dado">${dado}</span></div>`;
+    el.innerHTML = `${bar4("Análise da economia", "hub")}
+      <div class="card bloco">
+        <div class="cab-linha"><span class="tit">Economia total</span><button type="button" class="sel">Últimos 6 meses ${svg('<path d="m6 9 6 6 6-6"/>',16)}</button></div>
+        <div class="grande verde num" style="margin-top:12px">${brl(h.ecoTotal)}</div>
+        <div class="muted">nas suas contas, de maio a outubro</div>
+        ${h.p ? "" : `<p class="nota">A energia de outubro entra quando a fatura for paga.</p>`}
+        <div class="barras" role="img" aria-label="Economia por mês: ${serie.map(x => x[0] + " " + brl(x[1])).join(", ")}">
+          ${serie.map((x, i) => `<div class="${i === serie.length - 1 ? "atual" : ""}"><span style="height:${Math.max(4, Math.round(x[1] / max * 58))}px"></span><small>${x[0]}</small></div>`).join("")}
+        </div>
+        <dl class="contas num divisoria-cheia">
+          <div><dt>Média por mês</dt><dd>${brl(h.ecoTotal / 6)}</dd></div>
+          <div><dt>Melhor mês</dt><dd>${NOME[melhor[0]]} · ${brl(melhor[1])}</dd></div>
+        </dl>
+      </div>
+      <h4 class="titulo-sec">Por produto</h4>
+      <div class="hscroll num">
+        ${prodCard(I.energia, "Energia", h.ecoEnergia, pct(h.ecoEnergia, h.ecoTotal), `${h.kwh.toLocaleString("pt-BR")} kWh de energia limpa`)}
+        ${prodCard(I.telecom, "Telecom", h.ecoTelecom, pct(h.ecoTelecom, h.ecoTotal), "+5 GB por mês no plano")}
+        ${prodCard(I.seguro, "Seguros", 0, 0, "Proteção ativa · sem desconto")}
+      </div>
+      <h4 class="titulo-sec">Histórico · últimos 3 meses</h4>
+      <div class="card"><ul class="comp">${extratoEconomiaCompleto().filter(x => MESES3.includes(x.mes)).map(itemE).join("")}</ul>
+        <button type="button" class="rodape-card" data-hub-ir="historico-eco">Ver histórico completo ${svg(I.seta,18)}</button>
+      </div>`;
+  }

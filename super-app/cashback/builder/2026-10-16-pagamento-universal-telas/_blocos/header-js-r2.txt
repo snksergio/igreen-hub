@@ -1,0 +1,144 @@
+/* ---------- Proposta A ---------- */
+function renderA(){
+  const d = D(), e = eco(), sel = st.mesA;
+  const ecoV = sel === null ? d.eco : e[sel], cbV = sel === null ? d.cb : CB[sel];
+  const val = +(ecoV + cbV).toFixed(2), p = partes(val);
+  const pe = Math.round(ecoV / val * 100), pc = 100 - pe;
+  const bateu = d.emDia >= 6;
+  document.getElementById("propA").innerHTML = `
+    <section class="ha" aria-label="Seu retorno">
+      ${ILUS}
+      <h2 class="ha-tit">Seu retorno</h2>
+      <p class="ha-sub">Energia · Telecom · Seguros</p>
+      <div class="ha-linha"><span>${sel === null ? "Economia + cashback" : "Retorno em " + NOMES[sel]}</span><span class="chip ok">${svg(I.check,12,3.5)} Em dia</span></div>
+      <div class="ha-num num" aria-label="${brl(val)}"><span class="moeda">R$</span><span class="int">${p.i}</span><span class="dec">,${p.d}</span></div>
+      <p class="ha-nota">${sel === null ? "Desde maio de 2026 · <b>não é saldo</b>" : (sel === 5 && !st.pago ? "Outubro ainda sem a energia: entra quando pagar" : "Toque no mês de novo para ver o total")}</p>
+      <div class="ha-seg" role="img" aria-label="Meta de exemplo: ${d.emDia} de 6 faturas em dia">
+        ${Array.from({length:6}, (_, i) => `<span style="--fill:${i < d.emDia ? 100 : (i === 5 ? 35 : 0)}%"></span>`).join("")}
+      </div>
+      <p class="ha-meta">${bateu ? `<span class="chip bateu">Meta de exemplo batida</span> 6 de 6 em dia` : `<b>${d.emDia} de 6</b> faturas seguidas em dia · <span class="meta-ex">meta de exemplo</span>`}</p>
+      <hr class="ha-hr">
+      <div class="ha-div">
+        <div class="ha-div-cab"><span>De onde veio</span><span class="muted">${sel === null ? "desde maio" : "em " + NOMES[sel]}</span></div>
+        <div class="ha-div-barra" role="img" aria-label="Economia ${pe}%, cashback ${pc}%"><i class="e" style="width:${pe}%"></i><i class="c" style="width:${pc}%"></i></div>
+        <dl class="ha-div-leg num">
+          <div><dt><i class="e"></i>Economia nas contas</dt><dd>${brl(ecoV)}<span>${pe}%</span></dd></div>
+          <div><dt><i class="c"></i>Cashback</dt><dd>${brl(cbV)}<span>${pc}%</span></dd></div>
+        </dl>
+      </div>
+      <div class="ha-meses" role="group" aria-label="Faturas por mês">
+        ${MESES.map((m, i) => {
+          const agora = i === 5 && !st.pago;
+          return `<button type="button" data-mes-a="${i}" aria-pressed="${sel === i}" aria-label="${NOMES[i]}: ${agora ? "vence em 23 de outubro" : "paga em dia"}">
+            <span class="m">${m}</span><span class="c ${agora ? "agora" : ""}">${agora ? "23" : svg(I.check,18,3)}</span></button>`;
+        }).join("")}
+      </div>
+      <p class="ha-dica">Toque num mês para ver o retorno dele</p>
+      <div class="ha-dark">
+        <span class="ha-dark-ic" aria-hidden="true">${svg(I.cb,24,2.2)}</span>
+        <div class="lbl"><i></i> Seu cashback</div>
+        <div class="val num"><b>${brl(d.disp)}</b><span>disponível</span></div>
+        <p class="sub num">${d.receber ? `+ ${brl(d.receber)} a receber · cai até 20/10` : "De indicações e do Pay"}</p>
+        <button type="button" class="ha-cta">Ver meu cashback ${svg(I.seta,18,2.4)}</button>
+      </div>
+    </section>`;
+  document.querySelectorAll("[data-mes-a]").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.mesA; st.mesA = st.mesA === i ? null : i; renderA();
+    document.querySelector(`[data-mes-a="${i}"]`).focus();
+  }));
+}
+
+/* ---------- Proposta B: cada aba com o seu conteúdo ---------- */
+function anel(feito, total){
+  const r = 22, c = 2 * Math.PI * r, f = c * (feito / total);
+  return `<svg width="58" height="58" viewBox="0 0 58 58" role="img" aria-label="${feito} de ${total}">
+    <circle cx="29" cy="29" r="${r}" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="6"/>
+    <circle cx="29" cy="29" r="${r}" fill="none" stroke="#E6C14F" stroke-width="6" stroke-linecap="round" stroke-dasharray="${f} ${c}" transform="rotate(-90 29 29)"/>
+    <text x="29" y="34" text-anchor="middle" font-family="Figtree,sans-serif" font-size="15" font-weight="800" fill="#fff">${feito}/${total}</text></svg>`;
+}
+const MOVS = () => st.pago
+  ? [["Pago com Pay · energia de outubro", "Cai até 20/10", 1.20, "rec"], ["Usado na energia de outubro", "16/10", -9.20, ""], ["Indicação · amigo pagou a fatura", "08/10", 8.00, "mais"]]
+  : [["Indicação · amigo pagou a fatura", "08/10", 8.00, "mais"], ["Pago com Pay · energia de setembro", "18/09", 1.20, "mais"], ["Usado na energia de setembro", "16/09", -14.30, ""]];
+
+function abaTotal(d){
+  const pe = Math.round(d.eco / d.total * 100), pc = 100 - pe, bateu = d.emDia >= 6;
+  return `
+    <div class="hb-bloco">
+      <div class="ha-div-barra hb-barra2" role="img" aria-label="Economia ${pe}%, cashback ${pc}%"><i class="e" style="width:${pe}%"></i><i class="c" style="width:${pc}%"></i></div>
+      <div class="hb-leg num"><span><i class="e"></i>Economia ${brl(d.eco)}</span><span><i class="c"></i>Cashback ${brl(d.cb)}</span></div>
+    </div>
+    <h4 class="hb-sec">O que você já fez</h4>
+    <div class="hb-meta ${bateu ? "pulsa" : ""}">
+      ${anel(d.emDia, 6)}
+      <div class="t">
+        <b>${bateu ? "Meta de exemplo batida" : `${d.emDia} faturas seguidas em dia`}</b>
+        <span>${bateu ? "6 faturas seguidas pagas em dia" : "Meta de exemplo: 6 · a de outubro vence em 23/10"}</span>
+        <div class="bolas" aria-hidden="true">${MESES.map((_, i) => `<i class="${i < d.emDia ? "ok" : (i === 5 ? "agora" : "")}"></i>`).join("")}</div>
+      </div>
+    </div>
+    <div class="hb-feitos num">
+      <div><b>6 meses</b><span>com a iGreen, desde maio</span></div>
+      <div><b>${d.kwh.toLocaleString("pt-BR")} kWh</b><span>de energia limpa na sua conta</span></div>
+    </div>`;
+}
+function abaEconomia(d, e, sel){
+  const max = Math.max(...e), media = d.eco / 6, mi = e.indexOf(max);
+  return `
+    <div class="hb-barras" role="group" aria-label="Economia mês a mês">
+      ${e.map((v, i) => {
+        const agora = i === 5 && !st.pago;
+        return `<button type="button" data-mes-b="${i}" aria-pressed="${sel === i}" aria-label="${NOMES[i]}: ${brl(v)}">
+          <span class="b ${agora ? "agora" : ""}" style="height:${Math.max(10, Math.round(v / max * 70))}px"></span><span class="m">${MESES[i]}</span></button>`;
+      }).join("")}
+    </div>
+    <div class="hb-kpis num">
+      <div><span>Média por mês</span><b>${brl(media)}</b></div>
+      <div><span>Melhor mês: ${NOMES[mi]}</span><b>${brl(max)}</b></div>
+    </div>
+    <h4 class="hb-sec">Por produto</h4>
+    <ul class="hb-prod num">
+      <li><span>Energia</span><i style="--w:${Math.round(d.ecoEnergia / d.eco * 100)}%"></i><b>${brl(d.ecoEnergia)}</b></li>
+      <li><span>Telecom</span><i style="--w:${Math.round(60 / d.eco * 100)}%"></i><b>${brl(60)}</b></li>
+    </ul>
+    <button type="button" class="hb-cta">Ver análise completa ${svg(I.seta,18,2.4)}</button>`;
+}
+function abaCashback(d){
+  return `
+    <div class="hb-saldo2 num">
+      <span>Disponível agora</span><b>${brl(d.disp)}</b>
+      <p>${d.receber ? `+ ${brl(d.receber)} a receber · cai até 20/10` : "Usado em faturas: R$ 14,30 · resgatado: R$ 23,00"}</p>
+    </div>
+    <h4 class="hb-sec">De onde veio</h4>
+    <div class="ha-div-barra hb-barra2" role="img" aria-label="Indicações 82%, Pay 18%"><i class="c" style="width:82%"></i><i class="p" style="width:18%"></i></div>
+    <div class="hb-leg num"><span><i class="c"></i>Indicações R$ 38,00</span><span><i class="p"></i>Pagar com o Pay R$ 8,50</span></div>
+    <h4 class="hb-sec">Últimas movimentações</h4>
+    <ul class="hb-movs num">
+      ${MOVS().map(([t, s, v, k]) => `<li><div>${t}<span>${s}</span></div><b class="v ${k}">${v > 0 ? "+ " : "− "}${brl(Math.abs(v))}</b></li>`).join("")}
+    </ul>
+    <button type="button" class="hb-cta">Ver meu cashback ${svg(I.seta,18,2.4)}</button>`;
+}
+function renderB(){
+  const d = D(), e = eco(), met = st.metrica, sel = st.mesB;
+  const big = met === "total" ? d.total : met === "economia" ? (sel === null ? d.eco : e[sel]) : d.cb;
+  const p = partes(big);
+  const cap = met === "total" ? "Economia + cashback desde maio · não é saldo"
+    : met === "economia" ? (sel === null ? "Desconto nas contas pagas desde maio" : `Desconto em ${NOMES[sel]}${sel === 5 && !st.pago ? " · a energia entra ao pagar" : ""}`)
+    : "Cashback recebido desde maio";
+  document.getElementById("propB").innerHTML = `
+    <section class="hb" aria-label="Seu retorno">
+      <div class="hb-top"><h3>Seu retorno</h3><span class="chip ok">${svg(I.check,12,3.5)} Em dia</span></div>
+      <div class="hb-seg" role="group" aria-label="O que mostrar">
+        ${[["total","Total"],["economia","Economia"],["cashback","Cashback"]].map(([k, t]) => `<button type="button" data-met="${k}" aria-pressed="${met === k}">${t}</button>`).join("")}
+      </div>
+      <div class="hb-num num" aria-label="${brl(big)}"><span class="moeda">R$</span><span class="int">${p.i}</span><span class="dec">,${p.d}</span></div>
+      <p class="hb-cap">${cap}</p>
+      ${met === "total" ? abaTotal(d) : met === "economia" ? abaEconomia(d, e, sel) : abaCashback(d)}
+    </section>`;
+  document.querySelectorAll("[data-met]").forEach(b => b.addEventListener("click", () => {
+    st.metrica = b.dataset.met; st.mesB = null; renderB(); document.querySelector(`[data-met="${st.metrica}"]`).focus();
+  }));
+  document.querySelectorAll("[data-mes-b]").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.mesB; st.mesB = st.mesB === i ? null : i; renderB(); document.querySelector(`[data-mes-b="${i}"]`).focus();
+  }));
+}
+

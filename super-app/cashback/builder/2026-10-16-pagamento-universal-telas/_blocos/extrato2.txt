@@ -1,0 +1,21 @@
+  else if (v === "extrato"){
+    const q = st.buscaX.trim().toLowerCase();
+    const lista = extratoCashback()
+      .filter(x => st.filtroX === "todos" || (st.filtroX === "entradas" && x.v > 0 && !x.caminho) || (st.filtroX === "saidas" && x.v < 0) || (st.filtroX === "receber" && x.caminho))
+      .filter(x => !q || x.t.toLowerCase().includes(q));
+    const grupos = {}; lista.forEach((x, i) => (grupos[mesDe(x.d)] ||= []).push([x, i]));
+    el.innerHTML = `${bar4("Extrato do cashback", "cashback")}
+      <div class="card bloco">
+        <div class="muted">Recebido em outubro</div>
+        <div class="grande verde num" style="margin-top:2px">${brl(8.00)}</div>
+        ${h.caminho ? `<div class="faixa num" style="margin-top:10px">${svg(I.relogio,16)}<span class="t">${brl(h.caminho)} a receber · cai até ${CAI_ATE}</span></div>` : ""}
+      </div>
+      <div style="margin-top:14px">${busca("busca-x", st.buscaX)}</div>
+      ${chips("fx", [["todos","Todos"],["entradas","Entradas"],["saidas","Saídas"],["receber","A receber"]], st.filtroX)}
+      ${Object.keys(grupos).length
+        ? Object.entries(grupos).map(([mes, itens]) => `<h4 class="titulo-sec titulo-mes">${mes}</h4><div class="card"><ul class="movs">${itens.map(([x, i]) => itemMov(x, i)).join("")}</ul></div>`).join("")
+        : `<div class="card" style="margin-top:12px"><ul class="comp"><li class="vazio-lista muted">Nada encontrado</li></ul></div>`}`;
+    ligarBusca("busca-x", "buscaX", render4);
+    el.querySelectorAll("[data-fx]").forEach(b => b.addEventListener("click", () => { st.filtroX = b.dataset.fx; render4(); }));
+    el.querySelectorAll("[data-mov]").forEach(b => b.addEventListener("click", () => detalheMov(lista[+b.dataset.mov])));
+  }

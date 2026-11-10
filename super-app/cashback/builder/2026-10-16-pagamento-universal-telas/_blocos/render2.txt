@@ -1,0 +1,51 @@
+function render2(){
+  const el = document.getElementById("recibo");
+  if (st.det === undefined) st.det = true;
+  const seguro = st.recibo === "seguro";
+  const p = st.pago || {metodo:metodos[0], valor:120.00, cb:9.20, ganho:cb1(120.00)};
+  const linha = (a, b, cls = "") => `<div><dt>${a}</dt><dd class="num ${cls}">${b}</dd></div>`;
+  const d = seguro
+    ? {status:"Pagamento feito", topo:"R$ 89,90", ic:I.seguro, nome:"Seguro Auto · outubro", marca:"iGreen Seguros",
+       linhas: linha("Mensalidade", "R$ 89,90"),
+       pills: `<div class="cp-pill neutro">${svg(I.cb,16)} Seguro não rende cashback</div>`,
+       extra: `<div class="cp-apolice"><b>Apólice</b>
+          <ol class="timeline" aria-label="Situação da apólice">
+            <li class="feito"><span class="d" aria-hidden="true">${svg(I.check,12,4)}</span><div><b>Pagamento confirmado</b><span>16/10, 14:32</span></div></li>
+            <li class="agora" aria-current="step"><span class="d" aria-hidden="true"></span><div><b>Apólice em ativação</b><span>Até 30 minutos</span></div></li>
+            <li><span class="d" aria-hidden="true"></span><div><b>Apólice ativa</b><span>Avisamos aqui no app</span></div></li>
+          </ol></div>`,
+       det: [["Forma","Cartão Visa •••• 4821"],["Situação","Pago"],["Data","16/10/2026"],["Hora","14:32"],["ID",'<span class="codigo">IG2026101614320CRT4</span>']],
+       pagou:"R$ 89,90"}
+    : {status:"Fatura paga", topo:"R$ 129,20", ic:I.energia, nome:"Fatura de energia · outubro", marca:"iGreen Energia",
+       linhas: linha("Valor da fatura", "R$ 129,20") + (p.cb ? linha("Cashback usado", "− " + brl(p.cb), "menos") : ""),
+       pills: `<div class="cp-pill">${svg(I.eco,16)} Você economizou R$ 22,80 nesta fatura</div>`
+         + (p.ganho ? `<div class="cp-pill">${svg(I.presente,16)} Você ganhou + ${brl(p.ganho)} de cashback</div>` : `<div class="cp-pill neutro">${svg(I.presente,16)} Só o saldo Pay rende cashback</div>`),
+       extra: "",
+       det: [["Forma", p.metodo.nome],["Situação","Pago"],["Data","16/10/2026"],["Hora","14:35"]].concat(p.ganho ? [["Cashback", `Cai até ${CAI_ATE}`]] : []).concat([["ID",'<span class="codigo">IG2026101614350PAY7</span>']]),
+       pagou: brl(p.valor)};
+  el.innerHTML = `
+    <div class="cp-topo">
+      <button class="icon-btn" type="button" aria-label="Voltar">${svg(I.voltar,24,2.2)}</button>
+      <span class="cp-ok" aria-hidden="true">${svg(I.check,22,3)}</span>
+      <button class="icon-btn" type="button" aria-label="Baixar comprovante">${svg('<path d="M12 4v11m0 0-4-4m4 4 4-4"/><path d="M5 19h14"/>',22)}</button>
+    </div>
+    <div class="cp-head"><div class="cp-status">${d.status}</div><div class="cp-valor num">${d.topo}</div></div>
+    <div class="cp-card">
+      <span class="cp-logo" aria-hidden="true">${svg(d.ic,26)}</span>
+      <b class="cp-nome">${d.nome}</b>
+      <span class="cp-marca">${d.marca}</span>
+      <dl class="cp-linhas">${d.linhas}</dl>
+      ${d.pills}
+      ${d.extra}
+      <div class="cp-corte" aria-hidden="true"></div>
+      <button type="button" class="cp-det-cab" aria-expanded="${st.det}" data-det>Detalhes do pagamento ${svg('<path d="m6 9 6 6 6-6"/>',18)}</button>
+      ${st.det ? `<dl class="cp-linhas">${d.det.map(([a, b]) => linha(a, b)).join("")}</dl>` : ""}
+      <div class="cp-total"><span>Você pagou</span><b class="num">${d.pagou}</b></div>
+    </div>
+    <div class="cp-acoes">
+      <button class="btn btn--sec" type="button">${svg(I.casa,18)} Início</button>
+      <button class="btn btn--pri" type="button">${svg(I.share,18)} Compartilhar</button>
+    </div>`;
+  el.querySelector("[data-det]").addEventListener("click", () => { st.det = !st.det; render2(); el.querySelector("[data-det]").focus(); });
+}
+

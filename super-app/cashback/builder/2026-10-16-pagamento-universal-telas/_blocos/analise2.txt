@@ -1,0 +1,49 @@
+  if (v === "economia"){
+    const serie = ECO_MESES(), max = Math.max(...serie.map(x => x[1])), melhor = serie.reduce((a, b) => b[1] > a[1] ? b : a);
+    const NOME = {Mai:"maio", Jun:"junho", Jul:"julho", Ago:"agosto", Set:"setembro", Out:"outubro"};
+    const prodCard = (ic, nome, valor, p, dado) => `<div class="prodx"><div class="prodx-cab"><span class="ic" aria-hidden="true">${svg(ic,18)}</span><b>${nome}</b><span class="pct">${p}%</span></div><div class="v">${brl(valor)}</div><span class="trilho" aria-hidden="true"><i style="width:${p}%"></i></span><span class="dado">${dado}</span></div>`;
+    el.innerHTML = `${bar4("Análise da economia", "hub")}
+      <div class="card bloco">
+        <div class="cab-linha"><span class="tit">Economia total</span><button type="button" class="sel">Últimos 6 meses ${svg('<path d="m6 9 6 6 6-6"/>',16)}</button></div>
+        <div class="grande verde num" style="margin-top:12px">${brl(h.ecoTotal)}</div>
+        <div class="muted">nas suas contas, de maio a outubro</div>
+        ${h.p ? "" : `<p class="nota">A energia de outubro entra quando a fatura for paga.</p>`}
+        <div class="barras" role="img" aria-label="Economia por mês: ${serie.map(x => x[0] + " " + brl(x[1])).join(", ")}">
+          ${serie.map((x, i) => `<div class="${i === serie.length - 1 ? "atual" : ""}"><span style="height:${Math.max(4, Math.round(x[1] / max * 58))}px"></span><small>${x[0]}</small></div>`).join("")}
+        </div>
+        <dl class="contas num" style="margin-top:12px;border-top:1px solid var(--line)">
+          <div><dt>Média por mês</dt><dd>${brl(h.ecoTotal / 6)}</dd></div>
+          <div><dt>Melhor mês</dt><dd>${NOME[melhor[0]]} · ${brl(melhor[1])}</dd></div>
+        </dl>
+      </div>
+      <div class="label">Por produto</div>
+      <div class="hscroll num">
+        ${prodCard(I.energia, "Energia", h.ecoEnergia, pct(h.ecoEnergia, h.ecoTotal), `${h.kwh.toLocaleString("pt-BR")} kWh de energia limpa`)}
+        ${prodCard(I.telecom, "Telecom", h.ecoTelecom, pct(h.ecoTelecom, h.ecoTotal), "+5 GB por mês no plano")}
+        ${prodCard(I.seguro, "Seguros", 0, 0, "Proteção ativa · sem desconto")}
+      </div>
+      <div class="label">Histórico · últimos 3 meses</div>
+      <div class="card"><ul class="comp">${extratoEconomiaCompleto().filter(x => MESES3.includes(x.mes)).map(itemE).join("")}</ul>
+        <button type="button" class="rodape-card" data-hub-ir="historico-eco">Ver histórico completo ${svg(I.seta,18)}</button>
+      </div>`;
+  }
+  else if (v === "historico-eco"){
+    const q = st.buscaHE.trim().toLowerCase();
+    const lista = extratoEconomiaCompleto()
+      .filter(x => st.perE === "6" || MESES3.includes(x.mes))
+      .filter(x => st.origE === "todos" || x.p === st.origE)
+      .filter(x => !q || x.t.toLowerCase().includes(q));
+    const total = lista.reduce((s, x) => s + x.v, 0), grupos = {};
+    lista.forEach(x => (grupos[x.mes + " de 2026"] ||= []).push(x));
+    el.innerHTML = `${bar4("Histórico da economia", "economia")}
+      <div class="card bloco"><div class="muted">Economia no período</div><div class="grande verde num">${brl(total)}</div><div class="muted num">${lista.length} lançamentos</div></div>
+      <div style="margin-top:12px">${busca("busca-he", st.buscaHE)}</div>
+      <div class="mes-grupo" style="margin-top:4px">Período</div>
+      ${chips("pe", [["3","Últimos 3 meses"],["6","Últimos 6 meses"]], st.perE)}
+      <div class="mes-grupo" style="margin-top:4px">Origem</div>
+      ${chips("oe", [["todos","Todas"],["energia","Energia"],["telecom","Telecom"]], st.origE)}
+      ${Object.keys(grupos).length ? Object.entries(grupos).map(([mes, itens]) => `<div class="mes-grupo">${mes}</div><div class="card"><ul class="comp">${itens.map(itemE).join("")}</ul></div>`).join("") : `<div class="card"><ul class="comp"><li class="vazio-lista muted">Nada encontrado</li></ul></div>`}`;
+    ligarBusca("busca-he", "buscaHE", render4);
+    el.querySelectorAll("[data-pe]").forEach(b => b.addEventListener("click", () => { st.perE = b.dataset.pe; render4(); }));
+    el.querySelectorAll("[data-oe]").forEach(b => b.addEventListener("click", () => { st.origE = b.dataset.oe; render4(); }));
+  }

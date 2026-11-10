@@ -1,0 +1,93 @@
+/* ---------- Proposta C: cartão branco da A com as abas da B; os meses mudam o número em todas as abas ---------- */
+function cTotal(d, e, sel){
+  const ecoV = sel === null ? d.eco : e[sel], cbV = sel === null ? d.cb : CB[sel];
+  const pe = Math.round(ecoV / (ecoV + cbV) * 100), pc = 100 - pe;
+  return `
+    <div class="ha-div">
+      <div class="ha-div-cab"><span>De onde veio</span><span class="muted">${sel === null ? "desde maio" : "em " + NOMES[sel]}</span></div>
+      <div class="ha-div-barra" role="img" aria-label="Economia ${pe}%, cashback ${pc}%"><i class="e" style="width:${pe}%"></i><i class="c" style="width:${pc}%"></i></div>
+      <dl class="ha-div-leg num">
+        <div><dt><i class="e"></i>Economia nas contas</dt><dd>${brl(ecoV)}<span>${pe}%</span></dd></div>
+        <div><dt><i class="c"></i>Cashback</dt><dd>${brl(cbV)}<span>${pc}%</span></dd></div>
+      </dl>
+    </div>
+    <div class="hc-bloco">${cartaoMeta(d, true)}</div>
+    <h4 class="hc-sec">O que você já fez</h4>
+    ${carrossel(d, true)}`;
+}
+function cEconomia(d, e, sel){
+  const ene = [14.10, 17.40, 20.20, 18.90, 21.50, st.pago ? 22.80 : 0];
+  const max = Math.max(...e), media = d.eco / 6, mi = e.indexOf(max), ALT = 76;
+  return `
+    <div class="hc-graf" role="group" aria-label="Economia mês a mês, por produto">
+      <span class="hc-media" style="bottom:${Math.round(media / max * ALT) + 22}px"><span>Média ${brl(media)}</span></span>
+      ${e.map((v, i) => {
+        const agora = i === 5 && !st.pago;
+        return `<button type="button" data-mes-c="${i}" aria-pressed="${sel === i}" aria-label="${NOMES[i]}: ${brl(v)}, sendo energia ${brl(ene[i])} e Telecom ${brl(v - ene[i])}">
+          <span class="pilha2 ${agora ? "agora" : ""}"><i class="ene" style="height:${Math.round(ene[i] / max * ALT)}px"></i><i class="tel" style="height:${Math.round((v - ene[i]) / max * ALT)}px"></i></span><span class="m">${MESES[i]}</span></button>`;
+      }).join("")}
+    </div>
+    <div class="hc-leg"><span><i class="ene"></i>Energia</span><span><i class="tel"></i>Telecom</span></div>
+    <div class="hc-kpis num">
+      <div><span>Média por mês</span><b>${brl(media)}</b></div>
+      <div><span>Melhor mês: ${NOMES[mi]}</span><b>${brl(max)}</b></div>
+    </div>
+    <button type="button" class="hc-cta">Ver análise completa ${svg(I.seta,18,2.4)}</button>`;
+}
+function cCashback(d){
+  return `
+    <div class="ha-div">
+      <div class="ha-div-cab"><span>De onde veio</span><span class="muted">desde maio</span></div>
+      <div class="ha-div-barra" role="img" aria-label="Indicações 82%, Pay 18%"><i class="c" style="width:82%"></i><i class="e" style="width:18%"></i></div>
+      <dl class="ha-div-leg num">
+        <div><dt><i class="c"></i>Indicações</dt><dd>R$ 38,00<span>82%</span></dd></div>
+        <div><dt><i class="e"></i>Pagar com o Pay</dt><dd>R$ 8,50<span>18%</span></dd></div>
+      </dl>
+    </div>
+    <div class="ha-dark">
+      <span class="ha-dark-ic" aria-hidden="true">${svg(I.cb,24,2.2)}</span>
+      <div class="lbl"><i></i> Seu cashback</div>
+      <div class="val num"><b>${brl(d.disp)}</b><span>disponível</span></div>
+      <p class="sub num">${d.receber ? `+ ${brl(d.receber)} a receber · cai até 20/10` : "Já usou R$ 14,30 · resgatou R$ 23,00"}</p>
+      <button type="button" class="ha-cta">Ver meu cashback ${svg(I.seta,18,2.4)}</button>
+    </div>`;
+}
+function renderC(){
+  const d = D(), e = eco(), met = st.metC, sel = st.mesC;
+  const porMes = i => met === "economia" ? e[i] : met === "cashback" ? CB[i] : +(e[i] + CB[i]).toFixed(2);
+  const val = sel === null ? (met === "economia" ? d.eco : met === "cashback" ? d.cb : d.total) : porMes(sel), p = partes(val);
+  const rot = {total:"Economia + cashback", economia:"Desconto nas contas", cashback:"Cashback recebido"}[met];
+  const nota = sel !== null
+    ? (sel === 5 && !st.pago && met !== "cashback" ? "Outubro ainda sem a energia: entra quando pagar" : "Toque no mês de novo para ver desde maio")
+    : (met === "total" ? "Desde maio de 2026 · <b>não é saldo</b>" : "Desde maio de 2026");
+  document.getElementById("propC").innerHTML = `
+    <section class="ha hc" aria-label="Seu retorno">
+      ${ILUS.replace('class="ha-ilus"', 'class="ha-ilus hc-ilus"')}
+      <h2 class="ha-tit">Seu retorno</h2>
+      <p class="ha-sub">Energia · Telecom · Seguros</p>
+      <div class="hc-seg" role="group" aria-label="O que mostrar">
+        ${[["total","Total"],["economia","Economia"],["cashback","Cashback"]].map(([k, t]) => `<button type="button" data-met-c="${k}" aria-pressed="${met === k}">${t}</button>`).join("")}
+      </div>
+      <div class="ha-linha"><span>${sel === null ? rot : rot + " em " + NOMES[sel]}</span><span class="chip ok">${svg(I.check,12,3.5)} Em dia</span></div>
+      <div class="ha-num num" aria-label="${brl(val)}"><span class="moeda">R$</span><span class="int">${p.i}</span><span class="dec">,${p.d}</span></div>
+      <p class="ha-nota">${nota}</p>
+      <div class="ha-meses hc-meses" role="group" aria-label="Meses">
+        ${MESES.map((m, i) => {
+          const agora = i === 5 && !st.pago;
+          return `<button type="button" data-mes-c="${i}" aria-pressed="${sel === i}" aria-label="${NOMES[i]}: ${agora ? "vence em 23 de outubro" : "paga em dia"}">
+            <span class="m">${m}</span><span class="c ${agora ? "agora" : ""}">${agora ? "23" : svg(I.check,18,3)}</span></button>`;
+        }).join("")}
+      </div>
+      <p class="ha-dica">Toque num mês para ver o retorno dele</p>
+      <hr class="ha-hr">
+      ${met === "total" ? cTotal(d, e, sel) : met === "economia" ? cEconomia(d, e, sel) : cCashback(d)}
+    </section>`;
+  document.querySelectorAll("[data-met-c]").forEach(b => b.addEventListener("click", () => {
+    st.metC = b.dataset.metC; renderC(); document.querySelector(`[data-met-c="${st.metC}"]`).focus();
+  }));
+  document.querySelectorAll("[data-mes-c]").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.mesC; st.mesC = st.mesC === i ? null : i; renderC();
+    const alvo = document.querySelector(`.hc-meses [data-mes-c="${i}"]`); if (alvo) alvo.focus();
+  }));
+}
+

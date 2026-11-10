@@ -1,0 +1,1099 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cashback iGreen · proposta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --floresta:#0B2617; --floresta-2:#12301F; --mint:#A8D9B4; --verde:#338449; --verde-txt:#276638; --verde-esc:#276638;
+  --tint:#E5F1E8; --fundo:#EEF0EF; --card:#FFFFFF; --borda:#DCE1DD; --tinta:#111513; --muted:#545C57;
+  --ambar:#8A5208; --ambar-claro:#F0A43C; --ambar-tint:#FBEBD3;
+  --branco-70:rgba(243,246,244,.72); --branco-55:rgba(243,246,244,.58);
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#071A10}
+body{font-family:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--tinta);-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+img{display:block}
+
+/* palco 1920x1080 escalado */
+.deck{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform:translate(-50%,-50%) scale(.5);transform-origin:center}
+.slide{position:absolute;inset:0;overflow:hidden;background:var(--fundo);visibility:hidden}
+.slide.ativo{visibility:visible}
+.slide.escuro{background:var(--floresta);color:#F3F6F4}
+.slide.marca{background:var(--verde-esc);color:#fff}
+.slide .notas{display:none}
+
+/* trilho e rodapé */
+.trilho{position:absolute;left:104px;right:104px;top:52px;height:40px;display:flex;align-items:center;gap:16px;font-size:19px;font-weight:700;color:var(--muted);z-index:3}
+.trilho .simb{width:21px;height:30px;color:var(--verde);flex:none}
+.trilho .sep{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.5}
+.trilho .dir{margin-left:auto;display:flex;align-items:center;gap:22px}
+.escuro .trilho,.marca .trilho{color:var(--branco-55)}
+.escuro .trilho .simb{color:var(--mint)} .marca .trilho .simb{color:#fff}
+.rodape{position:absolute;left:104px;right:104px;bottom:38px;font-size:18px;font-weight:500;color:var(--muted);z-index:3}
+.escuro .rodape,.marca .rodape{color:var(--branco-55)}
+
+/* selos de certeza */
+.selo{display:inline-flex;align-items:center;gap:9px;height:36px;padding:0 16px;border-radius:99px;font-size:18px;font-weight:800;white-space:nowrap}
+.selo::before{content:'';width:8px;height:8px;border-radius:50%;background:currentColor}
+.selo.fato{color:var(--verde-txt);background:var(--tint)}
+.selo.ficticio{color:var(--ambar);border:1.5px dashed currentColor}
+.selo.hipotese{color:var(--ambar);border:1.5px solid currentColor}
+.selo.semdado{color:#5B3605;background:var(--ambar-tint)}
+.escuro .selo.fato,.marca .selo.fato{color:var(--mint);background:rgba(168,217,180,.14)}
+.escuro .selo.ficticio,.marca .selo.ficticio{color:var(--ambar-claro)}
+.escuro .selo.hipotese{color:var(--ambar-claro)}
+
+/* tipografia */
+.topo{position:absolute;left:104px;top:142px;width:1240px;z-index:2}
+.eyebrow{font-size:22px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--verde-txt)}
+.escuro .eyebrow{color:var(--mint)} .marca .eyebrow{color:#DDEFE2}
+.titulo{font-size:80px;font-weight:800;letter-spacing:-.035em;line-height:1.02;margin-top:16px}
+.titulo .l{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+.titulo .l>span{display:inline-block}
+.titulo .dest{color:var(--verde)}
+.escuro .titulo .dest{color:var(--mint)}
+.marca .titulo .dest{color:#CFEBD7}
+.titulo .w{display:inline-block}
+.num{font-variant-numeric:tabular-nums}
+
+/* blocos comuns */
+.card{background:var(--card);border:1.5px solid var(--borda);border-radius:28px;position:relative}
+.escuro .card{background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.11)}
+.regra{font-size:28px;font-weight:700;line-height:1.3}
+.regra::before{content:'';display:block;width:64px;height:4px;border-radius:2px;background:var(--verde);margin-bottom:18px}
+.escuro .regra::before{background:var(--mint)}
+.chip{display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 20px;border-radius:99px;font-size:22px;font-weight:700;background:var(--fundo);color:var(--tinta);white-space:nowrap}
+.chip.amb{background:transparent;border:1.5px solid var(--ambar);color:var(--ambar)}
+.escuro .chip.amb{border-color:var(--ambar-claro);color:var(--ambar-claro)}
+.chip.mint{background:transparent;border:1.5px solid var(--mint);color:var(--mint)}
+.botao{display:inline-flex;align-items:center;gap:14px;height:68px;padding:0 34px;border-radius:99px;background:var(--verde);color:#fff;font:800 24px 'Manrope',sans-serif;text-decoration:none;white-space:nowrap}
+.botao svg{width:24px;height:24px}
+.botao:hover{background:#2C7540}
+.botao:focus-visible{outline:3px solid var(--tinta);outline-offset:4px}
+.botao.claro{background:#fff;color:var(--verde-txt)}
+.botao.claro:hover{background:#E9F4EC}
+.ic{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* celular limpo: só moldura, sem sombra */
+.fone{--w:280px;width:var(--w);padding:calc(var(--w)*.03);border-radius:calc(var(--w)*.165);background:#0F1311;box-shadow:inset 0 0 0 1.5px #39413C}
+.fone img{width:100%;height:auto;border-radius:calc(var(--w)*.135)}
+.escuro .fone,.marca .fone{outline:1.5px solid rgba(255,255,255,.2)}
+.flutua{animation:flutua 7s ease-in-out infinite}
+.flutua.b{animation-duration:8.5s;animation-delay:-2s}
+.flutua.c{animation-duration:6.4s;animation-delay:-4s}
+@keyframes flutua{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-9px) rotate(.35deg)}}
+
+/* curvas de fundo */
+.curvas{position:absolute;left:-60px;top:-40px;width:2040px;height:1160px;pointer-events:none;animation:deriva 34s ease-in-out infinite alternate}
+.curvas path{fill:none;stroke:var(--mint);stroke-opacity:.1;stroke-width:1.6;stroke-dasharray:1}
+.marca .curvas path{stroke:#fff;stroke-opacity:.09}
+@keyframes deriva{from{transform:translate(-30px,6px)}to{transform:translate(30px,-18px)}}
+
+/* ---------- 1 capa ---------- */
+#s-capa .texto{position:absolute;left:104px;top:236px;width:1060px;z-index:2}
+#s-capa .titulo{font-size:124px;line-height:1.0;letter-spacing:-.04em}
+#s-capa .sub{font-size:32px;font-weight:500;color:var(--branco-70);margin-top:34px;max-width:860px;line-height:1.35}
+#s-capa .assina{font-size:22px;font-weight:700;color:var(--branco-55);margin-top:56px}
+#s-capa .ilus{position:absolute;right:40px;top:150px;width:840px;height:840px}
+#s-capa .ilus img{width:100%}
+
+/* ---------- 2 pedido ---------- */
+#s-pedido .pedido{position:absolute;left:104px;right:104px;top:418px;height:500px;display:grid;grid-template-columns:1fr 1fr;gap:40px}
+#s-pedido .card{padding:56px 60px;display:flex;flex-direction:column;overflow:hidden}
+#s-pedido .card.forte{background:var(--floresta);border-color:var(--floresta);color:#F3F6F4}
+#s-pedido .n{font-size:220px;font-weight:800;letter-spacing:-.05em;line-height:.85}
+#s-pedido .forte .n{color:var(--mint)} #s-pedido .card:not(.forte) .n{color:var(--verde)}
+#s-pedido .rot{font-size:42px;font-weight:800;letter-spacing:-.02em;margin-top:30px;line-height:1.1}
+#s-pedido .mini{font-size:26px;font-weight:500;margin-top:auto;color:var(--muted)}
+#s-pedido .forte .mini{color:var(--branco-70)}
+#s-pedido .ilus{position:absolute;right:36px;top:30px;width:230px}
+
+/* ---------- 3 hoje ---------- */
+#s-hoje .produtos{position:absolute;left:104px;right:104px;top:392px;display:grid;grid-template-columns:repeat(3,1fr);gap:48px}
+#s-hoje .card{padding:36px}
+#s-hoje .cab{display:flex;align-items:center;gap:18px}
+#s-hoje .tile{width:64px;height:64px;border-radius:20px;background:var(--tint);color:var(--verde-txt);display:grid;place-items:center}
+#s-hoje .tile svg{width:32px;height:32px}
+#s-hoje .nome{font-size:38px;font-weight:800;letter-spacing:-.02em}
+#s-hoje .modos{display:flex;flex-direction:column;align-items:flex-start;gap:12px;margin-top:28px}
+#s-hoje .liga{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none}
+#s-hoje .liga path{fill:none;stroke:var(--verde);stroke-width:3;stroke-dasharray:1}
+#s-hoje .vazio{position:absolute;left:910px;top:800px;width:100px;height:100px;border-radius:50%;border:3px dashed var(--ambar);display:grid;place-items:center;font-size:52px;font-weight:800;color:var(--ambar);background:var(--fundo)}
+#s-hoje .vazio-txt{position:absolute;left:0;right:0;top:924px;text-align:center;font-size:30px;font-weight:800;letter-spacing:-.01em}
+
+
+/* ---------- 5 mercado ---------- */
+#s-mercado .achados{position:absolute;left:104px;top:428px;width:960px;display:grid;gap:34px}
+#s-mercado .achado{display:grid;grid-template-columns:250px 1fr;align-items:start;gap:28px}
+#s-mercado .achado .n{font-size:92px;font-weight:800;letter-spacing:-.045em;line-height:.95;color:var(--verde)}
+#s-mercado .achado .t{font-size:28px;font-weight:700;line-height:1.3;padding-top:8px}
+#s-mercado .achado .s{font-size:21px;font-weight:500;color:var(--muted);margin-top:8px;line-height:1.4}
+#s-mercado .venn{position:absolute;left:1120px;top:356px;width:700px;height:660px}
+#s-mercado .venn circle.c{fill:rgba(51,132,73,.13);stroke:var(--verde);stroke-width:2.5}
+#s-mercado .venn text{font-family:'Manrope',sans-serif;font-weight:800;font-size:27px;fill:var(--tinta)}
+#s-mercado .venn .alvo{fill:var(--ambar-tint);stroke:var(--ambar);stroke-width:2.5;stroke-dasharray:8 7}
+#s-mercado .venn .leg{font-size:24px;font-weight:800;fill:var(--ambar)}
+
+/* ---------- 6 divisor proposta ---------- */
+#s-proposta .texto{position:absolute;left:104px;top:280px;width:1000px;z-index:2}
+#s-proposta .titulo{font-size:150px;line-height:.98;letter-spacing:-.045em}
+#s-proposta .partes{display:grid;grid-template-columns:repeat(2,max-content);gap:14px;margin-top:56px}
+#s-proposta .parte{display:inline-flex;align-items:center;gap:14px;height:62px;padding:0 26px 0 12px;border-radius:99px;background:rgba(255,255,255,.12);font-size:25px;font-weight:700;color:#fff}
+#s-proposta .parte b{width:40px;height:40px;border-radius:50%;background:#fff;color:var(--verde-txt);display:grid;place-items:center;font-size:20px}
+#s-proposta .ilus{position:absolute;right:70px;top:190px;width:740px}
+#s-proposta .ilus img{width:100%}
+
+/* ---------- 7 regras ---------- */
+#s-regras .regras{position:absolute;left:104px;right:104px;top:408px;height:430px;display:grid;grid-template-columns:repeat(5,1fr);gap:24px}
+#s-regras .card{padding:38px 30px 34px;display:flex;flex-direction:column}
+#s-regras .card.dest{border:2.5px solid var(--verde)}
+#s-regras .nn{font-size:60px;font-weight:800;letter-spacing:-.04em;color:var(--verde);line-height:1}
+#s-regras .t{font-size:31px;font-weight:800;letter-spacing:-.015em;line-height:1.15;margin-top:30px}
+#s-regras .ex{font-size:21px;font-weight:500;color:var(--muted);line-height:1.42;margin-top:auto}
+
+/* ---------- 8 jornada ---------- */
+#s-jornada .botao{position:absolute;right:104px;top:196px;z-index:3}
+#s-jornada .fio{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none}
+#s-jornada .fio path{fill:none;stroke:var(--verde);stroke-width:4;stroke-dasharray:1}
+#s-jornada .linha{position:absolute;left:104px;right:104px;top:386px;display:flex;justify-content:space-between;z-index:2}
+#s-jornada .passo{width:236px}
+#s-jornada .fone{--w:236px}
+#s-jornada .rot{display:flex;gap:12px;margin-top:20px;align-items:flex-start}
+#s-jornada .rot b{flex:none;width:34px;height:34px;border-radius:50%;background:var(--verde);color:#fff;display:grid;place-items:center;font-size:18px;font-weight:800}
+#s-jornada .rot strong{display:block;font-size:24px;font-weight:800;line-height:1.2}
+#s-jornada .rot span{display:block;font-size:19px;font-weight:500;color:var(--muted);line-height:1.3;margin-top:2px}
+
+/* ---------- 9 conta ---------- */
+#s-conta .grafico{position:absolute;left:0;top:0;width:1920px;height:1080px}
+#s-conta .grafico text{font-family:'Manrope',sans-serif;font-variant-numeric:tabular-nums}
+#s-conta .v{font-size:27px;font-weight:800;fill:var(--tinta)}
+#s-conta .v.verde{fill:var(--verde-txt)}
+#s-conta .cat{font-size:21px;font-weight:600;fill:var(--muted)}
+#s-conta .nota{font-size:19px;font-weight:800;letter-spacing:.06em;fill:var(--verde-txt)}
+#s-conta .bar{transform-box:fill-box;transform-origin:50% 100%}
+#s-conta .bar.cima{transform-origin:50% 0}
+#s-conta .liga{stroke:#9AA49E;stroke-width:2;stroke-dasharray:6 6}
+#s-conta .base{stroke:#B9C1BC;stroke-width:2}
+#s-conta .atraso{position:absolute;left:914px;top:366px;width:440px;padding:16px 22px;border-radius:18px;background:var(--ambar-tint);color:#5B3605;font-size:21px;font-weight:600;line-height:1.38}
+#s-conta .atraso strong{font-weight:800}
+#s-conta .fone-wrap{position:absolute;left:1546px;top:378px}
+#s-conta .fone{--w:270px}
+
+/* ---------- 10 ciclo ---------- */
+#s-ciclo .fone-wrap{position:absolute;left:1516px;top:330px}
+#s-ciclo .fone{--w:300px}
+#s-ciclo .total{position:absolute;left:104px;top:384px;display:flex;align-items:baseline;gap:16px}
+#s-ciclo .total .rs{font-size:46px;font-weight:800;color:var(--mint)}
+#s-ciclo .total .n{font-size:118px;font-weight:800;letter-spacing:-.045em;color:var(--mint);line-height:1}
+#s-ciclo .total p{font-size:26px;font-weight:600;color:var(--branco-70);margin-left:12px}
+#s-ciclo .pilha{position:absolute;left:104px;top:560px;width:1240px;height:64px;display:flex;border-radius:16px;overflow:hidden;gap:4px}
+#s-ciclo .pilha div{height:100%}
+#s-ciclo .s1{background:#5BB774;width:56.4%} #s-ciclo .s2{background:#8E9A93;width:6.3%} #s-ciclo .s3{background:var(--mint);flex:1}
+#s-ciclo .legenda{position:absolute;left:104px;top:650px;display:flex;gap:44px;font-size:23px;font-weight:600;color:var(--branco-70)}
+#s-ciclo .legenda b{color:#fff;font-weight:800;margin-left:6px}
+#s-ciclo .legenda i{display:inline-block;width:14px;height:14px;border-radius:4px;margin-right:10px;vertical-align:1px}
+#s-ciclo .vida{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none}
+#s-ciclo .vida path{fill:none;stroke:rgba(168,217,180,.55);stroke-width:3;stroke-dasharray:1}
+#s-ciclo .estados{position:absolute;left:104px;top:752px;width:1300px;display:grid;grid-template-columns:repeat(4,1fr)}
+#s-ciclo .estado .no{width:30px;height:30px;border-radius:50%;background:var(--floresta);border:4px solid var(--mint)}
+#s-ciclo .estado strong{display:block;font-size:26px;font-weight:800;margin-top:16px}
+#s-ciclo .estado span{display:block;font-size:20px;font-weight:500;color:var(--branco-70);margin-top:4px}
+#s-ciclo .chips{position:absolute;left:104px;top:918px;display:flex;gap:16px}
+
+/* ---------- 11 momentos ---------- */
+#s-momentos .linha{position:absolute;left:104px;right:104px;top:392px;display:flex;justify-content:space-between}
+#s-momentos .m{width:232px}
+#s-momentos .fone{--w:232px}
+#s-momentos .m strong{display:block;font-size:23px;font-weight:800;margin-top:18px;line-height:1.2}
+#s-momentos .m>span{display:block;font-size:19px;font-weight:500;color:var(--muted);margin-top:3px}
+
+/* ---------- 12 evolução ---------- */
+#s-evolucao .leque{position:absolute;left:104px;top:430px;width:700px;height:520px}
+#s-evolucao .item{position:absolute;top:24px}
+#s-evolucao .item .rot{transform-origin:50% 100%}
+#s-evolucao .fone{--w:206px}
+#s-evolucao .i1{left:40px} #s-evolucao .i1 .rot{transform:rotate(-8deg)}
+#s-evolucao .i2{left:230px;top:0}
+#s-evolucao .i3{left:420px} #s-evolucao .i3 .rot{transform:rotate(8deg)}
+#s-evolucao .tag-v1{position:absolute;left:104px;top:372px;z-index:3}
+#s-evolucao .lado-dir{position:absolute;left:920px;right:104px;top:372px}
+#s-evolucao .placar{display:flex;align-items:baseline;gap:26px}
+#s-evolucao .placar .de{font-size:96px;font-weight:800;color:var(--branco-55);letter-spacing:-.04em}
+#s-evolucao .placar .para{font-size:150px;font-weight:800;color:var(--mint);letter-spacing:-.05em;line-height:.9}
+#s-evolucao .placar svg{width:64px;height:64px;color:var(--mint);align-self:center}
+#s-evolucao .placar p{font-size:28px;font-weight:700;color:var(--branco-70);line-height:1.3}
+#s-evolucao h3{font-size:22px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);margin-top:44px}
+#s-evolucao ul{list-style:none;margin-top:18px;display:grid;gap:14px}
+#s-evolucao li{display:flex;align-items:center;gap:16px;font-size:27px;font-weight:700}
+#s-evolucao li svg{width:30px;height:30px;color:var(--mint);flex:none}
+#s-evolucao .aviso{margin-top:30px}
+
+/* ---------- 13 agentes ---------- */
+#s-agentes .raia{position:absolute;left:104px;right:104px;height:170px;border-radius:24px;display:flex;align-items:center;padding-left:26px}
+#s-agentes .r1{top:384px;background:#fff;border:1.5px solid var(--borda)}
+#s-agentes .r2{top:574px;background:var(--tint);border:1.5px solid #CFE5D6}
+#s-agentes .quem{display:flex;align-items:center;gap:16px;width:320px}
+#s-agentes .av{width:60px;height:60px;border-radius:50%;background:var(--floresta);color:var(--mint);display:grid;place-items:center;font-size:21px;font-weight:800;flex:none}
+#s-agentes .av.img{background:none;width:66px;height:66px}
+#s-agentes .av.img img{width:100%}
+#s-agentes .quem strong{display:block;font-size:24px;font-weight:800;line-height:1.15;white-space:nowrap}
+#s-agentes .quem span{display:block;font-size:18px;font-weight:600;color:var(--muted);margin-top:4px;line-height:1.3}
+#s-agentes .zig{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none;z-index:1}
+#s-agentes .zig path{fill:none;stroke:var(--verde);stroke-width:3;stroke-dasharray:1}
+#s-agentes .etapa{position:absolute;width:164px;margin-left:-82px;text-align:center;z-index:2}
+#s-agentes .etapa .no{width:30px;height:30px;border-radius:50%;background:#fff;border:5px solid var(--verde);margin:0 auto}
+#s-agentes .etapa.ux .no{background:var(--floresta);border-color:var(--floresta)}
+#s-agentes .etapa p{font-size:19px;font-weight:700;line-height:1.28}
+#s-agentes .etapa.ux p{margin-bottom:10px}
+#s-agentes .etapa.ag p{margin-top:10px}
+#s-agentes .valor{position:absolute;left:104px;top:790px;width:840px}
+#s-agentes .valor p{font-size:25px;font-weight:600;line-height:1.42;margin-top:16px}
+#s-agentes .kpis{position:absolute;left:1010px;right:104px;top:800px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+#s-agentes .kpi .n{font-size:64px;font-weight:800;letter-spacing:-.04em;color:var(--verde);line-height:1}
+#s-agentes .kpi p{font-size:19px;font-weight:600;color:var(--muted);margin-top:8px;line-height:1.3}
+
+/* ---------- 14 suposição ---------- */
+#s-suposicao .regua{position:absolute;left:0;top:0;width:1920px;height:1080px}
+#s-suposicao .regua text{font-family:'Manrope',sans-serif}
+#s-suposicao .esc{font-size:19px;font-weight:800;letter-spacing:.08em;fill:var(--branco-55);text-transform:uppercase}
+#s-suposicao .nome{font-size:30px;font-weight:800;fill:#F3F6F4}
+#s-suposicao .sub{font-size:20px;font-weight:500;fill:var(--branco-55)}
+#s-suposicao .trk{stroke:rgba(255,255,255,.13);stroke-width:2}
+#s-suposicao .marco{fill:rgba(255,255,255,.22)}
+#s-suposicao .fill{transform-box:fill-box;transform-origin:0 50%}
+#s-suposicao .medido{fill:none;stroke:var(--mint);stroke-width:2;stroke-dasharray:8 8;stroke-opacity:.7}
+#s-suposicao .medido-t{font-size:19px;font-weight:700;fill:var(--mint)}
+#s-suposicao .regra{position:absolute;left:104px;top:930px;font-size:36px;font-weight:800}
+
+/* ---------- 15 rastreio ---------- */
+#s-rastreio .funil{position:absolute;left:104px;width:1150px}
+#s-rastreio .f1{top:392px} #s-rastreio .f2{top:660px}
+#s-rastreio .funil h3{font-size:20px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+#s-rastreio .caixas{display:flex;align-items:center;gap:0;margin-top:16px}
+#s-rastreio .cx{width:236px;height:156px;border:2.5px dashed var(--ambar);border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff}
+#s-rastreio .cx b{font-size:58px;font-weight:800;color:var(--ambar);line-height:1}
+#s-rastreio .cx span{font-size:22px;font-weight:800;margin-top:10px;text-align:center;line-height:1.2}
+#s-rastreio .sx{width:62px;height:26px;color:#9AA49E;flex:none}
+#s-rastreio .lado{position:absolute;left:1330px;right:104px;top:392px}
+#s-rastreio .lado h3{font-size:30px;font-weight:800;letter-spacing:-.01em;line-height:1.2}
+#s-rastreio .lado ul{list-style:none;margin-top:24px;display:grid;gap:18px}
+#s-rastreio .lado li{display:flex;gap:14px;align-items:baseline;font-size:24px;font-weight:600;line-height:1.3}
+#s-rastreio .lado li i{flex:none;width:12px;height:12px;border-radius:50%;background:var(--ambar);transform:translateY(-2px)}
+#s-rastreio .papel{margin-top:40px;display:flex;align-items:baseline;gap:16px}
+#s-rastreio .papel .n{font-size:84px;font-weight:800;color:var(--verde);letter-spacing:-.04em;line-height:1}
+#s-rastreio .papel p{font-size:23px;font-weight:600;color:var(--muted);line-height:1.3}
+#s-rastreio .regra{position:absolute;left:104px;top:908px;width:1150px;font-size:30px}
+
+/* ---------- 16 falta ---------- */
+#s-falta .cols{position:absolute;left:104px;right:104px;top:400px;display:grid;grid-template-columns:1fr 1fr;gap:40px}
+#s-falta .card{padding:44px 52px}
+#s-falta .card.dest{border:2.5px solid var(--ambar)}
+#s-falta h3{font-size:24px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--verde-txt)}
+#s-falta .dest h3{color:var(--ambar)}
+#s-falta ul{list-style:none;margin-top:22px;display:grid;gap:16px}
+#s-falta li{display:flex;align-items:center;gap:18px;font-size:29px;font-weight:700}
+#s-falta li svg{width:32px;height:32px;flex:none;color:var(--verde)}
+#s-falta li i{flex:none;width:32px;height:32px;border-radius:50%;border:3px dashed var(--ambar)}
+
+/* ---------- 17 decisões ---------- */
+#s-decisoes .ilus{position:absolute;right:96px;top:96px;width:250px}
+#s-decisoes .lista{position:absolute;left:104px;right:104px;top:388px;display:grid;gap:14px}
+#s-decisoes .dec{display:grid;grid-template-columns:76px 1fr 470px;align-items:center;gap:20px;padding:14px 0;border-top:1.5px solid rgba(255,255,255,.12)}
+#s-decisoes .dec>b{width:56px;height:56px;border-radius:50%;border:2.5px solid var(--mint);color:var(--mint);display:grid;place-items:center;font-size:26px;font-weight:800}
+#s-decisoes .q{font-size:30px;font-weight:800;line-height:1.2}
+#s-decisoes .p{font-size:20px;font-weight:500;color:var(--branco-70);margin-top:5px;line-height:1.35}
+#s-decisoes .quem{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+#s-decisoes .quem span{font-size:19px;font-weight:700;padding:6px 14px;border-radius:99px;background:rgba(255,255,255,.09);color:#E7EDE9}
+#s-decisoes .aval{position:absolute;left:104px;right:104px;top:938px;display:flex;align-items:center;gap:18px;padding:0 30px;height:66px;border-radius:99px;background:var(--mint);color:var(--floresta);font-size:26px;font-weight:800}
+#s-decisoes .aval span{margin-left:auto;font-size:20px;font-weight:700}
+
+/* ---------- 18 próximos ---------- */
+#s-proximos .ilus{position:absolute;right:90px;top:100px;width:440px}
+#s-proximos .linha-t{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none}
+#s-proximos .linha-t path{fill:none;stroke:rgba(255,255,255,.55);stroke-width:3;stroke-dasharray:1}
+#s-proximos .passos{position:absolute;left:104px;right:104px;top:556px;display:grid;grid-template-columns:repeat(4,1fr);gap:34px}
+#s-proximos .no{width:30px;height:30px;border-radius:50%;background:var(--verde-esc);border:5px solid #fff}
+#s-proximos .px h4{font-size:19px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#CFEBD7;margin-top:24px}
+#s-proximos .px strong{display:block;font-size:31px;font-weight:800;margin-top:8px;line-height:1.15}
+#s-proximos .px p{font-size:21px;font-weight:500;color:rgba(255,255,255,.8);margin-top:10px;line-height:1.4}
+#s-proximos .fecho{position:absolute;left:104px;right:104px;top:862px;display:flex;align-items:center;justify-content:space-between;gap:40px}
+#s-proximos .fecho p{font-size:52px;font-weight:800;letter-spacing:-.03em}
+
+/* ---------- 2 motivação ---------- */
+#s-motivo .cols{position:absolute;left:104px;right:104px;top:400px;display:grid;grid-template-columns:1fr 1fr;gap:40px}
+#s-motivo .forte{background:var(--floresta);border-color:var(--floresta);color:#F3F6F4;padding:50px 56px;display:flex;flex-direction:column;height:520px}
+#s-motivo .forte h3{font-size:20px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--mint)}
+#s-motivo .forte .frase{font-size:44px;font-weight:800;letter-spacing:-.02em;line-height:1.16;margin-top:24px}
+#s-motivo .forte .frase em{font-style:normal;color:var(--mint)}
+#s-motivo .forte .mini{margin-top:auto;font-size:24px;font-weight:500;color:var(--branco-70);line-height:1.4}
+#s-motivo .passos{display:grid;gap:20px;align-content:start}
+#s-motivo .passos h3{font-size:20px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--verde-txt);margin-bottom:2px}
+#s-motivo .ps{display:grid;grid-template-columns:56px 1fr;gap:22px;align-items:start;padding:28px 32px}
+#s-motivo .ps b{width:56px;height:56px;border-radius:50%;background:var(--verde);color:#fff;display:grid;place-items:center;font-size:24px;font-weight:800}
+#s-motivo .ps strong{display:block;font-size:29px;font-weight:800;line-height:1.2}
+#s-motivo .ps p{font-size:21px;font-weight:500;color:var(--muted);margin-top:6px;line-height:1.4}
+
+/* ---------- 4 cashback hoje ---------- */
+#s-cbhoje .ilus{position:absolute;right:96px;top:104px;width:230px}
+#s-cbhoje .bento{position:absolute;left:104px;right:104px;top:396px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+#s-cbhoje .card{padding:32px 38px;min-height:178px}
+#s-cbhoje .card strong{display:block;font-size:30px;font-weight:800;color:#fff;letter-spacing:-.01em}
+#s-cbhoje .card p{font-size:22px;font-weight:500;color:var(--branco-70);margin-top:10px;line-height:1.4}
+#s-cbhoje .card.dest{border:2px solid var(--ambar-claro)}
+#s-cbhoje .mercado{position:absolute;left:104px;right:104px;top:832px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+#s-cbhoje .mercado p{font-size:24px;font-weight:700;color:var(--branco-70);margin-right:6px}
+
+/* ---------- 5 certezas e dúvidas ---------- */
+#s-csd .cols{position:absolute;left:104px;right:104px;top:400px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+#s-csd .card{padding:38px 40px 44px}
+#s-csd .card.sup{border:2px solid var(--ambar)}
+#s-csd .card.duv{border:2px dashed #8E9A93}
+#s-csd h3{font-size:20px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--verde-txt)}
+#s-csd .sup h3{color:var(--ambar)} #s-csd .duv h3{color:var(--muted)}
+#s-csd .grande{font-size:62px;font-weight:800;letter-spacing:-.04em;color:var(--verde);line-height:1;margin-top:30px;white-space:nowrap}
+#s-csd .grande small{font-size:26px;letter-spacing:0;margin-left:8px}
+#s-csd .t{font-size:22px;font-weight:500;color:var(--muted);margin-top:10px;line-height:1.4}
+#s-csd ul{list-style:none;margin-top:28px;display:grid;gap:22px}
+#s-csd li{display:grid;grid-template-columns:30px 1fr;gap:12px;font-size:25px;font-weight:700;line-height:1.3}
+#s-csd li i{font-style:normal;font-weight:800;font-size:25px}
+#s-csd .sup li i{color:var(--ambar)} #s-csd .duv li i{color:var(--muted)}
+
+/* ---------- obrigado ---------- */
+#s-obrigado .texto{position:absolute;left:104px;top:250px;width:1040px;z-index:2}
+#s-obrigado .titulo{font-size:150px;line-height:.98;letter-spacing:-.045em}
+#s-obrigado .sub{font-size:30px;font-weight:500;color:var(--branco-70);margin-top:34px;line-height:1.4;max-width:900px}
+#s-obrigado .nome{margin-top:64px;display:flex;align-items:center;gap:20px}
+#s-obrigado .nome .av{width:72px;height:72px;border-radius:50%;background:var(--mint);color:var(--floresta);display:grid;place-items:center;font-size:26px;font-weight:800}
+#s-obrigado .nome strong{display:block;font-size:40px;font-weight:800;letter-spacing:-.02em}
+#s-obrigado .nome span{display:block;font-size:22px;font-weight:700;color:var(--mint);margin-top:2px}
+#s-obrigado .ilus{position:absolute;right:80px;top:200px;width:700px}
+#s-obrigado .ilus img{width:100%}
+
+/* ---------- apêndices ---------- */
+.apx .cols{position:absolute;left:104px;right:104px;top:392px;display:grid;gap:32px}
+.apx .card{padding:40px 44px}
+.apx h3{font-size:22px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--verde-txt)}
+.apx .card.amb h3{color:var(--ambar)}
+.apx .card.amb{border:2px dashed var(--ambar)}
+.apx ul{list-style:none;margin-top:20px;display:grid;gap:14px}
+.apx li{font-size:24px;font-weight:600;line-height:1.35;display:flex;gap:14px}
+.apx li::before{content:'';flex:none;width:10px;height:10px;border-radius:50%;background:var(--verde);margin-top:12px}
+.apx .amb li::before{background:var(--ambar)}
+.apx p.t{font-size:24px;font-weight:500;line-height:1.45;margin-top:16px}
+.apx .caminho{font-family:Consolas,'Cascadia Mono',monospace;font-size:19px;color:var(--muted);margin-top:12px;line-height:1.5}
+.apx .grupo strong{display:block;font-size:30px;font-weight:800;margin-top:10px}
+.apx .grupo p{font-size:22px;font-weight:500;color:var(--muted);line-height:1.4;margin-top:10px}
+
+/* ---------- controles ---------- */
+.controles{position:fixed;right:18px;bottom:18px;display:flex;align-items:center;gap:6px;padding:6px;border-radius:99px;background:rgba(11,38,23,.82);color:#fff;font:700 14px 'Manrope',sans-serif;z-index:20;transition:opacity .4s}
+.controles.some{opacity:0}
+.controles button{width:40px;height:40px;border-radius:50%;border:0;background:transparent;color:#fff;cursor:pointer;display:grid;place-items:center}
+.controles button:hover{background:rgba(255,255,255,.14)}
+.controles button:focus-visible{outline:2px solid var(--mint)}
+.controles svg{width:20px;height:20px}
+#contador{min-width:64px;text-align:center}
+.progresso{position:fixed;left:0;bottom:0;height:4px;background:var(--mint);z-index:20;transition:width .6s var(--ease)}
+#painel-notas{position:fixed;left:18px;right:18px;bottom:74px;max-height:34vh;overflow:auto;padding:22px 26px;border-radius:18px;background:rgba(11,38,23,.95);color:#F3F6F4;font:500 17px/1.55 'Manrope',sans-serif;z-index:20}
+#painel-notas .rot-n{font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:13px;color:var(--mint);margin-bottom:8px}
+#painel-notas .atalhos{margin-top:12px;font-size:13px;color:var(--branco-55)}
+
+@media (prefers-reduced-motion:reduce){.flutua,.curvas{animation:none}}
+@media print{
+  @page{size:1920px 1080px;margin:0}
+  html,body{height:auto;overflow:visible;background:#fff}
+  .deck{position:static;transform:none!important;width:1920px;height:auto}
+  .slide{position:relative;visibility:visible!important;width:1920px;height:1080px;break-after:page;page-break-after:always}
+  .controles,.progresso,#painel-notas{display:none!important}
+  .flutua,.curvas{animation:none!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="simb" viewBox="55 55 1384 1937" fill="currentColor"><path d="M 862.462 58.4265 C 917.592 55.5606 992.611 61.2149 1046.31 70.8286 C 1155.53 89.9086 1258.37 135.557 1345.78 203.75 C 1382.77 232.695 1410.41 258.587 1437.25 297.153 C 1422.73 309.681 1402.19 330.922 1388.09 344.604 C 1356.76 375.172 1325.2 405.509 1293.42 435.613 C 1283.84 444.68 1265.6 462.613 1256.05 469.876 C 1239.02 482.825 1199.93 440.639 1187.05 430.63 C 1172.69 419.46 1157.78 408.998 1142.4 399.282 C 1104.17 375.124 1062.53 356.832 1018.88 345.017 C 912.218 316.161 785.449 326.43 689.65 382.906 C 590.266 441.495 531.31 525.842 501.688 635.598 C 483.263 707.837 488.219 771.158 498.018 843.599 C 500.064 858.718 506.267 870.927 507.799 888.335 C 512.231 938.669 477.048 977.132 446.852 1012.91 C 409.836 981.579 371.337 959.066 326.581 940.304 C 305.016 931.284 283.02 923.332 260.672 916.476 C 198.687 896.919 187.544 898.571 181.915 828.156 C 165.78 626.338 210.763 437.314 352.046 284.218 C 491.38 133.233 657.607 67.0093 862.462 58.4265 z"/><path d="M 1028.53 668.258 C 1029.49 668.329 1029.53 668.712 1030.58 669.596 C 1034.85 681.339 1037.85 694.03 1041.1 706.121 C 1090.22 888.856 1065.12 1086.94 919.441 1219.34 C 886.882 1248.66 850.572 1273.53 811.465 1293.29 C 742.246 1328.56 658.532 1350.96 584.288 1374.1 C 559.932 1381.69 533.271 1390.13 508.583 1396.27 C 505.335 1397.08 495.298 1396.54 491.444 1396.36 C 528.117 1213.46 619.662 1104.78 754.657 986.199 C 752.932 986.95 751.216 987.72 749.509 988.511 C 609.084 1053.44 525.274 1167.82 472.895 1309.73 C 425.437 1247.25 400.001 1179.66 343.253 1123.56 C 326.818 1108.45 315.874 1100.67 296.722 1089.6 C 369.601 1172.35 413.554 1240.12 438.537 1348.64 C 291.063 1356.2 176.121 1292.39 101.271 1164.55 C 51.2303 1079.09 47.9921 988.474 73.6953 894.446 C 150.049 926.157 226.101 958.589 301.841 991.737 C 326.327 1002.67 376.323 1023.85 397.099 1038.77 C 416.748 1052.87 445.104 1087.48 464.387 1106.5 C 470.506 1100.69 471.621 1096.3 474.384 1088.56 C 480.709 1070.84 487.298 1052.61 495.905 1035.84 C 507.599 1012.91 521.504 991.163 537.42 970.925 C 562.061 940.016 591.064 912.854 623.52 890.291 C 651.814 870.475 687.31 851.411 717.86 834.286 C 767.746 806.395 817.822 778.848 868.087 751.646 L 966.431 698.205 C 980.412 690.6 1014.38 669.895 1028.53 668.258 z"/><path d="M 1160.56 739.203 C 1178.77 737.588 1220.46 739.728 1240.74 739.921 C 1284.87 740.25 1329.01 739.928 1373.13 738.954 C 1391.91 738.712 1411.31 737.651 1412.72 762.751 C 1413.64 779.19 1413.13 795.771 1413.15 812.243 L 1413.38 904.426 C 1413.97 1007.12 1413.95 1109.81 1413.32 1212.5 C 1413.17 1244.47 1416.67 1279.85 1390.24 1303.65 C 1373.91 1318.35 1334.99 1340.05 1314.69 1351.18 C 1170.61 1430.17 1037.3 1462.55 874.494 1460.78 C 815.702 1457.88 760.396 1451.65 702.893 1438.14 C 687.036 1434.42 669.449 1430.61 654.078 1425.53 C 643.565 1422.05 629.81 1414.72 619.566 1409.56 C 640.463 1401.86 654.569 1397.2 676.166 1391.51 C 770.536 1366.45 867.226 1325.23 942.36 1262.21 C 991.422 1221.06 1022.4 1178.62 1085.3 1156.84 C 1100.89 1151.44 1123.98 1134.79 1129.87 1118.47 C 1141.21 1086.99 1136.93 1044.93 1136.82 1011.11 L 1136.86 846.706 C 1136.84 821.089 1136 795.358 1136.47 769.805 C 1136.79 752.316 1143.92 743.306 1160.56 739.203 z"/><path d="M 606.294 1528.27 C 632.177 1527.05 666.649 1528.14 693.255 1528.14 L 867.617 1528.14 L 1002.5 1528.13 C 1020.38 1528.12 1038.27 1528.03 1056.15 1528.13 C 1072.73 1528.23 1086.63 1527.26 1101.16 1536.44 C 1114.14 1544.7 1123.26 1557.83 1126.46 1572.88 C 1134.03 1607.32 1113.49 1636.58 1079.29 1643.39 C 1050.2 1644.61 1013.92 1643.68 984.145 1643.68 L 804.86 1643.7 L 675.102 1643.69 C 652.972 1643.69 630.011 1644.06 607.926 1643.25 C 597.452 1642.87 589.53 1640.48 580.907 1634.64 C 567.933 1625.77 559.104 1612.02 556.435 1596.54 C 550.34 1562.03 572.112 1533.68 606.294 1528.27 z"/><path d="M 660.935 1670.33 L 905.318 1670.27 L 979.796 1670.26 C 1002.21 1670.26 1030.62 1667.05 1049.2 1680.76 C 1061.78 1690.18 1070.03 1704.27 1072.09 1719.85 C 1074.36 1735.6 1070.21 1751.6 1060.57 1764.25 C 1050.06 1777.8 1037.28 1783.65 1020.69 1785.84 C 996.953 1786.68 968.667 1785.96 944.659 1785.97 L 794.995 1786 L 707.291 1786 C 682.737 1786 650.584 1790 630.634 1774.48 C 618.307 1764.77 610.387 1750.53 608.645 1734.93 C 606.862 1719.27 611.329 1703.54 621.075 1691.15 C 631.684 1677.83 644.441 1672.28 660.935 1670.33 z"/><path d="M 695.514 1810.34 C 709.426 1809.16 735.967 1809.89 750.763 1809.88 L 855.32 1809.86 L 935.387 1809.88 C 949.394 1809.89 970.765 1808.7 983.464 1811.17 C 1021.87 1818.67 1033.23 1868.12 1010.56 1896.52 C 990.804 1921.28 955.747 1922.36 932.164 1938.95 L 931.059 1939.74 C 925.594 1944.04 920 1950.82 915.294 1956.04 C 876.898 1998.63 810.033 2001.15 767.539 1963.13 C 759.451 1955.9 751.296 1942.93 741.934 1937.64 C 723.154 1927.03 701.212 1921.2 682.197 1910.9 C 639.527 1885.56 645 1822.28 695.514 1810.34 z"/></symbol>
+<pattern id="hachura" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="14" height="14" fill="#E5F1E8"/><rect width="5" height="14" fill="#338449" fill-opacity=".55"/></pattern>
+</defs></svg>
+
+<main class="deck" id="deck">
+
+<!-- 1 CAPA -->
+<section class="slide escuro" id="s-capa" data-titulo="Capa">
+  <svg class="curvas" viewBox="0 0 2040 1160" aria-hidden="true"></svg>
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Growth · UX</span><div class="dir"><span class="selo ficticio">Protótipo · valores fictícios</span><span class="pg"></span></div></header>
+  <div class="texto">
+    <p class="eyebrow" data-a="sobe">Uma ideia de como podemos trabalhar</p>
+    <h1 class="titulo" data-a="palavras" data-d=".15"><span class="l">Pagar, entender</span><span class="l dest">e ganhar.</span><span class="l">Num lugar só.</span></h1>
+    <p class="sub" data-a="sobe" data-d="1">Pagamento com cashback no app do cliente iGreen, do problema ao protótipo navegável.</p>
+    <p class="assina" data-a="sobe" data-d="1.2">Sergio Vieira · UX</p>
+  </div>
+  <div class="ilus" data-a="surge" data-d=".35"><img class="flutua" src="img/carteira-cashback.png" alt=""></div>
+  <aside class="notas">Isto é uma proposta de UX feita com os agentes de growth, e também um jeito de mostrar como podemos trabalhar. Tudo que vocês vão ver é protótipo: as regras e os valores são fictícios, e é justamente isso que vou pedir para vocês decidirem.</aside>
+</section>
+
+<!-- 2 MOTIVAÇÃO -->
+<section class="slide" id="s-motivo" data-titulo="Por que fizemos isso">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>Por que fizemos isso</span><div class="dir"><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">Por que fizemos isso</p><h2 class="titulo" data-a="titulo"><span class="l"><span>Começamos pelos dados,</span></span><span class="l dest"><span>não pela tela</span></span></h2></div>
+  <div class="cols">
+    <div class="card forte" data-a="sobe" data-d=".3">
+      <h3>A motivação</h3>
+      <p class="frase">O cliente paga em lugares diferentes e não vê, num lugar só, <em>o que pagou, como pagou e o que ganhou.</em></p>
+      <p class="mini">E o cashback que existe hoje fica longe da conta.</p>
+    </div>
+    <div class="passos">
+      <h3 data-a="sobe" data-d=".4">Como analisei</h3>
+      <div class="card ps" data-a="sobe" data-d=".5"><b>1</b><div><strong>Base interna (OS)</strong><p>Levei a pauta das regras que faltam. A base respondeu com a regra e a tabela de origem</p></div></div>
+      <div class="card ps" data-a="sobe" data-d=".62"><b>2</b><div><strong>Contexts dos 3 produtos</strong><p>Service blueprint: como energia, telecom e seguros cobram hoje</p></div></div>
+      <div class="card ps" data-a="sobe" data-d=".74"><b>3</b><div><strong>Mercado</strong><p>13 apps: regulamentos, telas públicas e reclamações</p></div></div>
+    </div>
+  </div>
+  <footer class="rodape">Cada resposta da base interna ainda precisa do sim do dono da área</footer>
+  <aside class="notas">Antes de desenhar qualquer tela, fui aos dados. Levei à base interna as perguntas sobre as regras que faltam, cruzei com os Contexts de energia, telecom e seguros e olhei o mercado. A motivação é simples: o cliente paga em lugares diferentes e não vê, num lugar só, o que pagou, como pagou e o que ganhou.</aside>
+</section>
+
+
+<!-- 3 HOJE -->
+<section class="slide" id="s-hoje" data-titulo="Como é hoje">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>O problema</span><div class="dir"><span class="selo fato">Fato · a confirmar</span><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">Como é hoje</p><h2 class="titulo" data-a="titulo"><span class="l"><span>Três produtos,</span></span><span class="l dest"><span>três jeitos de pagar</span></span></h2></div>
+  <svg class="liga" viewBox="0 0 1920 1080" aria-hidden="true">
+    <path pathLength="1" d="M 373 674 C 373 760 640 770 892 826" data-a="traco" data-d=".9"/>
+    <path pathLength="1" d="M 960 674 L 960 788" data-a="traco" data-d="1"/>
+    <path pathLength="1" d="M 1547 674 C 1547 760 1280 770 1028 826" data-a="traco" data-d="1.1"/>
+  </svg>
+  <div class="produtos">
+    <div class="card" data-a="sobe" data-d=".3"><div class="cab"><div class="tile"><svg class="ic" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></div><p class="nome">Energia</p></div><div class="modos"><span class="chip">Dois boletos ou Boleto Único</span><span class="chip">Pix ou cartão no app</span></div></div>
+    <div class="card" data-a="sobe" data-d=".4"><div class="cab"><div class="tile"><svg class="ic" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg></div><p class="nome">Telecom</p></div><div class="modos"><span class="chip">Ativação cobrada à parte</span><span class="chip">Pix ou cartão</span></div></div>
+    <div class="card" data-a="sobe" data-d=".5"><div class="cab"><div class="tile"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.4 8.3 8 9 4.6-.7 8-4 8-9V6l-8-3z"/></svg></div><p class="nome">Seguros</p></div><div class="modos"><span class="chip">Pago fora do app</span><span class="chip">Apólice em até 30 min</span></div></div>
+  </div>
+  <div class="vazio" data-a="pop" data-d="1.6">?</div>
+  <p class="vazio-txt" data-a="sobe" data-d="1.8">Nenhum lugar mostra o que o cliente pagou, como pagou e o que ganhou</p>
+  <footer class="rodape">Fonte: service blueprint dos 3 produtos e base interna da iGreen, a confirmar com cada dono</footer>
+  <aside class="notas">Isso saiu do service blueprint, montado com os Contexts dos três produtos e confirmado em parte pela base interna. Cada produto cobra de um jeito, e não existe um lugar que junte o que o cliente pagou, como pagou e o que ganhou.</aside>
+</section>
+
+<!-- 4 CASHBACK HOJE -->
+<section class="slide escuro" id="s-cbhoje" data-titulo="O cashback de hoje">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>O problema</span><div class="dir"><span class="selo fato">Fato · a confirmar</span><span class="pg"></span></div></header>
+  <img class="ilus flutua c" src="img/porquinho.png" alt="" data-a="surge" data-d=".3">
+  <div class="topo"><p class="eyebrow" data-a="sobe">O que a base interna respondeu</p><h2 class="titulo" data-a="titulo"><span class="l"><span>O cashback de hoje</span></span><span class="l dest"><span>não conversa com a conta</span></span></h2></div>
+  <div class="bento">
+    <div class="card dest" data-a="sobe" data-d=".3"><strong>Só por indicação</strong><p>Nos três produtos. Pagar a conta não rende nada</p></div>
+    <div class="card" data-a="sobe" data-d=".4"><strong>Fica no app do Club</strong><p>Saldo à parte, separado do abatimento da fatura</p></div>
+    <div class="card" data-a="sobe" data-d=".5"><strong>Pode sumir</strong><p>É cancelado se o indicado for desvalidado ou cancelar</p></div>
+    <div class="card" data-a="sobe" data-d=".6"><strong>Proibido no Pay</strong><p>No Pay, “cashback” é palavra proibida</p></div>
+    <div class="card" data-a="sobe" data-d=".7"><strong>Quase nada no seguro</strong><p>O volume pago por indicação é residual</p></div>
+    <div class="card" data-a="sobe" data-d=".8"><strong>Sem regra para crescer</strong><p>Sem parceiro para saldo de cliente e sem fluxo para aprovar oferta</p></div>
+  </div>
+  <div class="mercado" data-a="sobe" data-d="1.1">
+    <p>Reclamações no mercado:</p>
+    <span class="chip amb">Cashback que não caiu</span><span class="chip amb">Condição escondida no regulamento</span><span class="chip amb">Cobrança do clube</span><span class="chip amb">Economia mostrada bruta</span>
+  </div>
+  <footer class="rodape">Fonte: base interna da iGreen (OS), a confirmar com cada dono; reclamações públicas de 13 apps</footer>
+  <aside class="notas">Este foi o retorno da base interna sobre o cashback de hoje. Ele existe só por indicação, fica num saldo à parte no app do Club, pode ser cancelado e é proibido no Pay. No mercado, o cashback gera reclamação quando não cai, quando a condição está escondida no regulamento, quando vem com cobrança de clube ou quando a economia aparece bruta.</aside>
+</section>
+
+<!-- 5 CERTEZAS E DÚVIDAS -->
+<section class="slide" id="s-csd" data-titulo="Certezas e dúvidas">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>O problema</span><div class="dir"><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">Clientes e prováveis clientes</p><h2 class="titulo" data-a="titulo"><span class="l"><span>O que sabemos,</span></span><span class="l dest"><span>supomos e não sabemos</span></span></h2></div>
+  <div class="cols">
+    <div class="card" data-a="sobe" data-d=".3">
+      <h3>Certezas · a confirmar</h3>
+      <p class="grande">60–180<small>dias</small></p>
+      <p class="t">até a primeira fatura. Antes dela, o boleto da fornecedora parece golpe</p>
+      <p class="grande">&gt;10% → 10%</p>
+      <p class="t">o desconto de quem tem mais de 10% e paga com atraso</p>
+    </div>
+    <div class="card sup" data-a="sobe" data-d=".45">
+      <h3>Suposições · a testar</h3>
+      <ul>
+        <li data-a="desliza" data-d=".7"><i>→</i>Ver o ganho antes de pagar faz pagar em dia</li>
+        <li data-a="desliza" data-d=".82"><i>→</i>Um número só, já líquido, aumenta a confiança</li>
+        <li data-a="desliza" data-d=".94"><i>→</i>Juntar as contas dá motivo para voltar ao app</li>
+      </ul>
+    </div>
+    <div class="card duv" data-a="sobe" data-d=".6">
+      <h3>Dúvidas · ninguém sabe ainda</h3>
+      <ul>
+        <li data-a="desliza" data-d="1.0"><i>?</i>O cliente sabe que tem cashback?</li>
+        <li data-a="desliza" data-d="1.12"><i>?</i>Confia em pagar a conta de luz no app?</li>
+        <li data-a="desliza" data-d="1.24"><i>?</i>Por que quem paga fora do app paga fora?</li>
+        <li data-a="desliza" data-d="1.36"><i>?</i>Quanto o cashback pesa, perto do desconto?</li>
+      </ul>
+    </div>
+  </div>
+  <footer class="rodape">Certezas: base interna. Suposições: benchmark e reclamações. Dúvidas: para o teste com clientes</footer>
+  <aside class="notas">Separei o que sabemos do que supomos. As certezas vêm da base interna e ainda precisam do sim de cada área. As suposições vêm do benchmark e das reclamações, e vão para teste. E as dúvidas são o que ninguém sabe ainda sobre o cliente: é isso que o teste com clientes reais precisa responder.</aside>
+</section>
+
+
+<!-- 5 MERCADO -->
+<section class="slide" id="s-mercado" data-titulo="O que o mercado faz">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>Mercado</span><div class="dir"><span class="selo fato">Fonte pública</span><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">O que o mercado faz · 13 apps</p><h2 class="titulo" data-a="titulo"><span class="l"><span>Ninguém junta</span></span><span class="l dest"><span>pago, forma e ganho</span></span></h2></div>
+  <div class="achados">
+    <div class="achado" data-a="sobe" data-d=".3"><p class="n">0 de 4</p><div><p class="t">grandes apps de pagamento dão cashback por conta paga</p><p class="s">Nubank, Inter, Mercado Pago e PicPay excluem boleto e contas</p></div></div>
+    <div class="achado" data-a="sobe" data-d=".45"><p class="n">0</p><div><p class="t">apps mostram, lado a lado, quanto cada forma de pagar rende</p><p class="s">O Mercado Livre mostra só a forma escolhida</p></div></div>
+    <div class="achado" data-a="sobe" data-d=".6"><p class="n">1</p><div><p class="t">processo da FTC contra a Uber por mostrar economia sem descontar a mensalidade</p><p class="s">Aberto em 2025</p></div></div>
+  </div>
+  <svg class="venn" viewBox="0 0 700 660" role="img" aria-label="Três círculos, o que pagou, como pagou e o que ganhou, se encontram num centro vazio">
+    <g data-a="move" data-dx="-120" data-dy="-70" data-d=".5"><circle class="c" cx="270" cy="250" r="170"/><text x="150" y="58">O que pagou</text></g>
+    <g data-a="move" data-dx="120" data-dy="-70" data-d=".6"><circle class="c" cx="430" cy="250" r="170"/><text x="420" y="58">Como pagou</text></g>
+    <g data-a="move" data-dx="0" data-dy="120" data-d=".7"><circle class="c" cx="350" cy="388" r="170"/><text x="350" y="600" text-anchor="middle">O que ganhou</text></g>
+    <g data-a="pop" data-d="1.9"><rect class="alvo" x="250" y="270" width="200" height="56" rx="28"/><text class="leg" x="350" y="307" text-anchor="middle">espaço vazio</text></g>
+  </svg>
+  <footer class="rodape">Fonte: regulamentos, centrais de ajuda e reclamações públicas de 13 apps; ação da FTC contra a Uber</footer>
+  <aside class="notas">Foram duas rodadas de benchmark: pagamento e cashback, depois clubes e benefícios. O achado mais forte é o espaço vazio: ninguém junta o que a pessoa pagou, como pagou e o que ganhou, em reais e já líquido.</aside>
+</section>
+
+<!-- 6 DIVISOR PROPOSTA -->
+<section class="slide marca" id="s-proposta" data-titulo="A proposta">
+  <svg class="curvas" viewBox="0 0 2040 1160" aria-hidden="true"></svg>
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>A proposta</span><div class="dir"><span class="selo ficticio">Regras fictícias</span><span class="pg"></span></div></header>
+  <div class="texto">
+    <p class="eyebrow" data-a="sobe">A proposta</p>
+    <h2 class="titulo" data-a="titulo"><span class="l"><span>Um app,</span></span><span class="l dest"><span>quatro partes</span></span></h2>
+    <div class="partes">
+      <span class="parte" data-a="sobe" data-d=".6"><b>1</b>Aba Pagar</span>
+      <span class="parte" data-a="sobe" data-d=".7"><b>2</b>Pagar a fatura</span>
+      <span class="parte" data-a="sobe" data-d=".8"><b>3</b>Comprovante e faturas</span>
+      <span class="parte" data-a="sobe" data-d=".9"><b>4</b>Retorno iGreen</span>
+    </div>
+  </div>
+  <div class="ilus" data-a="surge" data-d=".3"><img class="flutua" src="img/celConta.png" alt=""></div>
+  <aside class="notas">A Aba Pagar foi a primeira recomendação do benchmark: uma lista única de contas. O Retorno junta economia e cashback, sem contar duas vezes, e avisa que aquilo não é saldo.</aside>
+</section>
+
+<!-- 7 REGRAS -->
+<section class="slide" id="s-regras" data-titulo="Cinco regras de desenho">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>A proposta</span><div class="dir"><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">O que a pesquisa pediu</p><h2 class="titulo" data-a="titulo"><span class="l"><span>Cinco regras</span></span><span class="l dest"><span>guiaram cada tela</span></span></h2></div>
+  <div class="regras">
+    <div class="card dest" data-a="sobe" data-d=".3"><p class="nn">01</p><p class="t">Um número só, em reais, já líquido</p><p class="ex">O mesmo valor no pagar, no comprovante e no retorno</p></div>
+    <div class="card" data-a="sobe" data-d=".4"><p class="nn">02</p><p class="t">O certo separado do prometido</p><p class="ex">Desconto vale na hora. Cashback tem data para cair e para vencer</p></div>
+    <div class="card" data-a="sobe" data-d=".5"><p class="nn">03</p><p class="t">Oferta antes, nunca culpa depois</p><p class="ex">“Pague até 11/10 e ganhe R$ 33,97”, e não “você perdeu”</p></div>
+    <div class="card" data-a="sobe" data-d=".6"><p class="nn">04</p><p class="t">Nada some</p><p class="ex">Compensando, expirado ou recusado: a pessoa sabe onde está</p></div>
+    <div class="card" data-a="sobe" data-d=".7"><p class="nn">05</p><p class="t">Assinar e usar são dois atos</p><p class="ex">O automático só liga se o cliente quiser</p></div>
+  </div>
+  <footer class="rodape">Origem: benchmark de 13 apps e reclamações públicas</footer>
+  <aside class="notas">Essas cinco regras vieram do benchmark e das reclamações públicas, e guiaram cada tela do protótipo. A primeira é a mais importante: um número só, em reais, já líquido, igual em todo lugar.</aside>
+</section>
+
+<!-- 8 JORNADA -->
+<section class="slide" id="s-jornada" data-titulo="A jornada">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>A proposta</span><div class="dir"><span class="selo ficticio">Valores fictícios</span><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">A jornada principal</p><h2 class="titulo" data-a="titulo"><span class="l"><span>Da conta de luz ao cashback,</span></span><span class="l dest"><span>em cinco toques</span></span></h2></div>
+  <a class="botao" href="prototipo/prototipo-cashback.html" target="_blank" rel="noopener" data-a="sobe" data-d=".5">Abrir o protótipo<svg class="ic" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+  <svg class="fio" viewBox="0 0 1920 1080" aria-hidden="true"><path pathLength="1" d="M 120 650 L 1800 650" data-a="traco" data-d=".4" data-dur="2200"/></svg>
+  <div class="linha">
+    <div class="passo" data-a="sobe" data-d=".3"><div class="flutua"><div class="fone"><img src="telas/home.png" alt="Tela inicial com o que a iGreen já devolveu"></div></div><div class="rot"><b>1</b><div><strong>Home</strong><span>o que a iGreen já devolveu</span></div></div></div>
+    <div class="passo" data-a="sobe" data-d=".45"><div class="flutua b"><div class="fone"><img src="telas/detalhe-fatura.png" alt="Detalhe da fatura de outubro"></div></div><div class="rot"><b>2</b><div><strong>Fatura</strong><span>desconto, prazo e o custo do atraso</span></div></div></div>
+    <div class="passo" data-a="sobe" data-d=".6"><div class="flutua c"><div class="fone"><img src="telas/pagar-fatura.png" alt="Pagar fatura com o cashback antes de confirmar"></div></div><div class="rot"><b>3</b><div><strong>Pagar</strong><span>o cashback antes de confirmar</span></div></div></div>
+    <div class="passo" data-a="sobe" data-d=".75"><div class="flutua b"><div class="fone"><img src="telas/confirmado.png" alt="Pagamento confirmado com cashback"></div></div><div class="rot"><b>4</b><div><strong>Confirmado</strong><span>o cashback cai junto com o Pix</span></div></div></div>
+    <div class="passo" data-a="sobe" data-d=".9"><div class="flutua"><div class="fone"><img src="telas/retorno-resumo.png" alt="Retorno iGreen com economia e cashback"></div></div><div class="rot"><b>5</b><div><strong>Retorno</strong><span>tudo que voltou, num lugar</span></div></div></div>
+  </div>
+  <footer class="rodape">Valores fictícios do protótipo · no protótipo, o fluxo 4 faz este caminho</footer>
+  <aside class="notas">Aqui vale abrir o protótipo e fazer o fluxo ao vivo: Home, fatura, pagar no Pix, confirmado, Retorno. Na lista da esquerda do protótipo, o fluxo 4 faz exatamente isso.</aside>
+</section>
+
+<!-- 9 CONTA -->
+<section class="slide" id="s-conta" data-titulo="Uma conta de luz">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>O cashback</span><div class="dir"><span class="selo ficticio">Valores fictícios</span><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">O cashback, em números</p><h2 class="titulo" data-a="titulo"><span class="l"><span>Uma conta de luz,</span></span><span class="l dest"><span>do jeito que o cliente vê</span></span></h2></div>
+  <svg class="grafico" viewBox="0 0 1920 1080" role="img" aria-label="Conta sem a iGreen 249,76 reais; desconto de 37,46; paga 212,30; cashback de 33,97; depois do cashback, 178,33">
+    <line class="base" x1="104" y1="920" x2="1354" y2="920"/>
+    <rect class="bar" x="104" y="460" width="170" height="460" rx="10" fill="#C9D0CB" data-a="cresce" data-d=".3"/>
+    <rect class="bar cima" x="374" y="460" width="170" height="69" rx="10" fill="#338449" data-a="cresce" data-d=".75"/>
+    <rect class="bar" x="644" y="529" width="170" height="391" rx="10" fill="#111513" data-a="cresce" data-d="1.1"/>
+    <rect class="bar cima" x="914" y="529" width="170" height="62.6" rx="10" fill="url(#hachura)" stroke="#338449" stroke-width="2.5" data-a="cresce" data-d="1.5"/>
+    <rect class="bar" x="1184" y="591.6" width="170" height="328.4" rx="10" fill="#A8D9B4" data-a="cresce" data-d="1.85"/>
+    <g data-a="sobe" data-d="2.1"><path class="liga" d="M274 460 H374 M544 529 H644 M814 529 H914 M1084 591.6 H1184" fill="none"/></g>
+    <g data-a="sobe" data-d=".6"><text class="v" x="189" y="442" text-anchor="middle">R$ <tspan data-a="conta" data-v="249.76" data-casas="2" data-d=".6">249,76</tspan></text></g>
+    <g data-a="sobe" data-d=".95"><text class="nota" x="459" y="404" text-anchor="middle">CERTO · NA HORA</text><text class="v verde" x="459" y="442" text-anchor="middle">− R$ 37,46</text></g>
+    <g data-a="sobe" data-d="1.3"><text class="v" x="729" y="511" text-anchor="middle">R$ <tspan data-a="conta" data-v="212.30" data-casas="2" data-d="1.3">212,30</tspan></text></g>
+    <g data-a="sobe" data-d="1.7"><text class="nota" x="999" y="473" text-anchor="middle">PROMETIDO · COM DATA</text><text class="v verde" x="999" y="511" text-anchor="middle">− R$ 33,97</text></g>
+    <g data-a="sobe" data-d="2.05"><text class="v" x="1269" y="573" text-anchor="middle">R$ <tspan data-a="conta" data-v="178.33" data-casas="2" data-d="2.05">178,33</tspan></text></g>
+    <g class="cats"><text class="cat" x="189" y="958" text-anchor="middle">Conta sem</text><text class="cat" x="189" y="984" text-anchor="middle">a iGreen</text>
+    <text class="cat" x="459" y="958" text-anchor="middle">Desconto</text><text class="cat" x="459" y="984" text-anchor="middle">de 15%</text>
+    <text class="cat" x="729" y="958" text-anchor="middle">O que</text><text class="cat" x="729" y="984" text-anchor="middle">o cliente paga</text>
+    <text class="cat" x="999" y="958" text-anchor="middle">Cashback</text><text class="cat" x="999" y="984" text-anchor="middle">de 16%, em dia</text>
+    <text class="cat" x="1269" y="958" text-anchor="middle">Depois de</text><text class="cat" x="1269" y="984" text-anchor="middle">usar o cashback</text></g>
+  </svg>
+  <p class="atraso" data-a="sobe" data-d="2.4"><strong>Atrasou?</strong> A conta sobe R$ 12,49, e o desconto e o cashback caem para 10%.</p>
+  <div class="fone-wrap" data-a="sobe" data-d=".4"><div class="flutua b"><div class="fone"><img src="telas/detalhe-fatura.png" alt="Detalhe da fatura com desconto, cashback e custo do atraso"></div></div></div>
+  <footer class="rodape">Valores fictícios do protótipo. R$ 178,33 = R$ 212,30 − R$ 33,97, conta nossa</footer>
+  <aside class="notas">Este é o cashback visto em números, numa conta só. O desconto é certo e vale na hora; o cashback é prometido, cai quando a conta é paga e tem validade. Por isso ele aparece hachurado. E se atrasar, o cliente vê antes quanto perde: R$ 12,49 a mais e cashback menor. Todos os valores são fictícios.</aside>
+</section>
+
+<!-- 10 CICLO -->
+<section class="slide escuro" id="s-ciclo" data-titulo="Para onde vai o cashback">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>O cashback</span><div class="dir"><span class="selo ficticio">Valores fictícios</span><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">O ciclo do cashback</p><h2 class="titulo" data-a="titulo"><span class="l"><span>Recebeu, usou,</span></span><span class="l dest"><span>e sabe o que vence</span></span></h2></div>
+  <div class="total" data-a="sobe" data-d=".3"><span class="rs">R$</span><span class="n num" data-a="conta" data-v="364.55" data-casas="2" data-d=".35">364,55</span><p>de cashback recebido,<br>no total</p></div>
+  <div class="pilha" data-a="revela" data-d=".8"><div class="s1"></div><div class="s2"></div><div class="s3"></div></div>
+  <div class="legenda" data-a="sobe" data-d="1.4"><span><i style="background:#5BB774"></i>Usado em faturas<b>R$ 205,60</b></span><span><i style="background:#8E9A93"></i>Resgatado<b>R$ 23,00</b></span><span><i style="background:#A8D9B4"></i>Disponível<b>R$ 135,95</b></span></div>
+  <svg class="vida" viewBox="0 0 1920 1080" aria-hidden="true"><path pathLength="1" d="M 119 767 L 1094 767" data-a="traco" data-d="1.6" data-dur="1600"/></svg>
+  <div class="estados">
+    <div class="estado" data-a="sobe" data-d="1.7"><div class="no"></div><strong>A receber</strong><span>com data, até compensar</span></div>
+    <div class="estado" data-a="sobe" data-d="1.9"><div class="no"></div><strong>Disponível</strong><span>usar ou resgatar</span></div>
+    <div class="estado" data-a="sobe" data-d="2.1"><div class="no"></div><strong>Usado na fatura</strong><span>abate qualquer conta</span></div>
+    <div class="estado" data-a="sobe" data-d="2.3"><div class="no"></div><strong>Vence em 12 meses</strong><span>com aviso antes</span></div>
+  </div>
+  <div class="chips" data-a="sobe" data-d="2.6"><span class="chip mint">Automático só se o cliente ligar</span><span class="chip amb">Resgate por Pix depende da decisão 1</span></div>
+  <div class="fone-wrap" data-a="sobe" data-d=".4"><div class="flutua c"><div class="fone"><img src="telas/meu-cashback.png" alt="Tela Meu cashback com saldo, prazos, resgatar e usar"></div></div></div>
+  <footer class="rodape">Valores fictícios do protótipo, telas Meu cashback e Retorno · validade e resgate são regras fictícias</footer>
+  <aside class="notas">Cada parte deste ciclo responde a uma reclamação comum do benchmark: cashback que não caiu, que venceu sem aviso, que ninguém sabia usar. O "a receber" mostra a data até o boleto compensar. O automático é escolha do cliente. O resgate por Pix depende da decisão sobre saldo.</aside>
+</section>
+
+<!-- 11 MOMENTOS -->
+<section class="slide" id="s-momentos" data-titulo="Os momentos difíceis">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>A proposta</span><div class="dir"><span class="selo ficticio">Valores fictícios</span><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">Os momentos difíceis</p><h2 class="titulo" data-a="titulo"><span class="l"><span>Onde costuma dar reclamação,</span></span><span class="l dest"><span>a tela explica</span></span></h2></div>
+  <div class="linha">
+    <div class="m" data-a="sobe" data-d=".3"><div class="flutua"><div class="fone"><img src="telas/loja-vencida.png" alt="Fatura vencida com multa e juros"></div></div><strong>Conta vencida</strong><span>multa, juros e o que mudou</span></div>
+    <div class="m" data-a="sobe" data-d=".4"><div class="flutua b"><div class="fone"><img src="telas/boleto-compensacao.png" alt="Boleto em compensação"></div></div><strong>Boleto compensando</strong><span>não precisa pagar de novo</span></div>
+    <div class="m" data-a="sobe" data-d=".5"><div class="flutua c"><div class="fone"><img src="telas/pix-expirado.png" alt="Código Pix expirado"></div></div><strong>Pix expirado</strong><span>nada foi cobrado</span></div>
+    <div class="m" data-a="sobe" data-d=".6"><div class="flutua"><div class="fone"><img src="telas/cartao-recusado.png" alt="Cartão recusado"></div></div><strong>Cartão recusado</strong><span>outra forma em um toque</span></div>
+    <div class="m" data-a="sobe" data-d=".7"><div class="flutua b"><div class="fone"><img src="telas/em-emissao.png" alt="Fatura em emissão"></div></div><strong>Fatura em emissão</strong><span>nada a pagar ainda</span></div>
+    <div class="m" data-a="sobe" data-d=".8"><div class="flutua c"><div class="fone"><img src="telas/fora-do-ar.png" alt="Consulta fora do ar"></div></div><strong>Consulta fora do ar</strong><span>fica o último dado confirmado</span></div>
+  </div>
+  <footer class="rodape">No Pix, o recebedor e o CNPJ aparecem antes de pagar, com “confira no seu banco”: resposta ao medo de golpe</footer>
+  <aside class="notas">Esses estados quase nunca aparecem num protótipo, e são onde mora a reclamação: boleto pago e não compensado, Pix vencido, cartão recusado. O protótipo cobre todos eles.</aside>
+</section>
+
+<!-- 12 EVOLUÇÃO -->
+<section class="slide escuro" id="s-evolucao" data-titulo="A evolução">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>A evolução</span><div class="dir"><span class="selo hipotese">Teste simulado</span><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">A evolução</p><h2 class="titulo" data-a="titulo"><span class="l"><span>De 3 telas</span></span><span class="l dest"><span>a um app inteiro</span></span></h2></div>
+  <span class="chip mint tag-v1" data-a="sobe" data-d=".3">Primeira versão</span>
+  <div class="leque">
+    <div class="item i1" data-a="sobe" data-d=".35"><div class="rot"><div class="fone"><img src="telas/v1-1.png" alt="Primeira versão: pagar fatura"></div></div></div>
+    <div class="item i3" data-a="sobe" data-d=".5"><div class="rot"><div class="fone"><img src="telas/v1-3.png" alt="Primeira versão: hub de retorno"></div></div></div>
+    <div class="item i2" data-a="sobe" data-d=".65"><div class="rot"><div class="fone"><img src="telas/v1-2.png" alt="Primeira versão: comprovante"></div></div></div>
+  </div>
+  <div class="lado-dir">
+    <div class="placar" data-a="sobe" data-d=".5"><span class="de">3</span><svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span class="para num" data-a="conta" data-v="32" data-d=".7">32</span><p>fluxos navegáveis, ~180 telas,<br>ampliados pelo UX com mais contexto</p></div>
+    <h3 data-a="sobe" data-d=".9">O que o teste da primeira versão mudou</h3>
+    <ul>
+      <li data-a="desliza" data-d="1.0"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></svg>A faixa do prazo diz o que se perde</li>
+      <li data-a="desliza" data-d="1.12"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></svg>O comprovante destaca o valor pago</li>
+      <li data-a="desliza" data-d="1.24"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></svg>O boleto fica “em compensação”, não “pago”</li>
+      <li data-a="desliza" data-d="1.36"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></svg>O Retorno avisa: “não é saldo”</li>
+      <li data-a="desliza" data-d="1.48"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></svg>“Pay” virou “Saldo iGreen”</li>
+    </ul>
+    <p class="aviso" data-a="sobe" data-d="1.7"><span class="chip amb">O teste foi simulado: é hipótese, não evidência</span></p>
+  </div>
+  <footer class="rodape">O UX desenhou e ampliou as telas; os agentes testaram e revisaram. O teste teve 3 sessões fictícias: clientes reais vão confirmar ou derrubar</footer>
+  <aside class="notas">A primeira versão tinha três telas. Ela passou por um teste simulado, com revisão de evidência, e as correções entraram na versão atual, que cobre energia, telecom, todas as contas e o cashback inteiro. O teste foi simulado: as correções ainda são hipótese.</aside>
+</section>
+
+<!-- 14 AGENTES -->
+<section class="slide" id="s-agentes" data-titulo="UX com agentes">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>Como chegamos aqui</span><div class="dir"><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">Como chegamos aqui</p><h2 class="titulo" data-a="titulo"><span class="l"><span>O UX conduz,</span></span><span class="l dest"><span>os agentes ajudam</span></span></h2></div>
+  <div class="raia r1" data-a="sobe" data-d=".25"><div class="quem"><div class="av">SV</div><div><strong>Sergio · UX</strong><span>conduz, avalia e decide</span></div></div></div>
+  <div class="raia r2" data-a="sobe" data-d=".35"><div class="quem"><div class="av img"><img src="img/icone-app.png" alt=""></div><div><strong>Agentes de growth</strong><span>pesquisam, revisam e marcam a certeza</span></div></div></div>
+  <svg class="zig" viewBox="0 0 1920 1080" aria-hidden="true"><path pathLength="1" d="M 526 522 L 698 590 L 870 522 L 1042 522 L 1214 590 L 1386 522 L 1558 590 L 1730 522" data-a="traco" data-d=".5" data-dur="2400"/></svg>
+  <div class="etapa ux" style="left:526px;bottom:543px" data-a="pop" data-d=".55"><p>Pergunta real e público</p><div class="no"></div></div>
+  <div class="etapa ag" style="left:698px;top:575px" data-a="pop" data-d=".85"><div class="no"></div><p>Mapa dos pagamentos e 13 apps</p></div>
+  <div class="etapa ux" style="left:870px;bottom:543px" data-a="pop" data-d="1.15"><p>Cruza com a base interna</p><div class="no"></div></div>
+  <div class="etapa ux" style="left:1042px;bottom:543px" data-a="pop" data-d="1.45"><p>Desenha as 3 primeiras telas</p><div class="no"></div></div>
+  <div class="etapa ag" style="left:1214px;top:575px" data-a="pop" data-d="1.75"><div class="no"></div><p>Roteiro, teste simulado e revisão</p></div>
+  <div class="etapa ux" style="left:1386px;bottom:543px" data-a="pop" data-d="2.05"><p>Amplia para 32 fluxos, com mais contexto</p><div class="no"></div></div>
+  <div class="etapa ag" style="left:1558px;top:575px" data-a="pop" data-d="2.35"><div class="no"></div><p>Plano de medição</p></div>
+  <div class="etapa ux" style="left:1730px;bottom:543px" data-a="pop" data-d="2.65"><p>Decide o que levar ao time</p><div class="no"></div></div>
+  <div class="valor" data-a="sobe" data-d="1.2">
+    <span class="selo fato">Primeiro teste de valor</span>
+    <p>Os agentes são uma ajuda que estou construindo com o Claude e refino a cada projeto. Eles pesquisam e revisam; quem avalia e decide é o UX. O humano não sai da etapa.</p>
+  </div>
+  <div class="kpis">
+    <div class="kpi" data-a="sobe" data-d="1.3"><p class="n num" data-a="conta" data-v="13" data-d="1.3">13</p><p>apps analisados, com fonte</p></div>
+    <div class="kpi" data-a="sobe" data-d="1.42"><p class="n num" data-a="conta" data-v="32" data-d="1.42">32</p><p>fluxos navegáveis</p></div>
+    <div class="kpi" data-a="sobe" data-d="1.54"><p class="n">~<span class="num" data-a="conta" data-v="180" data-d="1.54">180</span></p><p>telas</p></div>
+    <div class="kpi" data-a="sobe" data-d="1.66"><p class="n num" data-a="conta" data-v="18" data-d="1.66">18</p><p>eventos de medição desenhados</p></div>
+  </div>
+  <footer class="rodape">Agentes de UX e de benchmark, em refinamento a cada projeto</footer>
+  <aside class="notas">Quero deixar claro como isso funciona. Eu conduzo: defino a pergunta, cruzo com a base interna, desenho as telas, amplio e decido o que trazer para vocês. Os agentes ajudam: pesquisam o mercado, montam o roteiro, rodam o teste simulado, revisam a evidência e desenham a medição. Estou construindo esses agentes com o Claude e refinando a cada projeto. Este é o primeiro teste de valor: o humano não sai da etapa.</aside>
+</section>
+
+<!-- 14 SUPOSIÇÃO -->
+<section class="slide escuro" id="s-suposicao" data-titulo="O que ainda é suposição">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>Com honestidade</span><div class="dir"><span class="selo hipotese">Leitura honesta</span><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">Com honestidade</p><h2 class="titulo" data-a="titulo"><span class="l"><span>Muita coisa aqui</span></span><span class="l dest"><span>ainda é suposição</span></span></h2></div>
+  <svg class="regua" viewBox="0 0 1920 1080" role="img" aria-label="Nível de certeza: o problema está a confirmar; o mercado tem fonte pública; as regras do cashback são fictícias; o que o cliente entende veio de teste simulado; o efeito no negócio não tem dado. Nada foi medido.">
+    <g data-a="sobe" data-d=".3">
+      <text class="esc" x="740" y="420" text-anchor="middle">Sem dado</text><text class="esc" x="940" y="420" text-anchor="middle">Fictício</text><text class="esc" x="1140" y="420" text-anchor="middle">Simulado</text><text class="esc" x="1340" y="420" text-anchor="middle">A confirmar</text><text class="esc" x="1540" y="420" text-anchor="middle">Fonte pública</text><text class="esc" x="1740" y="420" text-anchor="middle">Medido</text>
+    </g>
+    <g data-a="sobe" data-d="2.2"><rect class="medido" x="1680" y="446" width="120" height="436" rx="22"/><text class="medido-t" x="1740" y="910" text-anchor="middle">ninguém chegou</text></g>
+    <g class="marcos"><circle class="marco" cx="940" cy="490" r="4"/><circle class="marco" cx="1140" cy="490" r="4"/><circle class="marco" cx="1540" cy="490" r="4"/><circle class="marco" cx="1740" cy="490" r="4"/><circle class="marco" cx="1740" cy="582" r="4"/><circle class="marco" cx="1140" cy="674" r="4"/><circle class="marco" cx="1340" cy="674" r="4"/><circle class="marco" cx="1540" cy="674" r="4"/><circle class="marco" cx="1740" cy="674" r="4"/><circle class="marco" cx="1340" cy="766" r="4"/><circle class="marco" cx="1540" cy="766" r="4"/><circle class="marco" cx="1740" cy="766" r="4"/><circle class="marco" cx="940" cy="858" r="4"/><circle class="marco" cx="1140" cy="858" r="4"/><circle class="marco" cx="1340" cy="858" r="4"/><circle class="marco" cx="1540" cy="858" r="4"/><circle class="marco" cx="1740" cy="858" r="4"/></g>
+    <!-- linhas: y 490, 582, 674, 766, 858 -->
+    <g data-a="sobe" data-d=".4"><text class="nome" x="104" y="486">O problema</text><text class="sub" x="104" y="516">como cada produto cobra</text></g>
+    <line class="trk" x1="740" y1="490" x2="1740" y2="490"/>
+    <rect class="fill" x="740" y="484" width="600" height="12" rx="6" fill="#A8D9B4" data-a="crescex" data-d=".7"/>
+    <circle cx="1340" cy="490" r="14" fill="#A8D9B4" data-a="pop" data-d="1.5"/>
+
+    <g data-a="sobe" data-d=".5"><text class="nome" x="104" y="578">O mercado</text><text class="sub" x="104" y="608">13 apps, com link</text></g>
+    <line class="trk" x1="740" y1="582" x2="1740" y2="582"/>
+    <rect class="fill" x="740" y="576" width="800" height="12" rx="6" fill="#A8D9B4" data-a="crescex" data-d=".8"/>
+    <circle cx="1540" cy="582" r="14" fill="#A8D9B4" data-a="pop" data-d="1.65"/>
+
+    <g data-a="sobe" data-d=".6"><text class="nome" x="104" y="670">As regras do cashback</text><text class="sub" x="104" y="700">16%, 12 meses, resgate</text></g>
+    <line class="trk" x1="740" y1="674" x2="1740" y2="674"/>
+    <rect class="fill" x="740" y="668" width="200" height="12" rx="6" fill="#F0A43C" data-a="crescex" data-d=".9"/>
+    <circle cx="940" cy="674" r="14" fill="#F0A43C" data-a="pop" data-d="1.8"/>
+
+    <g data-a="sobe" data-d=".7"><text class="nome" x="104" y="762">O que o cliente entende</text><text class="sub" x="104" y="792">3 sessões simuladas</text></g>
+    <line class="trk" x1="740" y1="766" x2="1740" y2="766"/>
+    <rect class="fill" x="740" y="760" width="400" height="12" rx="6" fill="#F0A43C" data-a="crescex" data-d="1.0"/>
+    <circle cx="1140" cy="766" r="14" fill="#F0A43C" data-a="pop" data-d="1.95"/>
+
+    <g data-a="sobe" data-d=".8"><text class="nome" x="104" y="854">O efeito no negócio</text><text class="sub" x="104" y="884">pagar em dia, voltar ao app</text></g>
+    <line class="trk" x1="740" y1="858" x2="1740" y2="858"/>
+    <circle cx="740" cy="858" r="14" fill="none" stroke="#F0A43C" stroke-width="3" data-a="pop" data-d="2.1"/>
+  </svg>
+  <p class="regra" data-a="sobe" data-d="2.5">Nada ainda foi medido com cliente real.</p>
+  <footer class="rodape">Classificação pela origem de cada afirmação: base interna, fonte pública, simulação ou valor fictício</footer>
+  <aside class="notas">Quero ser honesto sobre o que é sólido. O problema vem da base interna e falta o sim de cada dono. O mercado tem fonte pública. As regras do cashback são inventadas para ilustrar. O que o cliente entende saiu de um teste simulado. E o efeito no negócio não tem dado nenhum. Nada foi medido com cliente real.</aside>
+</section>
+
+<!-- 15 RASTREIO -->
+<section class="slide" id="s-rastreio" data-titulo="O que não rastreamos">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>Com honestidade</span><div class="dir"><span class="selo semdado">Sem dado ainda</span><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">O que ainda não rastreamos</p><h2 class="titulo" data-a="titulo"><span class="l"><span>Sem rastreio,</span></span><span class="l dest"><span>cada etapa é uma pergunta</span></span></h2></div>
+  <div class="funil f1">
+    <h3 data-a="sobe" data-d=".3">Pagamento · por fatura</h3>
+    <div class="caixas">
+      <div class="cx" data-a="pop" data-d=".45"><b>?</b><span>Fatura aberta</span></div><svg class="sx ic" viewBox="0 0 62 26" data-a="sobe" data-d=".55"><path d="M8 13h44M44 6l8 7-8 7"/></svg>
+      <div class="cx" data-a="pop" data-d=".65"><b>?</b><span>Viu no app</span></div><svg class="sx ic" viewBox="0 0 62 26" data-a="sobe" data-d=".75"><path d="M8 13h44M44 6l8 7-8 7"/></svg>
+      <div class="cx" data-a="pop" data-d=".85"><b>?</b><span>Tentou pagar</span></div><svg class="sx ic" viewBox="0 0 62 26" data-a="sobe" data-d=".95"><path d="M8 13h44M44 6l8 7-8 7"/></svg>
+      <div class="cx" data-a="pop" data-d="1.05"><b>?</b><span>Pagou em dia</span></div>
+    </div>
+  </div>
+  <div class="funil f2">
+    <h3 data-a="sobe" data-d="1.1">Cashback · por pessoa</h3>
+    <div class="caixas">
+      <div class="cx" data-a="pop" data-d="1.25"><b>?</b><span>Tem saldo</span></div><svg class="sx ic" viewBox="0 0 62 26" data-a="sobe" data-d="1.35"><path d="M8 13h44M44 6l8 7-8 7"/></svg>
+      <div class="cx" data-a="pop" data-d="1.45"><b>?</b><span>Viu o Retorno</span></div><svg class="sx ic" viewBox="0 0 62 26" data-a="sobe" data-d="1.55"><path d="M8 13h44M44 6l8 7-8 7"/></svg>
+      <div class="cx" data-a="pop" data-d="1.65"><b>?</b><span>Tentou usar</span></div><svg class="sx ic" viewBox="0 0 62 26" data-a="sobe" data-d="1.75"><path d="M8 13h44M44 6l8 7-8 7"/></svg>
+      <div class="cx" data-a="pop" data-d="1.85"><b>?</b><span>Usou ou resgatou</span></div>
+    </div>
+  </div>
+  <div class="lado" data-a="sobe" data-d=".6">
+    <h3>Para decidir com segurança, falta medir</h3>
+    <ul>
+      <li><i></i>Contas pagas em dia pelo app</li>
+      <li><i></i>Onde a pessoa desiste</li>
+      <li><i></i>Chamados sobre pagamento e saldo</li>
+      <li><i></i>Pagamento duplicado e falhas</li>
+    </ul>
+    <div class="papel"><p class="n">18</p><p>eventos desenhados,<br>ainda no papel</p></div>
+  </div>
+  <p class="regra" data-a="sobe" data-d="2.1">Sem esses números, cada decisão aqui continua sendo aposta.</p>
+  <footer class="rodape">Fonte: plano de medição em rascunho, feito com o agente de dados · os limites de alerta ainda não têm margem definida</footer>
+  <aside class="notas">Hoje a gente não sabe o que acontece entre a fatura abrir e o cliente pagar: se ele viu no app, se tentou, onde desistiu. O plano de medição já tem 18 eventos e dois funis desenhados, mas está no papel. Sem isso, nenhuma decisão aqui é 100% coerente: é aposta bem informada.</aside>
+</section>
+
+<!-- 16 FALTA -->
+<section class="slide" id="s-falta" data-titulo="O que está feito e o que falta">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>Onde estamos</span><div class="dir"><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">Onde estamos</p><h2 class="titulo" data-a="titulo"><span class="l"><span>O design está pronto.</span></span><span class="l dest"><span>Falta decidir e validar</span></span></h2></div>
+  <div class="cols">
+    <div class="card" data-a="sobe" data-d=".3"><h3>Feito</h3><ul>
+      <li data-a="desliza" data-d=".45"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></svg>Mapa dos pagamentos dos 3 produtos</li>
+      <li data-a="desliza" data-d=".55"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></svg>Benchmark de 13 apps, com fonte</li>
+      <li data-a="desliza" data-d=".65"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></svg>Pauta das regras para as áreas</li>
+      <li data-a="desliza" data-d=".75"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></svg>Protótipo com 32 fluxos</li>
+      <li data-a="desliza" data-d=".85"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></svg>Roteiro do teste com clientes</li>
+      <li data-a="desliza" data-d=".95"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></svg>Rascunho do plano de medição</li>
+    </ul></div>
+    <div class="card dest" data-a="sobe" data-d=".5"><h3>Falta</h3><ul>
+      <li data-a="desliza" data-d=".7"><i></i>As 5 regras de negócio</li>
+      <li data-a="desliza" data-d=".8"><i></i>Teste com 5 clientes reais</li>
+      <li data-a="desliza" data-d=".9"><i></i>Validação técnica dos gateways</li>
+      <li data-a="desliza" data-d="1.0"><i></i>Parecer jurídico sobre saldo</li>
+      <li data-a="desliza" data-d="1.1"><i></i>Textos de oferta aprovados</li>
+      <li data-a="desliza" data-d="1.2"><i></i>Design system e entrega ao desenvolvimento</li>
+    </ul></div>
+  </div>
+  <aside class="notas">O que falta é quase tudo decisão e validação, não design. Por isso o pedido de hoje.</aside>
+</section>
+
+<!-- PEDIDO -->
+<section class="slide" id="s-pedido" data-titulo="O pedido">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>O pedido</span><div class="dir"><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">O pedido de hoje</p><h2 class="titulo" data-a="titulo"><span class="l"><span>Hoje eu preciso</span></span><span class="l dest"><span>de duas coisas</span></span></h2></div>
+  <div class="pedido">
+    <div class="card forte" data-a="sobe" data-d=".3">
+      <img class="ilus flutua" src="img/lampadaMate.png" alt="">
+      <div class="n"><span class="num" data-a="conta" data-v="5" data-d=".4">5</span></div>
+      <p class="rot">regras de negócio<br>para decidir</p>
+      <p class="mini">Sem elas, o cashback não sai do protótipo</p>
+    </div>
+    <div class="card" data-a="sobe" data-d=".45">
+      <img class="ilus flutua b" src="img/celConta.png" alt="">
+      <div class="n"><span class="num" data-a="conta" data-v="5" data-d=".55">5</span></div>
+      <p class="rot">clientes reais<br>para testar</p>
+      <p class="mini">No celular deles, antes de desenvolver</p>
+    </div>
+  </div>
+  <aside class="notas">Começo pelo pedido para vocês ouvirem o resto com isso em mente. São duas coisas: cinco regras de negócio e um aval para testar com cinco clientes. Detalho as cinco no fim.</aside>
+</section>
+
+<!-- 17 DECISÕES -->
+<section class="slide escuro" id="s-decisoes" data-titulo="As 5 decisões">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>O pedido</span><div class="dir"><span class="pg"></span></div></header>
+  <img class="ilus flutua" src="img/alvoMate.png" alt="" data-a="surge" data-d=".3">
+  <div class="topo"><p class="eyebrow" data-a="sobe">O que eu peço</p><h2 class="titulo" data-a="titulo"><span class="l"><span>As 5 decisões</span></span><span class="l dest"><span>que destravam o cashback</span></span></h2></div>
+  <div class="lista">
+    <div class="dec" data-a="sobe" data-d=".35"><b>1</b><div><p class="q">O cliente pode guardar saldo no app?</p><p class="p">Pode exigir autorização do Banco Central (Lei 12.865/2013). Não é parecer jurídico</p></div><div class="quem"><span>Jurídico</span><span>Financeiro</span><span>Pay</span></div></div>
+    <div class="dec" data-a="sobe" data-d=".48"><b>2</b><div><p class="q">Pagar rende cashback? Quanto, e quem paga?</p><p class="p">Os 16% e 2% do protótipo são ilustração. No Pay, “cashback” é palavra proibida hoje</p></div><div class="quem"><span>Produto</span><span>Financeiro</span></div></div>
+    <div class="dec" data-a="sobe" data-d=".61"><b>3</b><div><p class="q">O cashback paga qualquer fatura? Tem validade?</p><p class="p">Hoje o cashback de indicação fica separado da fatura</p></div><div class="quem"><span>Produto</span><span>Financeiro</span></div></div>
+    <div class="dec" data-a="sobe" data-d=".74"><b>4</b><div><p class="q">A mensalidade do Club entra no total mostrado?</p><p class="p">Mostrar economia sem descontar a mensalidade levou a Uber a processo na FTC</p></div><div class="quem"><span>Produto</span><span>Jurídico</span></div></div>
+    <div class="dec" data-a="sobe" data-d=".87"><b>5</b><div><p class="q">Quem aprova os textos de oferta?</p><p class="p">Pelo CDC, a oferta obriga a empresa. Não há fluxo de aprovação documentado</p></div><div class="quem"><span>Jurídico</span><span>Marketing</span></div></div>
+  </div>
+  <div class="aval" data-a="sobe" data-d="1.2">E o aval para testar com 5 clientes reais, no celular deles<span>Produto e growth</span></div>
+  <aside class="notas">Estas são as cinco perguntas da pauta, atualizadas para o protótipo. Não precisamos decidir tudo agora: o ideal é sair com dono e prazo para cada uma. As leis estão citadas como lei, sem parecer jurídico.</aside>
+</section>
+
+<!-- 18 PRÓXIMOS -->
+<section class="slide marca" id="s-proximos" data-titulo="Próximos passos">
+  <svg class="curvas" viewBox="0 0 2040 1160" aria-hidden="true"></svg>
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>Próximos passos</span><div class="dir"><span class="pg"></span></div></header>
+  <img class="ilus flutua" src="img/carteira-cashback.png" alt="" data-a="surge" data-d=".3">
+  <div class="topo"><p class="eyebrow" data-a="sobe">Próximos passos</p><h2 class="titulo" data-a="titulo"><span class="l"><span>Da decisão</span></span><span class="l dest"><span>ao piloto</span></span></h2></div>
+  <svg class="linha-t" viewBox="0 0 1920 1080" aria-hidden="true"><path pathLength="1" d="M 119 571 L 1816 571" data-a="traco" data-d=".4" data-dur="1800"/></svg>
+  <div class="passos">
+    <div class="px" data-a="sobe" data-d=".5"><div class="no"></div><h4>Passo 1</h4><strong>Reunião de regras</strong><p>As 5 decisões, com produto, financeiro, jurídico e Pay. Cerca de 30 min</p></div>
+    <div class="px" data-a="sobe" data-d=".8"><div class="no"></div><h4>Passo 2</h4><strong>Protótipo com regras reais</strong><p>Trocar os valores fictícios e ajustar o roteiro de teste</p></div>
+    <div class="px" data-a="sobe" data-d="1.1"><div class="no"></div><h4>Passo 3</h4><strong>Teste com 5 clientes</strong><p>No celular deles: entendem o que pagam e o que ganham?</p></div>
+    <div class="px" data-a="sobe" data-d="1.4"><div class="no"></div><h4>Passo 4</h4><strong>Medir e decidir o piloto</strong><p>Com os eventos e funis desenhados, sem número inventado</p></div>
+  </div>
+  <div class="fecho" data-a="sobe" data-d="1.8"><p>Pagar, entender e ganhar, num lugar só.</p><a class="botao claro" href="prototipo/prototipo-cashback.html" target="_blank" rel="noopener">Abrir o protótipo<svg class="ic" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></a></div>
+  <aside class="notas">Fecho com o pedido de novo: as cinco decisões e o aval para o teste. O prazo de cada passo depende de quando a reunião de regras acontecer.</aside>
+</section>
+
+<!-- OBRIGADO -->
+<section class="slide escuro" id="s-obrigado" data-titulo="Obrigado">
+  <svg class="curvas" viewBox="0 0 2040 1160" aria-hidden="true"></svg>
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><div class="dir"><span class="pg"></span></div></header>
+  <div class="texto">
+    <p class="eyebrow" data-a="sobe">Obrigado</p>
+    <h2 class="titulo" data-a="palavras" data-d=".15"><span class="l">Obrigado.</span></h2>
+    <p class="sub" data-a="sobe" data-d=".6">Esta apresentação foi para mostrar o valor do estudo de mercado, da pesquisa e do UX com agentes, num caso real da iGreen.</p>
+    <div class="nome" data-a="sobe" data-d=".85"><div class="av">SV</div><div><strong>Sergio Vieira</strong><span>UX · Growth</span></div></div>
+  </div>
+  <div class="ilus" data-a="surge" data-d=".35"><img class="flutua" src="img/moedasVoando.png" alt=""></div>
+  <aside class="notas">Obrigado. A ideia era mostrar, num caso real, o valor do estudo de mercado e da pesquisa, e como o UX trabalha junto com os agentes. Fico aberto para perguntas.</aside>
+</section>
+
+<!-- A PREMISSAS -->
+<section class="slide apx" id="s-apx-a" data-titulo="Apêndice A · Premissas">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>Apêndice A</span><div class="dir"><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">Apêndice A</p><h2 class="titulo" data-a="titulo"><span class="l"><span>O que é real</span></span><span class="l dest"><span>e o que é fictício</span></span></h2></div>
+  <div class="cols" style="grid-template-columns:1fr 1fr">
+    <div class="card" data-a="sobe" data-d=".3"><h3>Real, a confirmar com cada área</h3><ul>
+      <li>O desconto da energia cai para 10% com atraso, para quem tem mais</li>
+      <li>O cashback de indicação fica como saldo no app do Club</li>
+      <li>Seguros paga fora do app e confirma em até 30 minutos</li>
+      <li>A mensalidade do Club é de R$ 29,90</li>
+    </ul></div>
+    <div class="card amb" data-a="sobe" data-d=".45"><h3>Fictício, só para ilustrar</h3><ul>
+      <li>16% de cashback na luz em dia, 10% com atraso; 2% no telecom</li>
+      <li>Cashback em Pix, boleto e saldo; cartão de crédito sem cashback na luz</li>
+      <li>Validade de 12 meses; resgate para o saldo iGreen ou por Pix</li>
+      <li>Saldo iGreen para pagar e cartão iGreen com cashback</li>
+      <li>Clientes, valores, unidades e telefones</li>
+    </ul></div>
+  </div>
+  <aside class="notas">Se alguém perguntar de onde vem o 16%: não vem de lugar nenhum, é ilustração. É a decisão 2.</aside>
+</section>
+
+<!-- B MÉTODO -->
+<section class="slide apx" id="s-apx-b" data-titulo="Apêndice B · Método e fontes">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>Apêndice B</span><div class="dir"><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">Apêndice B</p><h2 class="titulo" data-a="titulo"><span class="l"><span>De onde vem</span></span><span class="l dest"><span>cada afirmação</span></span></h2></div>
+  <div class="cols" style="grid-template-columns:repeat(3,1fr)">
+    <div class="card" data-a="sobe" data-d=".3"><h3>Produto</h3><p class="t">Service blueprint feito com os Contexts de Energia, Telecom e Seguros. Respostas da base interna da iGreen, a confirmar com cada dono.</p></div>
+    <div class="card" data-a="sobe" data-d=".4"><h3>Mercado</h3><p class="t">Duas rodadas de benchmark com 13 apps: regulamentos, centrais de ajuda, telas públicas e reclamações. Tudo com link.</p></div>
+    <div class="card amb" data-a="sobe" data-d=".5"><h3>Teste</h3><p class="t">Roteiro de teste pronto. O teste da primeira versão foi simulado, com 3 sessões fictícias: testa o processo, não o cliente.</p></div>
+  </div>
+  <div style="position:absolute;left:104px;right:104px;top:820px" data-a="sobe" data-d=".7">
+    <p class="eyebrow">Onde está tudo</p>
+    <p class="caminho">Investigação: 03-areas/growth/investigacoes/2026-10-16-pagamento-universal/<br>Protótipo e versões: 06-sandbox/2026-10-16-pagamento-universal-telas/<br>Esta apresentação: 06-sandbox/2026-10-26-apresentacao-cashback/</p>
+  </div>
+  <aside class="notas">Se precisarem do detalhe de qualquer número do mercado, a fonte está nos benchmarks da investigação.</aside>
+</section>
+
+<!-- C MAPA -->
+<section class="slide apx" id="s-apx-c" data-titulo="Apêndice C · Mapa do protótipo">
+  <header class="trilho"><svg class="simb" aria-hidden="true"><use href="#simb"/></svg><span>Pagamento com cashback</span><span class="sep"></span><span>Apêndice C</span><div class="dir"><span class="pg"></span></div></header>
+  <div class="topo"><p class="eyebrow" data-a="sobe">Apêndice C</p><h2 class="titulo" data-a="titulo"><span class="l"><span>Os 32 fluxos</span></span><span class="l dest"><span>do protótipo</span></span></h2></div>
+  <div class="cols" style="grid-template-columns:repeat(3,1fr);gap:24px">
+    <div class="card grupo" data-a="sobe" data-d=".3"><h3>1 a 6</h3><strong>Do início ao cashback</strong><p>Home e retorno, energia, boleto, Pix, saldo, usar o cashback</p></div>
+    <div class="card grupo" data-a="sobe" data-d=".38"><h3>7 a 9</h3><strong>Todas as contas</strong><p>Aba Pagar, conta vencida, quando o pagamento não dá certo</p></div>
+    <div class="card grupo" data-a="sobe" data-d=".46"><h3>10 a 15</h3><strong>Telecom</strong><p>Vencida no Pix, boleto, cashback, cartão em 3x, saldo, pagas</p></div>
+    <div class="card grupo" data-a="sobe" data-d=".54"><h3>16 a 18</h3><strong>Retorno iGreen</strong><p>Retorno completo, boleto compensando, depois de pagar</p></div>
+    <div class="card grupo" data-a="sobe" data-d=".62"><h3>19 a 24</h3><strong>Cashback</strong><p>Ganhar mais, usar, validade, resgatar, automático, avisos</p></div>
+    <div class="card grupo" data-a="sobe" data-d=".7"><h3>25 a 32</h3><strong>Estados e faturas</strong><p>Cliente novo, em emissão, vencida, paga, fora do ar, listas</p></div>
+  </div>
+  <aside class="notas">No protótipo, a lista da esquerda escolhe o fluxo e a da direita, o passo. "Simular", embaixo do celular, faz o banco pagar ou o Pix expirar. Para a demonstração ao vivo, sugiro os fluxos 1, 4, 7 e 16.</aside>
+</section>
+
+</main>
+
+<div class="controles" id="controles">
+  <button id="ant" aria-label="Slide anterior"><svg class="ic" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+  <span id="contador" aria-live="polite">1 / 21</span>
+  <button id="prox" aria-label="Próximo slide"><svg class="ic" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+  <button id="bt-notas" aria-label="Mostrar notas do apresentador"><svg class="ic" viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg></button>
+</div>
+<div class="progresso" id="progresso"></div>
+<aside id="painel-notas" hidden><p class="rot-n">Notas do apresentador</p><div id="texto-notas"></div><p class="atalhos">← → navegar · N notas · F tela cheia · Home e End: início e fim</p></aside>
+
+<script>
+(function(){
+  const deck = document.getElementById('deck');
+  const slides = [...deck.querySelectorAll('.slide')];
+  const total = slides.length;
+  const EASE = 'cubic-bezier(0.16,1,0.3,1)', BACK = 'cubic-bezier(0.34,1.56,0.64,1)';
+  const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let atual = 0, iniciado = false;
+
+  // números das páginas e tom de cada slide
+  slides.forEach((s, i) => {
+    s.dataset.tom = s.classList.contains('escuro') ? 'escuro' : s.classList.contains('marca') ? 'marca' : 'claro';
+    const pg = s.querySelector('.pg'); if (pg) pg.textContent = String(i + 1).padStart(2, '0') + ' / ' + total;
+  });
+
+  // curvas de fundo
+  document.querySelectorAll('svg.curvas').forEach(svg => {
+    let h = '';
+    for (let i = 0; i < 15; i++) {
+      const y = 50 + i * 74, a = 36 + (i % 5) * 18;
+      h += '<path pathLength="1" data-a="traco" data-d="' + (i * .05).toFixed(2) + '" data-dur="2600" d="M -60 ' + y + ' C 380 ' + (y - a) + ' 760 ' + (y + a * 1.6) + ' 1180 ' + (y + 10) + ' S 1780 ' + (y - a * 1.2) + ' 2100 ' + (y + 24) + '"/>';
+    }
+    svg.innerHTML = h;
+  });
+
+  // palavras do título da capa
+  document.querySelectorAll('[data-a="palavras"] .l').forEach(l => {
+    l.innerHTML = l.textContent.trim().split(/\s+/).map(w => '<span class="w">' + w + '</span>').join(' ');
+  });
+
+  function escala(){
+    const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+    deck.style.transform = 'translate(-50%,-50%) scale(' + s + ')';
+  }
+  addEventListener('resize', escala); escala();
+
+  function fmt(x, c){ return x.toLocaleString('pt-BR', { minimumFractionDigits: c, maximumFractionDigits: c }); }
+
+  function anima(sl){
+    (sl._anims || []).forEach(a => a.cancel());
+    sl._anims = [];
+    if (reduz) return;
+    const run = (el, kf, o) => { const a = el.animate(kf, Object.assign({ easing: EASE, fill: 'backwards' }, o)); sl._anims.push(a); return a; };
+    sl.querySelectorAll('[data-a]').forEach(el => {
+      const d = (0.12 + parseFloat(el.dataset.d || 0)) * 1000, t = el.dataset.a;
+      if (t === 'sobe') run(el, [{ opacity: 0, transform: 'translateY(34px)', filter: 'blur(8px)' }, { opacity: 1, transform: 'translateY(0)', filter: 'blur(0px)' }], { duration: 850, delay: d });
+      else if (t === 'surge') run(el, [{ opacity: 0, transform: 'scale(.9)', filter: 'blur(14px)' }, { opacity: 1, transform: 'scale(1)', filter: 'blur(0px)' }], { duration: 1300, delay: d });
+      else if (t === 'titulo') el.querySelectorAll('.l>span').forEach((s, i) => run(s, [{ transform: 'translateY(115%)' }, { transform: 'translateY(0)' }], { duration: 1000, delay: d + i * 110 }));
+      else if (t === 'palavras') el.querySelectorAll('.w').forEach((s, i) => run(s, [{ opacity: 0, transform: 'translateX(70px) skewX(-14deg)', filter: 'blur(14px)' }, { opacity: 1, transform: 'translateX(0) skewX(0deg)', filter: 'blur(0px)' }], { duration: 950, delay: d + i * 85 }));
+      else if (t === 'traco') run(el, [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: +(el.dataset.dur || 1400), delay: d, easing: 'cubic-bezier(.65,0,.35,1)' });
+      else if (t === 'cresce') run(el, [{ transform: 'scaleY(0)' }, { transform: 'scaleY(1)' }], { duration: 1000, delay: d });
+      else if (t === 'crescex') run(el, [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 1200, delay: d });
+      else if (t === 'revela') run(el, [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)' }], { duration: 1500, delay: d });
+      else if (t === 'pop') run(el, [{ opacity: 0, transform: 'scale(.3)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 650, delay: d, easing: BACK });
+      else if (t === 'desliza') run(el, [{ opacity: 0, transform: 'translateX(-46px)' }, { opacity: 1, transform: 'translateX(0)' }], { duration: 800, delay: d });
+      else if (t === 'move') run(el, [{ transform: 'translate(' + (el.dataset.dx || 0) + 'px,' + (el.dataset.dy || 0) + 'px)', opacity: 0 }, { transform: 'translate(0px,0px)', opacity: 1 }], { duration: 1600, delay: d });
+      else if (t === 'conta') conta(el, d);
+    });
+  }
+
+  function conta(el, d){
+    const v = parseFloat(el.dataset.v), c = +(el.dataset.casas || 0), dur = 1500, fim = fmt(v, c);
+    cancelAnimationFrame(el._raf);
+    el.textContent = fmt(0, c);
+    const t0 = performance.now() + d;
+    const passo = t => {
+      const p = Math.min(1, Math.max(0, (t - t0) / dur));
+      el.textContent = p >= 1 ? fim : fmt(v * (1 - Math.pow(2, -10 * p)), c);
+      if (p < 1) el._raf = requestAnimationFrame(passo);
+    };
+    el._raf = requestAnimationFrame(passo);
+  }
+
+  function ir(n){
+    n = Math.max(0, Math.min(total - 1, n));
+    if (n === atual && iniciado) return;
+    const velho = slides[atual], novo = slides[n], frente = n >= atual;
+    novo.classList.add('ativo');
+    novo.style.zIndex = 2;
+    if (velho !== novo) velho.style.zIndex = 1;
+    if (iniciado && !reduz && velho !== novo) {
+      if (velho.dataset.tom !== novo.dataset.tom) {
+        const de = frente ? 'polygon(0% 0%, 0% 0%, -18% 100%, -18% 100%)' : 'polygon(118% 0%, 118% 0%, 100% 100%, 100% 100%)';
+        const para = frente ? 'polygon(0% 0%, 118% 0%, 100% 100%, -18% 100%)' : 'polygon(-18% 0%, 118% 0%, 100% 100%, 0% 100%)';
+        novo.animate([{ clipPath: de }, { clipPath: para }], { duration: 850, easing: 'cubic-bezier(.7,0,.2,1)' });
+      } else {
+        novo.animate([{ transform: 'translateY(' + (frente ? 80 : -80) + 'px) scale(.985)', opacity: 0 }, { transform: 'translateY(0) scale(1)', opacity: 1 }], { duration: 750, easing: EASE });
+        velho.animate([{ transform: 'scale(1)', opacity: 1 }, { transform: 'scale(.965)', opacity: 0 }], { duration: 600, easing: EASE, fill: 'forwards' });
+      }
+    }
+    const sai = velho;
+    setTimeout(() => {
+      if (sai !== slides[atual]) {
+        sai.classList.remove('ativo'); sai.style.zIndex = '';
+        sai.getAnimations().forEach(a => a.cancel());
+        (sai._anims || []).forEach(a => a.cancel());
+      }
+    }, 900);
+    atual = n; iniciado = true;
+    anima(novo);
+    document.getElementById('contador').textContent = (n + 1) + ' / ' + total;
+    document.getElementById('progresso').style.width = ((n + 1) / total * 100) + '%';
+    document.getElementById('texto-notas').innerHTML = (novo.querySelector('.notas') || { innerHTML: '' }).innerHTML;
+    history.replaceState(null, '', '#' + (n + 1));
+  }
+
+  const painel = document.getElementById('painel-notas');
+  function notas(){ painel.hidden = !painel.hidden; }
+  function tela(){ if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {}); else document.exitFullscreen(); }
+
+  addEventListener('keydown', e => {
+    if (e.target.closest && e.target.closest('input,textarea')) return;
+    const k = e.key;
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(k)) { e.preventDefault(); ir(atual + 1); }
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(k)) { e.preventDefault(); ir(atual - 1); }
+    else if (k === 'Home') ir(0);
+    else if (k === 'End') ir(total - 1);
+    else if (k === 'n' || k === 'N') notas();
+    else if (k === 'f' || k === 'F') tela();
+  });
+  document.getElementById('ant').onclick = () => ir(atual - 1);
+  document.getElementById('prox').onclick = () => ir(atual + 1);
+  document.getElementById('bt-notas').onclick = notas;
+
+  let x0 = null;
+  addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+  addEventListener('touchend', e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) ir(atual + (dx < 0 ? 1 : -1)); x0 = null; });
+
+  const ctr = document.getElementById('controles'); let tmr;
+  const mostra = () => { ctr.classList.remove('some'); clearTimeout(tmr); tmr = setTimeout(() => ctr.classList.add('some'), 2600); };
+  addEventListener('mousemove', mostra); mostra();
+
+  const h = parseInt(location.hash.slice(1), 10);
+  atual = (h >= 1 && h <= total) ? h - 1 : 0;
+  ir(atual);
+})();
+</script>
+</body>
+</html>

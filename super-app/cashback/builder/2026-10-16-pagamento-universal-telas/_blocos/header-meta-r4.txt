@@ -1,0 +1,58 @@
+// Medidor em meia-lua, no estilo de score: um segmento por fatura da sequência (meta de exemplo)
+const CORES_ESC = ["#F2D06B", "#EBD877", "#DDDE88", "#CFE39C", "#C3E9B1", "#B8EEC5"];
+const CORES_CLARO = ["#F2D06B", "#E3D772", "#C9D97C", "#A6D388", "#86C97A", "#6BBF59"];
+function medidor(feito, total, o = {}){
+  const w = o.w || 220, h = o.h || 122, r = o.r || 86, sw = o.sw || 14, cx = w / 2, cy = h - (o.base ?? 18), seg = 180 / total, folga = o.folga ?? 3;
+  const ponto = g => [cx + r * Math.cos(g * Math.PI / 180), cy - r * Math.sin(g * Math.PI / 180)];
+  const cores = o.cores || CORES_ESC;
+  let arcos = "";
+  for (let i = 0; i < total; i++){
+    const [x0, y0] = ponto(180 - i * seg - folga), [x1, y1] = ponto(180 - (i + 1) * seg + folga);
+    arcos += `<path d="M${x0.toFixed(1)} ${y0.toFixed(1)} A${r} ${r} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" stroke="${i < feito ? cores[i] : (o.vazio || "rgba(255,255,255,.2)")}" stroke-width="${sw}" stroke-linecap="round" fill="none"/>`;
+  }
+  const [mx, my] = ponto(180 - feito * seg);
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">${arcos}
+    ${feito ? `<circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="${(sw * .62).toFixed(1)}" fill="#fff" stroke="#1C7443" stroke-width="3"/>` : ""}</svg>`;
+}
+// Cartão da meta: medidor à esquerda, descrição à direita
+function cartaoMeta(d, claro){
+  const bateu = d.emDia >= 6;
+  const g = medidor(d.emDia, 6, {w:132, h:78, r:54, sw:10, base:10, cores: claro ? CORES_CLARO : CORES_ESC, vazio: claro ? "#E7E3D8" : "rgba(255,255,255,.2)"});
+  return `<div class="meta-card ${claro ? "claro" : ""} ${bateu ? "pulsa" : ""}">
+    <div class="meta-g" role="img" aria-label="${d.emDia} de 6 faturas seguidas pagas em dia. Situação: saudável. Meta de exemplo: 6">${g}<div class="meta-n num"><b>${d.emDia}</b><small>de 6</small></div></div>
+    <div class="meta-t">
+      <span class="chip saude">${svg(I.check,12,3.5)} Saudável</span>
+      <b>${bateu ? "Meta de exemplo batida" : `${d.emDia} faturas seguidas em dia`}</b>
+      <span>${bateu ? "6 faturas seguidas pagas em dia" : "Meta de exemplo: 6 · outubro vence em 23/10"}</span>
+      <div class="bolas" aria-hidden="true">${MESES.map((_, i) => `<i class="${i < d.emDia ? "ok" : (i === 5 ? "agora" : "")}"></i>`).join("")}</div>
+    </div>
+  </div>`;
+}
+// Ilustrações dos indicadores (provisórias: podem virar 3D depois)
+const ILUS_IND = {
+  cal: `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#E2F2E7"/><rect x="15" y="18" width="34" height="30" rx="6" fill="#fff" stroke="#1C7443" stroke-width="2.5"/><path d="M15 24a6 6 0 0 1 6-6h22a6 6 0 0 1 6 6v3H15z" fill="#1C7443"/><path d="M23 14v7M41 14v7" stroke="#1C7443" stroke-width="3" stroke-linecap="round"/><path d="m24 37 5 5 10-10" stroke="#1C7443" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="49" cy="47" r="8" fill="#E6C14F"/><text x="49" y="50.5" font-size="9" font-weight="800" text-anchor="middle" fill="#5C3A00" font-family="Figtree,sans-serif">6</text></svg>`,
+  sol: `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#E2F2E7"/><g stroke="#F2D06B" stroke-width="2.5" stroke-linecap="round"><path d="M44 6v4M44 30v4M30 20h4M54 20h4"/></g><circle cx="44" cy="20" r="8" fill="#F2D06B"/><g transform="translate(12 30) skewX(-12)"><rect width="34" height="20" rx="3" fill="#1C7443"/><path d="M11 0v20M22 0v20M0 10h34" stroke="#E2F2E7" stroke-opacity=".5" stroke-width="1.5"/></g><rect x="27" y="50" width="4" height="8" fill="#9AA79C"/><path d="M20 10 13 23h6l-2 10 9-14h-6z" fill="#E6C14F" stroke="#7A5A10" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
+  ind: `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#E2F2E7"/><circle cx="24" cy="26" r="7" fill="#1C7443"/><path d="M12 50c0-8 5-13 12-13s12 5 12 13z" fill="#1C7443"/><circle cx="41" cy="29" r="6" fill="#7FBF8E"/><path d="M31 52c0-7 4.5-11.5 10-11.5S51 45 51 52z" fill="#7FBF8E"/><circle cx="47" cy="15" r="8" fill="#E6C14F"/><path d="M47 20s-4.5-2.7-4.5-5.6a2.2 2.2 0 0 1 4.5-.8 2.2 2.2 0 0 1 4.5.8c0 2.9-4.5 5.6-4.5 5.6z" fill="#fff"/></svg>`,
+  trofeu: `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#E2F2E7"/><path d="M22 14h20v10a10 10 0 0 1-20 0z" fill="#E6C14F" stroke="#7A5A10" stroke-width="2"/><path d="M22 17h-5a5 5 0 0 0 5 8M42 17h5a5 5 0 0 1-5 8" stroke="#7A5A10" stroke-width="2" fill="none"/><rect x="29" y="34" width="6" height="8" fill="#B8912A"/><rect x="22" y="42" width="20" height="6" rx="2" fill="#1C7443"/><path d="M32 17.5l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4-2.9-2.8 4-.6z" fill="#fff"/></svg>`
+};
+const INDICADORES = d => [
+  ["cal", "6 meses", "com a iGreen, desde maio"],
+  ["sol", `${d.kwh.toLocaleString("pt-BR")} kWh`, "de energia limpa na sua conta"],
+  ["ind", "R$ 38,00", "de cashback por indicações"],
+  ["trofeu", st.pago ? "Outubro" : "Setembro", `seu melhor mês: ${st.pago ? "R$ 40,80" : "R$ 39,50"} de retorno`]
+];
+const carrossel = (d, claro) => `<div class="ind-carrossel num ${claro ? "claro" : ""}" role="list">
+  ${INDICADORES(d).map(([k, v, t]) => `<div class="ind-card" role="listitem">${ILUS_IND[k]}<b>${v}</b><span>${t}</span></div>`).join("")}
+</div>`;
+
+function abaTotal(d){
+  const pe = Math.round(d.eco / d.total * 100), pc = 100 - pe;
+  return `
+    <div class="hb-bloco">
+      <div class="ha-div-barra hb-barra2" role="img" aria-label="Economia ${pe}%, cashback ${pc}%"><i class="e" style="width:${pe}%"></i><i class="c" style="width:${pc}%"></i></div>
+      <div class="hb-leg num"><span><i class="e"></i>Economia ${brl(d.eco)}</span><span><i class="c"></i>Cashback ${brl(d.cb)}</span></div>
+    </div>
+    <div class="hb-bloco">${cartaoMeta(d, false)}</div>
+    <h4 class="hb-sec">O que você já fez</h4>
+    ${carrossel(d, false)}`;
+}

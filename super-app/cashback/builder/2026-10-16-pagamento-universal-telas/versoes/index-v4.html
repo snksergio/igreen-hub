@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pagamento universal iGreen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* ===== Tokens: "Extrato claro" ===== */
+:root{
+  --paper:#F4F2EB; --surface:#FFFFFF; --ink:#1A1D1A; --ink-2:#4F574F; --line:#E0DCD1;
+  --gain:#1C7443; --gain-bg:#E2F2E7; --warn:#7A4E00; --warn-bg:#FCEFD3; --neutral-bg:#ECEAE3; --focus:#1F5BD6;
+  --r-card:16px; --r-pill:999px;
+  --font:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;text-align:inherit}
+button:disabled{cursor:not-allowed}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:8px}
+.num{font-variant-numeric:tabular-nums lining-nums}
+
+/* ===== Página ===== */
+.page{max-width:1320px;margin:0 auto;padding:32px 16px 64px}
+.page-head{display:grid;gap:14px;margin-bottom:32px}
+.page-head h1{font-size:clamp(1.6rem,3vw,2.25rem);font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.page-head p{color:var(--ink-2);max-width:66ch}
+.ficticio{display:flex;gap:10px;align-items:flex-start;background:var(--warn-bg);color:#5C3A00;border:1px solid #EBD39C;border-radius:var(--r-card);padding:10px 14px;max-width:820px;font-size:.93rem}
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;align-items:start}
+.col{display:grid;gap:12px;justify-items:center}
+.col-head{width:100%;max-width:390px}
+.col-head h2{font-size:1.05rem;font-weight:700}
+.col-head p{font-size:.9rem;color:var(--ink-2)}
+.estados{display:flex;gap:8px;flex-wrap:wrap;width:100%;max-width:390px}
+.estados button{border:1px solid var(--line);background:var(--surface);border-radius:var(--r-pill);padding:0 16px;min-height:44px;font-size:.9rem;font-weight:600;color:var(--ink-2)}
+.estados button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* ===== Aparelho ===== */
+.phone{width:100%;max-width:390px;height:812px;background:var(--paper);border:10px solid #121412;border-radius:46px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 30px 60px -30px rgba(26,29,26,.35)}
+.phone.pulse{animation:pulse 1.2s ease}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(28,116,67,.55)}100%{box-shadow:0 0 0 18px rgba(28,116,67,0)}}
+.status{height:40px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font-size:.8rem;font-weight:700}
+.tag-ficticio{position:absolute;top:9px;left:50%;transform:translateX(-50%);z-index:3;font-size:.7rem;font-weight:700;background:var(--warn-bg);color:var(--warn);border:1px solid #EBD39C;border-radius:var(--r-pill);padding:2px 8px}
+.screen{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 16px 16px}
+.screen::-webkit-scrollbar{width:0}
+.bar{display:flex;align-items:center;gap:6px;min-height:52px;margin:0 -8px 8px}
+.icon-btn{width:48px;height:48px;flex:none;border-radius:50%;display:grid;place-items:center}
+.bar h3{font-size:1.1rem;font-weight:700;line-height:1.2;flex:1}
+.bar small{display:block;font-size:.8rem;color:var(--ink-2);font-weight:500}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card)}
+.pad{padding:14px 16px}
+.label{font-size:.8rem;font-weight:700;color:var(--ink-2);margin:18px 2px 8px;display:flex;justify-content:space-between;align-items:center}
+.label .link{font-size:.8rem}
+.muted{color:var(--ink-2);font-size:.85rem}
+.ic{width:40px;height:40px;flex:none;border-radius:12px;background:var(--paper);display:grid;place-items:center}
+.link{font-weight:700;font-size:.85rem;text-decoration:underline;text-underline-offset:3px;min-height:44px;display:inline-flex;align-items:center}
+
+/* ===== Selos: sempre cheios, com ícone e texto (o tipo não depende só da cor) ===== */
+.selo{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r-pill);padding:4px 10px;font-size:.82rem;font-weight:700;line-height:1.3;white-space:nowrap;background:var(--gain-bg);color:var(--gain)}
+.selo svg{flex:none}
+.selo--nao{background:var(--neutral-bg);color:var(--ink-2)}
+.selo--linha{display:flex;width:100%;border-radius:10px;padding:8px 12px;white-space:normal}
+
+/* Banner de oferta (como o "Desconto neste pedido · Pegar") */
+.banner{display:flex;align-items:center;gap:12px;background:var(--gain-bg);border-radius:14px;padding:8px 8px 8px 12px;min-height:56px}
+.banner .bolinha{width:32px;height:32px;flex:none;border-radius:50%;background:var(--surface);color:var(--gain);display:grid;place-items:center}
+.banner .t{flex:1;font-size:.88rem;font-weight:600}
+.banner .t b{color:var(--gain)}
+.banner .acao{font-weight:800;color:var(--gain);min-height:44px;padding:0 8px;white-space:nowrap}
+
+/* ===== Tela 1 ===== */
+.fat{padding:14px 16px 12px}
+.fat-l{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.fat-l .tit{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.95rem;white-space:nowrap;min-width:0}
+.fat-l .ic{width:34px;height:34px;border-radius:10px}
+.fat-l .v{font-size:1.1rem;font-weight:800;white-space:nowrap}
+.fat-l2{display:flex;justify-content:space-between;align-items:center;margin-top:2px}
+.fat-l2 .link{min-height:40px}
+.prazo{display:flex;align-items:center;gap:8px;background:var(--warn-bg);color:#5C3A00;border-radius:10px;padding:8px 12px;font-size:.84rem;font-weight:600;margin:0 12px 12px}
+.benef{border-radius:var(--r-card);border:1px solid var(--line);background:var(--surface);transition:background .2s ease}
+.benef.on{background:var(--gain-bg);border-color:transparent}
+.benef-topo{display:flex;align-items:center;gap:12px;padding:14px 16px}
+.benef-topo .txt{flex:1;min-width:0}
+.benef-topo .txt b{display:block;font-size:.95rem}
+.benef.on .ic{background:var(--gain);color:#fff}
+.benef-conta{background:var(--surface);border-radius:12px;margin:0 10px 10px;padding:4px 14px}
+.benef-conta div{display:flex;justify-content:space-between;padding:8px 0;font-size:.9rem;border-top:1px solid var(--line)}
+.benef-conta div:first-child{border-top:0}
+.benef-conta dt{color:var(--ink-2)}
+.benef-conta .menos dd{color:var(--gain);font-weight:700}
+.benef-conta .tot dt{color:var(--ink);font-weight:800}
+.benef-conta .tot dd{font-weight:800}
+.benef-dica{padding:0 16px 12px;margin-top:-6px;font-size:.84rem;color:var(--gain);font-weight:700}
+.switch{flex:none;width:52px;height:30px;border-radius:var(--r-pill);border:2px solid var(--ink-2);background:var(--surface);position:relative}
+.switch::before{content:"";position:absolute;inset:-9px -6px}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--ink-2);transition:transform .2s ease}
+.switch[aria-checked="true"]{background:var(--gain);border-color:var(--gain)}
+.switch[aria-checked="true"]::after{transform:translateX(22px);background:#fff}
+.lista{display:grid}
+.op{border-top:1px solid var(--line)}
+.op:first-child{border-top:0}
+.opcao{display:flex;align-items:center;gap:12px;padding:12px 16px;min-height:64px;cursor:pointer}
+.opcao .txt{flex:1;min-width:0}
+.opcao .txt b{display:block;font-size:.95rem}
+.opcao .sub{font-size:.83rem;color:var(--ink-2)}
+.opcao input{appearance:none;flex:none;width:22px;height:22px;border:2px solid var(--ink-2);border-radius:50%;display:grid;place-items:center;margin:0}
+.opcao input:checked{border-color:var(--ink);background:var(--ink)}
+.opcao input:checked::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+.opcao:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:-3px;border-radius:12px}
+.op-faixa{padding:0 12px 12px}
+.footer{flex:none;background:var(--surface);border-top:1px solid var(--line);padding:10px 16px 16px;display:grid;gap:8px;justify-items:center}
+.btn{min-height:52px;border-radius:14px;font-weight:700;font-size:1rem;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;text-align:center}
+.btn--pri{background:var(--ink);color:#fff}
+.btn--sec{background:var(--surface);border:2px solid var(--ink)}
+.btn--txt{min-height:44px;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.spin{width:18px;height:18px;border-radius:50%;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;animation:girar .8s linear infinite}
+@keyframes girar{to{transform:rotate(360deg)}}
+
+/* ===== Folha de baixo ===== */
+.sheet-wrap{position:absolute;inset:0;z-index:5;display:flex;align-items:flex-end}
+.sheet-wrap[hidden]{display:none}
+.backdrop{position:absolute;inset:0;background:rgba(18,20,18,.45)}
+.sheet{position:relative;width:100%;background:var(--surface);border-radius:22px 22px 0 0;padding:10px 16px 18px;animation:sobe .22s ease-out;max-height:85%;overflow:auto}
+@keyframes sobe{from{transform:translateY(40px);opacity:.4}}
+.sheet .alca{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 8px}
+.sheet-top{display:flex;align-items:center;gap:8px}
+.sheet-top h4{font-size:1.1rem;font-weight:800;flex:1}
+.contas div{display:flex;justify-content:space-between;padding:8px 0;font-size:.92rem;border-top:1px solid var(--line)}
+.contas div:first-child{border-top:0}
+.contas dt{color:var(--ink-2)}
+.contas .menos dd{color:var(--gain);font-weight:700}
+.contas .tot dt{color:var(--ink);font-weight:800}
+.contas .tot dd{font-weight:800}
+.link-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.link-row:first-of-type{border-top:0}
+.link-row .txt{flex:1}
+.link-row .txt b{display:block;font-size:.95rem}
+.copiar{min-height:44px;padding:0 14px;border-radius:12px;border:2px solid var(--ink);font-weight:700;font-size:.85rem;white-space:nowrap}
+.copiar.ok{border-color:var(--gain);color:var(--gain)}
+
+/* ===== Tela 2: comprovante ===== */
+.recibo{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card) var(--r-card) 0 0;
+  -webkit-mask:radial-gradient(circle 7px at 50% 100%,#0000 98%,#000) 50% 100%/18px 100% repeat-x;mask:radial-gradient(circle 7px at 50% 100%,#0000 98%,#000) 50% 100%/18px 100% repeat-x}
+.recibo section{padding:14px 16px}
+.recibo .eyebrow{font-size:.7rem;letter-spacing:.1em;font-weight:800;color:var(--ink-2)}
+.recibo-cab{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.recibo-cab h4{font-size:1.05rem;font-weight:800}
+.recibo .l{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 0;font-size:.9rem}
+.recibo .l span:first-child{color:var(--ink-2)}
+.recibo .l b{font-weight:700;text-align:right}
+.recibo .l.tot span:first-child{color:var(--ink);font-weight:700}
+.recibo .l.tot b{font-weight:800}
+.recibo .l.menos b{color:var(--gain)}
+.ganho{display:flex;align-items:center;gap:10px;background:var(--gain-bg);border-radius:12px;padding:10px 12px;margin-top:8px}
+.ganho .bolinha{width:30px;height:30px;flex:none;border-radius:50%;background:var(--surface);color:var(--gain);display:grid;place-items:center}
+.ganho .t{flex:1;font-size:.88rem}
+.ganho .t b{display:block;color:var(--gain);font-weight:800}
+.ganho .t span{font-size:.78rem;color:var(--ink-2)}
+.ganho .v{font-weight:800;color:var(--gain);white-space:nowrap}
+.ganho--nao{background:var(--neutral-bg)} .ganho--nao .t b,.ganho--nao .v{color:var(--ink-2)}
+.corte{position:relative;border-top:2px dashed var(--line);margin:0 14px}
+.corte::before,.corte::after{content:"";position:absolute;top:-12px;width:22px;height:22px;border-radius:50%;background:var(--paper)}
+.corte::before{left:-26px} .corte::after{right:-26px}
+.codigo{font-family:var(--mono);font-size:.78rem}
+.barcode{height:46px;margin:10px 0 18px;background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 8px,var(--ink) 8px 11px,transparent 11px 12px,var(--ink) 12px 13px,transparent 13px 16px)}
+.status-pill{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:700;border-radius:var(--r-pill);padding:4px 10px;background:var(--gain-bg);color:var(--gain)}
+.status-pill.ativando{background:var(--warn-bg);color:#5C3A00}
+.ponto{width:8px;height:8px;border-radius:50%;background:currentColor;animation:respira 1.6s ease-in-out infinite}
+@keyframes respira{50%{opacity:.3}}
+.acoes{display:grid;gap:4px;margin-top:16px;justify-items:center}
+
+/* ===== Tela 3 ===== */
+.mes-btn{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:.9rem;min-height:44px;padding:0 8px;margin-left:-8px}
+.heroi .valor{font-size:2.4rem;font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);padding:12px 14px;display:grid;gap:2px;min-height:88px;align-content:start}
+.tile .k{font-size:.8rem;font-weight:700;color:var(--ink-2);display:flex;justify-content:space-between;align-items:center}
+.tile .v{font-size:1.3rem;font-weight:800;color:var(--gain)}
+.tile .s{font-size:.76rem;color:var(--ink-2)}
+.barras{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end;height:84px;margin-top:16px;padding:0 4px}
+.barras div{display:grid;gap:4px;justify-items:center;height:100%;align-content:end}
+.barras span{width:100%;max-width:28px;border-radius:6px 6px 2px 2px;background:#D7D3C6}
+.barras div.atual span{background:var(--gain)}
+.barras small{font-size:.72rem;color:var(--ink-2);font-weight:600}
+.barras div.atual small{color:var(--ink);font-weight:800}
+.saldo-card .linha{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.saldo-card .v{font-size:1.4rem;font-weight:800}
+.saldo-card .sub{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.indique{display:flex;align-items:center;gap:12px}
+.indique .txt{flex:1}
+.indique .txt b{display:block}
+.indique .btn{width:auto;min-height:44px;padding:0 18px;font-size:.9rem}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin:0 -16px 8px;padding-left:16px;padding-right:16px}
+.chips::-webkit-scrollbar{height:0}
+.chips button{flex:none;min-height:40px;padding:0 14px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--surface);font-size:.83rem;font-weight:700;color:var(--ink-2)}
+.chips button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.hist{list-style:none;padding:0}
+.hist li{display:flex;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line)}
+.hist li:first-child{border-top:0}
+.hist .txt{flex:1;min-width:0}
+.hist .txt b{display:block;font-size:.9rem}
+.hist .txt span{font-size:.78rem;color:var(--ink-2)}
+.hist .v{font-weight:800;white-space:nowrap}
+.hist .v.mais{color:var(--gain)}
+.hist .ic{width:36px;height:36px;border-radius:10px}
+.hist-vazio{padding:16px;text-align:center}
+.pend{display:grid;gap:10px}
+.pend-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.pend-baixo{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pend .btn{width:auto;min-height:44px;padding:0 22px;font-size:.92rem}
+.acoes2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.acoes2 .btn{min-height:48px;font-size:.92rem}
+.btn:disabled{background:#D7D3C6;color:#4F574F;border-color:#D7D3C6}
+.origens{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.auto{display:flex;align-items:center;gap:12px}
+.auto .txt{flex:1}
+.auto .txt b{display:block;font-size:.95rem}
+.tabbar{flex:none;display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-top:1px solid var(--line);padding:6px 4px 10px}
+.tabbar button{min-height:52px;display:grid;justify-items:center;align-content:center;gap:2px;font-size:.72rem;font-weight:600;color:var(--ink-2);text-align:center}
+.tabbar button[aria-current="page"]{color:var(--ink)}
+.vazio{text-align:center;display:grid;gap:10px;justify-items:center;padding:28px 18px}
+.vazio h4{font-size:1.2rem;font-weight:800}
+
+@media (max-width:1100px){.board{grid-template-columns:1fr}}
+@media (max-width:480px){
+  .page{padding:24px 16px 48px}
+  .phone{border-radius:var(--r-card);height:760px;box-shadow:none;border:1px solid var(--line)}
+  .status{display:none}
+  .tag-ficticio{position:static;transform:none;align-self:flex-end;margin:10px 12px 0}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="page-head">
+    <h1>Pagamento universal no app iGreen</h1>
+    <p>Versão 4. Na hora de pagar, os ganhos aparecem como "benefícios" e "bônus". Em Ganhos, a economia nas contas fica separada dos benefícios, que têm tela própria.</p>
+    <div class="ficticio" role="note">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+      <div><strong>Regras e valores fictícios</strong>, gerados em 16/10/2026 para testar as skills de UX (<span class="codigo">ficticio-respostas-da-pauta.md</span>). Não são regra da iGreen.</div>
+    </div>
+  </header>
+
+  <div class="board">
+    <!-- ===== 1. Pagar fatura ===== -->
+    <section class="col" aria-labelledby="t1">
+      <div class="col-head"><h2 id="t1">1. Pagar fatura</h2><p>Ligue os benefícios, troque a forma de pagamento, abra "Ver detalhes".</p></div>
+      <div class="estados" role="group" aria-label="Estado da tela 1">
+        <button type="button" data-pay="sim" aria-pressed="true">Com iGreen Pay</button>
+        <button type="button" data-pay="nao" aria-pressed="false">Sem iGreen Pay</button>
+      </div>
+      <div class="phone" id="phone1">
+        <div class="status" aria-hidden="true"><span>9:41</span><span>▮▮▮ ◔</span></div>
+        <span class="tag-ficticio">Regras fictícias</span>
+        <div class="screen" id="s1">
+          <div class="bar">
+            <button class="icon-btn" type="button" aria-label="Voltar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+            <h3>Pagar fatura<small>Conta de energia</small></h3>
+          </div>
+
+          <div class="card">
+            <div class="fat">
+              <div class="fat-l">
+                <span class="tit"><span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span>Fatura de outubro</span>
+                <span class="v num">R$ 129,20</span>
+              </div>
+              <div class="fat-l2"><span class="muted">Vence em 23/10</span><button type="button" class="link" data-detalhes>Ver detalhes ›</button></div>
+            </div>
+            <div class="prazo num">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              Pague até 23/10 e mantenha os 15%
+            </div>
+          </div>
+
+          <div class="benef" id="benef" style="margin-top:12px"></div>
+
+          <div class="label" id="t-forma">Como pagar</div>
+          <div class="card lista" role="radiogroup" aria-labelledby="t-forma" id="metodos"></div>
+          <div id="promo-pay" style="margin-top:10px"></div>
+        </div>
+        <div class="footer">
+          <div id="footer-bonus"></div>
+          <button class="btn btn--pri num" type="button" id="cta">Pagar</button>
+        </div>
+
+        <div class="sheet-wrap" id="sheet1" hidden>
+          <div class="backdrop" data-fechar></div>
+          <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh1-t">
+            <div class="alca" aria-hidden="true"></div>
+            <div class="sheet-top"><h4 id="sh1-t">Fatura de outubro</h4><button type="button" class="icon-btn" aria-label="Fechar" data-fechar><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+            <p class="muted">Energia · vence em 23/10</p>
+            <dl class="contas num" style="margin:10px 0 6px">
+              <div><dt>Conta sem a iGreen</dt><dd>R$ 152,00</dd></div>
+              <div class="menos"><dt>Desconto iGreen (15%)</dt><dd>− R$ 22,80</dd></div>
+              <div class="tot"><dt>Valor da fatura</dt><dd>R$ 129,20</dd></div>
+            </dl>
+            <div class="prazo num" style="margin:8px 0 10px">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              Depois de 23/10, o desconto cai para 10% (+ R$ 7,60)
+            </div>
+            <p class="muted" style="margin-bottom:14px">O desconto vem da energia que a iGreen compensa na sua conta.</p>
+            <button type="button" class="btn btn--pri" data-fechar>Entendi</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 2. Comprovante ===== -->
+    <section class="col" aria-labelledby="t2">
+      <div class="col-head"><h2 id="t2">2. Comprovante</h2><p>Valor, com o que pagou, o que ganhou e os dados da transação.</p></div>
+      <div class="estados" role="group" aria-label="Estado da tela 2">
+        <button type="button" data-recibo="energia" aria-pressed="true">Energia</button>
+        <button type="button" data-recibo="seguro" aria-pressed="false">Seguro</button>
+      </div>
+      <div class="phone" id="phone2">
+        <div class="status" aria-hidden="true"><span>9:41</span><span>▮▮▮ ◔</span></div>
+        <span class="tag-ficticio">Regras fictícias</span>
+        <div class="screen" id="recibo"></div>
+      </div>
+    </section>
+
+    <!-- ===== 3. Ganhos e Benefícios ===== -->
+    <section class="col" aria-labelledby="t3">
+      <div class="col-head"><h2 id="t3">3. Ganhos e Benefícios</h2><p>Ganhos é o painel do mês. Benefícios é o saldo que se usa ou se resgata.</p></div>
+      <div class="estados" role="group" aria-label="Estado da tela 3">
+        <button type="button" data-painel="ganhos" aria-pressed="true">Ganhos</button>
+        <button type="button" data-painel="beneficios" aria-pressed="false">Benefícios</button>
+        <button type="button" data-painel="vazio" aria-pressed="false">Primeiro mês</button>
+      </div>
+      <div class="phone" id="phone3">
+        <div class="status" aria-hidden="true"><span>9:41</span><span>▮▮▮ ◔</span></div>
+        <span class="tag-ficticio">Regras fictícias</span>
+        <div class="screen" id="painel"></div>
+        <nav class="tabbar" aria-label="Navegação principal">
+          <button type="button"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Início</button>
+          <button type="button"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>Pagar</button>
+          <button type="button" aria-current="page"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 17l5-5 4 4 7-8"/><path d="M15 8h5v5"/></svg>Ganhos</button>
+          <button type="button"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Perfil</button>
+        </nav>
+        <div class="sheet-wrap" id="sheet3" hidden>
+          <div class="backdrop" data-fechar></div>
+          <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh3-t">
+            <div class="alca" aria-hidden="true"></div>
+            <div class="sheet-top"><h4 id="sh3-t"></h4><button type="button" class="icon-btn" aria-label="Fechar" data-fechar><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+            <div id="sh3-corpo"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+/* Regras fictícias (ficticio-respostas-da-pauta.md): 1% de bônus só no que for pago com saldo Pay, teto R$ 5,00
+   por fatura, cai em até 2 dias úteis; os benefícios abatem qualquer fatura; seguro não rende bônus.
+   Nome: na hora de pagar, "benefícios" e "bônus", sem a palavra cashback (regra do contexto Pay). */
+const brl = n => n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const bonus = v => Math.min(Math.floor(v*100*0.01)/100, 5);
+const FATURA = 129.20, BENEF = 9.20, CAI_ATE = "20/10";
+const svg = (d, w = 20, sw = 2) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" aria-hidden="true">${d}</svg>`;
+const I = {
+  pay:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12.5h2"/>',
+  pix:'<path d="m12 3 9 9-9 9-9-9z"/><path d="m9 12 3-3 3 3-3 3z"/>',
+  boleto:'<path d="M4 6v12M7 6v12M10 6v12M14 6v12M17 6v12M20 6v12"/>',
+  card:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>',
+  presente:'<rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1.5S10 8 12 8c2 0 6-.5 6-1.5S14 4 12 8"/>',
+  relogio:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  check:'<path d="m5 12 5 5 9-10"/>',
+  benef:'<path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>',
+  energia:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  telecom:'<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+  seguro:'<path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6z"/>',
+  amigo:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M18 8v6m-3-3h6"/>',
+  seta:'<path d="m9 6 6 6-6 6"/>',
+  share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/>'
+};
+const metodos = [
+  {id:"pay",    nome:"Saldo iGreen Pay",  sub:"R$ 250,00 disponíveis",    curto:"saldo Pay", rende:true},
+  {id:"pix",    nome:"Pix",               sub:"Na hora · último usado",   curto:"Pix",       rende:false},
+  {id:"boleto", nome:"Boleto",            sub:"Compensa em até 2 dias úteis", curto:"boleto", rende:false},
+  {id:"card",   nome:"Cartão de crédito", sub:"Visa •••• 4821",           curto:"cartão",    rende:false},
+];
+const st = {payAtivo:true, usarBenef:false, metodo:"pix", recibo:"energia", pago:null, painel:"ganhos", filtroG:"todos", filtroB:"todos", auto:false};
+const restante = () => +(FATURA - (st.usarBenef ? BENEF : 0)).toFixed(2);
+
+/* ---------- Tela 1 ---------- */
+function render1(){
+  const v = restante(), b = bonus(v), m = metodos.find(x => x.id === st.metodo);
+
+  // Benefícios: desligado mostra quanto economiza; ligado mostra a conta (Fatura, Benefícios, Falta pagar)
+  const be = document.getElementById("benef");
+  be.className = "benef" + (st.usarBenef ? " on" : "");
+  be.innerHTML = `
+    <div class="benef-topo">
+      <span class="ic" aria-hidden="true">${svg(I.benef)}</span>
+      <div class="txt">${st.usarBenef
+        ? `<b class="num" id="lbl-b">Usando ${brl(BENEF)} dos seus benefícios</b><span class="muted">Abatido da fatura agora</span>`
+        : `<b id="lbl-b">Usar meus benefícios</b><span class="muted num">${brl(BENEF)} disponíveis</span>`}</div>
+      <button type="button" class="switch" role="switch" aria-checked="${st.usarBenef}" aria-labelledby="lbl-b" id="sw"></button>
+    </div>
+    ${st.usarBenef
+      ? `<dl class="benef-conta num"><div><dt>Fatura</dt><dd>${brl(FATURA)}</dd></div><div class="menos"><dt>Benefícios</dt><dd>− ${brl(BENEF)}</dd></div><div class="tot"><dt>Falta pagar</dt><dd>${brl(v)}</dd></div></dl>`
+      : `<div class="benef-dica num">Use e pague ${brl(FATURA - BENEF)}</div>`}`;
+  document.getElementById("sw").addEventListener("click", () => {st.usarBenef = !st.usarBenef; render1(); document.getElementById("sw").focus();});
+
+  // Formas de pagamento; o Pay inativo não aparece como forma
+  document.getElementById("metodos").innerHTML = metodos.filter(x => x.id !== "pay" || st.payAtivo).map(x => `
+    <div class="op">
+      <label class="opcao">
+        <span class="ic" aria-hidden="true">${svg(I[x.id])}</span>
+        <span class="txt"><b>${x.nome}</b><span class="sub num">${x.sub}</span></span>
+        <input type="radio" name="metodo" value="${x.id}" ${st.metodo === x.id ? "checked" : ""} aria-label="${x.nome}">
+      </label>
+      ${x.rende ? `<div class="op-faixa"><span class="selo selo--linha num">${svg(I.presente,16)} Ganhe ${brl(b)} de bônus com o Pay</span></div>` : ""}
+    </div>`).join("");
+  document.querySelectorAll('input[name="metodo"]').forEach(r => r.addEventListener("change", e => {st.metodo = e.target.value; render1();}));
+
+  // Pay inativo: banner separado, fora da lista
+  document.getElementById("promo-pay").innerHTML = st.payAtivo ? "" : `
+    <div class="banner num"><span class="bolinha">${svg(I.presente,18)}</span><span class="t">Ative o iGreen Pay e ganhe <b>${brl(b)}</b> nesta fatura</span><button type="button" class="acao" data-ativar>Ativar grátis</button></div>`;
+  const at = document.querySelector("[data-ativar]"); if (at) at.addEventListener("click", () => {st.payAtivo = true; marcar("[data-pay]","pay","sim"); render1();});
+
+  document.getElementById("footer-bonus").innerHTML = (m && m.rende) ? `<span class="selo num">${svg(I.presente,15)} + ${brl(b)} de bônus até ${CAI_ATE}</span>` : "";
+  const cta = document.getElementById("cta");
+  cta.disabled = !m; cta.textContent = m ? `Pagar com ${m.curto} • ${brl(v)}` : "Escolha como pagar";
+}
+document.querySelectorAll("[data-pay]").forEach(b => b.addEventListener("click", () => {
+  st.payAtivo = b.dataset.pay === "sim"; if (!st.payAtivo && st.metodo === "pay") st.metodo = "pix"; marcar("[data-pay]","pay",b.dataset.pay); render1();
+}));
+document.getElementById("cta").addEventListener("click", e => {
+  const btn = e.currentTarget, m = metodos.find(x => x.id === st.metodo), v = restante();
+  btn.disabled = true; btn.innerHTML = '<span class="spin" aria-hidden="true"></span> Pagando…';
+  setTimeout(() => {
+    st.pago = {metodo:m, valor:v, benef: st.usarBenef ? BENEF : 0, bonus: m.rende ? bonus(v) : 0};
+    st.recibo = "energia"; marcar("[data-recibo]","recibo","energia"); render2();
+    btn.disabled = false; btn.textContent = "Pago ✓";
+    const p2 = document.getElementById("phone2");
+    p2.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"center"});
+    p2.classList.remove("pulse"); void p2.offsetWidth; p2.classList.add("pulse");
+  }, 1100);
+});
+
+/* Folhas de baixo */
+let voltarFoco = null;
+function abrirFolha(id){ const w = document.getElementById(id); voltarFoco = document.activeElement; w.hidden = false; w.querySelector(".sheet [data-fechar]").focus(); }
+function fecharFolha(w){ w.hidden = true; if (voltarFoco && document.contains(voltarFoco)) voltarFoco.focus(); }
+document.querySelectorAll("[data-detalhes]").forEach(b => b.addEventListener("click", () => abrirFolha("sheet1")));
+document.querySelectorAll(".sheet-wrap").forEach(w => {
+  w.addEventListener("click", e => { if (e.target.closest("[data-fechar]")) fecharFolha(w); });
+  w.addEventListener("keydown", e => { if (e.key === "Escape") fecharFolha(w); });
+});
+function folha3(titulo, corpo){ document.getElementById("sh3-t").textContent = titulo; document.getElementById("sh3-corpo").innerHTML = corpo; abrirFolha("sheet3"); }
+
+/* ---------- Tela 2 ---------- */
+const L = (a, b, cls = "") => `<div class="l ${cls}"><span>${a}</span><b class="num">${b}</b></div>`;
+const bar2 = sub => `<div class="bar"><button class="icon-btn" type="button" aria-label="Voltar">${svg('<path d="m15 18-6-6 6-6"/>',24,2.2)}</button><h3>Comprovante<small>${sub}</small></h3></div>`;
+const acoes2 = `<div class="acoes"><button class="btn btn--pri" type="button">${svg(I.share,18)} Compartilhar comprovante</button><button class="btn--txt" type="button">Baixar em PDF</button></div>`;
+function render2(){
+  const el = document.getElementById("recibo");
+  if (st.recibo === "seguro"){
+    el.innerHTML = `${bar2("Mensalidade de outubro · Seguro Auto")}
+      <div class="recibo">
+        <section>
+          <div class="recibo-cab"><div><div class="eyebrow">COMPROVANTE</div><h4>iGreen Seguros</h4></div><span class="status-pill">${svg(I.check,14,3)} Pago</span></div>
+          <div style="margin-top:10px">
+            ${L("Mensalidade","Outubro · Seguro Auto")}
+            ${L("Valor pago","R$ 89,90","tot")}
+            ${L("Apólice",'<span class="status-pill ativando"><span class="ponto"></span> Em ativação · até 30 min</span>')}
+          </div>
+          <div class="ganho ganho--nao"><span class="bolinha">${svg(I.presente,16)}</span><span class="t"><b>Sem bônus neste pagamento</b><span>Seguro não rende bônus</span></span><span class="v num">R$ 0,00</span></div>
+        </section>
+        <div class="corte" aria-hidden="true"></div>
+        <section>
+          ${L("Forma","Cartão Visa •••• 4821")}
+          ${L("Data e hora","16/10/2026 · 14:32")}
+          ${L("ID da transação",'<span class="codigo">IG2026101614320CRT4</span>')}
+          <div class="barcode" aria-hidden="true"></div>
+        </section>
+      </div>${acoes2}`;
+    return;
+  }
+  const p = st.pago || {metodo:metodos[0], valor:120.00, benef:9.20, bonus:bonus(120.00)};
+  el.innerHTML = `${bar2("Fatura de outubro · Energia")}
+    <div class="recibo">
+      <section>
+        <div class="recibo-cab"><div><div class="eyebrow">COMPROVANTE</div><h4>iGreen Energia</h4></div><span class="status-pill">${svg(I.check,14,3)} Pago</span></div>
+        <div style="margin-top:10px">
+          ${L("Fatura","Outubro · Energia")}
+          ${L("Valor da fatura","R$ 129,20")}
+          ${p.benef ? L("Benefícios usados", "− " + brl(p.benef), "menos") : ""}
+          ${L("Valor pago", brl(p.valor), "tot")}
+        </div>
+        <div class="ganho"><span class="bolinha">${svg(I.benef,16)}</span><span class="t"><b>Desconto iGreen</b><span>15% nesta fatura</span></span><span class="v num">R$ 22,80</span></div>
+        ${p.bonus
+          ? `<div class="ganho"><span class="bolinha">${svg(I.presente,16)}</span><span class="t"><b>Bônus ganho</b><span>1% do valor pago · cai até ${CAI_ATE}</span></span><span class="v num">+ ${brl(p.bonus)}</span></div>`
+          : `<div class="ganho ganho--nao"><span class="bolinha">${svg(I.presente,16)}</span><span class="t"><b>Sem bônus</b><span>Só o saldo Pay rende bônus</span></span><span class="v num">R$ 0,00</span></div>`}
+      </section>
+      <div class="corte" aria-hidden="true"></div>
+      <section>
+        ${L("Forma", p.metodo.nome)}
+        ${L("Data e hora","16/10/2026 · 14:35")}
+        ${L("ID da transação",'<span class="codigo">IG2026101614350PAY7</span>')}
+        <div class="barcode" aria-hidden="true"></div>
+      </section>
+    </div>${acoes2}`;
+}
+
+/* ---------- Tela 3 ---------- */
+const MESES = [["Mai",31.40],["Jun",35.10],["Jul",38.90],["Ago",36.20],["Set",39.50],["Out",40.80]];
+const HIST = [
+  {p:"energia",   t:"Desconto na fatura",            d:"16/10",      v:22.80},
+  {p:"energia",   t:"Bônus Pay · a caminho",         d:"até 20/10",  v:1.20,  caminho:true, benef:true},
+  {p:"energia",   t:"Benefícios usados na fatura",   d:"16/10",      v:-9.20, benef:true, uso:true},
+  {p:"indicacao", t:"Amigo indicado pagou a fatura", d:"08/10",      v:8.00,  benef:true},
+  {p:"telecom",   t:"Desconto no plano",             d:"05/10",      v:10.00},
+  {p:"energia",   t:"Bônus Pay · fatura de setembro",d:"18/09",      v:1.20,  benef:true, antigo:true},
+];
+const ICP = {energia:I.energia, telecom:I.telecom, seguros:I.seguro, indicacao:I.amigo};
+const itemH = h => `<li><span class="ic" aria-hidden="true">${svg(h.caminho ? I.relogio : ICP[h.p], 18)}</span><span class="txt"><b>${h.t}</b><span>${h.d}</span></span><span class="v num ${h.v > 0 ? "mais" : ""}">${h.v > 0 ? "+ " : "− "}${brl(Math.abs(h.v))}</span></li>`;
+const chips = (grupo, opcoes, atual) => `<div class="chips" role="group" aria-label="Filtrar">${opcoes.map(([k, t]) => `<button type="button" data-${grupo}="${k}" aria-pressed="${atual === k}">${t}</button>`).join("")}</div>`;
+const bar3 = (t, voltar) => `<div class="bar">${voltar ? `<button class="icon-btn" type="button" aria-label="Voltar para Ganhos" data-ir="ganhos">${svg('<path d="m15 18-6-6 6-6"/>',24,2.2)}</button>` : ""}<h3 style="${voltar ? "" : "padding-left:8px"}">${t}</h3><button type="button" class="icon-btn" aria-label="Como calculamos" data-como>${svg('<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01"/>',22)}</button></div>`;
+
+function render3(){
+  const el = document.getElementById("painel");
+  if (st.painel === "vazio"){
+    el.innerHTML = `${bar3("Ganhos")}
+      <div class="card vazio">
+        <span class="selo num" style="font-size:1.3rem;padding:6px 16px">R$ 0,00</span>
+        <h4>Seus ganhos aparecem aqui</h4>
+        <p class="muted">A 1ª fatura chega de 60 a 180 dias após a assinatura.</p>
+        <button class="btn btn--pri" type="button" id="avisar" style="margin-top:6px">Avisar quando chegar</button>
+      </div>
+      <div class="prazo" style="margin:10px 0 0">${svg('<circle cx="12" cy="12" r="9"/><path d="M12 8v5m0 3h.01"/>',18)} A iGreen não manda boleto por e-mail</div>
+      <div class="label">Enquanto isso</div>
+      <div class="card pad indique"><span class="ic" aria-hidden="true">${svg(I.amigo)}</span><span class="txt"><b>Indique e ganhe</b><span class="muted">A cada fatura paga por quem você indicar</span></span><button class="btn btn--pri" type="button" data-indicar>Indicar</button></div>`;
+    document.getElementById("avisar").addEventListener("click", e => {e.currentTarget.textContent = "Aviso ativado ✓"; e.currentTarget.className = "btn btn--sec";});
+  }
+  else if (st.painel === "beneficios"){
+    const lista = HIST.filter(h => h.benef).filter(h => st.filtroB === "todos" || (st.filtroB === "indicacao" && h.p === "indicacao") || (st.filtroB === "bonus" && h.t.startsWith("Bônus")) || (st.filtroB === "usados" && h.uso));
+    el.innerHTML = `${bar3("Benefícios", true)}
+      <div class="card pad saldo-card">
+        <div class="muted">Disponível para usar ou resgatar</div>
+        <div class="linha"><span class="v num">R$ 0,00</span><span class="selo num">${svg(I.relogio,15)} + R$ 1,20 até 20/10</span></div>
+        <div class="origens num"><span class="selo selo--nao">Total acumulado R$ 46,50</span></div>
+        <div class="origens num"><span class="selo selo--nao">${svg(I.amigo,15)} Indicação R$ 38,00</span><span class="selo selo--nao">${svg(I.presente,15)} Bônus Pay R$ 8,50</span></div>
+        <div class="acoes2"><button class="btn btn--sec" type="button" disabled>Resgatar</button><button class="btn btn--pri" type="button">Usar numa fatura</button></div>
+      </div>
+      <div class="card pad auto" style="margin-top:10px">
+        <span class="ic" aria-hidden="true">${svg(I.benef)}</span>
+        <span class="txt"><b id="lbl-auto">Abater automático</b><span class="muted">${st.auto ? "Seus benefícios abatem a próxima fatura sozinhos" : "Usa o saldo assim que a fatura chega"}</span></span>
+        <button type="button" class="switch" role="switch" aria-checked="${st.auto}" aria-labelledby="lbl-auto" id="sw-auto"></button>
+      </div>
+      <div class="card pad indique" style="margin-top:10px"><span class="ic" aria-hidden="true">${svg(I.amigo)}</span><span class="txt"><b>Indique e ganhe</b><span class="muted">A cada fatura paga por quem você indicar</span></span><button class="btn btn--pri" type="button" data-indicar>Indicar</button></div>
+      <div class="label">Histórico de benefícios</div>
+      ${chips("fb", [["todos","Todos"],["indicacao","Indicação"],["bonus","Bônus Pay"],["usados","Usados"]], st.filtroB)}
+      <div class="card"><ul class="hist">${lista.map(itemH).join("") || `<li class="hist-vazio muted">Nada neste filtro</li>`}</ul></div>`;
+    document.getElementById("sw-auto").addEventListener("click", () => {st.auto = !st.auto; render3(); document.getElementById("sw-auto").focus();});
+    el.querySelectorAll("[data-fb]").forEach(b => b.addEventListener("click", () => {st.filtroB = b.dataset.fb; render3();}));
+  }
+  else {
+    const max = Math.max(...MESES.map(x => x[1]));
+    const lista = HIST.filter(h => !h.antigo && !h.uso).filter(h => st.filtroG === "todos" || h.p === st.filtroG);
+    el.innerHTML = `${bar3("Ganhos")}
+      <div class="heroi">
+        <button type="button" class="mes-btn">Outubro 2026 ${svg('<path d="m6 9 6 6 6-6"/>',16)}</button>
+        <div class="valor num">R$ 40,80</div>
+        <div class="muted">ganhos em outubro</div>
+      </div>
+      <div class="tiles num">
+        <button type="button" class="tile" data-ver="economia"><span class="k">Economia ${svg(I.seta,16)}</span><span class="v">R$ 32,80</span><span class="s">desconto nas contas</span></button>
+        <button type="button" class="tile" data-ir="beneficios"><span class="k">Benefícios ${svg(I.seta,16)}</span><span class="v">R$ 8,00</span><span class="s">recebidos no mês</span></button>
+      </div>
+      <div class="barras" role="img" aria-label="Ganhos por mês: ${MESES.map(x => x[0] + " " + brl(x[1])).join(", ")}">
+        ${MESES.map((x, i) => `<div class="${i === MESES.length - 1 ? "atual" : ""}"><span style="height:${Math.round(x[1] / max * 62)}px"></span><small>${x[0]}</small></div>`).join("")}
+      </div>
+
+      <div class="label">Saldo de benefícios <button type="button" class="link" data-ir="beneficios">Gerenciar ›</button></div>
+      <div class="card pad saldo-card">
+        <div class="linha"><span class="v num">R$ 0,00</span><span class="selo num">${svg(I.relogio,15)} + R$ 1,20 até 20/10</span></div>
+        <div class="muted" style="margin-top:4px">Você usou R$ 9,20 na energia em 16/10</div>
+      </div>
+
+      <div class="card pad indique" style="margin-top:10px"><span class="ic" aria-hidden="true">${svg(I.amigo)}</span><span class="txt"><b>Indique e ganhe</b><span class="muted">A cada fatura paga por quem você indicar</span></span><button class="btn btn--pri" type="button" data-indicar>Indicar</button></div>
+
+      <div class="label">Histórico <button type="button" class="link">Ver completo ›</button></div>
+      ${chips("fg", [["todos","Todos"],["energia","Energia"],["telecom","Telecom"],["seguros","Seguros"],["indicacao","Indicação"]], st.filtroG)}
+      <div class="card"><ul class="hist">${lista.map(itemH).join("") || `<li class="hist-vazio muted">Nada de seguros em outubro</li>`}</ul></div>
+
+      <div class="label">Próxima conta</div>
+      <div class="card pad pend">
+        <div class="pend-top"><b>Telecom · vence 25/10</b><b class="num">R$ 59,90</b></div>
+        <div class="pend-baixo"><span class="selo num">${svg(I.presente,15)} + R$ 0,59 com o Pay</span><button class="btn btn--pri" type="button">Pagar</button></div>
+      </div>`;
+    el.querySelectorAll("[data-fg]").forEach(b => b.addEventListener("click", () => {st.filtroG = b.dataset.fg; render3();}));
+    el.querySelector('[data-ver="economia"]').addEventListener("click", () => folha3("Economia em outubro", `
+      <dl class="contas num" style="margin:8px 0 14px">
+        <div class="menos"><dt>Energia · desconto de 15%</dt><dd>R$ 22,80</dd></div>
+        <div class="menos"><dt>Telecom · desconto no plano</dt><dd>R$ 10,00</dd></div>
+        <div><dt>Seguro</dt><dd>R$ 0,00</dd></div>
+        <div><dt>Club · incluso</dt><dd>R$ 0,00</dd></div>
+        <div class="tot"><dt>Total</dt><dd>R$ 32,80</dd></div>
+      </dl>
+      <p class="muted" style="margin-bottom:14px">Fora da soma: +5 GB no plano Telecom.</p>
+      <button type="button" class="btn btn--pri" data-fechar>Entendi</button>`));
+  }
+  el.querySelectorAll("[data-ir]").forEach(b => b.addEventListener("click", () => irPara(b.dataset.ir)));
+  el.querySelectorAll("[data-indicar]").forEach(b => b.addEventListener("click", indicar));
+  el.querySelector("[data-como]").addEventListener("click", () => folha3("Como calculamos", `
+    <p class="muted" style="margin:6px 0 10px">Economia é o desconto nas contas já pagas. Benefícios é o dinheiro que caiu no seu saldo: indicação e bônus Pay.</p>
+    <p class="muted" style="margin-bottom:14px">Benefício usado para pagar não conta de novo. O que está a caminho entra quando cair.</p>
+    <button type="button" class="btn btn--pri" data-fechar>Entendi</button>`));
+}
+function irPara(v){ st.painel = v; marcar("[data-painel]","painel",v); render3(); document.getElementById("painel").scrollTop = 0; }
+function indicar(){
+  folha3("Indique e ganhe", `
+    <p class="muted" style="margin:4px 0 8px">Você ganha a cada fatura paga por quem indicar.</p>
+    ${[["energia","Energia"],["telecom","Telecom"],["seguros","Seguros"]].map(([k, t]) => `
+      <div class="link-row"><span class="ic" aria-hidden="true">${svg(ICP[k])}</span><span class="txt"><b>${t}</b><span class="muted">Seu link de indicação</span></span><button type="button" class="copiar" data-copiar>Copiar link</button></div>`).join("")}
+    <button type="button" class="btn btn--pri" data-fechar style="margin-top:12px">Fechar</button>`);
+  document.querySelectorAll("#sheet3 [data-copiar]").forEach(b => b.addEventListener("click", () => {b.textContent = "Copiado ✓"; b.classList.add("ok");}));
+}
+
+/* ---------- Estados ---------- */
+function marcar(sel, chave, val){ document.querySelectorAll(sel).forEach(b => b.setAttribute("aria-pressed", b.dataset[chave] === val)); }
+document.querySelectorAll("[data-recibo]").forEach(b => b.addEventListener("click", () => {st.recibo = b.dataset.recibo; marcar("[data-recibo]","recibo",st.recibo); render2();}));
+document.querySelectorAll("[data-painel]").forEach(b => b.addEventListener("click", () => irPara(b.dataset.painel)));
+
+render1(); render2(); render3();
+</script>
+</body>
+</html>

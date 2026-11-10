@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Header do hub · propostas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Tokens do protótipo v1, mais dois só desta proposta (--broto e --ouro) */
+:root{
+  --paper:#F4F2EB; --surface:#FFFFFF; --ink:#1A1D1A; --ink-2:#4F574F; --line:#E0DCD1;
+  --gain:#1C7443; --gain-bg:#E2F2E7; --warn:#7A4E00; --warn-bg:#FCEFD3; --focus:#1F5BD6;
+  --broto:#6BBF59; --broto-bg:#EEF7EA; --ouro:#E6C14F; --escuro:#1A1D1A; --vazio:#F1EFE9;
+  --font:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;text-align:inherit}
+button:disabled{cursor:not-allowed;opacity:.45}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:10px}
+.num{font-variant-numeric:tabular-nums lining-nums}
+
+/* Página */
+.page{max-width:1000px;margin:0 auto;padding:32px 16px 64px}
+.page-head{display:grid;gap:12px;margin-bottom:24px}
+.page-head h1{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.page-head p{color:var(--ink-2);max-width:70ch}
+.ficticio{display:flex;gap:10px;align-items:flex-start;background:var(--warn-bg);color:#5C3A00;border:1px solid #EBD39C;border-radius:16px;padding:10px 14px;max-width:760px;font-size:.92rem}
+.estado{display:flex;gap:8px;flex-wrap:wrap}
+.estado button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:0 16px;min-height:44px;font-size:.9rem;font-weight:600;color:var(--ink-2)}
+.estado button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,370px),1fr));gap:32px;align-items:start;margin-top:20px}
+.col{display:grid;gap:12px;justify-items:center}
+.col-head{width:100%;max-width:390px}
+.col-head h2{font-size:1.05rem;font-weight:700}
+.col-head p{font-size:.9rem;color:var(--ink-2)}
+
+/* Aparelho */
+.phone{width:100%;max-width:390px;height:812px;background:var(--paper);border:10px solid #121412;border-radius:46px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 30px 60px -30px rgba(26,29,26,.35)}
+.status{height:40px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font-size:.8rem;font-weight:700}
+.tag{position:absolute;top:9px;left:50%;transform:translateX(-50%);z-index:3;font-size:.7rem;font-weight:700;background:var(--warn-bg);color:var(--warn);border:1px solid #EBD39C;border-radius:999px;padding:2px 8px}
+.screen{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 12px 16px}
+.screen::-webkit-scrollbar{width:0}
+.bar{display:flex;align-items:center;min-height:52px;margin:0 -4px 4px}
+.icon-btn{width:48px;height:48px;border-radius:50%;display:grid;place-items:center}
+.tabbar{flex:none;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);background:var(--surface);padding:6px 4px 10px}
+.tabbar button{display:grid;justify-items:center;gap:2px;font-size:.72rem;font-weight:600;color:var(--ink-2);min-height:48px;padding-top:4px}
+.tabbar button[aria-current="page"]{color:var(--gain)}
+.depois{margin-top:22px;opacity:.55}
+.depois h4{font-size:1.05rem;font-weight:800;margin:0 4px 10px}
+.fantasma{height:86px;border-radius:16px;background:var(--surface);border:1px dashed var(--line);display:grid;place-items:center;font-size:.82rem;color:var(--ink-2)}
+
+/* Comum */
+.chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 10px;font-size:.78rem;font-weight:700;white-space:nowrap}
+.chip.ok{background:var(--broto);color:#fff}
+.chip.bateu{background:var(--ouro);color:#3D2A00}
+.meta-ex{font-weight:600;color:var(--ink-2)}
+.switch{width:52px;height:32px;border-radius:999px;background:#D9D5CA;position:relative;flex:none;transition:background .2s}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
+.switch[aria-checked="true"]{background:var(--broto)}
+.switch[aria-checked="true"]::after{transform:translateX(20px)}
+.alvo{min-width:44px;min-height:44px}
+
+/* ===== Proposta A: cartão de retorno ===== */
+.ha{position:relative;background:var(--surface);border-radius:30px;padding:22px 20px 8px;overflow:hidden;box-shadow:0 1px 0 var(--line),0 12px 28px -18px rgba(26,29,26,.25)}
+.ha-ilus{position:absolute;top:-30px;right:-46px;width:166px;height:166px;pointer-events:none;-webkit-mask-image:linear-gradient(to left,#000 55%,transparent 98%);mask-image:linear-gradient(to left,#000 55%,transparent 98%)}
+.ha-tit{font-size:1.7rem;font-weight:700;letter-spacing:-.02em;line-height:1.1;position:relative}
+.ha-sub{font-size:.9rem;color:var(--ink-2);margin-top:2px;position:relative}
+.ha-linha{display:flex;align-items:center;gap:8px;margin-top:18px;position:relative;font-size:.95rem;color:var(--ink-2)}
+.ha-num{display:flex;align-items:flex-start;gap:4px;margin-top:4px;position:relative;line-height:1}
+.ha-num .moeda{font-size:1.25rem;font-weight:700;margin-top:10px}
+.ha-num .int{font-size:4.1rem;font-weight:600;letter-spacing:-.04em}
+.ha-num .dec{font-size:1.6rem;font-weight:600;align-self:flex-end;margin-bottom:6px}
+.ha-nota{font-size:.82rem;color:var(--ink-2);margin-top:6px;position:relative}
+.ha-nota b{color:var(--ink)}
+.ha-seg{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:16px;height:50px}
+.ha-seg span{border-radius:12px;background:var(--vazio);position:relative;overflow:hidden}
+.ha-seg span::after{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--fill,0%);background:var(--broto);transition:height .4s ease}
+.ha-meta{font-size:.84rem;margin-top:8px}
+.ha-hr{border:0;border-top:1px solid var(--line);margin:16px 0 14px}
+.ha-pares{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ha-pares dt{font-size:.82rem;color:var(--ink-2)}
+.ha-pares dd{font-size:1.15rem;font-weight:600;margin-top:2px}
+.ha-auto{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
+.ha-auto .t span{display:block;font-size:.82rem;color:var(--ink-2)}
+.ha-auto .t b{font-size:1.05rem;font-weight:600}
+.ha-auto label{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--ink-2)}
+.ha-meses{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:16px;text-align:center}
+.ha-meses button{display:grid;justify-items:center;gap:6px;padding:2px 0}
+.ha-meses .m{font-size:.78rem;color:var(--ink-2);font-weight:600}
+.ha-meses .c{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:.95rem;font-weight:700;background:var(--broto);color:#fff;transition:box-shadow .15s}
+.ha-meses .c.agora{background:var(--vazio);color:var(--ink-2);border:2px dashed #C9C4B6}
+.ha-meses button[aria-pressed="true"] .c{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--ink)}
+.ha-meses button[aria-pressed="true"] .m{color:var(--ink)}
+.ha-dica{font-size:.78rem;color:var(--ink-2);text-align:center;margin-top:6px}
+.ha-dark{background:var(--escuro);color:#fff;border-radius:24px;margin:18px -12px 0;padding:16px 16px 16px;position:relative}
+.ha-dark .lbl{display:flex;align-items:center;gap:6px;font-size:.82rem;color:rgba(255,255,255,.7)}
+.ha-dark .lbl i{width:8px;height:8px;border-radius:50%;background:var(--broto)}
+.ha-dark .val{display:flex;align-items:baseline;gap:8px;margin-top:4px;flex-wrap:wrap}
+.ha-dark .val b{font-size:1.6rem;font-weight:700;letter-spacing:-.01em}
+.ha-dark .val span{font-size:.86rem;color:rgba(255,255,255,.75)}
+.ha-dark .acoes{display:flex;gap:8px;margin-top:14px;padding-right:64px}
+.ha-dark .acoes button{min-height:44px;border-radius:999px;padding:0 16px;font-size:.88rem;font-weight:700}
+.ha-dark .acoes .pri{background:#fff;color:var(--ink)}
+.ha-dark .acoes .sec{border:1px solid rgba(255,255,255,.35);color:#fff}
+.ha-dark .ir{position:absolute;right:16px;top:16px;width:52px;height:52px;border-radius:50%;background:var(--ouro);color:#3D2A00;display:grid;place-items:center;box-shadow:0 6px 18px -4px rgba(230,193,79,.7)}
+.ha-dark .aviso{font-size:.8rem;color:rgba(255,255,255,.7);margin-top:10px}
+
+/* ===== Proposta B: meta em destaque ===== */
+.hb{background:var(--gain);color:#fff;border-radius:30px;padding:20px 18px 18px;position:relative;overflow:hidden}
+.hb::before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(230,193,79,.35),transparent 65%);top:-120px;right:-90px;pointer-events:none}
+.hb-top{display:flex;justify-content:space-between;align-items:center;gap:8px;position:relative}
+.hb-top h3{font-size:1.15rem;font-weight:700}
+.hb .chip.ok{background:rgba(255,255,255,.18);color:#fff}
+.hb-seg{display:grid;grid-template-columns:repeat(3,1fr);background:rgba(255,255,255,.12);border-radius:999px;padding:4px;margin-top:14px;position:relative}
+.hb-seg button{min-height:40px;border-radius:999px;font-size:.86rem;font-weight:700;color:rgba(255,255,255,.85)}
+.hb-seg button[aria-pressed="true"]{background:#fff;color:var(--gain)}
+.hb-num{display:flex;align-items:flex-start;gap:4px;margin-top:14px;line-height:1;position:relative}
+.hb-num .moeda{font-size:1.15rem;font-weight:700;margin-top:8px;opacity:.85}
+.hb-num .int{font-size:3.6rem;font-weight:600;letter-spacing:-.04em}
+.hb-num .dec{font-size:1.4rem;font-weight:600;align-self:flex-end;margin-bottom:5px}
+.hb-cap{font-size:.84rem;color:rgba(255,255,255,.78);margin-top:6px;min-height:1.2em;position:relative}
+.hb-barras{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:end;height:96px;margin-top:14px;position:relative}
+.hb-barras button{display:grid;justify-items:center;align-content:end;gap:6px;height:100%}
+.hb-barras .b{width:100%;max-width:34px;border-radius:10px 10px 6px 6px;background:rgba(255,255,255,.32);transition:height .35s ease,background .2s}
+.hb-barras .b.agora{background:transparent;border:2px dashed rgba(255,255,255,.6)}
+.hb-barras button[aria-pressed="true"] .b{background:var(--ouro)}
+.hb-barras .m{font-size:.74rem;font-weight:600;color:rgba(255,255,255,.8)}
+.hb-meta{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.12);border-radius:20px;padding:12px;margin-top:16px;position:relative}
+.hb-meta svg{flex:none}
+.hb-meta .t b{display:block;font-size:.98rem}
+.hb-meta .t span{display:block;font-size:.8rem;color:rgba(255,255,255,.78)}
+.hb-meta .bolas{display:flex;gap:4px;margin-top:6px}
+.hb-meta .bolas i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.3)}
+.hb-meta .bolas i.ok{background:var(--ouro)}
+.hb-meta .bolas i.agora{background:transparent;border:1.5px dashed rgba(255,255,255,.7)}
+.hb-saldo{background:var(--surface);border-radius:22px;margin-top:10px;box-shadow:0 1px 0 var(--line)}
+.hb-saldo .l1{display:flex;align-items:center;gap:12px;padding:14px}
+.hb-saldo .ic{width:40px;height:40px;border-radius:12px;background:var(--gain-bg);color:var(--gain);display:grid;place-items:center;flex:none}
+.hb-saldo .t{flex:1;min-width:0}
+.hb-saldo .t span{display:block;font-size:.8rem;color:var(--ink-2);font-weight:600}
+.hb-saldo .t b{font-size:1.35rem;font-weight:800}
+.hb-saldo .ver{min-height:44px;border-radius:999px;padding:0 14px;background:var(--gain);color:#fff;font-size:.86rem;font-weight:700;white-space:nowrap}
+.hb-saldo .l2{display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);padding:10px 14px;font-size:.82rem;font-weight:700;color:var(--gain)}
+
+.pulsa{animation:pulsa .7s ease}
+@keyframes pulsa{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
+@media (max-width:480px){
+  .page{padding:24px 16px 48px}
+  .phone{border-radius:24px;height:780px;box-shadow:none;border:1px solid var(--line)}
+  .status{display:none}
+  .tag{position:static;transform:none;align-self:flex-end;margin:10px 12px 0}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="page-head">
+    <h1>Header do hub · duas propostas</h1>
+    <p>As duas juntam num bloco só o que hoje está em três: o topo com o total, o cartão do saldo e o mosaico "Seus ganhos". A proposta A segue o print de referência. A proposta B dá mais peso à meta e ao mês a mês. Toque nos meses e nas abas: os números mudam.</p>
+    <div class="ficticio" role="note">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+      <div><strong>Regras, valores e meta fictícios.</strong> A meta "6 faturas em dia" é só uma simulação para discutir o visual: não existe regra nem prêmio por ela. Os números são os mesmos da v1.</div>
+    </div>
+    <div class="estado" role="group" aria-label="Momento da simulação">
+      <button type="button" data-estado="antes" aria-pressed="true">Antes de pagar outubro</button>
+      <button type="button" data-estado="depois" aria-pressed="false">Depois de pagar (Pay e cashback)</button>
+    </div>
+  </header>
+
+  <div class="board">
+    <section class="col" aria-labelledby="ta">
+      <div class="col-head"><h2 id="ta">A · Cartão de retorno</h2><p>Segue o print: número grande com selo, barra da meta, pares de informação, meses em círculos e o painel escuro com o que dá para usar hoje.</p></div>
+      <div class="phone">
+        <div class="status" aria-hidden="true"><span>9:41</span><span>▮▮▮ ◔</span></div>
+        <span class="tag">Regras fictícias</span>
+        <div class="screen">
+          <div class="bar"><button class="icon-btn" type="button" aria-label="Voltar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button></div>
+          <div id="propA"></div>
+          <div class="depois" aria-hidden="true"><h4>Dá pra ganhar mais</h4><div class="fantasma">o resto do hub continua como na v1</div></div>
+        </div>
+        <nav class="tabbar" aria-label="Navegação principal" id="tabA"></nav>
+      </div>
+    </section>
+
+    <section class="col" aria-labelledby="tb">
+      <div class="col-head"><h2 id="tb">B · Meta em destaque</h2><p>Cartão verde com abas Total, Economia e Cashback, barras mês a mês e a meta num anel. O que dá para usar hoje fica num cartão branco logo abaixo.</p></div>
+      <div class="phone">
+        <div class="status" aria-hidden="true"><span>9:41</span><span>▮▮▮ ◔</span></div>
+        <span class="tag">Regras fictícias</span>
+        <div class="screen">
+          <div class="bar"><button class="icon-btn" type="button" aria-label="Voltar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button></div>
+          <div id="propB"></div>
+          <div class="depois" aria-hidden="true"><h4>Dá pra ganhar mais</h4><div class="fantasma">o resto do hub continua como na v1</div></div>
+        </div>
+        <nav class="tabbar" aria-label="Navegação principal" id="tabB"></nav>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+/* Dados da v1 (fictícios). Economia por mês de maio a outubro; outubro só ganha os R$ 22,80 da energia depois de pago. */
+const MESES = ["Mai","Jun","Jul","Ago","Set","Out"];
+const NOMES = ["maio","junho","julho","agosto","setembro","outubro"];
+const CB = [7.30, 7.70, 8.70, 7.30, 8.00, 8.00];
+const st = {pago:false, mesA:null, metrica:"total", mesB:null, auto:false};
+const brl = n => n.toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+const partes = n => { const [i, d] = n.toFixed(2).split("."); return {i: Number(i).toLocaleString("pt-BR"), d}; };
+const eco = () => [24.10, 27.40, 30.20, 28.90, 31.50, st.pago ? 32.80 : 10.00];
+const D = () => ({
+  eco: st.pago ? 174.90 : 152.10, cb: 46.50, total: st.pago ? 221.40 : 198.60,
+  usar: st.pago ? 0 : 9.20, receber: st.pago ? 1.20 : 0, emDia: st.pago ? 6 : 5
+});
+const svg = (d, w = 20, sw = 2) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" aria-hidden="true">${d}</svg>`;
+const I = {
+  check:'<path d="m5 12 5 5 9-10"/>', seta:'<path d="M5 12h14M13 6l6 6-6 6"/>', relogio:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  cb:'<path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>', raio:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  casa:'<path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>', cartao:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/>',
+  alta:'<path d="M4 17l5-5 4 4 7-8"/><path d="M15 8h5v5"/>', perfil:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>'
+};
+const ILUS = `<svg class="ha-ilus" viewBox="0 0 200 200" aria-hidden="true">
+  <circle cx="118" cy="86" r="74" fill="#EEF7EA"/>
+  <g stroke="#F2D06B" stroke-width="5" stroke-linecap="round"><path d="M150 12v12M150 72v12M114 48h12M174 48h12M125 23l8 8M167 65l8 8M175 23l-8 8M133 65l-8 8"/></g>
+  <circle cx="150" cy="48" r="20" fill="#F2D06B"/>
+  <g transform="translate(70 92) skewX(-14)"><rect width="100" height="58" rx="7" fill="#1C7443"/><g stroke="#E2F2E7" stroke-opacity=".45" stroke-width="2"><path d="M33 0v58M66 0v58M0 19h100M0 39h100"/></g></g>
+  <rect x="108" y="150" width="8" height="30" rx="2" fill="#9AA79C"/>
+  <ellipse cx="176" cy="166" rx="18" ry="6.5" fill="#B8912A"/><ellipse cx="176" cy="160" rx="18" ry="6.5" fill="#E6C14F"/><ellipse cx="176" cy="154" rx="18" ry="6.5" fill="#B8912A"/><ellipse cx="176" cy="148" rx="18" ry="6.5" fill="#E6C14F"/>
+  <path d="M58 82 38 120h16l-7 34 28-46H58z" fill="#E6C14F" stroke="#7A5A10" stroke-width="2.5" stroke-linejoin="round"/>
+</svg>`;
+const tabbar = () => [["Início",I.casa],["Pagar",I.cartao],["Retorno",I.alta],["Perfil",I.perfil]]
+  .map(([t, ic]) => `<button type="button" ${t === "Retorno" ? 'aria-current="page"' : ""}>${svg(ic,22)}${t}</button>`).join("");
+
+/* ---------- Proposta A ---------- */
+function renderA(){
+  const d = D(), e = eco(), sel = st.mesA;
+  const val = sel === null ? d.total : +(e[sel] + CB[sel]).toFixed(2), p = partes(val);
+  const pares = sel === null
+    ? [["Você economizou", d.eco], ["Cashback recebido", d.cb]]
+    : [[`Economia em ${NOMES[sel]}`, e[sel]], [`Cashback em ${NOMES[sel]}`, CB[sel]]];
+  const bateu = d.emDia >= 6;
+  document.getElementById("propA").innerHTML = `
+    <section class="ha" aria-label="Seu retorno">
+      ${ILUS}
+      <h2 class="ha-tit">Seu retorno</h2>
+      <p class="ha-sub">Energia · Telecom · Seguros</p>
+      <div class="ha-linha"><span>${sel === null ? "Economia + cashback" : "Retorno em " + NOMES[sel]}</span><span class="chip ok">${svg(I.check,12,3.5)} Em dia</span></div>
+      <div class="ha-num num" aria-label="${brl(val)}"><span class="moeda">R$</span><span class="int">${p.i}</span><span class="dec">,${p.d}</span></div>
+      <p class="ha-nota">${sel === null ? "Desde maio de 2026 · <b>não é saldo</b>" : (sel === 5 && !st.pago ? "Outubro ainda sem a energia: entra quando pagar" : "Toque no mês de novo para ver o total")}</p>
+      <div class="ha-seg" role="img" aria-label="Meta de exemplo: ${d.emDia} de 6 faturas em dia">
+        ${Array.from({length:6}, (_, i) => `<span style="--fill:${i < d.emDia ? 100 : (i === 5 ? 35 : 0)}%"></span>`).join("")}
+      </div>
+      <p class="ha-meta">${bateu ? `<span class="chip bateu">Meta de exemplo batida</span> 6 de 6 em dia` : `<b>${d.emDia} de 6</b> faturas seguidas em dia · <span class="meta-ex">meta de exemplo</span>`}</p>
+      <hr class="ha-hr">
+      <dl class="ha-pares num">${pares.map(([a, b]) => `<div><dt>${a}</dt><dd>${brl(b)}</dd></div>`).join("")}</dl>
+      <div class="ha-auto">
+        <div class="t"><span>Cashback automático</span><b>${st.auto ? "Abate a fatura de energia" : "Desligado"}</b></div>
+        <label>Auto <button type="button" class="switch alvo" role="switch" aria-checked="${st.auto}" aria-label="Cashback automático" data-auto-a></button></label>
+      </div>
+      <div class="ha-meses" role="group" aria-label="Faturas por mês">
+        ${MESES.map((m, i) => {
+          const agora = i === 5 && !st.pago;
+          return `<button type="button" data-mes-a="${i}" aria-pressed="${sel === i}" aria-label="${NOMES[i]}: ${agora ? "vence em 23 de outubro" : "paga em dia"}">
+            <span class="m">${m}</span><span class="c ${agora ? "agora" : ""}">${agora ? "23" : svg(I.check,18,3)}</span></button>`;
+        }).join("")}
+      </div>
+      <p class="ha-dica">Toque num mês para ver o retorno dele</p>
+      <div class="ha-dark">
+        <div class="lbl"><i></i> Para usar hoje</div>
+        <div class="val num"><b>${brl(d.usar)}</b>${d.receber ? `<span>+ ${brl(d.receber)} a receber · cai até 20/10</span>` : ""}</div>
+        <div class="acoes"><button type="button" class="pri" ${d.usar ? "" : "disabled"}>Usar na fatura</button><button type="button" class="sec" ${d.usar ? "" : "disabled"}>Resgatar</button></div>
+        ${d.usar ? "" : `<p class="aviso">Resgate e uso liberam quando o cashback cair.</p>`}
+        <button type="button" class="ir" aria-label="Ver cashback">${svg(I.seta,22,2.4)}</button>
+      </div>
+    </section>`;
+  document.querySelectorAll("[data-mes-a]").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.mesA; st.mesA = st.mesA === i ? null : i; renderA();
+    document.querySelector(`[data-mes-a="${i}"]`).focus();
+  }));
+  document.querySelector("[data-auto-a]").addEventListener("click", () => { st.auto = !st.auto; renderA(); document.querySelector("[data-auto-a]").focus(); });
+}
+
+/* ---------- Proposta B ---------- */
+function anel(feito, total){
+  const r = 22, c = 2 * Math.PI * r, f = c * (feito / total);
+  return `<svg width="58" height="58" viewBox="0 0 58 58" role="img" aria-label="${feito} de ${total}">
+    <circle cx="29" cy="29" r="${r}" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="6"/>
+    <circle cx="29" cy="29" r="${r}" fill="none" stroke="#E6C14F" stroke-width="6" stroke-linecap="round" stroke-dasharray="${f} ${c}" transform="rotate(-90 29 29)"/>
+    <text x="29" y="34" text-anchor="middle" font-family="Figtree,sans-serif" font-size="15" font-weight="800" fill="#fff">${feito}/${total}</text></svg>`;
+}
+function renderB(){
+  const d = D(), e = eco(), sel = st.mesB, met = st.metrica;
+  const porMes = e.map((x, i) => met === "economia" ? x : met === "cashback" ? CB[i] : +(x + CB[i]).toFixed(2));
+  const totalMet = met === "economia" ? d.eco : met === "cashback" ? d.cb : d.total;
+  const val = sel === null ? totalMet : porMes[sel], p = partes(val), max = Math.max(...porMes);
+  const rot = {total:"Economia + cashback", economia:"Desconto nas contas pagas", cashback:"Cashback recebido"}[met];
+  const bateu = d.emDia >= 6;
+  document.getElementById("propB").innerHTML = `
+    <section class="hb" aria-label="Seu retorno">
+      <div class="hb-top"><h3>Seu retorno</h3><span class="chip ok">${svg(I.check,12,3.5)} Em dia</span></div>
+      <div class="hb-seg" role="group" aria-label="O que mostrar">
+        ${[["total","Total"],["economia","Economia"],["cashback","Cashback"]].map(([k, t]) => `<button type="button" data-met="${k}" aria-pressed="${met === k}">${t}</button>`).join("")}
+      </div>
+      <div class="hb-num num" aria-label="${brl(val)}"><span class="moeda">R$</span><span class="int">${p.i}</span><span class="dec">,${p.d}</span></div>
+      <p class="hb-cap">${sel === null ? `${rot} desde maio · não é saldo` : `${rot} em ${NOMES[sel]}${sel === 5 && !st.pago && met !== "cashback" ? " · energia entra ao pagar" : ""}`}</p>
+      <div class="hb-barras" role="group" aria-label="Mês a mês">
+        ${porMes.map((v, i) => {
+          const agora = i === 5 && !st.pago;
+          return `<button type="button" data-mes-b="${i}" aria-pressed="${sel === i}" aria-label="${NOMES[i]}: ${brl(v)}">
+            <span class="b ${agora ? "agora" : ""}" style="height:${Math.max(10, Math.round(v / max * 70))}px"></span><span class="m">${MESES[i]}</span></button>`;
+        }).join("")}
+      </div>
+      <div class="hb-meta ${bateu ? "pulsa" : ""}">
+        ${anel(d.emDia, 6)}
+        <div class="t">
+          <b>${bateu ? "Meta de exemplo batida" : `${d.emDia} faturas seguidas em dia`}</b>
+          <span>${bateu ? "6 faturas seguidas pagas em dia" : "Meta de exemplo: 6 · a de outubro vence em 23/10"}</span>
+          <div class="bolas" aria-hidden="true">${MESES.map((_, i) => `<i class="${i < d.emDia ? "ok" : (i === 5 ? "agora" : "")}"></i>`).join("")}</div>
+        </div>
+      </div>
+    </section>
+    <div class="hb-saldo">
+      <div class="l1">
+        <span class="ic">${svg(I.cb,20)}</span>
+        <span class="t"><span>Para usar hoje</span><b class="num">${brl(d.usar)}</b></span>
+        <button type="button" class="ver">Ver cashback</button>
+      </div>
+      ${d.receber ? `<div class="l2 num">${svg(I.relogio,16)}<span>${brl(d.receber)} a receber · cai até 20/10</span></div>` : ""}
+    </div>`;
+  document.querySelectorAll("[data-met]").forEach(b => b.addEventListener("click", () => {
+    st.metrica = b.dataset.met; st.mesB = null; renderB(); document.querySelector(`[data-met="${st.metrica}"]`).focus();
+  }));
+  document.querySelectorAll("[data-mes-b]").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.mesB; st.mesB = st.mesB === i ? null : i; renderB(); document.querySelector(`[data-mes-b="${i}"]`).focus();
+  }));
+}
+
+document.querySelectorAll("[data-estado]").forEach(b => b.addEventListener("click", () => {
+  st.pago = b.dataset.estado === "depois";
+  document.querySelectorAll("[data-estado]").forEach(x => x.setAttribute("aria-pressed", x === b));
+  renderA(); renderB();
+}));
+document.getElementById("tabA").innerHTML = tabbar();
+document.getElementById("tabB").innerHTML = tabbar();
+renderA(); renderB();
+</script>
+</body>
+</html>

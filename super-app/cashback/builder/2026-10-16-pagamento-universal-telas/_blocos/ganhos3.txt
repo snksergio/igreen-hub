@@ -1,0 +1,40 @@
+      <div class="label">Seus ganhos <button type="button" class="link link-ic" style="min-height:32px" data-hub-ir="economia">${svg('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',16)} Ver análise completa</button></div>
+      <div class="mosaico num">
+        <div class="m-card m-grande">
+          <span class="m-ilustra" aria-hidden="true">${svg(I.energia,26)}</span>
+          <b class="v">${brl(h.ecoTotal)}</b>
+          <span class="t">de economia nas suas contas</span>
+          <span class="s">${h.kwh.toLocaleString("pt-BR")} kWh de energia limpa na sua conta</span>
+          <button type="button" class="m-cta" data-hub-ir="economia">Ver economia ${svg(I.seta,14)}</button>
+        </div>
+        <div class="m-card">
+          <b class="v">${brl(h.cbRecebido)}</b>
+          <span class="t">de cashback em indicações e no Pay</span>
+          <button type="button" class="m-cta" data-ganhe4>Ganhe mais ${svg(I.seta,14)}</button>
+        </div>
+        <div class="m-card">
+          <b class="v neutro">5 cupons</b>
+          <span class="t">para usar no Club</span>
+          <button type="button" class="m-cta" data-club4>Ver cupons ${svg(I.seta,14)}</button>
+        </div>
+      </div>
+
+      <div class="label">Origem dos seus ganhos</div>
+      <div class="hscroll num">
+        ${[
+          [I.energia, "ENERGIA", "Conta de luz", h.ecoEnergia + 30.30, h.ecoEnergia, 30.30, `${h.kwh.toLocaleString("pt-BR")} kWh de energia limpa`],
+          [I.telecom, "TELECOM", "Plano de celular", h.ecoTelecom + 9.40, h.ecoTelecom, 9.40, "+5 GB por mês no plano"],
+          [I.seguro, "SEGUROS", "Seguro Auto", 6.80, 0, 6.80, "Mensalidade sem desconto"]
+        ].map(([ic, cat, nome, total, desc, cb, extra]) => `
+        <div class="orig3">
+          <div class="o-cab"><span class="ic" aria-hidden="true">${svg(ic,20)}</span><div><span class="eyebrow">${cat}</span><b>${nome}</b></div></div>
+          <div class="o-stats">
+            <div><span class="k">Você ganhou</span><b class="verde">${brl(total)}</b></div>
+            <div><span class="k">Dos seus ganhos</span><b>${pct(total, h.total)}%</b></div>
+          </div>
+          <div class="o-linha"><span>Desconto ${brl(desc)}</span><span>Cashback ${brl(cb)}</span></div>
+          <span class="trilho" aria-hidden="true"><i style="width:${pct(total, h.total)}%"></i></span>
+          <span class="o-extra">${extra}</span>
+        </div>`).join("")}
+      </div>
+

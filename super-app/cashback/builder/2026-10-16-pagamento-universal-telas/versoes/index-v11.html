@@ -1,0 +1,1228 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pagamento universal iGreen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* ===== Tokens: "Extrato claro" ===== */
+:root{
+  --paper:#F4F2EB; --surface:#FFFFFF; --ink:#1A1D1A; --ink-2:#4F574F; --line:#E0DCD1;
+  --gain:#1C7443; --gain-bg:#E2F2E7; --warn:#7A4E00; --warn-bg:#FCEFD3; --neutral-bg:#ECEAE3; --focus:#1F5BD6;
+  --r-card:16px; --r-pill:999px;
+  --font:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--font);line-height:1.4;-webkit-font-smoothing:antialiased}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;text-align:inherit}
+button:disabled{cursor:not-allowed}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:8px}
+.num{font-variant-numeric:tabular-nums lining-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ===== Página ===== */
+.page{max-width:1320px;margin:0 auto;padding:32px 16px 64px}
+.page-head{display:grid;gap:14px;margin-bottom:32px}
+.page-head h1{font-size:clamp(1.6rem,3vw,2.25rem);font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.page-head p{color:var(--ink-2);max-width:70ch}
+.ficticio{display:flex;gap:10px;align-items:flex-start;background:var(--warn-bg);color:#5C3A00;border:1px solid #EBD39C;border-radius:var(--r-card);padding:10px 14px;max-width:820px;font-size:.93rem}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,370px),1fr));gap:32px;align-items:start}
+.col{display:grid;gap:12px;justify-items:center}
+.col-head{width:100%;max-width:390px}
+.col-head h2{font-size:1.05rem;font-weight:700}
+.col-head p{font-size:.9rem;color:var(--ink-2)}
+.estados{display:flex;gap:8px;flex-wrap:wrap;width:100%;max-width:390px}
+.estados button{border:1px solid var(--line);background:var(--surface);border-radius:var(--r-pill);padding:0 14px;min-height:44px;font-size:.88rem;font-weight:600;color:var(--ink-2)}
+.estados button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* ===== Aparelho ===== */
+.phone{width:100%;max-width:390px;height:812px;background:var(--paper);border:10px solid #121412;border-radius:46px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 30px 60px -30px rgba(26,29,26,.35)}
+.phone.pulse{animation:pulse 1.2s ease}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(28,116,67,.55)}100%{box-shadow:0 0 0 18px rgba(28,116,67,0)}}
+.status{height:40px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font-size:.8rem;font-weight:700}
+.tag-ficticio{position:absolute;top:9px;left:50%;transform:translateX(-50%);z-index:3;font-size:.7rem;font-weight:700;background:var(--warn-bg);color:var(--warn);border:1px solid #EBD39C;border-radius:var(--r-pill);padding:2px 8px}
+.screen{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 16px 16px}
+.screen::-webkit-scrollbar{width:0}
+.bar{display:flex;align-items:center;gap:6px;min-height:52px;margin:0 -8px 8px}
+.icon-btn{width:48px;height:48px;flex:none;border-radius:50%;display:grid;place-items:center}
+.bar h3{font-size:1.1rem;font-weight:700;line-height:1.2;flex:1}
+.bar small{display:block;font-size:.8rem;color:var(--ink-2);font-weight:500}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card)}
+.pad{padding:14px 16px}
+.label{font-size:.8rem;font-weight:700;color:var(--ink-2);margin:18px 2px 8px;display:flex;justify-content:space-between;align-items:center;min-height:20px}
+.muted{color:var(--ink-2);font-size:.85rem}
+.ic{width:40px;height:40px;flex:none;border-radius:12px;background:var(--paper);display:grid;place-items:center}
+.link{font-weight:700;font-size:.85rem;text-decoration:underline;text-underline-offset:3px;min-height:44px;display:inline-flex;align-items:center}
+.chev{flex:none;color:var(--ink-2)}
+
+/* ===== Selos e faixas de uma linha ===== */
+.selo{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r-pill);padding:4px 10px;font-size:.82rem;font-weight:700;line-height:1.3;white-space:nowrap;background:var(--gain-bg);color:var(--gain)}
+.selo svg{flex:none}
+.faixa{display:flex;align-items:center;gap:8px;width:100%;border-radius:10px;padding:0 4px 0 12px;min-height:40px;font-size:.84rem;font-weight:700;background:var(--gain-bg);color:var(--gain)}
+.faixa svg{flex:none}
+.faixa .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.faixa .acao{min-height:40px;padding:0 10px;font-weight:800;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.faixa--prazo{background:var(--warn-bg);color:#5C3A00}
+
+/* ===== Tela 1 ===== */
+.fatura{width:100%;display:block}
+.fat-l{display:flex;align-items:center;gap:8px;padding:14px 10px 12px 14px}
+.fat-l .ic{width:34px;height:34px;border-radius:10px}
+.fat-l .tit{flex:1;min-width:0}
+.fat-l .tit b,.fat-l .tit span{display:block;white-space:nowrap}
+.fat-l .tit b{font-size:.98rem}
+.fat-l .v{font-size:1.08rem;font-weight:800;white-space:nowrap}
+.fatura .faixa{margin:0 12px 12px;width:calc(100% - 24px)}
+.benef{border-radius:var(--r-card);border:1px solid var(--line);background:var(--surface);transition:background .2s ease}
+.benef.on{background:var(--gain-bg);border-color:transparent}
+.benef-topo{display:flex;align-items:center;gap:12px;padding:14px 16px}
+.benef-topo .txt{flex:1;min-width:0}
+.benef-topo .txt b{display:block;font-size:.95rem}
+.benef.on .ic{background:var(--gain);color:#fff}
+.benef-conta{background:var(--surface);border-radius:12px;margin:0 10px 10px;padding:4px 14px}
+.benef-dica{padding:0 16px 12px;margin-top:-6px;font-size:.84rem;color:var(--gain);font-weight:700}
+.contas div{display:flex;justify-content:space-between;gap:10px;padding:8px 0;font-size:.9rem;border-top:1px solid var(--line)}
+.contas div:first-child{border-top:0}
+.contas dt{color:var(--ink-2)}
+.contas dd{font-weight:600;white-space:nowrap}
+.contas .menos dd,.contas .mais dd{color:var(--gain);font-weight:700}
+.contas .tot dt{color:var(--ink);font-weight:800}
+.contas .tot dd{font-weight:800}
+.switch{flex:none;width:52px;height:30px;border-radius:var(--r-pill);border:2px solid var(--ink-2);background:var(--surface);position:relative}
+.switch::before{content:"";position:absolute;inset:-9px -6px}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--ink-2);transition:transform .2s ease}
+.switch[aria-checked="true"]{background:var(--gain);border-color:var(--gain)}
+.switch[aria-checked="true"]::after{transform:translateX(22px);background:#fff}
+.op{border-top:1px solid var(--line)}
+.op:first-child{border-top:0}
+.opcao{display:flex;align-items:center;gap:12px;padding:12px 16px;min-height:64px;cursor:pointer;width:100%}
+.opcao .txt{flex:1;min-width:0}
+.opcao .txt b{display:block;font-size:.95rem}
+.opcao .sub{font-size:.83rem;color:var(--ink-2)}
+.opcao input{appearance:none;flex:none;width:22px;height:22px;border:2px solid var(--ink-2);border-radius:50%;display:grid;place-items:center;margin:0}
+.opcao input:checked{border-color:var(--ink);background:var(--ink)}
+.opcao input:checked::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+.opcao:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:-3px;border-radius:12px}
+.op-faixa{padding:0 12px 12px}
+.footer{flex:none;background:var(--surface);border-top:1px solid var(--line);padding:10px 16px 16px;display:grid;gap:8px;justify-items:center}
+.btn{min-height:52px;border-radius:14px;font-weight:700;font-size:1rem;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;text-align:center}
+.btn--pri{background:var(--ink);color:#fff}
+.btn--sec{background:var(--surface);border:2px solid var(--ink)}
+.btn--txt{min-height:44px;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.btn:disabled{background:#D7D3C6;color:#4F574F;border-color:#D7D3C6}
+.spin{width:18px;height:18px;border-radius:50%;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;animation:girar .8s linear infinite}
+@keyframes girar{to{transform:rotate(360deg)}}
+
+/* ===== Folha de baixo ===== */
+.sheet-wrap{position:absolute;inset:0;z-index:5;display:flex;align-items:flex-end}
+.sheet-wrap[hidden]{display:none}
+.backdrop{position:absolute;inset:0;background:rgba(18,20,18,.45)}
+.sheet{position:relative;width:100%;background:var(--surface);border-radius:22px 22px 0 0;padding:10px 16px 18px;animation:sobe .22s ease-out;max-height:85%;overflow:auto}
+@keyframes sobe{from{transform:translateY(40px);opacity:.4}}
+.sheet .alca{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 8px}
+.sheet-top{display:flex;align-items:center;gap:8px}
+.sheet-top h4{font-size:1.1rem;font-weight:800;flex:1}
+.link-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.link-row:first-of-type{border-top:0}
+.link-row .txt{flex:1}
+.link-row .txt b{display:block;font-size:.95rem}
+.copiar{min-height:44px;padding:0 14px;border-radius:12px;border:2px solid var(--ink);font-weight:700;font-size:.85rem;white-space:nowrap}
+.copiar.ok{border-color:var(--gain);color:var(--gain)}
+.destino{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line);cursor:pointer}
+.destino:first-of-type{border-top:0}
+.destino .txt{flex:1}
+.destino .txt b{display:block;font-size:.95rem}
+.destino input{appearance:none;width:22px;height:22px;border:2px solid var(--ink-2);border-radius:50%;display:grid;place-items:center;margin:0}
+.destino input:checked{border-color:var(--ink);background:var(--ink)}
+.destino input:checked::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+
+/* ===== Tela 2: comprovante ===== */
+.recibo{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card) var(--r-card) 0 0;
+  -webkit-mask:radial-gradient(circle 7px at 50% 100%,#0000 98%,#000) 50% 100%/18px 100% repeat-x;mask:radial-gradient(circle 7px at 50% 100%,#0000 98%,#000) 50% 100%/18px 100% repeat-x}
+.recibo section{padding:14px 16px}
+.eyebrow{font-size:.7rem;letter-spacing:.1em;font-weight:800;color:var(--ink-2)}
+.recibo-cab{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.recibo-cab h4{font-size:1.05rem;font-weight:800}
+.recibo .l{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 0;font-size:.9rem}
+.recibo .l span:first-child{color:var(--ink-2)}
+.recibo .l b{font-weight:700;text-align:right}
+.recibo .l.tot span:first-child{color:var(--ink);font-weight:700}
+.recibo .l.tot b{font-weight:800}
+.recibo .l.menos b{color:var(--gain)}
+.ganhos{background:var(--gain-bg);border-radius:12px;margin-top:10px;padding:2px 12px}
+.ganhos .g{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid rgba(28,116,67,.18)}
+.ganhos .g:first-child{border-top:0}
+.ganhos .g .txt{flex:1;min-width:0}
+.ganhos .g .txt b{display:block;font-size:.9rem}
+.ganhos .g .txt span{font-size:.78rem;color:var(--ink-2)}
+.ganhos .g .v{font-weight:800;color:var(--gain);white-space:nowrap}
+.ganhos .g svg{color:var(--gain)}
+.ganhos--nao{background:var(--neutral-bg)} .ganhos--nao .g .v,.ganhos--nao .g svg{color:var(--ink-2)}
+.corte{position:relative;border-top:2px dashed var(--line);margin:0 14px}
+.corte::before,.corte::after{content:"";position:absolute;top:-12px;width:22px;height:22px;border-radius:50%;background:var(--paper)}
+.corte::before{left:-26px} .corte::after{right:-26px}
+.codigo{font-family:var(--mono);font-size:.78rem}
+.barcode{height:46px;margin:10px 0 18px;background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 8px,var(--ink) 8px 11px,transparent 11px 12px,var(--ink) 12px 13px,transparent 13px 16px)}
+.status-pill{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:700;border-radius:var(--r-pill);padding:4px 10px;background:var(--gain-bg);color:var(--gain)}
+.timeline{list-style:none;padding:8px 0 0;display:grid}
+.timeline li{display:grid;grid-template-columns:22px 1fr;gap:10px;position:relative;padding-bottom:12px}
+.timeline li:last-child{padding-bottom:0}
+.timeline li:not(:last-child)::before{content:"";position:absolute;left:10px;top:22px;bottom:0;width:2px;background:var(--line)}
+.timeline li.feito:not(:last-child)::before{background:var(--ink)}
+.timeline .d{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);background:var(--surface);display:grid;place-items:center}
+.timeline .feito .d{background:var(--ink);border-color:var(--ink);color:#fff}
+.timeline .agora .d{border-color:var(--ink)}
+.timeline .agora .d::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--ink);animation:respira 1.6s ease-in-out infinite}
+@keyframes respira{50%{opacity:.3}}
+.timeline b{display:block;font-size:.9rem}
+.timeline span{font-size:.78rem;color:var(--ink-2)}
+.acoes{display:grid;gap:4px;margin-top:16px;justify-items:center}
+
+/* ===== Tela 3 ===== */
+.bloco{padding:14px 16px}
+.bloco-cab{display:flex;align-items:center;gap:10px}
+.bloco-cab .ic{width:34px;height:34px;border-radius:10px}
+.bloco-cab b{font-size:.95rem;flex:1}
+.grande{font-size:2rem;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.grande.verde{color:var(--gain)}
+.linha-v{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-top:8px}
+.linha-v .btn{width:auto;min-height:44px;padding:0 18px;font-size:.92rem}
+.nota{font-size:.8rem;color:var(--ink-2);margin-top:6px}
+.rodape-card{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:48px;padding:0 16px;border-top:1px solid var(--line);font-weight:700;font-size:.88rem}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.duo .k{font-size:.78rem;color:var(--ink-2);font-weight:600}
+.duo .v{font-size:1.35rem;font-weight:800;color:var(--gain)}
+.duo .v.neutro{color:var(--ink)}
+.barras{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end;height:76px;margin-top:12px;padding:0 4px}
+.barras div{display:grid;gap:4px;justify-items:center;height:100%;align-content:end}
+.barras span{width:100%;max-width:28px;border-radius:6px 6px 2px 2px;background:#D7D3C6;transition:height .25s ease}
+.barras div.atual span{background:var(--gain)}
+.barras small{font-size:.72rem;color:var(--ink-2);font-weight:600}
+.barras div.atual small{color:var(--ink);font-weight:800}
+.comp{list-style:none;padding:0}
+.comp li{display:flex;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line)}
+.comp li:first-child{border-top:0}
+.comp .txt{flex:1;min-width:0}
+.comp .txt b{display:block;font-size:.9rem}
+.comp .txt span{font-size:.78rem;color:var(--ink-2)}
+.comp .v{font-weight:800;white-space:nowrap}
+.comp .v.mais{color:var(--gain)}
+.comp .ic{width:36px;height:36px;border-radius:10px}
+.pend{display:grid;gap:10px;border:2px solid var(--ink)}
+.pend-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.pend-baixo{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.pend .btn{width:auto;min-height:44px;padding:0 22px;font-size:.92rem}
+.indique{display:flex;align-items:center;gap:12px}
+.indique .txt{flex:1}
+.indique .txt b{display:block}
+.indique .btn{width:auto;min-height:44px;padding:0 18px;font-size:.9rem}
+.auto{display:grid;gap:2px}
+.auto .topo-a{display:flex;align-items:center;gap:12px}
+.auto .topo-a .txt{flex:1}
+.auto .topo-a .txt b{display:block;font-size:.95rem}
+.auto .link{min-height:40px;justify-self:start}
+.busca{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:0 12px;min-height:44px;margin-bottom:8px}
+.busca input{flex:1;border:0;outline:0;background:none;min-height:42px;font-size:.92rem}
+.busca:focus-within{outline:3px solid var(--focus);outline-offset:2px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin:0 -16px 8px;padding-left:16px;padding-right:16px}
+.chips::-webkit-scrollbar{height:0}
+.chips button{flex:none;min-height:40px;padding:0 14px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--surface);font-size:.83rem;font-weight:700;color:var(--ink-2)}
+.chips button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.vazio-lista{padding:16px;justify-content:center}
+.tabbar{flex:none;display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-top:1px solid var(--line);padding:6px 4px 10px}
+.tabbar button{min-height:52px;display:grid;justify-items:center;align-content:center;gap:2px;font-size:.72rem;font-weight:600;color:var(--ink-2);text-align:center}
+.tabbar button[aria-current="page"]{color:var(--ink)}
+.vazio{text-align:center;display:grid;gap:10px;justify-items:center;padding:28px 18px}
+.vazio h4{font-size:1.2rem;font-weight:800}
+
+/* ===== Tela 4: Retorno iGreen (hub) ===== */
+.hero{background:#17351F;color:#fff;border-radius:18px;padding:16px 16px 12px}
+.hero .k{font-size:.82rem;color:#D5E8DA}
+.hero .v{font-size:2.2rem;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-top:2px}
+.hero .s{font-size:.8rem;color:#D5E8DA}
+.tempo{display:flex;gap:22px;overflow-x:auto;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.18)}
+.tempo::-webkit-scrollbar{height:0}
+.tempo div{flex:none;position:relative;padding-top:12px}
+.tempo div::before{content:"";position:absolute;top:0;left:0;width:8px;height:8px;border-radius:50%;background:#7FBF8E}
+.tempo div.atual::before{background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.2)}
+.tempo b{display:block;font-size:.92rem}
+.tempo span{font-size:.74rem;color:#D5E8DA}
+.saldos2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.saldos2 .k{font-size:.78rem;color:var(--ink-2);font-weight:600}
+.saldos2 .v{font-size:1.3rem;font-weight:800}
+.acoes3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.acao3{display:grid;justify-items:center;align-content:center;gap:4px;min-height:64px;border-radius:12px;background:var(--paper);font-size:.8rem;font-weight:700;text-align:center}
+.acao3:disabled{color:#8A8F88}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile2{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:2px;min-height:118px;text-align:left;width:100%}
+.tile2.fixo{min-height:auto}
+.tile2 .ic{width:32px;height:32px;border-radius:10px;margin-bottom:4px}
+.tile2 .k{font-size:.78rem;color:var(--ink-2);font-weight:600}
+.tile2 .v{font-size:1.15rem;font-weight:800;color:var(--gain)}
+.tile2 .v.neutro{color:var(--ink)}
+.tile2 .s{font-size:.78rem;color:var(--ink-2)}
+.tile2 .cta{margin-top:auto;padding-top:6px;font-size:.8rem;font-weight:800;display:flex;align-items:center;gap:2px}
+.carrossel{display:flex;gap:10px;overflow-x:auto;margin:0 -16px;padding:2px 16px 8px;scroll-snap-type:x mandatory}
+.carrossel::-webkit-scrollbar{height:0}
+.prod{flex:none;width:82%;scroll-snap-align:start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:8px;align-content:start}
+.prod-cab{display:flex;align-items:center;gap:10px}
+.prod-cab .ic{width:34px;height:34px;border-radius:10px}
+.prod-cab b{display:block;font-size:.95rem}
+.prod-cab span{font-size:.78rem;color:var(--ink-2)}
+.prod .v{font-size:1.3rem;font-weight:800;color:var(--gain)}
+.prod .linha2{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid var(--line);padding-top:8px;min-height:48px}
+.prod .linha2 .btn{width:auto;min-height:40px;padding:0 14px;font-size:.85rem}
+.mini-tag{display:inline-flex;align-items:center;gap:4px;font-size:.78rem;font-weight:700;border-radius:999px;padding:3px 9px;background:var(--gain-bg);color:var(--gain);justify-self:start}
+.mini-tag.aviso{background:var(--warn-bg);color:#5C3A00}
+.mini-tag.neutro{background:var(--neutral-bg);color:var(--ink-2)}
+.linha-acao{display:flex;align-items:center;gap:12px;width:100%;padding:10px 14px;min-height:60px;border-top:1px solid var(--line);text-align:left}
+.linha-acao:first-child{border-top:0}
+.linha-acao .txt{flex:1;min-width:0}
+.linha-acao .txt b{display:block;font-size:.9rem}
+.linha-acao .txt span{font-size:.78rem;color:var(--ink-2)}
+.linha-acao .ic{width:36px;height:36px;border-radius:10px}
+.origem div{display:grid;grid-template-columns:1fr auto;gap:4px 10px;padding:9px 0;border-top:1px solid var(--line);font-size:.9rem}
+.origem div:first-child{border-top:0}
+.origem .pct{font-size:.76rem;color:var(--ink-2);text-align:right}
+.origem .trilho{grid-column:1 / -1;height:6px;border-radius:3px;background:var(--neutral-bg)}
+.origem .trilho i{display:block;height:100%;border-radius:3px;background:var(--gain)}
+.mes-grupo{font-size:.78rem;font-weight:800;color:var(--ink-2);margin:14px 2px 6px}
+.check-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line);cursor:pointer}
+.check-row:first-of-type{border-top:0}
+.check-row .txt{flex:1}
+.check-row input{appearance:none;width:22px;height:22px;border:2px solid var(--ink-2);border-radius:6px;display:grid;place-items:center;margin:0}
+.check-row input:checked{background:var(--ink);border-color:var(--ink)}
+.check-row input:checked::after{content:"";width:10px;height:6px;border:solid #fff;border-width:0 0 2px 2px;transform:rotate(-45deg) translate(1px,-1px)}
+.hero2{display:flex;align-items:center;gap:10px;padding:4px 2px 2px}
+.hero2 .txt{flex:1;min-width:0}
+.hero2 .k{font-size:.9rem;color:var(--ink-2);font-weight:600}
+.hero2 .v{font-size:2.3rem;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:2px 0}
+.hero2 .s{font-size:.82rem;color:var(--ink-2);margin-bottom:8px}
+.hero2 .ilustra{flex:none}
+.saldo3{display:flex;align-items:center;gap:12px;background:var(--gain-bg);border-radius:16px;padding:14px}
+.saldo3 .bolinha{width:40px;height:40px;border-radius:12px;background:var(--surface);color:var(--gain);display:grid;place-items:center;flex:none}
+.saldo3 .txt{flex:1;min-width:0}
+.saldo3 .txt span{display:block;font-size:.8rem;color:var(--ink-2);font-weight:600}
+.saldo3 .txt b{font-size:1.35rem;font-weight:800}
+.saldo3 .btn{width:auto;min-height:44px;padding:0 14px;font-size:.88rem;background:var(--gain);color:#fff;white-space:nowrap}
+.hscroll{display:flex;gap:10px;overflow-x:auto;margin:0 -16px;padding:2px 16px 6px}
+.hscroll::-webkit-scrollbar{height:0}
+.stat{flex:none;width:140px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:4px;align-content:start;text-align:left}
+.stat .ic{width:32px;height:32px;border-radius:10px}
+.stat b{font-size:1.05rem;font-weight:800}
+.stat span:last-child{font-size:.76rem;color:var(--ink-2)}
+.orig{flex:none;width:116px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:6px;justify-items:start;text-align:left}
+.orig .circ{width:40px;height:40px;border-radius:50%;background:var(--gain-bg);color:var(--gain);display:grid;place-items:center}
+.orig span:not(.circ){font-size:.8rem;color:var(--ink-2)}
+.orig b{font-size:.98rem;font-weight:800}
+/* v9: título no topo, saldo em cartão branco, cartões maiores na origem e nos produtos */
+.hero2 .titulo{font-size:1.25rem;font-weight:800;line-height:1.2}
+.hero2 .s{font-size:.78rem;color:var(--ink-2);margin:2px 0 10px}
+.hero2 .v{margin:0 0 8px}
+.saldo3{background:var(--surface);border:1px solid var(--line)}
+.saldo3 .bolinha{background:var(--gain-bg)}
+.saldo3 .txt span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.saldo3{gap:10px;padding:14px 12px}
+.saldo3 .bolinha{width:36px;height:36px}
+.saldo3 .btn{padding:0 12px;font-size:.85rem}
+.saldo3 .txt b{display:block;line-height:1.15}
+.stat{min-height:124px;box-shadow:0 1px 2px rgba(26,29,26,.05)}
+.stat .ic{background:var(--gain-bg);color:var(--gain)}
+.stat b{font-size:1.1rem;margin-top:4px}
+.orig2{flex:none;width:160px;min-height:170px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:2px;text-align:left;box-shadow:0 1px 2px rgba(26,29,26,.05)}
+.orig2 .ic{width:34px;height:34px;border-radius:10px;background:var(--gain-bg);color:var(--gain);margin-bottom:6px}
+.orig2 .n{font-size:.82rem;color:var(--ink-2);font-weight:600}
+.orig2 b{font-size:1.2rem;font-weight:800;color:var(--gain)}
+.orig2 .s{font-size:.76rem;color:var(--ink-2)}
+.orig2 .cta{margin-top:auto;padding-top:8px;font-size:.8rem;font-weight:800;display:flex;align-items:center;gap:2px}
+.prodx{flex:none;width:176px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:6px;align-content:start}
+.prodx-cab{display:flex;align-items:center;gap:8px}
+.prodx-cab .ic{width:32px;height:32px;border-radius:10px;background:var(--gain-bg);color:var(--gain)}
+.prodx-cab b{flex:1;font-size:.92rem}
+.prodx-cab .pct{font-size:.78rem;color:var(--ink-2);font-weight:700}
+.prodx .v{font-size:1.2rem;font-weight:800;color:var(--gain)}
+.prodx .trilho{display:block;height:6px;border-radius:3px;background:var(--neutral-bg)}
+.prodx .trilho i{display:block;height:100%;border-radius:3px;background:var(--gain)}
+.prodx .dado{font-size:.76rem;color:var(--ink-2)}
+.cab-linha{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.cab-linha .tit{font-weight:700;font-size:.95rem}
+.sel{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:.95rem;color:var(--gain);min-height:44px}
+/* v10: ilustração na base, mosaico de ganhos e cartões largos de origem */
+.hero2{align-items:flex-end}
+.link-ic{gap:6px}
+.mosaico{display:grid;grid-template-columns:1.08fr 1fr;grid-template-rows:auto auto;gap:10px}
+.m-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:2px;box-shadow:0 1px 2px rgba(26,29,26,.05)}
+.m-grande{grid-row:1 / span 2}
+.m-ilustra{width:56px;height:56px;border-radius:50%;background:var(--gain-bg);color:var(--gain);display:grid;place-items:center;margin:4px 0 auto}
+.m-grande .v{margin-top:14px}
+.m-card .v{font-size:1.2rem;font-weight:800;color:var(--gain)}
+.m-card .v.neutro{color:var(--ink)}
+.m-card .t{font-size:.82rem}
+.m-card .s{font-size:.76rem;color:var(--ink-2);margin-top:4px}
+.m-cta{margin-top:auto;padding-top:10px;min-height:40px;display:flex;align-items:flex-end;gap:2px;font-size:.84rem;font-weight:800;color:var(--gain);text-align:left}
+.orig3{flex:none;width:84%;scroll-snap-align:start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:10px;box-shadow:0 1px 2px rgba(26,29,26,.05)}
+.o-cab{display:flex;align-items:center;gap:12px}
+.o-cab .ic{width:44px;height:44px;border-radius:12px;background:var(--gain-bg);color:var(--gain)}
+.o-cab b{display:block;font-size:1rem}
+.o-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.o-stats .k{display:block;font-size:.76rem;color:var(--ink-2);font-weight:600}
+.o-stats b{font-size:1.15rem;font-weight:800}
+.o-stats b.verde{color:var(--gain)}
+.o-linha{display:flex;justify-content:space-between;gap:8px;font-size:.8rem;font-weight:600;color:var(--ink-2)}
+.orig3 .trilho{display:block;height:6px;border-radius:3px;background:var(--neutral-bg)}
+.orig3 .trilho i{display:block;height:100%;border-radius:3px;background:var(--gain)}
+.o-extra{font-size:.76rem;color:var(--ink-2)}
+/* v11: título com ícone de gráfico, títulos de seção maiores, textos de uma linha, origem mais limpa */
+.hero3{padding:4px 2px 2px}
+.hero3 .h-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.hero3 .titulo{font-size:1.25rem;font-weight:800;line-height:1.2}
+.ic-graf{flex:none;width:44px;height:44px;border-radius:50%;background:var(--surface);border:1px solid var(--line);color:var(--gain);display:grid;place-items:center}
+.hero3 .h-corpo{display:flex;align-items:flex-end;gap:10px}
+.hero3 .txt{flex:1;min-width:0}
+.hero3 .s{font-size:.78rem;color:var(--ink-2);margin:2px 0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero3 .v{font-size:2.3rem;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0 0 8px}
+.hero3 .ilustra{flex:none}
+.titulo-sec{font-size:1.08rem;font-weight:800;margin:22px 2px 10px}
+.m-card .t,.m-card .s,.linha-acao .txt b,.linha-acao .txt span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m-mini{display:grid;margin-top:10px}
+.m-mini .k{font-size:.74rem;color:var(--ink-2)}
+.m-mini b{font-size:.95rem;font-weight:800}
+.orig4{flex:none;width:72%;scroll-snap-align:start;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;display:grid;gap:10px;box-shadow:0 1px 3px rgba(26,29,26,.06)}
+.o4-cab{display:flex;align-items:center;gap:10px}
+.o4-cab .ic{width:40px;height:40px;border-radius:12px;background:var(--gain-bg);color:var(--gain)}
+.o4-cab b{flex:1;font-size:1rem}
+.o4-pct{font-size:.78rem;font-weight:800;border-radius:999px;padding:3px 9px;background:var(--gain-bg);color:var(--gain)}
+.o4-v{font-size:1.45rem;font-weight:800;letter-spacing:-.01em}
+.o4-barra{display:block;height:8px;border-radius:4px;background:var(--neutral-bg)}
+.o4-barra i{display:block;height:100%;border-radius:4px;background:var(--gain)}
+.o4-cap{font-size:.78rem;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.status-auto{display:inline-flex;font-size:.75rem;font-weight:800;border-radius:999px;padding:2px 9px;background:var(--neutral-bg);color:var(--ink-2)}
+.status-auto.on{background:var(--gain-bg);color:var(--gain)}
+
+@media (max-width:1100px){.board{grid-template-columns:1fr}}
+@media (max-width:480px){
+  .page{padding:24px 16px 48px}
+  .phone{border-radius:var(--r-card);height:760px;box-shadow:none;border:1px solid var(--line)}
+  .status{display:none}
+  .tag-ficticio{position:static;transform:none;align-self:flex-end;margin:10px 12px 0}
+  .fat-l .ic{display:none}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="page-head">
+    <h1>Pagamento universal no app iGreen</h1>
+    <p>Versão 7: entra a tela 4, uma proposta de hub ("Retorno iGreen"), sem apagar a tela 3. Versão 6: volta o termo cashback. Ganhos mostra primeiro o cashback (dinheiro seu, que se usa ou se resgata) e depois a economia (o desconto nas faturas pagas). Cada um tem a sua tela e o seu histórico. Os números da tela 3 mudam depois que você paga na tela 1.</p>
+    <div class="ficticio" role="note">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+      <div><strong>Regras e valores fictícios</strong>, gerados em 16/10/2026 para testar as skills de UX (<span class="codigo">ficticio-respostas-da-pauta.md</span>). Não são regra da iGreen.</div>
+    </div>
+  </header>
+
+  <div class="board">
+    <!-- ===== 1. Pagar fatura ===== -->
+    <section class="col" aria-labelledby="t1">
+      <div class="col-head"><h2 id="t1">1. Pagar fatura</h2><p>Toque na fatura para ver o detalhe. Ligue o cashback e troque a forma de pagamento.</p></div>
+      <div class="estados" role="group" aria-label="Estado da tela 1">
+        <button type="button" data-pay="sim" aria-pressed="true">Com iGreen Pay</button>
+        <button type="button" data-pay="nao" aria-pressed="false">Sem iGreen Pay</button>
+        <button type="button" data-reset>Recomeçar</button>
+      </div>
+      <div class="phone" id="phone1">
+        <div class="status" aria-hidden="true"><span>9:41</span><span>▮▮▮ ◔</span></div>
+        <span class="tag-ficticio">Regras fictícias</span>
+        <div class="screen" id="s1">
+          <div class="bar">
+            <button class="icon-btn" type="button" aria-label="Voltar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+            <h3>Pagar fatura<small>Conta de energia</small></h3>
+          </div>
+
+          <button type="button" class="card fatura" data-detalhes aria-label="Fatura de outubro, R$ 129,20, vence em 23/10. Ver detalhes">
+            <span class="fat-l">
+              <span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span>
+              <span class="tit"><b>Fatura de outubro</b><span class="muted">Vence em 23/10</span></span>
+              <span class="v num">R$ 129,20</span>
+              <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+            </span>
+            <span class="faixa faixa--prazo num"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="t">Pague até 23/10 e mantenha os 15%</span></span>
+          </button>
+
+          <div class="benef" id="benef" style="margin-top:12px"></div>
+
+          <div class="label" id="t-forma">Como pagar</div>
+          <div id="promo-pay"></div>
+          <div class="card" role="radiogroup" aria-labelledby="t-forma" id="metodos"></div>
+        </div>
+        <div class="footer">
+          <div id="footer-bonus"></div>
+          <button class="btn btn--pri num" type="button" id="cta">Pagar</button>
+        </div>
+        <div class="sheet-wrap" id="sheet1" hidden>
+          <div class="backdrop" data-fechar></div>
+          <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh1-t">
+            <div class="alca" aria-hidden="true"></div>
+            <div class="sheet-top"><h4 id="sh1-t"></h4><button type="button" class="icon-btn" aria-label="Fechar" data-fechar><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+            <div id="sh1-corpo"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 2. Comprovante ===== -->
+    <section class="col" aria-labelledby="t2">
+      <div class="col-head"><h2 id="t2">2. Comprovante</h2><p>Valor, com o que pagou, o que ganhou e os dados da transação.</p></div>
+      <div class="estados" role="group" aria-label="Estado da tela 2">
+        <button type="button" data-recibo="energia" aria-pressed="true">Energia</button>
+        <button type="button" data-recibo="seguro" aria-pressed="false">Seguro</button>
+      </div>
+      <div class="phone" id="phone2">
+        <div class="status" aria-hidden="true"><span>9:41</span><span>▮▮▮ ◔</span></div>
+        <span class="tag-ficticio">Regras fictícias</span>
+        <div class="screen" id="recibo"></div>
+      </div>
+    </section>
+
+    <!-- ===== 3. Ganhos ===== -->
+    <section class="col" aria-labelledby="t3">
+      <div class="col-head"><h2 id="t3">3. Ganhos</h2><p>Cashback em cima, economia embaixo, cada um com a sua tela. Pague na tela 1 e veja os números mudarem.</p></div>
+      <div class="estados" role="group" aria-label="Estado da tela 3">
+        <button type="button" data-painel="ganhos" aria-pressed="true">Ganhos</button>
+        <button type="button" data-painel="cashback" aria-pressed="false">Cashback</button>
+        <button type="button" data-painel="economia" aria-pressed="false">Economia</button>
+        <button type="button" data-painel="vazio" aria-pressed="false">Primeiro mês</button>
+      </div>
+      <div class="phone" id="phone3">
+        <div class="status" aria-hidden="true"><span>9:41</span><span>▮▮▮ ◔</span></div>
+        <span class="tag-ficticio">Regras fictícias</span>
+        <div class="screen" id="painel"></div>
+        <nav class="tabbar" aria-label="Navegação principal">
+          <button type="button"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Início</button>
+          <button type="button"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>Pagar</button>
+          <button type="button" aria-current="page"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 17l5-5 4 4 7-8"/><path d="M15 8h5v5"/></svg>Ganhos</button>
+          <button type="button"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Perfil</button>
+        </nav>
+        <div class="sheet-wrap" id="sheet3" hidden>
+          <div class="backdrop" data-fechar></div>
+          <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh3-t">
+            <div class="alca" aria-hidden="true"></div>
+            <div class="sheet-top"><h4 id="sh3-t"></h4><button type="button" class="icon-btn" aria-label="Fechar" data-fechar><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+            <div id="sh3-corpo"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 4. Retorno iGreen (proposta de hub) ===== -->
+    <section class="col" aria-labelledby="t4">
+      <div class="col-head"><h2 id="t4">4. Retorno iGreen · proposta de hub</h2><p>Área central do que a iGreen já devolveu: o total, o cashback com atalhos, de onde veio, os produtos e como ganhar mais. Dois níveis abaixo: análise da economia e o cashback completo. A tela 3 continua como estava.</p></div>
+      <div class="estados" role="group" aria-label="Estado da tela 4">
+        <button type="button" data-hub="hub" aria-pressed="true">Hub</button>
+        <button type="button" data-hub="economia" aria-pressed="false">Análise da economia</button>
+        <button type="button" data-hub="historico-eco" aria-pressed="false">Histórico da economia</button>
+        <button type="button" data-hub="cashback" aria-pressed="false">Meu cashback</button>
+        <button type="button" data-hub="extrato" aria-pressed="false">Extrato</button>
+      </div>
+      <div class="phone" id="phone4">
+        <div class="status" aria-hidden="true"><span>9:41</span><span>▮▮▮ ◔</span></div>
+        <span class="tag-ficticio">Regras fictícias</span>
+        <div class="screen" id="hub"></div>
+        <nav class="tabbar" aria-label="Navegação principal">
+          <button type="button"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Início</button>
+          <button type="button"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>Pagar</button>
+          <button type="button" aria-current="page"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 17l5-5 4 4 7-8"/><path d="M15 8h5v5"/></svg>Retorno</button>
+          <button type="button"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Perfil</button>
+        </nav>
+        <div class="sheet-wrap" id="sheet4" hidden>
+          <div class="backdrop" data-fechar></div>
+          <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh4-t">
+            <div class="alca" aria-hidden="true"></div>
+            <div class="sheet-top"><h4 id="sh4-t"></h4><button type="button" class="icon-btn" aria-label="Fechar" data-fechar><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+            <div id="sh4-corpo"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+/* Regras fictícias (ficticio-respostas-da-pauta.md), com o nome "cashback" a pedido do Sergio (16/10):
+   - pagar com saldo Pay rende 1% de cashback, teto R$ 5,00 por fatura, cai em até 2 dias úteis; seguro não rende;
+   - o cashback abate qualquer fatura, pode ser resgatado e vale 12 meses a partir de quando caiu;
+   - economia = o que pagaria sem a iGreen menos o que pagou, só em faturas já pagas (regra da base interna). */
+const brl = n => n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const cb1 = v => Math.min(Math.floor(v*100*0.01)/100, 5);
+const FATURA = 129.20, CB_INICIAL = 9.20, CAI_ATE = "20/10";
+const svg = (d, w = 20, sw = 2) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" aria-hidden="true">${d}</svg>`;
+const I = {
+  pay:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12.5h2"/>',
+  pix:'<path d="m12 3 9 9-9 9-9-9z"/><path d="m9 12 3-3 3 3-3 3z"/>',
+  boleto:'<path d="M4 6v12M7 6v12M10 6v12M14 6v12M17 6v12M20 6v12"/>',
+  card:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>',
+  mais:'<path d="M12 5v14M5 12h14"/>',
+  presente:'<rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1.5S10 8 12 8c2 0 6-.5 6-1.5S14 4 12 8"/>',
+  relogio:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  check:'<path d="m5 12 5 5 9-10"/>',
+  cb:'<path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>',
+  eco:'<path d="M4 17l5-5 4 4 7-8"/><path d="M15 8h5v5"/>',
+  energia:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  telecom:'<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+  seguro:'<path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6z"/>',
+  club:'<path d="M3 9h18v3a2 2 0 0 0 0 4v3H3v-3a2 2 0 0 0 0-4z"/>',
+  amigo:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M18 8v6m-3-3h6"/>',
+  resgate:'<path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>',
+  usado:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  seta:'<path d="m9 6 6 6-6 6"/>',
+  voltar:'<path d="m15 18-6-6 6-6"/>',
+  lupa:'<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
+  share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/>',
+  ajuda:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01"/>'
+};
+const metodos = [
+  {id:"pay",    nome:"Saldo iGreen Pay",  sub:"R$ 250,00 disponíveis",        curto:"saldo Pay", rende:true},
+  {id:"pix",    nome:"Pix",               sub:"Na hora · último usado",       curto:"Pix"},
+  {id:"boleto", nome:"Boleto",            sub:"Compensa em até 2 dias úteis", curto:"boleto"},
+  {id:"card",   nome:"Cartão de crédito", sub:"Visa •••• 4821",               curto:"cartão"},
+];
+const st = {payAtivo:true, usarCb:false, metodo:"pix", recibo:"energia", pago:null, painel:"ganhos",
+            filtroC:"todos", buscaC:"", filtroE:"todos", buscaE:"", auto:false, resgatado:0,
+            hub:"hub", seg:"produto", filtroX:"todos", buscaX:"", autoProd:{energia:true, telecom:false, seguro:false},
+            perE:"6", origE:"todos", buscaHE:""};
+const restante = () => +(FATURA - (st.usarCb ? CB_INICIAL : 0)).toFixed(2);
+
+/* Modelo único que alimenta as três telas */
+function M(){
+  const p = st.pago, usado = p ? p.cb : 0, caminho = p ? p.ganho : 0;
+  const disp = +(CB_INICIAL - usado - st.resgatado).toFixed(2);
+  const ecoMes = 10 + (p ? 22.80 : 0);           // energia só entra depois de paga
+  return {p, usado, caminho, disp, ecoMes, ecoTotal: +(142.10 + ecoMes).toFixed(2)};
+}
+
+/* Folhas de baixo */
+let voltarFoco = null;
+function folha(n, titulo, corpo){
+  document.getElementById(`sh${n}-t`).textContent = titulo; document.getElementById(`sh${n}-corpo`).innerHTML = corpo;
+  const w = document.getElementById(`sheet${n}`); voltarFoco = document.activeElement; w.hidden = false; w.querySelector(".sheet [data-fechar]").focus();
+}
+function fecharFolha(w){ w.hidden = true; if (voltarFoco && document.contains(voltarFoco)) voltarFoco.focus(); }
+document.querySelectorAll(".sheet-wrap").forEach(w => {
+  w.addEventListener("click", e => { if (e.target.closest("[data-fechar]")) fecharFolha(w); });
+  w.addEventListener("keydown", e => { if (e.key === "Escape") fecharFolha(w); });
+});
+const ENTENDI = `<button type="button" class="btn btn--pri" data-fechar>Entendi</button>`;
+
+/* ---------- Tela 1 ---------- */
+function render1(){
+  const v = restante(), g = cb1(v), m = metodos.find(x => x.id === st.metodo), pago = !!st.pago;
+  const be = document.getElementById("benef");
+  be.className = "benef" + (st.usarCb ? " on" : "");
+  be.innerHTML = `
+    <div class="benef-topo">
+      <span class="ic" aria-hidden="true">${svg(I.cb)}</span>
+      <div class="txt">${st.usarCb
+        ? `<b class="num" id="lbl-b">Usando ${brl(CB_INICIAL)} de cashback</b><span class="muted">Abatido da fatura agora</span>`
+        : `<b id="lbl-b">Usar meu cashback</b><span class="muted num">${brl(CB_INICIAL)} disponíveis</span>`}</div>
+      <button type="button" class="switch" role="switch" aria-checked="${st.usarCb}" aria-labelledby="lbl-b" id="sw" ${pago ? "disabled" : ""}></button>
+    </div>
+    ${st.usarCb
+      ? `<dl class="benef-conta contas num"><div><dt>Fatura</dt><dd>${brl(FATURA)}</dd></div><div class="menos"><dt>Cashback</dt><dd>− ${brl(CB_INICIAL)}</dd></div><div class="tot"><dt>Falta pagar</dt><dd>${brl(v)}</dd></div></dl>`
+      : `<div class="benef-dica num">Use e pague ${brl(FATURA - CB_INICIAL)}</div>`}`;
+  document.getElementById("sw").addEventListener("click", () => {st.usarCb = !st.usarCb; render1(); document.getElementById("sw").focus();});
+
+  document.getElementById("promo-pay").innerHTML = st.payAtivo ? "" :
+    `<div class="faixa num" style="margin-bottom:8px">${svg(I.presente,16)}<span class="t">Ative o Pay e ganhe ${brl(g)}</span><button type="button" class="acao" data-ativar>Ativar</button></div>`;
+  const at = document.querySelector("[data-ativar]"); if (at) at.addEventListener("click", () => {st.payAtivo = true; marcar("[data-pay]","pay","sim"); render1();});
+
+  document.getElementById("metodos").innerHTML = metodos.filter(x => x.id !== "pay" || st.payAtivo).map(x => `
+    <div class="op">
+      <label class="opcao">
+        <span class="ic" aria-hidden="true">${svg(I[x.id])}</span>
+        <span class="txt"><b>${x.nome}</b><span class="sub num">${x.sub}</span></span>
+        <input type="radio" name="metodo" value="${x.id}" ${st.metodo === x.id ? "checked" : ""} aria-label="${x.nome}">
+      </label>
+      ${x.rende ? `<div class="op-faixa"><div class="faixa num">${svg(I.presente,16)}<span class="t">Ganhe ${brl(g)} de cashback com o Pay</span></div></div>` : ""}
+    </div>`).join("") + `
+    <div class="op"><button type="button" class="opcao" data-novo-cartao>
+      <span class="ic" aria-hidden="true">${svg(I.mais)}</span>
+      <span class="txt"><b>Adicionar cartão de crédito</b><span class="sub">Use outro cartão</span></span>
+      ${svg(I.seta,20,2.2).replace("<svg", '<svg class="chev"')}
+    </button></div>`;
+  document.querySelectorAll('input[name="metodo"]').forEach(r => r.addEventListener("change", e => {st.metodo = e.target.value; render1();}));
+  document.querySelector("[data-novo-cartao]").addEventListener("click", () => folha(1, "Adicionar cartão", `
+    <p class="muted" style="margin:6px 0 14px">Aqui entra o cadastro de um novo cartão de crédito. Fica fora deste protótipo.</p>${ENTENDI}`));
+
+  document.getElementById("footer-bonus").innerHTML = (m && m.rende && !pago) ? `<span class="selo num">${svg(I.presente,15)} + ${brl(g)} de cashback até ${CAI_ATE}</span>` : "";
+  const cta = document.getElementById("cta");
+  if (pago){ cta.disabled = true; cta.textContent = "Fatura paga ✓"; }
+  else { cta.disabled = !m; cta.textContent = m ? `Pagar com ${m.curto} • ${brl(v)}` : "Escolha como pagar"; }
+}
+document.querySelector("[data-detalhes]").addEventListener("click", () => folha(1, "Fatura de outubro", `
+  <p class="muted">Energia · vence em 23/10</p>
+  <dl class="contas num" style="margin:10px 0 6px">
+    <div><dt>Conta sem a iGreen</dt><dd>R$ 152,00</dd></div>
+    <div class="menos"><dt>Desconto iGreen (15%)</dt><dd>− R$ 22,80</dd></div>
+    <div class="tot"><dt>Valor da fatura</dt><dd>R$ 129,20</dd></div>
+  </dl>
+  <div class="faixa faixa--prazo num" style="margin:8px 0 10px">${svg(I.relogio,16,2.2)}<span class="t">Depois de 23/10, o desconto cai para 10%</span></div>
+  <p class="muted" style="margin-bottom:14px">Pagando com atraso, esta fatura fica R$ 7,60 mais cara. O desconto vem da energia que a iGreen compensa na sua conta.</p>${ENTENDI}`));
+document.querySelectorAll("[data-pay]").forEach(b => b.addEventListener("click", () => {
+  st.payAtivo = b.dataset.pay === "sim"; if (!st.payAtivo && st.metodo === "pay") st.metodo = "pix"; marcar("[data-pay]","pay",b.dataset.pay); render1();
+}));
+document.querySelector("[data-reset]").addEventListener("click", () => {
+  Object.assign(st, {usarCb:false, metodo:"pix", pago:null, resgatado:0}); render1(); render2(); render3(); render4(); document.getElementById("s1").scrollTop = 0;
+});
+document.getElementById("cta").addEventListener("click", e => {
+  const btn = e.currentTarget, m = metodos.find(x => x.id === st.metodo), v = restante();
+  btn.disabled = true; btn.innerHTML = '<span class="spin" aria-hidden="true"></span> Pagando…';
+  setTimeout(() => {
+    st.pago = {metodo:m, valor:v, cb: st.usarCb ? CB_INICIAL : 0, ganho: m.rende ? cb1(v) : 0};
+    st.recibo = "energia"; marcar("[data-recibo]","recibo","energia");
+    render1(); render2(); render3(); render4();
+    const p2 = document.getElementById("phone2");
+    p2.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"center"});
+    p2.classList.remove("pulse"); void p2.offsetWidth; p2.classList.add("pulse");
+  }, 1100);
+});
+
+/* ---------- Tela 2 ---------- */
+const L = (a, b, cls = "") => `<div class="l ${cls}"><span>${a}</span><b class="num">${b}</b></div>`;
+const G = (ic, t, s, v) => `<div class="g">${svg(ic,18)}<span class="txt"><b>${t}</b><span>${s}</span></span><span class="v num">${v}</span></div>`;
+const bar2 = sub => `<div class="bar"><button class="icon-btn" type="button" aria-label="Voltar">${svg(I.voltar,24,2.2)}</button><h3>Comprovante<small>${sub}</small></h3></div>`;
+const acoes2 = `<div class="acoes"><button class="btn btn--pri" type="button">${svg(I.share,18)} Compartilhar comprovante</button><button class="btn--txt" type="button">Voltar para o início</button></div>`;
+function render2(){
+  const el = document.getElementById("recibo");
+  if (st.recibo === "seguro"){
+    el.innerHTML = `${bar2("Mensalidade de outubro · Seguro Auto")}
+      <div class="recibo">
+        <section>
+          <div class="recibo-cab"><div><div class="eyebrow">COMPROVANTE</div><h4>iGreen Seguros</h4></div><span class="status-pill">${svg(I.check,14,3)} Pago</span></div>
+          <div style="margin-top:10px">${L("Mensalidade","Outubro · Seguro Auto")}${L("Valor pago","R$ 89,90","tot")}</div>
+          <div class="eyebrow" style="margin-top:12px">APÓLICE</div>
+          <ol class="timeline" aria-label="Situação da apólice">
+            <li class="feito"><span class="d" aria-hidden="true">${svg(I.check,12,4)}</span><div><b>Pagamento confirmado</b><span>16/10, 14:32</span></div></li>
+            <li class="agora" aria-current="step"><span class="d" aria-hidden="true"></span><div><b>Apólice em ativação</b><span>Até 30 minutos</span></div></li>
+            <li><span class="d" aria-hidden="true"></span><div><b>Apólice ativa</b><span>Avisamos aqui no app</span></div></li>
+          </ol>
+          <div class="ganhos ganhos--nao">${G(I.cb,"Sem cashback","Seguro não rende cashback","R$ 0,00")}</div>
+        </section>
+        <div class="corte" aria-hidden="true"></div>
+        <section>
+          ${L("Forma","Cartão Visa •••• 4821")}${L("Data e hora","16/10/2026 · 14:32")}${L("ID da transação",'<span class="codigo">IG2026101614320CRT4</span>')}
+          <div class="barcode" aria-hidden="true"></div>
+        </section>
+      </div>${acoes2}`;
+    return;
+  }
+  const p = st.pago || {metodo:metodos[0], valor:120.00, cb:9.20, ganho:cb1(120.00)};
+  el.innerHTML = `${bar2("Fatura de outubro · Energia")}
+    <div class="recibo">
+      <section>
+        <div class="recibo-cab"><div><div class="eyebrow">COMPROVANTE</div><h4>iGreen Energia</h4></div><span class="status-pill">${svg(I.check,14,3)} Pago</span></div>
+        <div style="margin-top:10px">
+          ${L("Fatura","Outubro · Energia")}
+          ${L("Valor da fatura","R$ 129,20")}
+          ${p.cb ? L("Cashback usado", "− " + brl(p.cb), "menos") : ""}
+          ${L("Valor pago", brl(p.valor), "tot")}
+        </div>
+        <div class="ganhos">
+          ${G(I.eco,"Desconto iGreen","15% nesta fatura","R$ 22,80")}
+          ${p.ganho ? G(I.cb,"Cashback ganho",`1% pago com o Pay · cai até ${CAI_ATE}`,"+ " + brl(p.ganho)) : G(I.cb,"Cashback ganho","Só o saldo Pay rende","R$ 0,00")}
+        </div>
+      </section>
+      <div class="corte" aria-hidden="true"></div>
+      <section>
+        ${L("Forma", p.metodo.nome)}${L("Data e hora","16/10/2026 · 14:35")}${L("ID da transação",'<span class="codigo">IG2026101614350PAY7</span>')}
+        <div class="barcode" aria-hidden="true"></div>
+      </section>
+    </div>${acoes2}`;
+}
+
+/* ---------- Tela 3 ---------- */
+// Economia por mês (fictícia). Outubro muda: a energia só entra depois de paga.
+const ECO_MESES = () => [["Mai",24.10],["Jun",27.40],["Jul",30.20],["Ago",28.90],["Set",31.50],["Out",M().ecoMes]];
+function extratoCashback(){
+  const m = M(), l = [];
+  if (m.caminho) l.push({tipo:"pay", t:"Pago com Pay · energia de outubro", d:`Cai até ${CAI_ATE}`, v:m.caminho, caminho:true});
+  if (st.resgatado) l.push({tipo:"resgate", t:"Resgate", d:"16/10", v:-st.resgatado});
+  if (m.usado) l.push({tipo:"uso", t:"Usado na energia de outubro", d:"16/10", v:-m.usado});
+  l.push({tipo:"indicacao", t:"Indicação · amigo pagou a fatura", d:"08/10", v:8.00});
+  l.push({tipo:"pay", t:"Pago com Pay · energia de setembro", d:"18/09", v:1.20});
+  l.push({tipo:"uso", t:"Usado na energia de setembro", d:"16/09", v:-14.30});
+  l.push({tipo:"indicacao", t:"Indicação · amigo pagou a fatura", d:"07/09", v:6.80});
+  l.push({tipo:"resgate", t:"Resgate", d:"02/09", v:-23.00});
+  return l;
+}
+function extratoEconomia(){
+  const l = [];
+  if (st.pago) l.push({p:"energia", t:"Energia · fatura de outubro", d:"Paga em 16/10 · 15% de desconto", v:22.80});
+  l.push({p:"telecom", t:"Telecom · plano de outubro", d:"Pago em 05/10 · desconto promocional", v:10.00});
+  l.push({p:"energia", t:"Energia · fatura de setembro", d:"Paga em 16/09 · 15% de desconto", v:21.50});
+  l.push({p:"telecom", t:"Telecom · plano de setembro", d:"Pago em 05/09 · desconto promocional", v:10.00});
+  l.push({p:"energia", t:"Energia · fatura de agosto", d:"Paga em 18/08 · 15% de desconto", v:18.90});
+  l.push({p:"telecom", t:"Telecom · plano de agosto", d:"Pago em 05/08 · desconto promocional", v:10.00});
+  return l;
+}
+const ICT = {pay:I.pay, indicacao:I.amigo, uso:I.usado, resgate:I.resgate, energia:I.energia, telecom:I.telecom};
+const linhaC = (ic, t, s, v, mais) => `<li><span class="ic" aria-hidden="true">${svg(ic, 18)}</span><span class="txt"><b>${t}</b><span>${s}</span></span><span class="v num ${mais ? "mais" : ""}">${v}</span></li>`;
+const itemC = h => linhaC(h.caminho ? I.relogio : ICT[h.tipo], h.t, h.d, (h.v > 0 ? "+ " : "− ") + brl(Math.abs(h.v)), h.v > 0);
+const itemE = h => linhaC(ICT[h.p], h.t, h.d, "+ " + brl(h.v), true);
+const chips = (grupo, opcoes, atual) => `<div class="chips" role="group" aria-label="Filtrar">${opcoes.map(([k, t]) => `<button type="button" data-${grupo}="${k}" aria-pressed="${atual === k}">${t}</button>`).join("")}</div>`;
+const busca = (id, valor) => `<label class="busca">${svg(I.lupa,18)}<span class="sr">Buscar</span><input type="search" id="${id}" placeholder="Buscar" value="${valor}" autocomplete="off"></label>`;
+const bar3 = (t, voltar, ajuda = "geral") => `<div class="bar">${voltar ? `<button class="icon-btn" type="button" aria-label="Voltar" data-ir="ganhos">${svg(I.voltar,24,2.2)}</button>` : ""}<h3 style="${voltar ? "" : "padding-left:8px"}">${t}</h3><button type="button" class="icon-btn" aria-label="Como funciona" data-ajuda="${ajuda}">${svg(I.ajuda,22)}</button></div>`;
+const cardIndique = `<div class="card pad indique" style="margin-top:10px"><span class="ic" aria-hidden="true">${svg(I.amigo)}</span><span class="txt"><b>Indique e ganhe cashback</b><span class="muted">A cada fatura paga por quem você indicar</span></span><button class="btn btn--pri" type="button" data-indicar>Indicar</button></div>`;
+const AJUDA = {
+  geral:["Cashback e economia", `<p class="muted" style="margin:6px 0 10px"><b>Cashback</b> é dinheiro seu: vem de indicações e de pagar com o Pay. Dá para usar numa fatura ou resgatar.</p><p class="muted" style="margin-bottom:14px"><b>Economia</b> é o desconto nas faturas já pagas. Ela não vira saldo e não se resgata.</p>${ENTENDI}`],
+  cashback:["Como funciona o cashback", `<p class="muted" style="margin:6px 0 10px">Você ganha cashback quando alguém que você indicou paga a fatura e quando paga com o saldo Pay (1%, até R$ 5,00 por fatura).</p><p class="muted" style="margin-bottom:14px">Ele cai em até 2 dias úteis e vale 12 meses. Use numa fatura ou resgate quando quiser.</p>${ENTENDI}`],
+  economia:["Como calculamos a economia", `<p class="muted" style="margin:6px 0 14px">É o que você pagaria sem a iGreen menos o que pagou. Só entram faturas já pagas: a de energia de outubro entra quando você pagar.</p>${ENTENDI}`]
+};
+
+function proximaConta(m){
+  return m.p
+    ? `<div class="card pad pend"><div class="pend-top"><b>Telecom · vence 25/10</b><b class="num">R$ 59,90</b></div>
+        <div class="pend-baixo"><span class="selo num">${svg(I.presente,15)} + R$ 0,59 de cashback com o Pay</span><button class="btn btn--pri" type="button">Pagar</button></div></div>`
+    : `<div class="card pad pend"><div class="pend-top"><b>Energia · vence 23/10</b><b class="num">R$ 129,20</b></div>
+        <div class="pend-baixo"><span class="selo num" style="background:var(--warn-bg);color:#5C3A00">${svg(I.relogio,15)} Pague em dia e mantenha os 15%</span><button class="btn btn--pri" type="button" data-ir-pagar>Pagar</button></div></div>`;
+}
+
+function render3(){
+  const el = document.getElementById("painel"), m = M();
+  if (st.painel === "vazio"){
+    el.innerHTML = `${bar3("Ganhos")}
+      <div class="card vazio">
+        <span class="selo num" style="font-size:1.3rem;padding:6px 16px">R$ 0,00</span>
+        <h4>Seus ganhos aparecem aqui</h4>
+        <p class="muted">A 1ª fatura chega de 60 a 180 dias após a assinatura. A economia aparece quando você pagar.</p>
+        <button class="btn btn--pri" type="button" id="avisar" style="margin-top:6px">Avisar quando chegar</button>
+      </div>
+      <div class="faixa faixa--prazo" style="margin-top:10px">${svg(I.ajuda,16)}<span class="t">A iGreen não manda boleto por e-mail</span></div>
+      ${cardIndique}`;
+    document.getElementById("avisar").addEventListener("click", e => {e.currentTarget.textContent = "Aviso ativado ✓"; e.currentTarget.className = "btn btn--sec";});
+  }
+  else if (st.painel === "cashback"){
+    const q = st.buscaC.trim().toLowerCase();
+    const lista = extratoCashback().filter(h => st.filtroC === "todos" || h.tipo === st.filtroC).filter(h => !q || h.t.toLowerCase().includes(q));
+    const usadoTot = 14.30 + m.usado, resgTot = 23.00 + st.resgatado;
+    el.innerHTML = `${bar3("Cashback", true, "cashback")}
+      <div class="card bloco">
+        <div class="muted">Disponível</div>
+        <div class="linha-v"><span class="grande num">${brl(m.disp)}</span><button class="btn btn--pri" type="button" data-resgatar ${m.disp > 0 ? "" : "disabled"}>${svg(I.resgate,18)} Resgatar</button></div>
+        ${m.caminho ? `<div style="margin-top:8px"><span class="selo num">${svg(I.relogio,15)} + ${brl(m.caminho)} a caminho · cai até ${CAI_ATE}</span></div>` : ""}
+        <p class="nota">${m.disp > 0 ? "Cada cashback vale 12 meses. O próximo vence em 18/09/2027." : (m.caminho ? "O resgate libera quando o cashback cair." : "Sem cashback para resgatar agora.")}</p>
+        <div class="eyebrow" style="margin-top:14px">DESDE O INÍCIO</div>
+        <dl class="contas num" style="margin-top:4px">
+          <div class="mais"><dt>Recebido de indicações</dt><dd>+ R$ 38,00</dd></div>
+          <div class="mais"><dt>Recebido pagando com o Pay</dt><dd>+ R$ 8,50</dd></div>
+          <div><dt>Usado em faturas</dt><dd>− ${brl(usadoTot)}</dd></div>
+          <div><dt>Resgatado</dt><dd>− ${brl(resgTot)}</dd></div>
+          <div class="tot"><dt>Disponível</dt><dd>${brl(m.disp)}</dd></div>
+        </dl>
+      </div>
+      <div class="card pad auto" style="margin-top:10px">
+        <div class="topo-a">
+          <span class="ic" aria-hidden="true">${svg(I.cb)}</span>
+          <span class="txt"><b id="lbl-auto">Cashback automático</b><span class="muted">${st.auto ? "Ligado: abate as próximas faturas sozinho" : "Usa seu cashback para abater as próximas faturas"}</span></span>
+          <button type="button" class="switch" role="switch" aria-checked="${st.auto}" aria-labelledby="lbl-auto" id="sw-auto"></button>
+        </div>
+        <button type="button" class="link" data-como-auto>Como funciona</button>
+      </div>
+      ${cardIndique}
+      <div class="label">Extrato do cashback</div>
+      ${busca("busca-c", st.buscaC)}
+      ${chips("fc", [["todos","Todos"],["indicacao","Indicação"],["pay","Pago com Pay"],["uso","Usado"],["resgate","Resgatado"]], st.filtroC)}
+      <div class="card"><ul class="comp">${lista.map(itemC).join("") || `<li class="vazio-lista muted">Nada encontrado</li>`}</ul></div>`;
+    document.getElementById("sw-auto").addEventListener("click", () => {st.auto = !st.auto; render3(); document.getElementById("sw-auto").focus();});
+    el.querySelector("[data-como-auto]").addEventListener("click", () => folha(3, "Cashback automático", `
+      <p class="muted" style="margin:6px 0 10px">Quando uma fatura chega, o cashback disponível abate o valor sozinho. Você vê o abatimento antes de pagar.</p>
+      <p class="muted" style="margin-bottom:14px">Cashback a caminho só entra depois de cair. Dá para desligar quando quiser.</p>${ENTENDI}`));
+    const rb = el.querySelector("[data-resgatar]"); if (rb) rb.addEventListener("click", () => resgatar(3));
+    ligarBusca("busca-c", "buscaC");
+    el.querySelectorAll("[data-fc]").forEach(b => b.addEventListener("click", () => {st.filtroC = b.dataset.fc; render3();}));
+  }
+  else if (st.painel === "economia"){
+    const serie = ECO_MESES(), max = Math.max(...serie.map(x => x[1]));
+    const q = st.buscaE.trim().toLowerCase();
+    const lista = extratoEconomia().filter(h => st.filtroE === "todos" || h.p === st.filtroE).filter(h => !q || h.t.toLowerCase().includes(q));
+    el.innerHTML = `${bar3("Economia", true, "economia")}
+      <div class="card bloco">
+        <div class="duo num">
+          <div><div class="k">Em outubro</div><div class="v">${brl(m.ecoMes)}</div></div>
+          <div><div class="k">Desde maio</div><div class="v neutro">${brl(m.ecoTotal)}</div></div>
+        </div>
+        ${m.p ? "" : `<p class="nota">A fatura de energia de outubro entra quando for paga.</p>`}
+        <div class="barras" role="img" aria-label="Economia por mês: ${serie.map(x => x[0] + " " + brl(x[1])).join(", ")}">
+          ${serie.map((x, i) => `<div class="${i === serie.length - 1 ? "atual" : ""}"><span style="height:${Math.max(4, Math.round(x[1] / max * 58))}px"></span><small>${x[0]}</small></div>`).join("")}
+        </div>
+      </div>
+      <div class="label">Em outubro, por produto</div>
+      <div class="card"><ul class="comp num">
+        ${linhaC(I.energia,"Energia", m.p ? "15% de desconto na fatura" : "Entra quando você pagar", m.p ? "+ R$ 22,80" : "R$ 0,00", !!m.p)}
+        ${linhaC(I.telecom,"Telecom","Desconto promocional no plano","+ R$ 10,00",true)}
+        ${linhaC(I.seguro,"Seguro","Sem desconto","R$ 0,00")}
+        ${linhaC(I.club,"Club","Incluso com seus serviços","R$ 0,00")}
+      </ul></div>
+      <p class="nota">Fora da soma: +5 GB no plano Telecom.</p>
+      <div class="label">Histórico da economia</div>
+      ${busca("busca-e", st.buscaE)}
+      ${chips("fe", [["todos","Todos"],["energia","Energia"],["telecom","Telecom"]], st.filtroE)}
+      <div class="card"><ul class="comp">${lista.map(itemE).join("") || `<li class="vazio-lista muted">Nada encontrado</li>`}</ul></div>`;
+    ligarBusca("busca-e", "buscaE");
+    el.querySelectorAll("[data-fe]").forEach(b => b.addEventListener("click", () => {st.filtroE = b.dataset.fe; render3();}));
+  }
+  else {
+    el.innerHTML = `${bar3("Ganhos")}
+      <div class="card">
+        <div class="bloco">
+          <div class="bloco-cab"><span class="ic" aria-hidden="true">${svg(I.cb,18)}</span><b>Seu cashback</b></div>
+          <div class="linha-v"><div><div class="muted">Disponível</div><span class="grande num">${brl(m.disp)}</span></div>
+            <button class="btn btn--sec" type="button" data-resgatar ${m.disp > 0 ? "" : "disabled"}>Resgatar</button></div>
+          ${m.caminho ? `<div style="margin-top:8px"><span class="selo num">${svg(I.relogio,15)} + ${brl(m.caminho)} a caminho · cai até ${CAI_ATE}</span></div>` : ""}
+        </div>
+        <button type="button" class="rodape-card" data-ir="cashback">Ver extrato do cashback ${svg(I.seta,18)}</button>
+      </div>
+
+      <div class="label">Próxima conta</div>
+      ${proximaConta(m)}
+
+      <div class="label">Sua economia com a iGreen</div>
+      <div class="card">
+        <div class="bloco">
+          <div class="duo num">
+            <div><div class="k">Em outubro</div><div class="v">${brl(m.ecoMes)}</div></div>
+            <div><div class="k">Desde maio</div><div class="v neutro">${brl(m.ecoTotal)}</div></div>
+          </div>
+          ${m.p ? "" : `<p class="nota">A energia de outubro entra quando for paga.</p>`}
+        </div>
+        <button type="button" class="rodape-card" data-ir="economia">Ver detalhes da economia ${svg(I.seta,18)}</button>
+      </div>
+      ${cardIndique}`;
+    const rb = el.querySelector("[data-resgatar]"); if (rb) rb.addEventListener("click", () => resgatar(3));
+    const ip = el.querySelector("[data-ir-pagar]"); if (ip) ip.addEventListener("click", () => {
+      const p1 = document.getElementById("phone1");
+      p1.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"center"});
+      p1.classList.remove("pulse"); void p1.offsetWidth; p1.classList.add("pulse");
+    });
+  }
+  el.querySelectorAll("[data-ir]").forEach(b => b.addEventListener("click", () => irPara(b.dataset.ir)));
+  el.querySelectorAll("[data-indicar]").forEach(b => b.addEventListener("click", () => indicar(3)));
+  el.querySelectorAll("[data-ajuda]").forEach(b => b.addEventListener("click", () => { const [t, c] = AJUDA[b.dataset.ajuda]; folha(3, t, c); }));
+}
+function resgatar(n = 3){
+  const m = M();
+  folha(n, "Resgatar cashback", `
+    <p class="muted" style="margin:4px 0 4px">Valor</p>
+    <div class="grande num" style="margin-bottom:10px">${brl(m.disp)}</div>
+    <p class="muted" style="margin-bottom:4px">Para onde vai</p>
+    <label class="destino"><span class="ic" aria-hidden="true">${svg(I.pay)}</span><span class="txt"><b>Saldo iGreen Pay</b><span class="muted">Na hora</span></span><input type="radio" name="destino${n}" checked aria-label="Saldo iGreen Pay"></label>
+    <label class="destino"><span class="ic" aria-hidden="true">${svg(I.pix)}</span><span class="txt"><b>Pix para a sua conta</b><span class="muted">Chave cadastrada</span></span><input type="radio" name="destino${n}" aria-label="Pix para a sua conta"></label>
+    <button type="button" class="btn btn--pri num" id="confirma-resgate${n}" style="margin-top:12px">Resgatar ${brl(m.disp)}</button>`);
+  document.getElementById(`confirma-resgate${n}`).addEventListener("click", () => {
+    const valor = M().disp; st.resgatado += valor; render3(); render4();
+    document.getElementById(`sh${n}-corpo`).innerHTML = `<p class="muted" style="margin:6px 0 14px">Resgate de ${brl(valor)} feito.</p>${ENTENDI}`;
+    document.querySelector(`#sheet${n} .sheet [data-fechar]`).focus();
+  });
+}
+function ligarBusca(id, chave, fn = render3){
+  const inp = document.getElementById(id);
+  inp.addEventListener("input", () => { st[chave] = inp.value; const pos = inp.selectionStart; fn(); const n = document.getElementById(id); n.focus(); n.setSelectionRange(pos, pos); });
+}
+function destacar(id){
+  const p = document.getElementById(id);
+  p.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"center"});
+  p.classList.remove("pulse"); void p.offsetWidth; p.classList.add("pulse");
+}
+function foraDoPrototipo(n, titulo, texto){ folha(n, titulo, `<p class="muted" style="margin:6px 0 14px">${texto}</p>${ENTENDI}`); }
+function usarNaFatura(n){
+  const m = M(), abertas = [];
+  if (!m.p) abertas.push({k:"energia", t:"Energia", s:"Vence 23/10", v:129.20});
+  abertas.push({k:"telecom", t:"Telecom", s:"Vence 25/10", v:59.90});
+  folha(n, "Usar cashback na fatura", `
+    <p class="muted">Saldo disponível</p>
+    <div class="grande num" style="margin-bottom:10px">${brl(m.disp)}</div>
+    <p class="muted" style="margin-bottom:4px">Escolha a fatura</p>
+    ${abertas.map((f, i) => `<label class="destino"><span class="ic" aria-hidden="true">${svg(I[f.k])}</span><span class="txt"><b>${f.t}</b><span class="muted">${f.s}</span></span><b class="num" style="margin-right:6px">${brl(f.v)}</b><input type="radio" name="fat${n}" value="${f.k}" ${i === 0 ? "checked" : ""} aria-label="${f.t}"></label>`).join("")}
+    <button type="button" class="btn btn--pri" id="usar-ok${n}" style="margin-top:12px">Continuar</button>`);
+  document.getElementById(`usar-ok${n}`).addEventListener("click", () => {
+    const k = document.querySelector(`input[name="fat${n}"]:checked`).value;
+    if (k === "energia"){ st.usarCb = true; st.metodo = st.metodo || "pix"; render1(); fecharFolha(document.getElementById(`sheet${n}`)); destacar("phone1"); }
+    else document.getElementById(`sh${n}-corpo`).innerHTML = `<p class="muted" style="margin:6px 0 14px">O pagamento do Telecom fica fora deste protótipo.</p>${ENTENDI}`;
+  });
+}
+function automatico(n){
+  folha(n, "Cashback automático", `
+    <div class="auto"><div class="topo-a"><span class="txt"><b id="lbl-auto${n}">Usar cashback nas faturas</b><span class="muted">Abate sozinho, até o saldo disponível</span></span><button type="button" class="switch" role="switch" aria-checked="${st.auto}" aria-labelledby="lbl-auto${n}" id="sw-auto${n}"></button></div></div>
+    <p class="muted" style="margin:12px 0 4px">Em quais faturas</p>
+    ${[["energia","Energia"],["telecom","Telecom"],["seguro","Seguros"]].map(([k, t]) => `<label class="check-row"><span class="ic" aria-hidden="true">${svg(I[k])}</span><span class="txt"><b>${t}</b></span><input type="checkbox" data-prod="${k}" ${st.autoProd[k] ? "checked" : ""} aria-label="${t}"></label>`).join("")}
+    <p class="nota" style="margin:10px 0 14px">Você vê o abatimento antes de pagar. Cashback a receber só entra depois de cair. Dá para desligar quando quiser.</p>${ENTENDI}`);
+  document.getElementById(`sw-auto${n}`).addEventListener("click", e => { st.auto = !st.auto; e.currentTarget.setAttribute("aria-checked", st.auto); render3(); render4(); });
+  document.querySelectorAll(`#sheet${n} [data-prod]`).forEach(c => c.addEventListener("change", () => { st.autoProd[c.dataset.prod] = c.checked; }));
+}
+function irPara(v){ st.painel = v; marcar("[data-painel]","painel",v); render3(); document.getElementById("painel").scrollTop = 0; }
+function indicar(n = 3){
+  folha(n, "Indique e ganhe cashback", `
+    <p class="muted" style="margin:4px 0 8px">Você ganha cashback a cada fatura paga por quem indicar.</p>
+    ${[["energia","Energia"],["telecom","Telecom"],["seguro","Seguros"]].map(([k, t]) => `
+      <div class="link-row"><span class="ic" aria-hidden="true">${svg(I[k])}</span><span class="txt"><b>${t}</b><span class="muted">Seu link de indicação</span></span><button type="button" class="copiar" data-copiar>Copiar link</button></div>`).join("")}
+    <button type="button" class="link" style="width:100%;justify-content:center">Gerenciar meus links ›</button>
+    <button type="button" class="btn btn--pri" data-fechar style="margin-top:6px">Fechar</button>`);
+  document.querySelectorAll(`#sheet${n} [data-copiar]`).forEach(b => b.addEventListener("click", () => {b.textContent = "Copiado ✓"; b.classList.add("ok");}));
+}
+
+/* ---------- Tela 4: Retorno iGreen (hub) ---------- */
+// Cashback recebido por mês (fictício), na mesma ordem de ECO_MESES
+const CB_MES = [7.30, 7.70, 8.70, 7.30, 8.00, 8.00];
+function H(){
+  const m = M(), eco = ECO_MESES();
+  return {...m,
+    meses: eco.map((x, i) => [x[0], +(x[1] + CB_MES[i]).toFixed(2)]),
+    ecoEnergia: +(92.10 + (m.p ? 22.80 : 0)).toFixed(2), ecoTelecom: 60.00,
+    cbRecebido: 46.50, total: +(m.ecoTotal + 46.50).toFixed(2), kwh: m.p ? 1296 : 1080,
+    usadoTot: +(14.30 + m.usado).toFixed(2), resgTot: +(23.00 + st.resgatado).toFixed(2)};
+}
+// Histórico completo da economia (fictício): seis meses, com o mês de cada lançamento
+const MESES3 = ["Outubro", "Setembro", "Agosto"];
+const MES_NOME = ["outubro", "setembro", "agosto", "julho", "junho", "maio"];
+function extratoEconomiaCompleto(){
+  const cap = s => s[0].toUpperCase() + s.slice(1);
+  return extratoEconomia().map(x => ({...x, mes: cap(MES_NOME.find(m => x.t.includes(m)))})).concat([
+    {p:"energia", t:"Energia · fatura de julho", d:"Paga em 16/07 · 15% de desconto",      v:20.20, mes:"Julho"},
+    {p:"telecom", t:"Telecom · plano de julho",  d:"Pago em 05/07 · desconto promocional", v:10.00, mes:"Julho"},
+    {p:"energia", t:"Energia · fatura de junho", d:"Paga em 16/06 · 15% de desconto",      v:17.40, mes:"Junho"},
+    {p:"telecom", t:"Telecom · plano de junho",  d:"Pago em 05/06 · desconto promocional", v:10.00, mes:"Junho"},
+    {p:"energia", t:"Energia · fatura de maio",  d:"Paga em 16/05 · 15% de desconto",      v:14.10, mes:"Maio"},
+    {p:"telecom", t:"Telecom · plano de maio",   d:"Pago em 05/05 · desconto promocional", v:10.00, mes:"Maio"}]);
+}
+const bar4 = (t, voltar, extra = "") => `<div class="bar">${voltar ? `<button class="icon-btn" type="button" aria-label="Voltar" data-hub-ir="${voltar}">${svg(I.voltar,24,2.2)}</button>` : ""}<h3 style="${voltar ? "" : "padding-left:8px"}">${t}</h3>${extra}</div>`;
+const pct = (v, t) => t > 0 ? Math.round(v / t * 100) : 0;
+const linhaOrigem = (nome, v, t) => `<div><span>${nome}</span><b>${brl(v)} <span class="pct">· ${pct(v, t)}%</span></b><span class="trilho" aria-hidden="true"><i style="width:${pct(v, t)}%"></i></span></div>`;
+const tileFixo = (k, v, cls = "") => `<div class="tile2 fixo"><span class="k">${k}</span><span class="v ${cls}">${v}</span></div>`;
+const acoesCb = h => `<div class="acoes3">
+    <button type="button" class="acao3" data-resg4 ${h.disp > 0 ? "" : "disabled"}>${svg(I.resgate,20)}Resgatar</button>
+    <button type="button" class="acao3" data-usar4 ${h.disp > 0 ? "" : "disabled"}>${svg(I.usado,20)}Usar na fatura</button>
+    <button type="button" class="acao3" data-ind4>${svg(I.amigo,20)}Indicar</button>
+  </div>`;
+const mesDe = d => d.includes("/10") ? "Outubro de 2026" : "Setembro de 2026";
+
+function render4(){
+  const el = document.getElementById("hub"), h = H(), v = st.hub;
+  if (v === "economia"){
+    const serie = ECO_MESES(), max = Math.max(...serie.map(x => x[1])), melhor = serie.reduce((a, b) => b[1] > a[1] ? b : a);
+    const NOME = {Mai:"maio", Jun:"junho", Jul:"julho", Ago:"agosto", Set:"setembro", Out:"outubro"};
+    const prodCard = (ic, nome, valor, p, dado) => `<div class="prodx"><div class="prodx-cab"><span class="ic" aria-hidden="true">${svg(ic,18)}</span><b>${nome}</b><span class="pct">${p}%</span></div><div class="v">${brl(valor)}</div><span class="trilho" aria-hidden="true"><i style="width:${p}%"></i></span><span class="dado">${dado}</span></div>`;
+    el.innerHTML = `${bar4("Análise da economia", "hub")}
+      <div class="card bloco">
+        <div class="cab-linha"><span class="tit">Economia total</span><button type="button" class="sel">Últimos 6 meses ${svg('<path d="m6 9 6 6 6-6"/>',16)}</button></div>
+        <div class="grande verde num" style="margin-top:12px">${brl(h.ecoTotal)}</div>
+        <div class="muted">nas suas contas, de maio a outubro</div>
+        ${h.p ? "" : `<p class="nota">A energia de outubro entra quando a fatura for paga.</p>`}
+        <div class="barras" role="img" aria-label="Economia por mês: ${serie.map(x => x[0] + " " + brl(x[1])).join(", ")}">
+          ${serie.map((x, i) => `<div class="${i === serie.length - 1 ? "atual" : ""}"><span style="height:${Math.max(4, Math.round(x[1] / max * 58))}px"></span><small>${x[0]}</small></div>`).join("")}
+        </div>
+        <dl class="contas num" style="margin-top:12px;border-top:1px solid var(--line)">
+          <div><dt>Média por mês</dt><dd>${brl(h.ecoTotal / 6)}</dd></div>
+          <div><dt>Melhor mês</dt><dd>${NOME[melhor[0]]} · ${brl(melhor[1])}</dd></div>
+        </dl>
+      </div>
+      <div class="label">Por produto</div>
+      <div class="hscroll num">
+        ${prodCard(I.energia, "Energia", h.ecoEnergia, pct(h.ecoEnergia, h.ecoTotal), `${h.kwh.toLocaleString("pt-BR")} kWh de energia limpa`)}
+        ${prodCard(I.telecom, "Telecom", h.ecoTelecom, pct(h.ecoTelecom, h.ecoTotal), "+5 GB por mês no plano")}
+        ${prodCard(I.seguro, "Seguros", 0, 0, "Proteção ativa · sem desconto")}
+      </div>
+      <div class="label">Histórico · últimos 3 meses</div>
+      <div class="card"><ul class="comp">${extratoEconomiaCompleto().filter(x => MESES3.includes(x.mes)).map(itemE).join("")}</ul>
+        <button type="button" class="rodape-card" data-hub-ir="historico-eco">Ver histórico completo ${svg(I.seta,18)}</button>
+      </div>`;
+  }
+  else if (v === "historico-eco"){
+    const q = st.buscaHE.trim().toLowerCase();
+    const lista = extratoEconomiaCompleto()
+      .filter(x => st.perE === "6" || MESES3.includes(x.mes))
+      .filter(x => st.origE === "todos" || x.p === st.origE)
+      .filter(x => !q || x.t.toLowerCase().includes(q));
+    const total = lista.reduce((s, x) => s + x.v, 0), grupos = {};
+    lista.forEach(x => (grupos[x.mes + " de 2026"] ||= []).push(x));
+    el.innerHTML = `${bar4("Histórico da economia", "economia")}
+      <div class="card bloco"><div class="muted">Economia no período</div><div class="grande verde num">${brl(total)}</div><div class="muted num">${lista.length} ${lista.length === 1 ? "lançamento" : "lançamentos"}</div></div>
+      <div style="margin-top:12px">${busca("busca-he", st.buscaHE)}</div>
+      <div class="mes-grupo" style="margin-top:4px">Período</div>
+      ${chips("pe", [["3","Últimos 3 meses"],["6","Últimos 6 meses"]], st.perE)}
+      <div class="mes-grupo" style="margin-top:4px">Origem</div>
+      ${chips("oe", [["todos","Todas"],["energia","Energia"],["telecom","Telecom"]], st.origE)}
+      ${Object.keys(grupos).length ? Object.entries(grupos).map(([mes, itens]) => `<div class="mes-grupo">${mes}</div><div class="card"><ul class="comp">${itens.map(itemE).join("")}</ul></div>`).join("") : `<div class="card"><ul class="comp"><li class="vazio-lista muted">Nada encontrado</li></ul></div>`}`;
+    ligarBusca("busca-he", "buscaHE", render4);
+    el.querySelectorAll("[data-pe]").forEach(b => b.addEventListener("click", () => { st.perE = b.dataset.pe; render4(); }));
+    el.querySelectorAll("[data-oe]").forEach(b => b.addEventListener("click", () => { st.origE = b.dataset.oe; render4(); }));
+  }
+  else if (v === "cashback"){
+    const porProduto = st.seg === "produto";
+    el.innerHTML = `${bar4("Meu cashback", "hub", `<button type="button" class="icon-btn" aria-label="Configurar cashback automático" data-auto4>${svg('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',22)}</button>`)}
+      <div class="card bloco">
+        <div class="muted">Saldo disponível</div>
+        <div class="grande num">${brl(h.disp)}</div>
+        ${h.caminho ? `<div class="faixa num" style="margin-top:10px">${svg(I.relogio,16)}<span class="t">${brl(h.caminho)} a receber · cai até ${CAI_ATE}</span></div>` : ""}
+        ${acoesCb(h)}
+        <p class="nota">${h.disp > 0 ? "Cada cashback vale 12 meses. O próximo vence em 18/09/2027." : (h.caminho ? "Resgatar e usar liberam quando o cashback cair." : "Sem saldo agora.")}</p>
+      </div>
+      <div class="label">Seu cashback em números <span style="font-weight:600">Todo o período</span></div>
+      <div class="card pad" style="padding-top:4px;padding-bottom:10px">
+        <dl class="contas num">
+          <div class="mais"><dt>Total recebido</dt><dd>+ ${brl(h.cbRecebido)}</dd></div>
+          <div><dt>Usado em faturas</dt><dd>− ${brl(h.usadoTot)}</dd></div>
+          <div><dt>Resgatado</dt><dd>− ${brl(h.resgTot)}</dd></div>
+          <div class="tot"><dt>Disponível</dt><dd>${brl(h.disp)}</dd></div>
+        </dl>
+        ${h.caminho ? `<p class="nota num">${brl(h.caminho)} a receber fica fora da conta até cair.</p>` : ""}
+      </div>
+      <div class="label">De onde vem</div>
+      <div class="abas" role="tablist" aria-label="Agrupar por">
+        <button type="button" role="tab" aria-selected="${porProduto}" data-seg="produto">Por produto</button>
+        <button type="button" role="tab" aria-selected="${!porProduto}" data-seg="tipo">Por tipo</button>
+      </div>
+      <div class="card pad" style="margin-top:8px"><div class="origem num">
+        ${porProduto
+          ? linhaOrigem("Energia", 30.30, 46.50) + linhaOrigem("Telecom", 9.40, 46.50) + linhaOrigem("Seguros", 6.80, 46.50)
+          : linhaOrigem("Indicações", 38.00, 46.50) + linhaOrigem("Pagamento com o Pay", 8.50, 46.50)}
+      </div></div>
+      <div class="label">Cashback automático</div>
+      <div class="card pad">
+        <div class="topo-a" style="display:flex;align-items:center;gap:12px">
+          <span class="ic" aria-hidden="true">${svg(I.cb)}</span>
+          <span style="flex:1"><b style="display:block;font-size:.95rem">Usar nas faturas</b><span class="muted">Abate sozinho as faturas que você escolher</span></span>
+          <span class="status-auto ${st.auto ? "on" : ""}">${st.auto ? "Ativo" : "Desligado"}</span>
+        </div>
+        <button type="button" class="link" data-auto4>Gerenciar ›</button>
+      </div>
+      <div class="label">Últimas movimentações <button type="button" class="link" style="min-height:32px" data-hub-ir="extrato">Ver extrato ›</button></div>
+      <div class="card"><ul class="comp">${extratoCashback().slice(0, 3).map(itemC).join("")}</ul></div>`;
+    el.querySelectorAll("[data-seg]").forEach(b => b.addEventListener("click", () => { st.seg = b.dataset.seg; render4(); el.querySelector(`[data-seg="${st.seg}"]`).focus(); }));
+  }
+  else if (v === "extrato"){
+    const q = st.buscaX.trim().toLowerCase();
+    const lista = extratoCashback()
+      .filter(x => st.filtroX === "todos" || (st.filtroX === "entradas" && x.v > 0 && !x.caminho) || (st.filtroX === "saidas" && x.v < 0) || (st.filtroX === "receber" && x.caminho))
+      .filter(x => !q || x.t.toLowerCase().includes(q));
+    const grupos = {}; lista.forEach(x => (grupos[mesDe(x.d)] ||= []).push(x));
+    el.innerHTML = `${bar4("Extrato do cashback", "cashback")}
+      <div class="card bloco"><div class="muted">Recebido em outubro</div><div class="grande num">${brl(8.00)}</div>${h.caminho ? `<div class="nota num">+ ${brl(h.caminho)} a receber</div>` : ""}</div>
+      <div style="margin-top:12px">${busca("busca-x", st.buscaX)}</div>
+      ${chips("fx", [["todos","Todos"],["entradas","Entradas"],["saidas","Saídas"],["receber","A receber"]], st.filtroX)}
+      ${Object.keys(grupos).length ? Object.entries(grupos).map(([mes, itens]) => `<div class="mes-grupo">${mes}</div><div class="card"><ul class="comp">${itens.map(itemC).join("")}</ul></div>`).join("") : `<div class="card"><ul class="comp"><li class="vazio-lista muted">Nada encontrado</li></ul></div>`}`;
+    ligarBusca("busca-x", "buscaX", render4);
+    el.querySelectorAll("[data-fx]").forEach(b => b.addEventListener("click", () => { st.filtroX = b.dataset.fx; render4(); }));
+  }
+  else {
+    el.innerHTML = `<div class="bar"><button class="icon-btn" type="button" aria-label="Voltar">${svg(I.voltar,24,2.2)}</button></div>
+      <div class="hero3">
+        <div class="h-top">
+          <h3 class="titulo">A iGreen já te devolveu</h3>
+          <button type="button" class="ic-graf" aria-label="Ver análise completa" data-hub-ir="economia">${svg('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',20)}</button>
+        </div>
+        <div class="s">Economia e cashback desde maio de 2026</div>
+        <div class="h-corpo">
+          <div class="txt">
+            <div class="v num">${brl(h.total)}</div>
+            <span class="selo num">${svg(I.eco,14)} + ${brl(h.meses[5][1])} em outubro</span>
+          </div>
+          <svg class="ilustra" width="76" height="76" viewBox="0 0 88 88" aria-hidden="true"><circle cx="44" cy="42" r="38" fill="#E2F2E7"/><ellipse cx="29" cy="68" rx="14" ry="5" fill="#B8912A"/><ellipse cx="29" cy="64" rx="14" ry="5" fill="#E6C14F"/><ellipse cx="58" cy="71" rx="12" ry="4.5" fill="#B8912A"/><ellipse cx="58" cy="67" rx="12" ry="4.5" fill="#E6C14F"/><path d="M49 12 30 45h12l-4 23 20-33H47z" fill="#1C7443"/></svg>
+        </div>
+      </div>
+
+      <div class="saldo3" style="margin-top:14px">
+        <span class="bolinha">${svg(I.cb,20)}</span>
+        <span class="txt"><span>Seu cashback</span><b class="num">${brl(h.disp)}</b></span>
+        <button type="button" class="btn" data-hub-ir="cashback">Ver cashback ${svg(I.seta,16)}</button>
+      </div>
+      ${h.caminho ? `<div class="faixa num" style="margin-top:8px">${svg(I.relogio,16)}<span class="t">${brl(h.caminho)} a receber · cai até ${CAI_ATE}</span><button type="button" class="acao" data-hub-ir="cashback">Ver</button></div>` : ""}
+
+      <h4 class="titulo-sec">Seus ganhos</h4>
+      <div class="mosaico num">
+        <div class="m-card m-grande">
+          <span class="m-ilustra" aria-hidden="true">${svg(I.energia,26)}</span>
+          <b class="v">${brl(h.ecoTotal)}</b>
+          <span class="t">nas suas contas</span>
+          <span class="m-mini"><span class="k">Energia limpa</span><b>${h.kwh.toLocaleString("pt-BR")} kWh</b></span>
+          <button type="button" class="m-cta" data-hub-ir="economia">Ver economia ${svg(I.seta,14)}</button>
+        </div>
+        <div class="m-card">
+          <b class="v">${brl(h.cbRecebido)}</b>
+          <span class="t">em cashback</span>
+          <button type="button" class="m-cta" data-ganhe4>Ganhe mais ${svg(I.seta,14)}</button>
+        </div>
+        <div class="m-card">
+          <b class="v neutro">5 cupons</b>
+          <span class="t">no Club</span>
+          <button type="button" class="m-cta" data-club4>Ver cupons ${svg(I.seta,14)}</button>
+        </div>
+      </div>
+
+      <h4 class="titulo-sec">Origem dos seus ganhos</h4>
+      <div class="hscroll num">
+        ${[
+          [I.energia, "Energia", h.ecoEnergia + 30.30, `${h.kwh.toLocaleString("pt-BR")} kWh de energia limpa`],
+          [I.telecom, "Telecom", h.ecoTelecom + 9.40, "+5 GB por mês no plano"],
+          [I.seguro, "Seguros", 6.80, "Cashback de indicação"]
+        ].map(([ic, nome, total, cap]) => `
+        <div class="orig4">
+          <div class="o4-cab"><span class="ic" aria-hidden="true">${svg(ic,20)}</span><b>${nome}</b><span class="o4-pct">${pct(total, h.total)}%</span></div>
+          <b class="o4-v">${brl(total)}</b>
+          <span class="o4-barra" aria-hidden="true"><i style="width:${pct(total, h.total)}%"></i></span>
+          <span class="o4-cap">${cap}</span>
+        </div>`).join("")}
+      </div>
+
+      <h4 class="titulo-sec">Dá pra ganhar mais</h4>
+      <div class="card">
+        <button type="button" class="linha-acao" data-mais="pay"><span class="ic" aria-hidden="true">${svg(I.pay,18)}</span><span class="txt"><b>Pague com o saldo Pay</b><span>1% de cashback por fatura</span></span>${svg(I.seta,18)}</button>
+        <button type="button" class="linha-acao" data-ind4><span class="ic" aria-hidden="true">${svg(I.amigo,18)}</span><span class="txt"><b>Indique e ganhe</b><span>Cashback a cada fatura paga</span></span>${svg(I.seta,18)}</button>
+        <button type="button" class="linha-acao" data-auto4><span class="ic" aria-hidden="true">${svg(I.cb,18)}</span><span class="txt"><b>Cashback automático</b><span>${st.auto ? "Ligado nas faturas escolhidas" : "Abate suas faturas sozinho"}</span></span>${svg(I.seta,18)}</button>
+        ${h.p ? "" : `<button type="button" class="linha-acao" data-mais="emdia"><span class="ic" aria-hidden="true">${svg(I.relogio,18)}</span><span class="txt"><b>Pague em dia</b><span>Mantenha os 15% de desconto</span></span>${svg(I.seta,18)}</button>`}
+      </div>`;
+  }
+  // ações comuns da tela 4
+  el.querySelectorAll("[data-hub-ir]").forEach(b => b.addEventListener("click", () => irHub(b.dataset.hubIr)));
+  el.querySelectorAll("[data-resg4]").forEach(b => b.addEventListener("click", () => resgatar(4)));
+  el.querySelectorAll("[data-usar4]").forEach(b => b.addEventListener("click", () => usarNaFatura(4)));
+  el.querySelectorAll("[data-ind4]").forEach(b => b.addEventListener("click", () => indicar(4)));
+  el.querySelectorAll("[data-auto4]").forEach(b => b.addEventListener("click", () => automatico(4)));
+  el.querySelectorAll("[data-pagar4]").forEach(b => b.addEventListener("click", () => destacar("phone1")));
+  el.querySelectorAll("[data-pagar-tel4]").forEach(b => b.addEventListener("click", () => foraDoPrototipo(4, "Pagar o Telecom", "O pagamento do Telecom fica fora deste protótipo.")));
+  el.querySelectorAll("[data-ganhe4]").forEach(b => b.addEventListener("click", () => {
+    folha(4, "Como ganhar mais cashback", `
+      <div class="link-row"><span class="ic" aria-hidden="true">${svg(I.pay)}</span><span class="txt"><b>Pague com o saldo Pay</b><span class="muted">1% de cashback em cada fatura, até R$ 5,00</span></span><button type="button" class="copiar" data-ganhe="pay">Pagar</button></div>
+      <div class="link-row"><span class="ic" aria-hidden="true">${svg(I.amigo)}</span><span class="txt"><b>Indique e ganhe</b><span class="muted">A cada fatura paga por quem você indicar</span></span><button type="button" class="copiar" data-ganhe="indicar">Indicar</button></div>
+      <button type="button" class="btn btn--pri" data-fechar style="margin-top:12px">Fechar</button>`);
+    document.querySelector('#sheet4 [data-ganhe="indicar"]').addEventListener("click", () => indicar(4));
+    document.querySelector('#sheet4 [data-ganhe="pay"]').addEventListener("click", () => {
+      fecharFolha(document.getElementById("sheet4"));
+      if (!st.pago){ st.payAtivo = true; st.metodo = "pay"; marcar("[data-pay]","pay","sim"); render1(); destacar("phone1"); }
+      else foraDoPrototipo(4, "Pague com o saldo Pay", "Na próxima fatura, escolha o saldo Pay na hora de pagar e ganhe 1% de cashback.");
+    });
+  }));
+  el.querySelectorAll("[data-club4]").forEach(b => b.addEventListener("click", () => foraDoPrototipo(4, "Cupons do Club", "Os cupons ficam no Club, fora deste protótipo. O valor economizado com cupons não aparece aqui porque ainda não é medido.")));
+  el.querySelectorAll("[data-mais]").forEach(b => b.addEventListener("click", () => {
+    if (b.dataset.mais === "pay" && !st.pago){ st.payAtivo = true; st.metodo = "pay"; marcar("[data-pay]","pay","sim"); render1(); destacar("phone1"); }
+    else if (b.dataset.mais === "pay") foraDoPrototipo(4, "Pague com o saldo Pay", "Na próxima fatura, escolha o saldo Pay na hora de pagar e ganhe 1% de cashback.");
+    else destacar("phone1");
+  }));
+  const aj = el.querySelector("[data-ajuda4]"); if (aj) aj.addEventListener("click", () => folha(4, "O que entra no retorno", `
+    <p class="muted" style="margin:6px 0 10px">O desconto nas contas já pagas e o cashback que já caiu. O cashback a receber entra quando cair.</p>
+    <p class="muted" style="margin-bottom:14px">Os cupons do Club ainda não entram no valor, porque não medimos quanto você economiza com eles.</p>${ENTENDI}`));
+}
+function irHub(v){ st.hub = v; marcar("[data-hub]","hub",v); render4(); document.getElementById("hub").scrollTop = 0; }
+
+/* ---------- Estados ---------- */
+function marcar(sel, chave, val){ document.querySelectorAll(sel).forEach(b => b.setAttribute("aria-pressed", b.dataset[chave] === val)); }
+document.querySelectorAll("[data-recibo]").forEach(b => b.addEventListener("click", () => {st.recibo = b.dataset.recibo; marcar("[data-recibo]","recibo",st.recibo); render2();}));
+document.querySelectorAll("[data-painel]").forEach(b => b.addEventListener("click", () => irPara(b.dataset.painel)));
+document.querySelectorAll("[data-hub]").forEach(b => b.addEventListener("click", () => irHub(b.dataset.hub)));
+
+render1(); render2(); render3(); render4();
+</script>
+</body>
+</html>
