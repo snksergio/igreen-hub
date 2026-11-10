@@ -108,6 +108,7 @@ for (const categoria of categorias) {
     if (p.tipo && !tipos[p.tipo]) aviso(`tipo "${p.tipo}" não existe em categorias.json`);
     if (p.atualizado && !DATA.test(p.atualizado)) aviso('"atualizado" deve ser AAAA-MM-DD');
     if (p.status && !STATUS.includes(p.status)) aviso(`"status" deve ser ${STATUS.join(', ')}`);
+    if (p.destaque !== undefined && typeof p.destaque !== 'boolean') aviso('"destaque" deve ser true ou false');
 
     // O padrão da ficha para a busca (seção 3 do ORQUESTRADOR): descrição curta, tags de assunto, página com nome.
     if (typeof p.descricao === 'string' && p.descricao.length > 220) aviso(`"descricao" com ${p.descricao.length} caracteres: o padrão é até uns 200`);
@@ -223,6 +224,7 @@ for (const categoria of categorias) {
       tipo: p.tipo ?? '',
       atualizado: p.atualizado ?? '',
       status: p.status ?? 'ativo',
+      destaque: p.destaque === true,
       paginas: paginas.map((pg) => ({ nome: pg.nome, url: url(pg.arquivo) })),
       versoes: versoes.map((v) => ({ nome: v.nome, url: url(v.arquivo), data: v.data ?? null })),
       acervo,
@@ -236,6 +238,10 @@ for (const categoria of categorias) {
 }
 
 projetos.sort((a, b) => b.atualizado.localeCompare(a.atualizado) || a.nome.localeCompare(b.nome));
+
+// O destaque do topo da vitrine é um projeto por vez
+const destacados = projetos.filter((p) => p.destaque && p.status !== 'arquivado');
+if (destacados.length > 1) avisos.push(`${destacados.map((p) => p.id).join(', ')}: mais de um projeto com "destaque"; a vitrine mostra só o atualizado por último`);
 
 const catalogo = { gerado: new Date().toISOString(), categorias, tipos, projetos };
 writeFileSync(

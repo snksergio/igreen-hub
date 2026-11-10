@@ -88,6 +88,7 @@ Use builder e output quando o estudo for grande ou não puder ir para quem vai v
 | `link` | não | Só quando o projeto mora fora daqui: a URL dele. Aí o `arquivo` de cada página é relativo a esse link |
 | `repo` | não | Onde está o código-fonte, se for outro repositório |
 | `status` | não | `ativo` (padrão), `rascunho` ou `arquivado` (sai da lista principal e fica no filtro Arquivados) |
+| `destaque` | não | `true` põe o projeto no destaque do topo da vitrine, no lugar do atualizado por último. Um projeto por vez: ao destacar outro, tire o `destaque` do anterior. Só com o pedido do usuário |
 | `tags` | não | De 5 a 10 assuntos que alguém digitaria para achar o projeto e que não estão no nome: no singular, minúsculas, em português. Sem versão (`v3`) nem formato que o nome já diz (`canvas`). Projeto grande pode ter mais |
 
 A categoria e o slug saem do caminho da pasta, não repita no arquivo.
