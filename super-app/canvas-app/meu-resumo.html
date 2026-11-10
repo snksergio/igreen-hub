@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meu resumo · Canvas do app iGreen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap">
+<style>
+html, body { height: 100%; margin: 0 }
+body { overflow: hidden; background: #1F2120; color: #F0F2F1; -webkit-user-select: none; user-select: none; font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased }
+#vista { position: fixed; inset: 0; overflow: hidden; cursor: grab; touch-action: none }
+#vista.arrastando { cursor: grabbing }
+#mundo { position: absolute; left: 0; top: 0; transform-origin: 0 0 }
+.quadro { position: absolute; box-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 32px rgba(0,0,0,0.35); background: #EEF0EF }
+.rotulo { position: absolute; left: 4px; bottom: 100%; margin-bottom: 12px; max-width: calc(100% - 8px); font-size: 18px; line-height: 24px; font-weight: 600; color: #A7ABA9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none }
+.titulo-linha { position: absolute; margin: 0; font-size: 72px; line-height: 84px; font-weight: 800; letter-spacing: -0.02em; color: #ECEEED; white-space: nowrap; pointer-events: none }
+.topo { position: fixed; z-index: 5; left: 12px; right: 12px; top: 12px; display: flex; align-items: center; gap: 10px; pointer-events: none }
+.topo > * { pointer-events: auto }
+.marca { flex-shrink: 0; padding: 9px 12px; border-radius: 12px; background: rgba(42,44,43,0.94); border: 1px solid #3A3D3B; font-size: 13px; font-weight: 800; color: #F0F2F1; white-space: nowrap }
+.abas { min-width: 0; display: flex; gap: 4px; padding: 4px; border-radius: 14px; background: rgba(42,44,43,0.94); border: 1px solid #3A3D3B; overflow-x: auto; scrollbar-width: none }
+.abas::-webkit-scrollbar { display: none }
+.abas a { flex-shrink: 0; padding: 7px 11px; border-radius: 10px; color: #C4C9C6; text-decoration: none; font-size: 13px; font-weight: 700; white-space: nowrap }
+.abas a:hover { background: #333634; color: #F0F2F1 }
+.abas a[aria-current="page"] { background: #F0F2F1; color: #111513 }
+.abas a.secundaria { color: #93D5A6 }
+.abas .sep { flex-shrink: 0; width: 1px; margin: 6px 4px; background: #3F4341 }
+.abas a:focus-visible, .barra button:focus-visible { outline: 2px solid #7CC492; outline-offset: 2px }
+.barra { position: fixed; z-index: 5; left: 50%; bottom: 16px; transform: translateX(-50%); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; max-width: calc(100vw - 24px); padding: 6px; border-radius: 18px; background: #2A2C2B; border: 1px solid #3A3D3B; box-shadow: 0 10px 30px rgba(0,0,0,0.4) }
+.barra button { min-width: 40px; height: 40px; padding: 0 12px; border-radius: 12px; border: 1px solid #3F4341; background: #333634; color: #F0F2F1; font-family: inherit; font-size: 14px; font-weight: 700; line-height: 1; cursor: pointer }
+.barra button:hover { background: #3C3F3D }
+.barra .nivel { min-width: 52px; text-align: center; font-weight: 800; font-size: 13px; color: #D5D9D7; font-variant-numeric: tabular-nums }
+.barra .sep { width: 1px; height: 24px; background: #3F4341 }
+.barra .dica { padding: 0 6px; font-size: 12px; font-weight: 600; color: #9CA29F }
+@media (max-width: 760px) { .barra .dica { display: none } .marca { display: none } }
+</style>
+</head>
+<body>
+<div id="vista"><div id="mundo"></div></div>
+<div class="topo"><span class="marca">Canvas do app iGreen</span><nav class="abas" aria-label="Páginas do canvas"><a href="index.html">Home iGreen</a><a href="eletroposto.html">Eletroposto: home, veículos e pagamento</a><a href="login.html">Login</a><a href="telecom-pagamento.html">Telecom e pagamento</a><a href="cadastro-pay.html">Cadastro Pay</a><a href="loja.html">Loja</a><a href="meu-resumo.html" aria-current="page">Meu resumo</a><a href="componentes.html">Componentes</a><a href="descartadas.html">Descartadas</a><span class="sep" aria-hidden="true"></span><a href="anteriores-home-igreen.html" class="secundaria">Versões anteriores</a></nav></div>
+<div class="barra" role="toolbar" aria-label="Zoom e navegação">
+<button type="button" id="menos" aria-label="Diminuir o zoom">−</button>
+<span class="nivel" id="nivel">100%</span>
+<button type="button" id="mais" aria-label="Aumentar o zoom">+</button>
+<button type="button" id="ajustar">Ver tudo</button>
+<span class="sep"></span>
+<button type="button" id="anterior" aria-label="Tela anterior">←</button>
+<button type="button" id="proxima" aria-label="Próxima tela">→</button>
+<span class="dica">3 telas · arraste para mover · Ctrl + roda para zoom · 2 cliques para focar</span>
+</div>
+<script>
+const DADOS = {"quadros":[{"id":"Resumo01Plano","x":0,"y":0,"w":390,"h":320,"t":"Resumo 1 · Cartão do plano (faixa verde)","r":28,"html":"<div style=\"width: 390px; height: 320px; box-sizing: border-box; padding: 20px 16px 0; background: #EEF0EF; color: #111513; font-family: 'Manrope', system-ui, sans-serif; display: flex; flex-direction: column; gap: 10px\">\n<div style=\"height: 28px; display: flex; align-items: center; justify-content: space-between; padding-left: 4px\">\n<h2 style=\"margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.01em\">Meu resumo<\/h2>\n<button aria-label=\"Mudar mês e veículo do resumo\" style=\"height: 44px; margin: -8px 0; border: 0; background: transparent; color: #545C57; font-size: 13.5px; font-weight: 500; display: flex; align-items: center; gap: 6px\"><span>setembro<\/span><span>·<\/span><span style=\"font-weight: 700; color: #111513\">BYD King<\/span><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#111513\" stroke-width=\"2.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m6 9 6 6 6-6\"><\/path><\/svg><\/button>\n<\/div>\n<div style=\"border-radius: 24px; background: #FFFFFF; border: 1px solid #E1E5E2; overflow: hidden\">\n<div style=\"padding: 16px 18px 14px\">\n<span style=\"font-size: 13px; font-weight: 600; color: #545C57\">Gasto em setembro<\/span>\n<div style=\"margin-top: 2px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap\">\n<span style=\"display: flex; align-items: baseline; gap: 5px; font-variant-numeric: tabular-nums\"><span style=\"font-size: 18px; font-weight: 700\">R$<\/span><span style=\"font-size: 36px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.15\">228,90<\/span><\/span>\n<span style=\"height: 26px; padding: 0 10px; border-radius: 13px; background: #338449; color: #FFFFFF; font-size: 12.5px; font-weight: 800; display: flex; align-items: center\">6 recargas<\/span>\n<\/div>\n<span style=\"display: block; margin-top: 2px; font-size: 14px; color: #545C57\">Média de <span style=\"font-weight: 800; color: #111513\">R$ 1,95/kWh<\/span><\/span>\n<div style=\"margin-top: 14px; padding-top: 12px; border-top: 1px solid #EEF0EF; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr))\">\n<span style=\"display: flex; flex-direction: column; gap: 1px\"><span style=\"font-size: 12.5px; font-weight: 600; color: #545C57\">Energia<\/span><span style=\"font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums\">117,1 kWh<\/span><\/span>\n<span style=\"display: flex; flex-direction: column; gap: 1px; padding-left: 14px; border-left: 1px solid #EEF0EF\"><span style=\"font-size: 12.5px; font-weight: 600; color: #545C57\">Eletropostos<\/span><span style=\"font-size: 17px; font-weight: 800\">4 diferentes<\/span><\/span>\n<\/div>\n<\/div>\n<a href=\"#\" style=\"height: 48px; background: #338449; color: #FFFFFF; padding: 0 14px 0 18px; display: flex; align-items: center; justify-content: space-between; text-decoration: none\">\n<span style=\"display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z\"><\/path><path d=\"M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12\"><\/path><\/svg>Economia vs. gasolina<\/span>\n<span style=\"display: flex; align-items: center; gap: 4px; font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums\">R$ 268,50<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m9 18 6-6-6-6\"><\/path><\/svg><\/span>\n<\/a>\n<\/div>\n<\/div>","css":"body{margin:0;background:#EEF0EF}button{font-family:inherit;cursor:pointer;padding:0}"},{"id":"Resumo02Grade","x":470,"y":0,"w":390,"h":360,"t":"Resumo 2 · Grade com ícones","r":28,"html":"<div style=\"width: 390px; height: 360px; box-sizing: border-box; padding: 20px 16px 0; background: #EEF0EF; color: #111513; font-family: 'Manrope', system-ui, sans-serif; display: flex; flex-direction: column; gap: 10px\">\n<div style=\"height: 28px; display: flex; align-items: center; justify-content: space-between; padding-left: 4px\">\n<h2 style=\"margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.01em\">Meu resumo<\/h2>\n<button aria-label=\"Mudar mês e veículo do resumo\" style=\"height: 44px; margin: -8px 0; border: 0; background: transparent; color: #545C57; font-size: 13.5px; font-weight: 500; display: flex; align-items: center; gap: 6px\"><span>setembro<\/span><span>·<\/span><span style=\"font-weight: 700; color: #111513\">BYD King<\/span><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#111513\" stroke-width=\"2.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m6 9 6 6 6-6\"><\/path><\/svg><\/button>\n<\/div>\n<div style=\"display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px\">\n<a href=\"#\" style=\"min-height: 134px; box-sizing: border-box; border-radius: 24px; background: #FFFFFF; border: 1px solid #E1E5E2; padding: 16px; display: flex; flex-direction: column; color: #111513; text-decoration: none\">\n<span style=\"width: 40px; height: 40px; border-radius: 20px; background: #338449; color: #FFFFFF; display: flex; align-items: center; justify-content: center\"><svg width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z\"><\/path><path d=\"M14 8H8\"><\/path><path d=\"M16 12H8\"><\/path><path d=\"M13 16H8\"><\/path><\/svg><\/span>\n<span style=\"margin-top: auto; font-size: 20px; font-weight: 800; letter-spacing: -0.01em; font-variant-numeric: tabular-nums\">R$ 228,90<\/span>\n<span style=\"font-size: 13px; color: #545C57\">Gasto no mês<\/span>\n<\/a>\n<a href=\"#\" style=\"min-height: 134px; box-sizing: border-box; border-radius: 24px; background: #FFFFFF; border: 1px solid #E1E5E2; padding: 16px; display: flex; flex-direction: column; color: #111513; text-decoration: none\">\n<span style=\"width: 40px; height: 40px; border-radius: 20px; background: #EEF1EF; color: #338449; display: flex; align-items: center; justify-content: center\"><svg width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z\"><\/path><\/svg><\/span>\n<span style=\"margin-top: auto; font-size: 20px; font-weight: 800; letter-spacing: -0.01em; font-variant-numeric: tabular-nums\">117,1 kWh<\/span>\n<span style=\"font-size: 13px; color: #545C57\">Energia recarregada<\/span>\n<\/a>\n<a href=\"#\" style=\"min-height: 134px; box-sizing: border-box; border-radius: 24px; background: #FFFFFF; border: 1px solid #E1E5E2; padding: 16px; display: flex; flex-direction: column; color: #111513; text-decoration: none\">\n<span style=\"width: 40px; height: 40px; border-radius: 20px; background: #EEF1EF; color: #338449; display: flex; align-items: center; justify-content: center\"><svg width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 22v-5\"><\/path><path d=\"M9 8V2\"><\/path><path d=\"M15 8V2\"><\/path><path d=\"M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z\"><\/path><\/svg><\/span>\n<span style=\"margin-top: auto; font-size: 20px; font-weight: 800; letter-spacing: -0.01em\">6 recargas<\/span>\n<span style=\"font-size: 13px; color: #545C57\">Em 4 eletropostos<\/span>\n<\/a>\n<a href=\"#\" style=\"min-height: 134px; box-sizing: border-box; border-radius: 24px; background: #FFFFFF; border: 1px solid #E1E5E2; padding: 16px; display: flex; flex-direction: column; color: #111513; text-decoration: none\">\n<span style=\"width: 40px; height: 40px; border-radius: 20px; background: #EEF1EF; color: #338449; display: flex; align-items: center; justify-content: center\"><svg width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z\"><\/path><path d=\"M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12\"><\/path><\/svg><\/span>\n<span style=\"margin-top: auto; font-size: 20px; font-weight: 800; letter-spacing: -0.01em; font-variant-numeric: tabular-nums\">R$ 268,50<\/span>\n<span style=\"font-size: 13px; color: #545C57\">Economia vs. gasolina<\/span>\n<\/a>\n<\/div>\n<\/div>","css":"body{margin:0;background:#EEF0EF}button{font-family:inherit;cursor:pointer;padding:0}"},{"id":"Resumo04Semanas","x":940,"y":0,"w":390,"h":400,"t":"Resumo 4 · Energia por semana (gráfico)","r":28,"html":"<div style=\"width: 390px; height: 400px; box-sizing: border-box; padding: 20px 16px 0; background: #EEF0EF; color: #111513; font-family: 'Manrope', system-ui, sans-serif; display: flex; flex-direction: column; gap: 10px\">\n<div style=\"height: 28px; display: flex; align-items: center; justify-content: space-between; padding-left: 4px\">\n<h2 style=\"margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.01em\">Meu resumo<\/h2>\n<button aria-label=\"Mudar mês e veículo do resumo\" style=\"height: 44px; margin: -8px 0; border: 0; background: transparent; color: #545C57; font-size: 13.5px; font-weight: 500; display: flex; align-items: center; gap: 6px\"><span>setembro<\/span><span>·<\/span><span style=\"font-weight: 700; color: #111513\">BYD King<\/span><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#111513\" stroke-width=\"2.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m6 9 6 6 6-6\"><\/path><\/svg><\/button>\n<\/div>\n<div style=\"border-radius: 24px; background: #FFFFFF; border: 1px solid #E1E5E2; padding: 16px 18px 16px\">\n<div style=\"display: flex; align-items: flex-start; justify-content: space-between; gap: 10px\">\n<span style=\"display: flex; flex-direction: column; gap: 1px\"><span style=\"font-size: 13px; font-weight: 600; color: #545C57\">Energia recarregada<\/span><span style=\"font-size: 28px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; font-variant-numeric: tabular-nums\">117,1 kWh<\/span><\/span>\n<div role=\"tablist\" aria-label=\"Métrica do gráfico\" style=\"height: 44px; box-sizing: border-box; padding: 3px; border-radius: 22px; background: #F0F2F1; display: flex; gap: 2px\">\n<button role=\"tab\" aria-selected=\"true\" style=\"height: 38px; padding: 0 12px; border-radius: 19px; border: 0; background: #FFFFFF; color: #111513; font-size: 13px; font-weight: 700; box-shadow: 0 1px 3px rgba(17,21,19,0.10)\">Energia<\/button>\n<button role=\"tab\" aria-selected=\"false\" style=\"height: 38px; padding: 0 12px; border-radius: 19px; border: 0; background: transparent; color: #545C57; font-size: 13px; font-weight: 600\">Gasto<\/button>\n<\/div>\n<\/div>\n<figure style=\"margin: 12px 0 0\" aria-label=\"Energia recarregada por semana de setembro: 1 a 7, 22,4 kWh; 8 a 14, 31,8 kWh; 15 a 21, 18,6 kWh; 22 a 28, 36,2 kWh; 29 e 30, 8,1 kWh\">\n<svg width=\"320\" height=\"156\" viewBox=\"0 0 320 156\" style=\"display: block; max-width: 100%\" aria-hidden=\"true\">\n<path d=\"M11 128 V67.6 Q11 63.6 15 63.6 H49 Q53 63.6 53 67.6 V128 Z\" fill=\"#338449\"><title>1–7 set · 22,4 kWh<\/title><\/path>\n<path d=\"M75 128 V40.6 Q75 36.6 79 36.6 H113 Q117 36.6 117 40.6 V128 Z\" fill=\"#338449\"><title>8–14 set · 31,8 kWh<\/title><\/path>\n<path d=\"M139 128 V78.6 Q139 74.6 143 74.6 H177 Q181 74.6 181 78.6 V128 Z\" fill=\"#338449\"><title>15–21 set · 18,6 kWh<\/title><\/path>\n<path d=\"M203 128 V28 Q203 24 207 24 H241 Q245 24 245 28 V128 Z\" fill=\"#338449\"><title>22–28 set · 36,2 kWh<\/title><\/path>\n<path d=\"M267 128 V108.7 Q267 104.7 271 104.7 H305 Q309 104.7 309 108.7 V128 Z\" fill=\"#338449\"><title>29–30 set · 8,1 kWh<\/title><\/path>\n<text x=\"224\" y=\"16\" text-anchor=\"middle\" font-family=\"Manrope, sans-serif\" font-size=\"12\" font-weight=\"700\" fill=\"#111513\">36,2 kWh<\/text>\n<line x1=\"0\" x2=\"320\" y1=\"128.5\" y2=\"128.5\" stroke=\"#DDE2DE\" stroke-width=\"1\"><\/line>\n<text x=\"32\" y=\"146\" text-anchor=\"middle\" font-family=\"Manrope, sans-serif\" font-size=\"11.5\" font-weight=\"600\" fill=\"#6A726D\">1–7<\/text>\n<text x=\"96\" y=\"146\" text-anchor=\"middle\" font-family=\"Manrope, sans-serif\" font-size=\"11.5\" font-weight=\"600\" fill=\"#6A726D\">8–14<\/text>\n<text x=\"160\" y=\"146\" text-anchor=\"middle\" font-family=\"Manrope, sans-serif\" font-size=\"11.5\" font-weight=\"600\" fill=\"#6A726D\">15–21<\/text>\n<text x=\"224\" y=\"146\" text-anchor=\"middle\" font-family=\"Manrope, sans-serif\" font-size=\"11.5\" font-weight=\"600\" fill=\"#6A726D\">22–28<\/text>\n<text x=\"288\" y=\"146\" text-anchor=\"middle\" font-family=\"Manrope, sans-serif\" font-size=\"11.5\" font-weight=\"600\" fill=\"#6A726D\">29–30<\/text>\n<\/svg>\n<\/figure>\n<div style=\"margin-top: 12px; padding-top: 12px; border-top: 1px solid #EEF0EF; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr))\">\n<span style=\"display: flex; flex-direction: column; gap: 1px\"><span style=\"font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums\">R$ 228,90<\/span><span style=\"font-size: 12px; color: #545C57\">gasto no mês<\/span><\/span>\n<span style=\"display: flex; flex-direction: column; gap: 1px; padding-left: 12px; border-left: 1px solid #EEF0EF\"><span style=\"font-size: 15px; font-weight: 800\">6<\/span><span style=\"font-size: 12px; color: #545C57\">recargas<\/span><\/span>\n<span style=\"display: flex; flex-direction: column; gap: 1px; padding-left: 12px; border-left: 1px solid #EEF0EF\"><span style=\"font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums\">R$ 1,95<\/span><span style=\"font-size: 12px; color: #545C57\">por kWh<\/span><\/span>\n<\/div>\n<\/div>\n<\/div>","css":"body{margin:0;background:#EEF0EF}button{font-family:inherit;cursor:pointer;padding:0}"}],"titulos":[{"x":0,"y":-300,"w":1330,"t":"Meu resumo · modelos escolhidos (1, 2 e 4)"}],"alvos":[]};
+const vista = document.getElementById('vista'), mundo = document.getElementById('mundo');
+const quadros = [];
+for (const n of DADOS.titulos) { const h = document.createElement('h2'); h.className = 'titulo-linha'; h.style.cssText = 'left:' + n.x + 'px;top:' + n.y + 'px;width:' + n.w + 'px'; h.textContent = n.t; mundo.appendChild(h); }
+DADOS.quadros.forEach((q, i) => {
+  const el = document.createElement('section');
+  el.className = 'quadro'; el.dataset.i = i; el.dataset.id = q.id;
+  el.style.cssText = 'left:' + q.x + 'px;top:' + q.y + 'px;width:' + q.w + 'px;height:' + q.h + 'px;border-radius:' + q.r + 'px';
+  const rot = document.createElement('span'); rot.className = 'rotulo'; rot.textContent = q.t; el.appendChild(rot);
+  const tela = document.createElement('div'); tela.style.cssText = 'width:100%;height:100%;overflow:hidden;border-radius:inherit;position:relative';
+  el.appendChild(tela); el._tela = tela; mundo.appendChild(el); quadros.push(el);
+});
+// each board is drawn in its own shadow root when it gets near the screen, so styles never mix
+function desenhar(el) {
+  if (el._feito) return; el._feito = true;
+  const q = DADOS.quadros[+el.dataset.i];
+  const raiz = el._tela.attachShadow({ mode: 'open' });
+  raiz.innerHTML = '<style>:host{display:block;width:100%;height:100%;overflow:hidden;color:#111513;font-family:Manrope,system-ui,sans-serif;-webkit-user-select:none;user-select:none}button{font-family:inherit}</style><style>' + q.css + '</style>' + q.html;
+  for (const b of raiz.querySelectorAll('button')) {
+    const r = b.getAttribute('aria-label') || b.textContent.trim();
+    const a = DADOS.alvos.find(([re]) => new RegExp(re).test(r));
+    if (a) { b.dataset.alvo = a[1]; b.style.cursor = 'pointer'; }
+  }
+}
+const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { desenhar(e.target); obs.unobserve(e.target); } }), { rootMargin: '600px' });
+quadros.forEach(q => obs.observe(q));
+
+let z = 1, px = 0, py = 0, atual = -1, volta = null;
+const limita = v => Math.min(3, Math.max(0.03, v));
+function aplicar() { mundo.style.transform = 'translate(' + px + 'px,' + py + 'px) scale(' + z + ')'; document.getElementById('nivel').textContent = Math.round(z * 100) + '%'; }
+function zoomEm(cx, cy, f) { const nz = limita(z * f); px = cx - (cx - px) * (nz / z); py = cy - (cy - py) * (nz / z); z = nz; aplicar(); }
+function caixaDe(els) {
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  els.forEach(q => { x0 = Math.min(x0, q.offsetLeft); y0 = Math.min(y0, q.offsetTop); x1 = Math.max(x1, q.offsetLeft + q.offsetWidth); y1 = Math.max(y1, q.offsetTop + q.offsetHeight); });
+  return { x0, y0, x1, y1 };
+}
+function enquadrar(b, folga) {
+  const W = vista.clientWidth, H = vista.clientHeight - 130;
+  z = limita(Math.min((W - folga * 2) / (b.x1 - b.x0), (H - folga * 2) / (b.y1 - b.y0)));
+  px = (W - (b.x1 - b.x0) * z) / 2 - b.x0 * z; py = 64 + (H - (b.y1 - b.y0) * z) / 2 - b.y0 * z; aplicar();
+}
+const todos = () => [...quadros, ...mundo.querySelectorAll('.titulo-linha')];
+function verTudo() { atual = -1; enquadrar(caixaDe(todos()), 30); }
+function inicio() {
+  atual = -1;
+  const b = caixaDe(todos()), W = vista.clientWidth;
+  z = limita(Math.min(1, (W - 80) / (b.x1 - b.x0))); px = (W - (b.x1 - b.x0) * z) / 2 - b.x0 * z; py = 76 - b.y0 * z; aplicar();
+}
+function focar(i, semHash) {
+  if (!quadros.length) return;
+  atual = (i + quadros.length) % quadros.length;
+  const q = quadros[atual];
+  enquadrar({ x0: q.offsetLeft, y0: q.offsetTop - 40, x1: q.offsetLeft + q.offsetWidth, y1: q.offsetTop + Math.min(q.offsetHeight, 1000) }, 24);
+  if (!semHash) history.replaceState(null, '', '#' + q.dataset.id);
+}
+const focarId = id => { const i = quadros.findIndex(q => q.dataset.id === id); if (i >= 0) focar(i); };
+
+// pan, pinch, no text selection
+let ponteiros = new Map(), moveu = 0, d0 = 0, z0 = 1;
+vista.addEventListener('selectstart', e => e.preventDefault());
+vista.addEventListener('dragstart', e => e.preventDefault());
+vista.addEventListener('pointerdown', e => { if (e.button === 0) e.preventDefault(); ponteiros.set(e.pointerId, { x: e.clientX, y: e.clientY }); moveu = 0; vista.classList.add('arrastando');
+  if (ponteiros.size === 2) { const [a, b] = [...ponteiros.values()]; d0 = Math.hypot(a.x - b.x, a.y - b.y); z0 = z; } });
+vista.addEventListener('pointermove', e => {
+  const p = ponteiros.get(e.pointerId); if (!p) return;
+  const dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
+  if (ponteiros.size === 2) { const [a, b] = [...ponteiros.values()]; const d = Math.hypot(a.x - b.x, a.y - b.y); zoomEm((a.x + b.x) / 2, (a.y + b.y) / 2, (z0 * d / d0) / z); moveu += 10; return; }
+  moveu += Math.abs(dx) + Math.abs(dy); px += dx; py += dy; aplicar();
+  if (moveu > 4 && !vista.hasPointerCapture(e.pointerId)) vista.setPointerCapture(e.pointerId);
+});
+const solta = e => { ponteiros.delete(e.pointerId); if (!ponteiros.size) vista.classList.remove('arrastando'); };
+vista.addEventListener('pointerup', solta); vista.addEventListener('pointercancel', solta);
+vista.addEventListener('click', e => {
+  if (moveu > 5) return;
+  const alvo = e.composedPath().find(n => n.dataset && n.dataset.alvo);
+  if (!alvo) return;
+  e.preventDefault();
+  const q = quadros[atual];
+  if (alvo.dataset.alvo === 'voltar') { if (volta) focarId(volta); return; }
+  if (q && !q.dataset.id.startsWith('Folha')) volta = q.dataset.id;
+  focarId(alvo.dataset.alvo);
+});
+vista.addEventListener('dblclick', e => { const q = e.target.closest('.quadro'); if (q) focar(+q.dataset.i); });
+vista.addEventListener('wheel', e => { e.preventDefault(); if (e.ctrlKey || e.metaKey) zoomEm(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.0022)); else { px -= e.deltaX; py -= e.deltaY; aplicar(); } }, { passive: false });
+const centro = () => [vista.clientWidth / 2, vista.clientHeight / 2];
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && (e.key === '=' || e.key === '+')) { e.preventDefault(); zoomEm(...centro(), 1.25); }
+  else if ((e.ctrlKey || e.metaKey) && e.key === '-') { e.preventDefault(); zoomEm(...centro(), 0.8); }
+  else if ((e.ctrlKey || e.metaKey) && e.key === '0') { e.preventDefault(); verTudo(); }
+  else if (e.key === 'ArrowRight') focar(atual + 1);
+  else if (e.key === 'ArrowLeft') focar(atual < 0 ? quadros.length - 1 : atual - 1);
+  else if (e.key === 'Escape') verTudo();
+});
+document.getElementById('mais').onclick = () => zoomEm(...centro(), 1.25);
+document.getElementById('menos').onclick = () => zoomEm(...centro(), 0.8);
+document.getElementById('ajustar').onclick = verTudo;
+document.getElementById('proxima').onclick = () => focar(atual + 1);
+document.getElementById('anterior').onclick = () => focar(atual < 0 ? quadros.length - 1 : atual - 1);
+// a row title is one line, as in the canvas: a longer text shrinks to fit its width
+function ajustarTitulos() { for (const h of mundo.querySelectorAll('.titulo-linha')) { h.style.fontSize = '72px'; h.style.lineHeight = '84px'; const w = parseFloat(h.style.width); if (h.scrollWidth > w) { const f = Math.max(20, 72 * w / h.scrollWidth); h.style.fontSize = f + 'px'; h.style.lineHeight = Math.round(f * 1.17) + 'px'; } } }
+function abrir() { const id = decodeURIComponent(location.hash.slice(1)); const i = quadros.findIndex(q => q.dataset.id === id); if (i >= 0) focar(i, true); else inicio(); }
+window.addEventListener('resize', () => atual < 0 ? inicio() : focar(atual, true));
+window.addEventListener('hashchange', abrir);
+ajustarTitulos();
+abrir();
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(() => { ajustarTitulos(); if (atual < 0) inicio(); });
+</script>
+</body>
+</html>

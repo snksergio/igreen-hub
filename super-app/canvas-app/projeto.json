@@ -1,0 +1,90 @@
+{
+  "nome": "Canvas do app iGreen",
+  "descricao": "As telas do app iGreen como no canvas do Claude: Home iGreen, Eletroposto, login, telecom e pagamento, Cadastro Pay e loja, com zoom, arrastar e foco em cada tela.",
+  "tipo": "proposta",
+  "atualizado": "2026-11-10",
+  "paginas": [
+    {
+      "nome": "Home iGreen",
+      "arquivo": "index.html"
+    },
+    {
+      "nome": "Eletroposto: home, veículos e pagamento",
+      "arquivo": "eletroposto.html"
+    },
+    {
+      "nome": "Login",
+      "arquivo": "login.html"
+    },
+    {
+      "nome": "Telecom e pagamento",
+      "arquivo": "telecom-pagamento.html"
+    },
+    {
+      "nome": "Cadastro Pay",
+      "arquivo": "cadastro-pay.html"
+    },
+    {
+      "nome": "Loja",
+      "arquivo": "loja.html"
+    },
+    {
+      "nome": "Meu resumo",
+      "arquivo": "meu-resumo.html"
+    },
+    {
+      "nome": "Componentes",
+      "arquivo": "componentes.html"
+    },
+    {
+      "nome": "Descartadas",
+      "arquivo": "descartadas.html"
+    }
+  ],
+  "acervo": {
+    "nome": "Versões anteriores",
+    "grupos": [
+      {
+        "nome": "Versões anteriores",
+        "paginas": [
+          {
+            "nome": "Home iGreen",
+            "arquivo": "anteriores-home-igreen.html"
+          },
+          {
+            "nome": "Eletroposto",
+            "arquivo": "anteriores-eletroposto.html"
+          },
+          {
+            "nome": "Login",
+            "arquivo": "anteriores-login.html"
+          },
+          {
+            "nome": "Telecom e pagamento",
+            "arquivo": "anteriores-telecom-pagamento.html"
+          },
+          {
+            "nome": "Loja",
+            "arquivo": "anteriores-loja.html"
+          },
+          {
+            "nome": "Descartadas",
+            "arquivo": "anteriores-descartadas.html"
+          }
+        ]
+      }
+    ]
+  },
+  "tags": [
+    "canvas",
+    "eletroposto",
+    "login",
+    "telecom",
+    "pagamento",
+    "cadastro pay",
+    "loja",
+    "home",
+    "banners",
+    "carteira"
+  ]
+}
