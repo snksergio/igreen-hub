@@ -3,8 +3,9 @@
 Regras para subir ou alterar um projeto neste repositório. Valem para qualquer IA e para quem mexer à mão. Leia inteiro antes de começar: é curto de propósito.
 
 - Repositório: https://github.com/snksergio/igreen-hub
-- Vitrine: https://snksergio.github.io/igreen-hub/
-- Endereço de um projeto: `https://snksergio.github.io/igreen-hub/<categoria>/<slug>/`
+- Vitrine: https://igreen-hub.pages.dev/
+- Endereço de um projeto: `https://igreen-hub.pages.dev/<categoria>/<slug>/`
+- Endereço antigo, que continua no ar para os links já compartilhados: https://snksergio.github.io/igreen-hub/ (os mesmos caminhos depois de `/igreen-hub/`)
 
 ## 1. O que entra aqui
 
@@ -30,7 +31,7 @@ Não entra. O projeto fica onde está e aqui vai só a ficha com o link (seção
 - **Slug**: o nome da pasta. Minúsculas, sem acento, palavras separadas por hífen, curto e descritivo: `pagar-fatura`, `hotsite-eletroposto`. Não comece com `igreen-`, o repositório inteiro já é iGreen.
 - **Um projeto, uma pasta.** Várias telas do mesmo assunto ficam na mesma pasta, listadas em `paginas`. Versões do mesmo assunto (`faturas-v1.html`, `faturas-v2.html`) também, listadas em `versoes`.
 - **Variações vão no acervo, não em projetos novos.** Opções de design de partes do mesmo projeto (heros, rodapés, selos, explorações de um componente) entram no `acervo` da mesma ficha, em grupos (seção 3). Assim a vitrine mostra um card só, e as variações ficam numa aba da ficha.
-- **Caminhos sempre relativos** (`assets/logo.svg`, nunca `/assets/logo.svg`): o site mora numa subpasta.
+- **Caminhos sempre relativos** (`assets/logo.svg`, nunca `/assets/logo.svg`): o hub abre em dois endereços, e no antigo o site mora numa subpasta.
 - **Não mexa** em pasta de outro projeto, no `index.html` da raiz (é a vitrine) nem no `catalogo.js` (é gerado na publicação).
 
 ### Builder e output
@@ -171,7 +172,7 @@ Olhe a capa antes de subir. Se pegou tela de carregamento ou animação de entra
    - Projeto com build (Vite, React...): gere o build com caminho relativo (`npx vite build --base=./`) e copie só o conteúdo do `dist`. Use rotas com hash (`HashRouter`). Registre em `repo` onde está o código.
    - Projeto com estudo por trás: monte o `builder/` e gere o output (seção 2, "Builder e output").
 5. **Crie o `projeto.json`** (seção 3) e **os prints** (seção 4).
-6. **Valide**: `node scripts/gerar-catalogo.mjs --checar`. Corrija os avisos do seu projeto. Só pode sobrar o aviso de prints, e só se você não conseguiu capturar.
+6. **Valide**: `node scripts/gerar-catalogo.mjs --checar`. Corrija os avisos do seu projeto. Só pode sobrar o aviso de prints, e só se você não conseguiu capturar. Confira também que nenhum arquivo passa de 25 MB (seção 7): `find <categoria>/<slug> -type f -size +25M` não deve devolver nada.
 7. **Publique**:
    ```bash
    git add <categoria>/<slug>
@@ -180,8 +181,8 @@ Olhe a capa antes de subir. Se pegou tela de carregamento ou animação de entra
    ```
    Se o push for recusado, rode `git pull --rebase` e faça o push de novo.
 8. **Responda ao usuário** com os dois links e avise que a publicação leva cerca de 1 minuto:
-   - o projeto: `https://snksergio.github.io/igreen-hub/<categoria>/<slug>/`
-   - na vitrine: `https://snksergio.github.io/igreen-hub/#<categoria>/<slug>`
+   - o projeto: `https://igreen-hub.pages.dev/<categoria>/<slug>/`
+   - na vitrine: `https://igreen-hub.pages.dev/#<categoria>/<slug>`
 9. Apague a pasta temporária.
 
 ### Alterar um projeto que já está aqui
@@ -205,6 +206,7 @@ Para o que não entra aqui (seção 1), a pasta leva só o `projeto.json` e a `_
 ## 7. Limites e cuidados
 
 - O repositório é público: nada de `.env`, token, chave, senha ou dado real de cliente (CPF, telefone, fatura). Use dados fictícios. Vale também para o `builder/`, que fica fora da vitrine mas abre para quem tiver o endereço.
-- Arquivo até 50 MB (o GitHub recusa acima de 100 MB). Pasta de projeto, de preferência, até 20 MB.
-- O site inteiro no GitHub Pages tem limite de 1 GB: imagens otimizadas e vídeo só comprimido e curto.
-- A publicação é automática a cada push na `main` (`.github/workflows/publicar.yml`). Não precisa rodar nada além do push.
+- Arquivo até 25 MB. O Cloudflare recusa acima disso, e aí a publicação do hub inteiro falha, não só a do seu projeto. Vídeo maior só comprimido, e só com o ok do usuário. Pasta de projeto, de preferência, até 20 MB.
+- O site inteiro: até 1 GB (limite do GitHub Pages) e até 20 mil arquivos (limite do Cloudflare). Imagens otimizadas e vídeo só comprimido e curto.
+- A publicação é automática a cada push na `main`, nos dois endereços: no Cloudflare (`.github/workflows/cloudflare.yml`), o principal, que recebe só os arquivos que mudaram, e no GitHub Pages (`.github/workflows/publicar.yml`), o antigo. Não precisa rodar nada além do push.
+- Se só a publicação do GitHub Pages falhar, não bloqueia: o endereço principal já está atualizado. Não use "Re-run" nela, que falha com `Multiple artifacts named "github-pages"`; para tentar de novo, `gh workflow run publicar.yml -R snksergio/igreen-hub`.

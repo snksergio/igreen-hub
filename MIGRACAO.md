@@ -70,7 +70,7 @@ Exemplo de resposta: "cashback só o resultado; faturas e os outros completos".
 
 ## 5. Veja se o projeto já está no hub
 
-Procure o nome do repositório e a URL publicada em https://snksergio.github.io/igreen-hub/catalogo.js
+Procure o nome do repositório e a URL publicada em https://igreen-hub.pages.dev/catalogo.js
 
 - **Ficha só com `link` apontando para o original:** use aquela pasta. Copie os arquivos para dentro e tire o `link` da ficha (senão a vitrine continua abrindo o original).
 - **Pasta que já tem os arquivos, migrada no modo só o resultado:** é uma atualização. Substitua a cópia pela versão atual do original.
@@ -84,8 +84,9 @@ Em todos os casos, `repo` fica apontando para o repositório original e `atualiz
 - **Estático** (HTML, CSS, JS, imagens): copia os arquivos.
 - **Com build:** build com caminho relativo, copia o `dist` para a raiz da pasta. O build não muda o projeto, só gera os arquivos. No modo completo, o código-fonte vai para o `builder/`.
 - **Não cabe no hub** (servidor, API própria, chave, mais de 50 MB, app que segue sendo desenvolvido fora): não copia, só a ficha com `link` (seção 6 do orquestrador).
+- **Arquivo acima de 25 MB** (em geral, vídeo): não copie. O Cloudflare recusa e a publicação do hub inteiro falha, não só a deste projeto. Mostre no passo 9 e pergunte: comprimir muda o projeto, então só com o ok do usuário.
 - **Repositório com mais de um assunto:** um projeto do hub por assunto, cada um na sua pasta e com o seu modo. As páginas vão como estão; só a separação em pastas é nova. Variações do mesmo assunto vão no `acervo`.
-- **Navegação por hash** (`#fluxo/tela`): o link antigo `.../#x/y` tem que abrir igual em `https://snksergio.github.io/igreen-hub/<categoria>/<slug>/#x/y`. Use esses hashes nas `paginas`.
+- **Navegação por hash** (`#fluxo/tela`): o link antigo `.../#x/y` tem que abrir igual em `https://igreen-hub.pages.dev/<categoria>/<slug>/#x/y`. Use esses hashes nas `paginas`.
 
 ## 7. Nada de Vercel na cópia
 
@@ -136,13 +137,21 @@ Os dados dos protótipos são fictícios e podem ir.
 
 ## 10. Publique
 
-Prints (`--celular` se for app; olhe a capa antes), `node scripts/gerar-catalogo.mjs --checar` sem aviso, um commit por projeto citando o repo, o commit de origem e o modo, push.
+Prints (`--celular` se for app; olhe a capa antes), `node scripts/gerar-catalogo.mjs --checar` sem aviso, nenhum arquivo acima de 25 MB (`find <categoria>/<slug> -type f -size +25M` não devolve nada), um commit por projeto citando o repo, o commit de origem e o modo, push.
 
 Se o git pedir identidade, configure só no clone, com o autor dos commits do hub: `git log -1 --format='%an <%ae>'`.
 
 ## 11. Confira publicado
 
-Espere a publicação (`gh run watch` no `snksergio/igreen-hub`) e abra cada página no hub e no original:
+Uns segundos depois do push, espere a publicação no Cloudflare, que é o endereço principal:
+
+```bash
+gh run watch $(gh run list -R snksergio/igreen-hub -w cloudflare.yml -L 1 --json databaseId -q '.[0].databaseId') -R snksergio/igreen-hub --exit-status
+```
+
+O push também publica no GitHub Pages, o endereço antigo (workflow `Publicar`). Se só essa falhar, não é erro da migração e não bloqueia: siga. Não use "Re-run" nela, que falha com `Multiple artifacts named "github-pages"`; para tentar de novo, `gh workflow run publicar.yml -R snksergio/igreen-hub`.
+
+Abra cada página em `https://igreen-hub.pages.dev/<categoria>/<slug>/` e no original:
 
 - carrega sem imagem, CSS ou JS quebrado;
 - mostra e funciona igual ao original. Diferença que não seja de endereço é erro da migração: volte e corrija a cópia;

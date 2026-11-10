@@ -2,13 +2,15 @@
 
 Os protótipos, POCs, hotsites, landing pages e propostas iGreen num lugar só, com uma vitrine para achar e abrir cada um.
 
-**Vitrine:** https://snksergio.github.io/igreen-hub/
+**Vitrine:** https://igreen-hub.pages.dev/
+
+O endereço antigo, https://snksergio.github.io/igreen-hub/, continua no ar e atualizado, para os links já compartilhados.
 
 > **IA:** antes de subir ou alterar qualquer coisa aqui, leia o [ORQUESTRADOR.md](ORQUESTRADOR.md) e siga o pipeline dele.
 
 ## Como está organizado
 
-Cada projeto mora em `<categoria>/<slug>/`, com uma ficha `projeto.json` e os prints em `_vitrine/`. O endereço publicado segue a pasta: `snksergio.github.io/igreen-hub/mob/hotsite-migre-bandeira/`.
+Cada projeto mora em `<categoria>/<slug>/`, com uma ficha `projeto.json` e os prints em `_vitrine/`. O endereço publicado segue a pasta: `igreen-hub.pages.dev/mob/hotsite-migre-bandeira/`.
 
 | Arquivo | Para que serve |
 |---|---|
@@ -18,7 +20,8 @@ Cada projeto mora em `<categoria>/<slug>/`, com uma ficha `projeto.json` e os pr
 | `index.html` | A vitrine |
 | `scripts/gerar-catalogo.mjs` | Junta as fichas em `catalogo.js`, que a vitrine lê (roda sozinho na publicação) |
 | `scripts/capturar-telas.mjs` | Tira os prints da vitrine com o Chrome ou o Edge |
-| `.github/workflows/publicar.yml` | Publica no GitHub Pages a cada push na `main` |
+| `.github/workflows/cloudflare.yml` | Publica no Cloudflare Pages, o endereço principal, a cada push na `main`. Envia só os arquivos que mudaram |
+| `.github/workflows/publicar.yml` | Publica no GitHub Pages, o endereço antigo, a cada push na `main` |
 
 ## Como subir um projeto
 
