@@ -1,0 +1,179 @@
+@@@ folha de origem por produto
+<<<
+function construir(cen = {}) {
+===
+// ---------- 3d. Each product's gains, in the sheet its card opens in "Origem dos seus ganhos" (and "De onde vem" in my
+// cashback, on the Cashback tab). The card's numbers again, discount and cashback even when one is zero, under segmented
+// tabs that swap their panel in place: month by month since May, how you earn as a timeline, the bills and the movements
+const GANHOS_PROD = {
+  Energia: { ic: P.raio, p: 'energia', abas: [['res', 'Resumo'], ['eco', 'Desconto'], ['cb', 'Cashback']], comoDesc: '15% em dia, 10% com atraso', comoCb: '16% em dia, 10% com atraso',
+    passos: [[P.calendario, 'Pague até o vencimento', 'Em dia, a conta de luz sai com 15% de desconto.'], [P.carteira, 'Use Pix, saldo iGreen ou boleto', 'Pagando em dia, 16% do valor volta como cashback. No cartão de crédito não tem cashback.'], [PT.porcento, 'O cashback cai na sua conta', 'Na hora no Pix e no saldo. No boleto, quando compensar, em até 2 dias úteis.']],
+    nota: ['atraso', 'Pagou depois do vencimento?', 'A conta ainda rende 10% de desconto e 10% de cashback.'],
+    atalhos: [[P.raio, 'Faturas de energia', 'Pague em dia e ganhe 16% de volta', 'faturas']] },
+  Telecom: { ic: P.celular, p: 'telecom', abas: [['res', 'Resumo'], ['eco', 'Desconto'], ['cb', 'Cashback']], comoDesc: 'Desconto no plano, todo mês', comoCb: '2% em qualquer forma de pagamento',
+    passos: [[P.celular, 'Desconto no plano, todo mês', 'Vem aplicado quando o plano renova, sem você fazer nada.'], [P.calendario, 'Pague até o vencimento', 'Pix, saldo iGreen, boleto ou cartão. Depois do vencimento entram multa e juros.'], [PT.porcento, '2% voltam como cashback', 'Na hora no Pix, no saldo e no cartão. No boleto, quando compensar.']],
+    atalhos: [[P.celular, 'Faturas do Telecom', 'Pagando, 2% voltam como cashback', 'telfaturas']] },
+  Seguros: { ic: I.escudo, p: 'seguros', abas: [['res', 'Resumo'], ['cb', 'Cashback']], comoCb: 'por indicação',
+    passos: [[I.amigo, 'Indique o seguro', 'Mande seu link para quem quiser se proteger.'], [I.escudo, 'A pessoa paga a mensalidade', 'Cada mensalidade paga por quem você indicou rende cashback pra você.'], [PT.porcento, 'O cashback cai na sua conta', 'Aparece no extrato como Indicação aprovada.']],
+    nota: ['info', 'Seu próprio seguro não rende', 'A mensalidade do seguro que você paga não tem desconto nem cashback.'],
+    atalhos: [[I.amigo, 'Indique e ganhe', 'Cashback a cada mensalidade paga por quem você indicou', 'indicar']] },
+};
+const r2o = v => Math.round(v * 100) / 100;
+// the product a cashback movement came from: its bill, or what its line says
+const produtoMov = x => x.conta ? CONTAS_DEF[x.conta].produto : /seguro/i.test(x.de) ? 'seguros' : /telecom/i.test(x.de) ? 'telecom' : 'energia';
+// month by month (May to October) the discount of the paid bills and the cashback that landed; the sums are the card's
+function dadosOrigem(n) {
+  const h = H(), o = GANHOS_PROD[n], ene = [...ENE_MES(h).slice(0, 5), h.ecoMes];
+  const desc = n === 'Energia' ? ene : n === 'Telecom' ? ECO_MES(h).map((v, i) => (i < 5 ? r2o(v - ene[i]) : 0)) : NOMES_MES.map(() => 0);
+  const movs = EXTRATO().map((x, k) => ({ ...x, k })).filter(x => x.v > 0 && ['conta', 'indicacao', 'pay'].includes(x.tipo) && produtoMov(x) === o.p);
+  const cb = NOMES_MES.map(() => 0);
+  movs.forEach(x => { if (!x.caminho) cb[+x.d.slice(3, 5) - 5] += x.v; });
+  const loja = o.p === 'energia' && h.por.loja && h.por.loja.fase === 'pago' ? [{ t: 'Loja · fatura de setembro', d: `Paga em ${h.por.loja.dia} · 10%, com atraso`, v: CONTAS_DEF.loja.desc }] : [];
+  const contas = o.p === 'seguros' ? [] : [...loja, ...ECONOMIA().filter(x => x.p === o.p)].map(x => ({ ...x, t: x.t.replace(/^(Energia|Telecom) · /, '').replace(/^./, m => m.toUpperCase()) }));
+  const d = r2o(desc.reduce((a, b) => a + b, 0)), c = r2o(cb.reduce((a, b) => a + b, 0));
+  return { h, o, desc, cb: cb.map(r2o), d, c, tot: r2o(d + c), receber: r2o(movs.filter(x => x.caminho).reduce((a, x) => a + x.v, 0)), movs, contas };
+}
+// bars by month; two values stack (discount at the bottom, cashback on top) with a legend, a single one gets the
+// average line like the economy analysis. Months with nothing get the flat gray stub of the other charts
+const graficoOrigem = (serie, cores, nomes, media = 0, alt = 104) => {
+  const tot = serie.map(v => v.reduce((a, b) => a + b, 0)), m = Math.max(...tot) || 1, y = v => Math.max(4, Math.round(v / m * (alt - 8)));
+  const col = (vs, i) => {
+    if (!tot[i]) return `<span style="justify-self: center; width: 100%; max-width: 28px; height: 3px; border-radius: 2px; background: #E1E5E2"></span>`;
+    const ps = vs.map((v, k) => [v, k]).filter(([v]) => v > 0);
+    return `<span data-barra style="justify-self: center; width: 100%; max-width: 28px; display: flex; flex-direction: column-reverse; gap: 2px">${ps.map(([v, k], j) => `<span style="height: ${y(v)}px; border-radius: ${j === ps.length - 1 ? '6px 6px' : '0 0'} ${j ? '0 0' : '2px 2px'}; background: ${cores[k]}"></span>`).join('')}</span>`;
+  };
+  const leitura = NOMES_MES.map(([, nm], i) => `${nm} ${brl(tot[i])}${nomes.length > 1 ? ` (${nomes.map((t, k) => `${t.toLowerCase()} ${brl(serie[i][k])}`).join(', ')})` : ''}`).join('; ');
+  const ym = Math.round(media / m * (alt - 8));
+  return `<div role="img" aria-label="Por mês, de maio a outubro: ${leitura}" style="margin-top: 24px">
+<div aria-hidden="true" style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px"><span style="font-size: 14px; line-height: 20px; font-weight: 700">Por mês</span><span style="font-size: 12px; line-height: 16px; color: #6A726D">maio a outubro</span></div>
+<div aria-hidden="true" style="position: relative; margin-top: ${media ? 32 : 16}px">
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: ${alt}px">${guias(alt)}</div>
+<div style="position: relative; height: ${alt}px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: end; border-bottom: 1px solid #DCE1DE">${serie.map(col).join('')}</div>
+${media ? `<span style="position: absolute; left: 0; right: 0; bottom: ${ym}px; border-top: 1.5px dashed #6A726D"></span><span style="position: absolute; left: 0; bottom: ${ym + 5}px; height: 20px; padding: 0 8px; border-radius: 10px; background: #111513; color: #FFFFFF; font-size: 11px; line-height: 16px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; font-variant-numeric: tabular-nums">Média ${brl(media)}</span>` : ''}
+</div>
+<div aria-hidden="true" style="margin-top: 8px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); text-align: center; font-size: 12px; line-height: 16px">${NOMES_MES.map(([mm], i) => `<span style="font-weight: ${i === 5 ? 700 : 500}; color: ${i === 5 ? '#111513' : '#545C57'}">${mm}</span>`).join('')}</div>
+${nomes.length > 1 ? `<div aria-hidden="true" style="margin-top: 12px; display: flex; gap: 16px; font-size: 13px; line-height: 18px; color: #3E4541">${nomes.map((t, k) => `<span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: ${cores[k]}"></span>${t}</span>`).join('')}</div>` : ''}
+</div>`;
+};
+// how you earn, step by step: the timeline of the receipts (a mark per step, a 2px line between them), each mark the
+// step's icon in a 36px circle (the size of the list icons) centred on the title line. Loose on purpose: 20px inside
+// the card, 24px between steps, 16px from the mark to the text. The note closes the same card under a hairline, with
+// the same room: a late payment in amber, what does not earn in gray
+const marcaPasso = (ic, tom = { bg: '#E5F1E8', cor: VERDE_TXT }, onde = 'left: 0; top: -8px') => `<span aria-hidden="true" style="position: absolute; ${onde}; width: 36px; height: 36px; border-radius: 18px; background: ${tom.bg}; color: ${tom.cor}; display: flex; align-items: center; justify-content: center">${svg(ic, 17, 2.1)}</span>`;
+const passosGanho = (passos, nota) => `<ol style="margin: 0; padding: 0; list-style: none">${passos.map(([ic, t, s], i) => { const ult = i === passos.length - 1; return `<li style="position: relative; min-height: 52px; padding-left: 52px; padding-bottom: ${ult ? 0 : 24}px">
+${marcaPasso(ic)}${ult ? '' : '<span aria-hidden="true" style="position: absolute; left: 17px; top: 32px; bottom: 12px; width: 2px; border-radius: 1px; background: #CFE6D6"></span>'}
+<span style="display: block; font-size: 15px; line-height: 20px; font-weight: 700">${t}</span><span style="display: block; margin-top: 4px; font-size: 13px; line-height: 18px; color: #545C57; text-wrap: pretty">${s}</span></li>`; }).join('')}</ol>${!nota ? '' : `
+<div style="position: relative; margin: 24px -20px 0; border-top: 1px solid #EEF0EF; padding: 20px 20px 0 72px; min-height: 40px">${marcaPasso(nota[0] === 'atraso' ? P.relogio : P.info, nota[0] === 'atraso' ? { bg: FX_PRAZO.bg, cor: FX_PRAZO.cor } : CINZA_C, 'left: 20px; top: 12px')}<span style="display: block; font-size: 15px; line-height: 20px; font-weight: 700; color: ${nota[0] === 'atraso' ? FX_PRAZO.cor : '#111513'}">${nota[1]}</span><span style="display: block; margin-top: 4px; font-size: 13px; line-height: 18px; color: #545C57; text-wrap: pretty">${nota[2]}</span></div>`}`;
+// every section of the sheet the same way: the title on a 28px row, 12px, then a white card with a hairline border
+const secaoFolha = (t, c, dir = '') => `<div style="margin-top: 28px; min-height: 28px; display: flex; align-items: center; justify-content: space-between; gap: 12px"><h3 style="margin: 0; font-size: 16px; line-height: 22px; font-weight: 700">${t}</h3>${dir}</div>
+<div style="margin-top: 12px">${c}</div>`;
+// the band that closes the main part (number, chart, split, averages) before the sections: edge to edge, 24px
+// from what is above it and from the next title (the section's 28px less its 4px)
+const divisorFolha = '<div aria-hidden="true" style="margin: 24px -20px -4px; height: 8px; background: #F0F2F1"></div>';
+const caixaFolha = (c, pad = '0 16px') => `<div style="border-radius: 20px; background: #FFFFFF; border: 1px solid #E1E5E2; padding: ${pad}">${c}</div>`;
+const abasFolha = (itens, atual) => `<div role="tablist" aria-label="Seus ganhos" style="height: 44px; box-sizing: border-box; padding: 4px; border-radius: 22px; background: #F0F2F1; display: flex; gap: 4px">${itens.map(([id, t]) => { const on = id === atual; return `<button role="tab" data-aba="${id}" aria-selected="${on}" style="flex: 1 1 0; min-width: 0; height: 36px; border: 0; border-radius: 18px; background: ${on ? '#FFFFFF' : 'transparent'}; color: ${on ? '#111513' : '#545C57'}; box-shadow: ${on ? '0 1px 4px rgba(17,21,19,0.14)' : 'none'}; font-size: 14px; line-height: 20px; font-weight: 700; white-space: nowrap">${t}</button>`; }).join('')}</div>`;
+function painelOrigem(n, aba, x) {
+  const { h, o } = x;
+  const serie = aba === 'res' ? x.desc.map((v, i) => [v, x.cb[i]]) : aba === 'eco' ? x.desc.map(v => [v]) : x.cb.map(v => [v]);
+  const valor = aba === 'res' ? x.tot : aba === 'eco' ? x.d : x.c;
+  const mes = serie.map(v => r2o(v.reduce((a, b) => a + b, 0))), ini = mes.findIndex(v => v > 0), media = ini < 0 ? 0 : r2o(valor / (6 - ini));
+  // the average and the best month say something only with two months or more; a tie has no best month
+  const ativos = mes.filter(v => v > 0).length, melhor = mes.reduce((b, v, i) => (v > mes[b] ? i : b), 0), unico = mes.filter(v => v === mes[melhor]).length === 1;
+  const rot = { res: 'Já voltou pra você', eco: 'Desconto nas contas', cb: 'Cashback que já caiu' }[aba];
+  const resto = { res: `${pct(x.tot, h.total)}% do que a iGreen já te devolveu`, eco: `${o.comoDesc} · desde maio`, cb: x.c ? `${pct(x.c, h.cbGanho)}% do seu cashback · ${o.comoCb}` : o.comoCb.replace(/^./, m => m.toUpperCase()) }[aba];
+  const noMes = mes[5] > 0 ? `<span style="height: 24px; flex-shrink: 0; padding: 0 8px; border-radius: 12px; background: #E5F1E8; color: ${VERDE_TXT}; display: inline-flex; align-items: center; font-size: 13px; line-height: 18px; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums">+ ${brl(mes[5])} em outubro</span>` : '';
+  const casa = h.por.casa || {};
+  const aviso = n === 'Energia' && aba !== 'cb' && !h.pago ? info(casa.fase === 'agu' ? 'A conta de outubro entra quando o boleto compensar' : 'A conta de outubro entra ao pagar', 16)
+    : aba !== 'eco' && x.receber ? `<div style="margin-top: 16px">${faixa(`${brl(x.receber)} a receber · cai até ${CAI}`, P.relogio, FX_PRAZO)}</div>` : '';
+  // the Telecom cashback started in October: before the first bill is paid, the tab says what it will give
+  const vazio = !valor && !x.receber ? `<div style="margin-top: 20px">${caixaFolha(`<div style="display: flex; align-items: flex-start; gap: 12px">${circulo(svg(PT.porcento, 18, 2.1), { bg: '#E5F1E8', cor: VERDE_TXT, s: 40 })}<span style="min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; line-height: 20px; font-weight: 700">O cashback do Telecom começou em outubro</span><span style="font-size: 13px; line-height: 18px; color: #545C57; text-wrap: pretty">Pagando a fatura, ${brl(h.telGerado)} voltam pra você, 2% do valor.</span></span></div>`, '16px')}</div>` : '';
+  const grafico = valor ? (aba === 'res' ? graficoOrigem(serie, ['#338449', '#8FCB9F'], ['Desconto', 'Cashback']) : graficoOrigem(serie, [aba === 'eco' ? '#338449' : '#8FCB9F'], [rot], ativos > 1 ? media : 0)) : '';
+  const numeros = ativos > 1 ? `${linhaToda(20)}<div>${kv('Média por mês', brl(media), { primeiro: true })}${unico ? kv('Melhor mês', `${NOMES_MES[melhor][1]} · ${brl(mes[melhor])}`) : ''}</div>` : '';
+  const atalho = ([ic, t, s, alvo], i) => `<button data-ir-origem="${alvo}" style="width: 100%; min-height: 72px; box-sizing: border-box; border: 0;${i ? ' border-top: 1px solid #EEF0EF;' : ''} background: transparent; color: #111513; padding: 14px 0; display: flex; align-items: center; gap: 12px; text-align: left">${bola(ic)}<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; line-height: 20px; font-weight: 700">${t}</span><span style="font-size: 13px; line-height: 18px; color: #545C57; text-wrap: pretty">${s}</span></span>${chevron}</button>`;
+  const verTambem = secaoFolha('Ver também', caixaFolha([...o.atalhos, [P.recentes, 'Extrato do cashback', 'Tudo o que entrou e saiu', 'extrato']].map(atalho).join('')));
+  const embaixo = aba === 'res' ? `${secaoFolha('Como você ganha', caixaFolha(passosGanho(o.passos, o.nota), '20px'))}${verTambem}`
+    : aba === 'eco' ? secaoFolha('Mês a mês', caixaFolha(x.contas.map((l, i) => linhaLista({ icone: o.ic, titulo: l.t, sub: l.d, fim: valorDir(l.v, true), primeiro: !i })).join('')))
+    : x.movs.length ? secaoFolha('Movimentações', caixaFolha(x.movs.map((m, i) => itemMov(m, i).replace('<button ', `<button data-mov="${m.k}" `)).join('')), linkSec('Extrato'))
+    : verTambem;
+  return `<div data-painel-aba="${aba}">
+<div style="padding-top: 20px"><span style="display: block; font-size: 13px; line-height: 18px; color: #545C57">${rot}</span><div style="margin-top: 4px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px">${grande(valor, { t: 34 })}${noMes}</div><span style="display: block; margin-top: 2px; font-size: 13px; line-height: 18px; color: #545C57; text-wrap: pretty">${resto}</span></div>
+${aviso}${vazio}${grafico}
+${aba === 'res' ? `<div style="margin-top: 24px">${barraDupla('De onde veio', [['#338449', 'Desconto', x.d], ['#8FCB9F', 'Cashback', x.c]], 'desde maio')}</div>` : ''}
+${numeros}
+${divisorFolha}
+${embaixo}
+</div>`;
+}
+// the sheet holds every tab's panel; the one asked for shows and the others wait hidden
+function folhaOrigem(n, aba) {
+  const x = dadosOrigem(n), o = x.o;
+  const tipo = n === 'Energia' ? 'Desconto e cashback' : n === 'Telecom' ? (x.c ? 'Desconto e cashback' : 'Desconto no plano') : 'Cashback de indicação';
+  return U.sheet(n, `<div data-origem-folha="${n}" style="padding: 0 4px">
+<div style="margin-top: 12px">${abasFolha(o.abas, aba)}</div>
+${o.abas.map(([a]) => painelOrigem(n, a, x).replace('<div data-painel-aba', `<div${a === aba ? '' : ' hidden'} data-painel-aba`)).join('\n')}
+</div>`, `${tipo} · desde maio de 2026`);
+}
+// OrigemEnergia opens on Resumo; OrigemEnergia-eco and -cb on their tab; OrigemCbEnergia (from my cashback) on Cashback
+const folhasOrigem = () => Object.fromEntries(Object.entries(GANHOS_PROD).flatMap(([n, o]) => [
+  ...o.abas.map(([a]) => [a === 'res' ? 'Origem' + n : `Origem${n}-${a}`, folhaOrigem(n, a)]),
+  ['OrigemCb' + n, folhaOrigem(n, 'cb')]]));
+function construir(cen = {}) {
+>>>
+@@@ as folhas de origem sao desenhadas a cada momento
+<<<
+  SHEETS = SHEETS_DE();
+  const abas3 = ['res', 'eco', 'cb'], hub
+===
+  SHEETS = SHEETS_DE();
+  Object.assign(SHEETS, folhasOrigem());
+  const abas3 = ['res', 'eco', 'cb'], hub
+>>>
+@@@ ligar a folha de origem
+<<<
+  function ligarMeuCb(c) {
+===
+  // a product's gains in a sheet: a tab shows its panel in place (bars grow, the number counts up), a movement opens its
+  // detail, the shortcuts go where they say. Coming back from any of them, the sheet opens on the tab it was left on
+  let voltaOrigem = null;
+  function ligarOrigem(c) {
+    const raiz = c.querySelector('[data-origem-folha]');
+    if (!raiz) return;
+    const nome = raiz.dataset.origemFolha, abas = [...raiz.querySelectorAll('[role=tab]')], paineis = [...raiz.querySelectorAll('[data-painel-aba]')];
+    let atualAba = (abas.find(t => t.getAttribute('aria-selected') === 'true') || abas[0]).dataset.aba;
+    const mostrar = (id, anima) => {
+      atualAba = id;
+      abas.forEach(t => { const on = t.dataset.aba === id; t.setAttribute('aria-selected', String(on)); Object.assign(t.style, on ? { background: '#FFFFFF', color: '#111513', boxShadow: '0 1px 4px rgba(17,21,19,0.14)' } : { background: 'transparent', color: '#545C57', boxShadow: 'none' }); });
+      paineis.forEach(p => { p.hidden = p.dataset.painelAba !== id; });
+      const p = paineis.find(q => !q.hidden);
+      if (!p) return;
+      crescerLinhas(p);
+      if (!anima || calmo) return;
+      p.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: SAI });
+      crescer([...p.querySelectorAll('[data-barra]')]);
+      p.querySelectorAll('[data-num]').forEach(contar);
+    };
+    const sair = fn => () => { voltaOrigem = { nome, aba: atualAba }; fn(); };
+    abas.forEach(t => { t._acao = () => mostrar(t.dataset.aba, true); });
+    dados(raiz, 'data-mov', k => sair(() => folha('Mov' + k))());
+    dados(raiz, 'data-ir-origem', a => sair(() => (a === 'faturas' ? ir('Faturas:casa') : a === 'telfaturas' ? ir('TelFaturas') : a === 'indicar' ? folha('Indicar') : ir('Extrato')))());
+    em(raiz, 'Extrato', sair(() => ir('Extrato')), { exato: true });
+    const volta = voltaOrigem && voltaOrigem.nome === nome ? voltaOrigem.aba : null;
+    voltaOrigem = null;
+    mostrar(volta || atualAba, !volta);
+  }
+
+  function ligarMeuCb(c) {
+>>>
+@@@ a folha de origem liga as abas
+<<<
+    else ligarFolha(c, sobre.slice(2));
+===
+    else { ligarFolha(c, sobre.slice(2)); if (n.startsWith('F:Origem')) ligarOrigem(c); }
+>>>
+@@@ fluxo da origem dos ganhos
+<<<
+['Detalhe: cashback da conta', 'Extrato+F:Mov1']] },
+===
+['Detalhe: cashback da conta', 'Extrato+F:Mov1']] },
+    { id: 'origem', titulo: 'Origem dos ganhos por produto', desc: 'Cada card de "Origem dos seus ganhos" abre a folha do produto: desconto e cashback (mesmo quando um é zero), mês a mês, nas abas Resumo, Desconto e Cashback, como você ganha numa linha do tempo, as faturas e as movimentações. Em Meu cashback, "De onde vem" abre a mesma folha na aba Cashback.', passos: [['Retorno · Resumo', 'Retorno-res'], ['Energia · resumo', 'Retorno-res+F:OrigemEnergia'], ['Energia · desconto', 'Retorno-res+F:OrigemEnergia-eco'], ['Energia · cashback', 'Retorno-res+F:OrigemEnergia-cb'], ['Telecom · resumo', 'Retorno-res+F:OrigemTelecom'], ['Telecom · desconto', 'Retorno-res+F:OrigemTelecom-eco'], ['Telecom · cashback antes de pagar', 'Retorno-res+F:OrigemTelecom-cb'], ['Telecom · cashback depois de pagar', 'Retorno-res+F:OrigemTelecom-cb', pago('telOut', 'pix')], ['Seguros · resumo', 'Retorno-res+F:OrigemSeguros'], ['Seguros · cashback', 'Retorno-res+F:OrigemSeguros-cb'], ['Meu cashback · De onde vem', 'MeuCashback-prod+F:OrigemCbEnergia']] },
+>>>

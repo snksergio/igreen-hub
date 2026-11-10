@@ -1,0 +1,35 @@
+{
+  "nome": "Super App · Tipografia",
+  "descricao": "O padrão tipográfico do Super App para as próximas telas: o protótipo de cashback com a escala Manrope aplicada (12 tamanhos, pesos 500 a 700, espaços em base 4) e o benchmark que a definiu.",
+  "tipo": "documentacao",
+  "atualizado": "2026-10-27",
+  "paginas": [
+    {
+      "nome": "Cashback com a escala aplicada",
+      "arquivo": "prototipo-cashback-v2.html"
+    },
+    {
+      "nome": "Origem dos ganhos por produto",
+      "arquivo": "prototipo-cashback-v2.html#origem"
+    },
+    {
+      "nome": "Pagar no Pix",
+      "arquivo": "prototipo-cashback-v2.html#pix"
+    },
+    {
+      "nome": "Detalhe da fatura em aberto",
+      "arquivo": "prototipo-cashback-v2.html#detalhe"
+    }
+  ],
+  "tags": [
+    "escala",
+    "manrope",
+    "fonte",
+    "entrelinha",
+    "peso",
+    "espaçamento",
+    "benchmark",
+    "acessibilidade",
+    "cashback"
+  ]
+}

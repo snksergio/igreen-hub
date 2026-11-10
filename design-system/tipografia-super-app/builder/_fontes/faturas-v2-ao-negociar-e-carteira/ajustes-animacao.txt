@@ -1,0 +1,76 @@
+@@@ entrada do selo de status: aneis, onda e icone desenhado
+<<<
+// success screens (payment confirmed, invoice paid, rescue done): a short entrance, skipped when the phone asks for less motion
+(() => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const SAI = 'cubic-bezier(0.22, 1, 0.36, 1)';
+  const SUCESSO = /^(Pagamento confirmado|Pagamento feito|Fatura paga|Resgate feito)/;
+  const subir = (el, atraso, d = 12) => el.animate([{ transform: 'translateY(' + d + 'px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 460, delay: atraso, easing: SAI, fill: 'backwards' });
+  const animar = cam => {
+    const h1 = [...cam.querySelectorAll('h1')].find(h => SUCESSO.test(h.textContent.trim()));
+    if (!h1) return;
+    const bloco = h1.parentElement, check = bloco.firstElementChild;
+    check.animate([{ transform: 'scale(0.5)', opacity: 0 }, { transform: 'scale(1.06)', opacity: 1, offset: 0.62 }, { transform: 'scale(1)' }], { duration: 620, easing: SAI, fill: 'backwards' });
+    [...bloco.children].slice(1).forEach((el, i) => subir(el, 200 + i * 70));
+===
+// status screens (payment confirmed, invoice paid, boleto in clearing, consult failed): the badge pops, its icon draws
+// itself, the rings open outward one after the other and a single wave leaves them. Skipped when the phone asks for less motion
+(() => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const SAI = 'cubic-bezier(0.22, 1, 0.36, 1)', TRACO = 'cubic-bezier(0.65, 0, 0.35, 1)';
+  const SUCESSO = /^(Pagamento confirmado|Pagamento feito|Fatura paga|Resgate feito)/;
+  const ANEL = /inset: -\d+px; border-radius: 50%/;
+  // the tone comes from the disc's color: it paints the wave and says what the icon does once it lands
+  const TONS = { '#47A263': ['ok', '51,132,73'], '#D18B20': ['atencao', '214,128,24'], '#CA574C': ['erro', '178,59,50'], '#7A847E': ['neutro', '92,104,98'] };
+  const subir = (el, atraso, d = 12) => el.animate([{ transform: 'translateY(' + d + 'px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 460, delay: atraso, easing: SAI, fill: 'backwards' });
+  const aneisDe = el => el ? [...el.children].filter(c => ANEL.test(c.getAttribute('style') || '')) : [];
+  // a shape that is not drawn (its screen already left) has no length: it just stays as it is
+  const desenhar = (svg, atraso) => svg && svg.querySelectorAll('path, line, polyline, polygon, circle, ellipse, rect').forEach(el => {
+    let n;
+    try { n = Math.ceil(el.getTotalLength()) + 1; } catch (e) { return; }
+    el.style.strokeDasharray = n;
+    el.animate([{ strokeDashoffset: n }, { strokeDashoffset: 0 }], { duration: 420, delay: atraso, easing: TRACO, fill: 'backwards' });
+  });
+  // one ring that leaves the badge and fades past the outer one
+  const onda = (icone, rgb, atraso, antes = null) => {
+    const o = document.createElement('span');
+    o.setAttribute('aria-hidden', 'true');
+    o.style.cssText = 'position: absolute; z-index: -1; inset: -1px; border-radius: 50%; border: 1.5px solid rgba(' + rgb + ',0.5); pointer-events: none; opacity: 0';
+    icone.insertBefore(o, antes);
+    o.animate([{ transform: 'scale(1)', opacity: 0.9 }, { transform: 'scale(1.45)', opacity: 0.6, offset: 0.4 }, { transform: 'scale(1.9)', opacity: 0 }], { duration: 1100, delay: atraso, easing: 'ease-out' }).onfinish = () => o.remove();
+  };
+  const selo = icone => {
+    const aneis = aneisDe(icone), svg = icone.querySelector('svg');
+    if (!aneis.length) {
+      // the receipts' check: a disc whose ring is a box-shadow, opened after the pop
+      icone.animate([{ transform: 'scale(0.5)', opacity: 0 }, { transform: 'scale(1.08)', opacity: 1, offset: 0.6 }, { transform: 'none' }], { duration: 540, easing: SAI, fill: 'backwards' });
+      const sombra = icone.style.boxShadow;
+      if (/0px 0px 0px 6px/.test(sombra)) {
+        icone.animate([{ boxShadow: sombra.replace('0px 0px 0px 6px', '0px 0px 0px 0px') }, { boxShadow: sombra }], { duration: 520, delay: 220, easing: SAI, fill: 'backwards' });
+        if (getComputedStyle(icone).position === 'static') icone.style.position = 'relative';
+        onda(icone, '51,132,73', 460);
+      }
+      desenhar(svg, 240);
+      return;
+    }
+    const disco = icone.lastElementChild;
+    const [tom, rgb] = TONS[((disco.getAttribute('style') || '').match(/160deg, (#[0-9A-F]{6})/) || [])[1]] || TONS['#47A263'];
+    icone.animate([{ transform: 'scale(0.6)', opacity: 0 }, { transform: 'scale(1.04)', opacity: 1, offset: 0.6 }, { transform: 'none' }], { duration: 520, easing: SAI, fill: 'backwards' });
+    disco.animate([{ transform: 'scale(0.3)' }, { transform: 'scale(1.1)', offset: 0.6 }, { transform: 'none' }], { duration: 540, delay: 90, easing: SAI, fill: 'backwards' });
+    aneis.forEach((a, i) => a.animate([{ transform: 'scale(0.7)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 600, delay: 180 + i * 110, easing: SAI, fill: 'backwards' }));
+    desenhar(svg, 300);
+    // success and waiting send the wave; waiting then rocks the icon, a failure shakes the disc
+    if (tom === 'ok' || tom === 'atencao') onda(icone, rgb, 520, disco);
+    if (tom === 'atencao' && svg) svg.animate([{ transform: 'none' }, { transform: 'rotate(-12deg)', offset: 0.25 }, { transform: 'rotate(9deg)', offset: 0.5 }, { transform: 'rotate(-5deg)', offset: 0.75 }, { transform: 'none' }], { duration: 640, delay: 720, easing: 'ease-in-out' });
+    else if (tom !== 'ok') disco.animate([{ transform: 'none' }, { transform: 'translateX(-5px)', offset: 0.2 }, { transform: 'translateX(5px)', offset: 0.4 }, { transform: 'translateX(-3px)', offset: 0.6 }, { transform: 'translateX(3px)', offset: 0.8 }, { transform: 'none' }], { duration: 420, delay: 720, easing: 'ease-in-out' });
+  };
+  const animar = cam => {
+    if (!cam.isConnected) return;
+    const h1 = [...cam.querySelectorAll('h1')].find(h => SUCESSO.test(h.textContent.trim()) || aneisDe(h.previousElementSibling).length);
+    if (!h1) return;
+    const bloco = h1.parentElement;
+    const aura = cam.querySelector('div[style*="filter: blur(44px)"]');
+    if (aura) aura.animate([{ opacity: 0 }, { opacity: getComputedStyle(aura).opacity }], { duration: 900, easing: SAI, fill: 'backwards' });
+    selo(bloco.firstElementChild);
+    [...bloco.children].slice(1).forEach((el, i) => subir(el, 260 + i * 70));
+>>>

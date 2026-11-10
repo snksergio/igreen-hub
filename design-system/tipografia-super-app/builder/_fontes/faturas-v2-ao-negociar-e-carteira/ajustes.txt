@@ -1,0 +1,314 @@
+@@@ botoes: primario em 52
+<<<
+const btnPrimario = (txt, icone = '', alt = 54) =>
+===
+const btnPrimario = (txt, icone = '', alt = 52) =>
+>>>
+
+@@@ botoes: neutro em 52
+<<<
+const btnNeutro = (txt, icone = '', alt = 50) =>
+===
+const btnNeutro = (txt, icone = '', alt = 52) =>
+>>>
+
+@@@ numeros: a contagem anima com tabular e termina proporcional
+<<<
+      el.textContent = p < 1 ? v.toLocaleString('pt-BR') : txt;
+===
+      el.textContent = p < 1 ? v.toLocaleString('pt-BR') : txt;
+      el.style.fontVariantNumeric = p < 1 ? 'tabular-nums' : '';
+>>>
+
+@@@ extrato: filtros em carrossel
+<<<
+const chips = itens => `<div style="padding: 0 16px; display: flex; flex-wrap: wrap; gap: 8px">
+===
+const chips = itens => `<div style="padding: 0 16px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none">
+>>>
+
+@@@ extrato: busca com o filtro de periodo dentro do campo
+<<<
+${busca}
+<div style="margin-top: 12px">${chips([['Todos', true]
+===
+<div style="margin: 12px 16px 0; height: 48px; box-sizing: border-box; border-radius: 24px; background: #FFFFFF; border: 1px solid #E1E5E2; padding: 0 6px 0 16px; display: flex; align-items: center; gap: 10px; color: #545C57">${svg(P.busca, 18, 2.1)}<input type="search" aria-label="Buscar no extrato" placeholder="Buscar" enterkeyhint="search" style="flex-grow: 1; min-width: 0; height: 44px; border: 0; outline: 0; background: transparent; padding: 0; font: 500 16px/22px 'Manrope', system-ui, sans-serif; color: #111513"><button aria-label="Filtrar por período" style="height: 36px; flex-shrink: 0; padding: 0 12px 0 10px; border-radius: 18px; border: 0; background: #F0F2F1; color: #111513; display: flex; align-items: center; gap: 6px; font-size: 13px; line-height: 18px; font-weight: 700">${svg(P.calendario, 16, 2.1)}Período</button></div>
+<div style="margin-top: 12px">${chips([['Todos', true]
+>>>
+
+@@@ extrato: linha alinhada pelo topo e icone com a cor do status
+<<<
+padding: 16px 0; display: flex; align-items: center; gap: 12px; text-align: left">${bola(x.caminho ? P.relogio : ICT[x.tipo])}
+===
+padding: 16px 0; display: flex; align-items: flex-start; gap: 12px; text-align: left">${bola(x.caminho ? P.relogio : ICT[x.tipo], tom === CINZA ? {} : tom)}
+>>>
+
+@@@ extrato: subtitulo na cor de subtitulo do app
+<<<
+font-size: 13px; line-height: 18px; color: #3E4541; text-wrap: pretty">${x.de}
+===
+font-size: 13px; line-height: 18px; color: #545C57; text-wrap: pretty">${x.de}
+>>>
+
+@@@ detalhe da movimentacao: icone com a cor do status
+<<<
+${bola(ICT[x.tipo], { s: 52 })}
+===
+${bola(ICT[x.tipo], { s: 52, ...(tom === CINZA ? {} : tom) })}
+>>>
+
+@@@ detalhe da movimentacao: Ver comprovante na altura dos outros botoes
+<<<
+margin: 8px 4px 0; height: 40px; box-sizing: border-box; border-radius: 20px; border: 1px solid #CFE6D6; background: #FFFFFF; color: ${VERDE_TXT}; display: flex; align-items: center; justify-content: center; gap: 4px; font-size: 14px; line-height: 20px
+===
+margin: 12px 4px 0; height: 52px; box-sizing: border-box; border-radius: 26px; border: 1px solid #CFE6D6; background: #FFFFFF; color: ${VERDE_TXT}; display: flex; align-items: center; justify-content: center; gap: 4px; font-size: 15px; line-height: 20px
+>>>
+
+@@@ meu cashback: Indique e receba com mais folga
+<<<
+const indicar = `<a href="#" style="margin: 12px 16px 0; border-radius: 24px; background: #FFFFFF; border: 1px solid #E1E5E2; padding: 10px 12px 10px 8px;
+===
+const indicar = `<a href="#" style="margin: 12px 16px 0; border-radius: 24px; background: #FFFFFF; border: 1px solid #E1E5E2; padding: 16px 12px 16px 8px;
+>>>
+
+@@@ meu cashback: numeros com o grafico de para onde foi o cashback
+<<<
+${bloco(cartao(`<div style="padding: 2px 16px${h.caminho ? ' 14px' : ''}">${kv('Total recebido', '+ ' + brl(h.cbRecebido ?? 46.50), { primeiro: true, cor: VERDE_TXT })}
+===
+${bloco(cartao(`<div style="padding: 2px 16px${h.caminho ? ' 14px' : ''}">${(() => { const fat = [[Math.max(0, h.disp), '#338449', 'Disponível'], [h.usadoTot, '#8CC79E', 'Usado em faturas'], [h.resgTot, '#CFE6D6', 'Resgatado']].filter(([v]) => v > 0), tot = fat.reduce((a, [v]) => a + v, 0) || 1; return `<div style="padding: 16px 0 14px"><div role="img" aria-label="Para onde foi o cashback: ${fat.map(([v, , t]) => `${t} ${pct(v, tot)}%`).join(', ')}" style="height: 12px; display: flex; gap: 3px">${fat.map(([v, c]) => `<span style="flex: ${v} 1 0; min-width: 8px; border-radius: 6px; background: ${c}"></span>`).join('')}</div><div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; line-height: 18px; color: #545C57">${fat.map(([v, c, t]) => `<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; flex-shrink: 0; border-radius: 3px; background: ${c}"></span>${t} · ${pct(v, tot)}%</span>`).join('')}</div></div>`; })()}${kv('Total recebido', '+ ' + brl(h.cbRecebido ?? 46.50), { cor: VERDE_TXT })}
+>>>
+
+@@@ retorno: card de origem abre o detalhe
+<<<
+const origem = rolar(ORIG.map(([ic, n, o, tot, d, c]) => { const p = pct(tot, h.total); return `<div style="flex: 0 0 318px;
+===
+const origem = rolar(ORIG.map(([ic, n, o, tot, d, c]) => { const p = pct(tot, h.total); return `<div data-origem="${n}" style="flex: 0 0 318px;
+>>>
+
+@@@ meu cashback: linha de De onde vem abre o detalhe do produto
+<<<
+const orig = (ic, n, v, i) => { const p = pct(v, h.cbGanho); return `<div style="${i ? 'border-top: 1px solid #EEF0EF; ' : ''}padding: 16px 0; display: flex; align-items: center; gap: 12px">
+===
+const orig = (ic, n, v, i) => { const p = pct(v, h.cbGanho); return `<div${['Energia', 'Telecom', 'Seguros'].includes(n) ? ` data-origem="${n}"` : ''} style="${i ? 'border-top: 1px solid #EEF0EF; ' : ''}padding: 16px 0; display: flex; align-items: center; gap: 12px">
+>>>
+
+@@@ sheets novos: origem de cada produto e filtro por periodo
+<<<
+  // movement details: what it was and where it came from or went, with the receipt behind it
+===
+  // where each product's gains come from: what came back, its parts and the rules behind them
+  ...(() => { const h = H(), ORIGENS = {
+    Energia: [P.raio, +(h.ecoEnergia + h.cbEnergia).toFixed(2), h.ecoEnergia, h.cbEnergia, [[P.raio, '15% de desconto em toda conta de luz paga em dia'], [PT.porcento, '16% de cashback pagando com Pix, saldo ou boleto'], [P.relogio, 'Paga com atraso, a fatura rende 10%']]],
+    Telecom: [P.celular, +(h.ecoTelecom + h.cbTelecom).toFixed(2), h.ecoTelecom, h.cbTelecom, [[P.celular, 'Desconto no plano, todo mês'], [PT.porcento, '2% de cashback em qualquer forma de pagamento']]],
+    Seguros: [I.escudo, 6.80, 0, 6.80, [[I.amigo, 'Cashback quando quem você indicou paga o seguro'], [PT.porcento, 'A mensalidade do seguro não rende cashback']]] };
+    const heroi = (ic, rot, v, sub) => `<div style="margin-top: 16px; display: flex; flex-direction: column; align-items: center; text-align: center">${bola(ic, { s: 52, ...VERDE })}<span style="margin-top: 12px; font-size: 13px; line-height: 18px; color: #545C57">${rot}</span><span style="font-size: 28px; line-height: 34px; font-weight: 700; letter-spacing: -0.03em; color: ${VERDE_TXT}; white-space: nowrap">${v}</span><span style="margin-top: 2px; font-size: 13px; line-height: 18px; color: #545C57">${sub}</span></div>`;
+    // from the Retorno the product's whole return (discount + cashback); from my cashback, only its cashback
+    return Object.fromEntries(Object.entries(ORIGENS).flatMap(([n, [ic, tot, d, c, regras]]) => [
+      ['Origem' + n, U.sheet(n, `${heroi(ic, 'Já voltou pra você', brl(tot), `${pct(tot, h.total)}% do que a iGreen já te devolveu`)}<div style="margin: 16px 4px 0; border-radius: 20px; background: #F4F6F5; border: 1px solid #E7EBE8; padding: 4px 16px">${d ? parcela(P.raio, 'Desconto nas contas', brl(d), 0) : ''}${c ? parcela(PT.porcento, 'Cashback', '+ ' + brl(c), d ? 1 : 0) : ''}</div>${cartaoIdeias(regras)}${entendi}`, 'Desde maio de 2026')],
+      ['OrigemCb' + n, U.sheet(n, `${heroi(ic, 'Cashback que já caiu', brl(c), `${pct(c, h.cbGanho)}% do seu cashback`)}${cartaoIdeias(regras)}${d ? `<p style="margin: 16px 4px 0; font-size: 13px; line-height: 18px; color: #545C57; text-wrap: pretty">Além do cashback, ${n === 'Energia' ? 'as contas de luz' : 'o plano'} já tiveram ${brl(d)} de desconto. Os dois somados estão no Retorno iGreen.</p>` : ''}${entendi}`, 'Cashback desde maio de 2026')]])); })(),
+  // the statement's date filter
+  FiltroPeriodo: U.sheet('Filtrar por período', `<div role="radiogroup" aria-label="Período" style="margin-top: 8px; padding: 0 4px">${[['Últimos 30 dias', 'De 06/09 a 06/10'], ['Últimos 3 meses', 'De julho a outubro'], ['Últimos 6 meses', 'De maio a outubro', true], ['Este ano', 'Desde janeiro de 2026'], ['Escolher as datas', 'Do dia que quiser até hoje']].map(([t, s, sel], i) => `<button role="radio" aria-checked="${!!sel}" style="width: 100%; min-height: 64px; box-sizing: border-box; border: 0;${i ? ' border-top: 1px solid #EEF0EF;' : ''} background: transparent; color: #111513; padding: 12px 0; display: flex; align-items: center; gap: 12px; text-align: left"><span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; line-height: 20px; font-weight: 700">${t}</span><span style="font-size: 13px; line-height: 18px; color: #545C57">${s}</span></span>${radio(!!sel)}</button>`).join('')}</div><div style="margin-top: 24px">${btnPrimario('Aplicar')}</div>`),
+  // movement details: what it was and where it came from or went, with the receipt behind it
+>>>
+
+@@@ acoes: filtro por periodo no extrato
+<<<
+      if (nome === 'Extrato') movimentos(c);
+===
+      if (nome === 'Extrato') { movimentos(c); ligarExtrato(c); }
+>>>
+
+@@@ acoes: sheet do filtro por periodo
+<<<
+    if (n === 'GanheMais') {
+===
+    if (n === 'FiltroPeriodo') {
+      // the sheet opens on the period in use, and applying it filters the statement under it
+      d.querySelectorAll('[role=radio]').forEach(r => { const on = norm(r.querySelector('span span').textContent) === filtroExt.periodo; r.setAttribute('aria-checked', String(on)); const ind = r.lastElementChild; if (ind) ind.outerHTML = on ? PECAS.radioOn : PECAS.radioOff; });
+      const sel = radios(d);
+      em(d, 'Aplicar', () => { const r = sel(); voltar(); if (r) aplicarPeriodo(norm(r.querySelector('span span').textContent)); }, { exato: true });
+    } else if (n === 'GanheMais') {
+>>>
+
+@@@ acoes: cards de origem no retorno
+<<<
+    c.querySelectorAll('[aria-roledescription="slide"]').forEach((s, i) => { s._acao = fazer[i]; });
+===
+    c.querySelectorAll('[aria-roledescription="slide"]').forEach((s, i) => { s._acao = fazer[i]; });
+    c.querySelectorAll('[data-origem]').forEach(el => area(el, () => folha('Origem' + el.dataset.origem)));
+>>>
+
+@@@ acoes: linhas de De onde vem no meu cashback
+<<<
+    em(c, 'Ver extrato completo', () => ir('Extrato'), { comeca: true });
+===
+    em(c, 'Ver extrato completo', () => ir('Extrato'), { comeca: true });
+    c.querySelectorAll('[data-origem]').forEach(el => area(el, () => folha('OrigemCb' + el.dataset.origem)));
+>>>
+
+@@@ faturas: data e forma a 2 do titulo
+<<<
+const dataForma = (pagaEm, metodo) => `<span style="margin-top: 4px;
+===
+const dataForma = (pagaEm, metodo) => `<span style="margin-top: 2px;
+>>>
+
+@@@ comprovante: baloes agrupados (valor da fatura, economia e cashback)
+<<<
+const pilula = (icone, t, neutro = false) => `<div style="margin-top: 10px;
+===
+const pilula = (icone, t, neutro = false) => `<div style="margin-top: 8px;
+>>>
+
+@@@ comprovante: balao do cashback agrupado
+<<<
+const pilulaCasinha = t => `<div style="margin-top: 10px;
+===
+const pilulaCasinha = t => `<div style="margin-top: 8px;
+>>>
+
+@@@ comprovante: Inicio e Compartilhar lado a lado
+<<<
+const peComprovante = rodapeFixo(`${btnPrimario('Compartilhar', svg(PT.compartilhar2, 18))}<div style="margin-top: 10px">${btnSecundario('Início', svg(P.casa, 18, 2))}</div>`);
+===
+const peComprovante = rodapeFixo(`<div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px">${btnSecundario('Início', svg(P.casa, 18, 2))}${btnPrimario('Compartilhar', svg(PT.compartilhar2, 18))}</div>`);
+>>>
+
+@@@ comprovante: detalhes fechados por padrao (o comprovante cabe na tela)
+<<<
+const detalhes = ls => `<button aria-expanded="true" style="width: 100%; height: 44px; margin-top: -4px; border: 0; background: transparent; color: #111513; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 15px; line-height: 20px; font-weight: 700; text-align: left">Detalhes do pagamento<span style="display: flex; color: #545C57; transform: rotate(180deg)">
+===
+const detalhes = ls => `<button aria-expanded="false" style="width: 100%; height: 44px; margin-top: -4px; border: 0; background: transparent; color: #111513; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 15px; line-height: 20px; font-weight: 700; text-align: left">Detalhes do pagamento<span style="display: flex; color: #545C57">
+>>>
+
+@@@ comprovante: painel de detalhes comeca fechado
+<<<
+<div>${ls.map(([k, v]) => C.linha(k, v)).join('')}</div>`;
+===
+<div style="display: none">${ls.map(([k, v]) => C.linha(k, v)).join('')}</div>`;
+>>>
+
+@@@ telas: a altura minima e a da tela de verdade (no celular, nao os 844 do iPhone)
+<<<
+    m.raiz.style.height = Math.max(844, Math.ceil(fim + (pe ? pe - 4 : 24))) + 'px';
+===
+    m.raiz.style.height = Math.max(m.camada.clientHeight || 844, Math.ceil(fim + (pe ? pe - 4 : 24))) + 'px';
+>>>
+
+@@@ comprovante: valor em stat-md (34) para caber na tela
+<<<
+<span style="margin-top: 2px">${cents(int, ',' + dec, 38)}</span>
+===
+<span style="margin-top: 2px">${cents(int, ',' + dec, 34)}</span>
+>>>
+
+@@@ rodape fixo: 24 embaixo
+<<<
+const rodapeFixo = c => `<div data-fixo style="position: absolute; left: 0; right: 0; bottom: 0; padding: 24px 16px 32px;
+===
+const rodapeFixo = c => `<div data-fixo style="position: absolute; left: 0; right: 0; bottom: 0; padding: 16px 16px 24px;
+>>>
+
+@@@ extrato: cada linha diz o tipo e o dia (para os filtros)
+<<<
+const itemMov = (x, i) => { const [s, tom] = statusMov(x); return `<button style="width: 100%; min-height: 76px;
+===
+const itemMov = (x, i) => { const [s, tom] = statusMov(x); return `<button data-tipo-mov="${x.caminho ? 'receber' : x.v > 0 ? 'entrada' : 'saida'}" data-dia="${x.d}" style="width: 100%; min-height: 76px;
+>>>
+
+@@@ extrato: filtros de tipo, busca e periodo funcionando juntos
+<<<
+  const movimentos = c => comEstilo(c, 'button', 'width: 100%; min-height: 76px').forEach((b, i) => { b._acao = () => folha('Mov' + i); });
+===
+  const movimentos = c => comEstilo(c, 'button', 'width: 100%; min-height: 76px').forEach((b, i) => { b._acao = () => folha('Mov' + i); });
+  // the statement filters for real: type chips, the search field and the period sheet narrow the list together;
+  // the choice lives here, so it survives the screen being drawn again
+  const filtroExt = { tipo: 'Todos', q: '', periodo: 'Últimos 6 meses' };
+  const DIAS_PERIODO = { 'Últimos 30 dias': 30, 'Últimos 3 meses': 92 };
+  const CURTO_PERIODO = { 'Últimos 30 dias': '30 dias', 'Últimos 3 meses': '3 meses', 'Este ano': 'Este ano' };
+  const TIPO_MOV = { Entradas: 'entrada', 'Saídas': 'saida', 'A receber': 'receber' };
+  let extratoAtual = null;
+  function filtrarExtrato(c) {
+    const q = filtroExt.q.trim().toLowerCase(), dias = DIAS_PERIODO[filtroExt.periodo] || 0, hoje = new Date(2026, 9, 6);
+    const passa = b => {
+      const [d, m] = (b.dataset.dia || '1/1').split('/').map(Number);
+      return (filtroExt.tipo === 'Todos' || TIPO_MOV[filtroExt.tipo] === b.dataset.tipoMov)
+        && (!dias || (hoje - new Date(2026, m - 1, d)) / 864e5 <= dias)
+        && (!q || norm(b.textContent).toLowerCase().includes(q));
+    };
+    let total = 0;
+    c.querySelectorAll('h2').forEach(h => {
+      const card = h.nextElementSibling, rs = card ? comEstilo(card, 'button', 'width: 100%; min-height: 76px') : [];
+      if (!rs.length) return;
+      const vs = rs.filter(passa);
+      // a month shows only with something in it; its first visible row drops the divider
+      rs.forEach(b => { b.dataset.bt ??= b.style.borderTop; b.style.display = vs.includes(b) ? 'flex' : 'none'; b.style.borderTop = b === vs[0] ? '0' : b.dataset.bt; });
+      h.style.display = card.style.display = vs.length ? '' : 'none';
+      total += vs.length;
+    });
+    let vazio = c.querySelector('[data-vazio]');
+    if (!vazio) {
+      const chipsLinha = c.querySelector('[aria-label="Filtrar por período"]').parentElement.nextElementSibling;
+      chipsLinha.insertAdjacentHTML('afterend', '<div data-vazio style="margin: 40px 32px 0; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center"><span style="font-size: 15px; line-height: 20px; font-weight: 700">Nada por aqui</span><span style="font-size: 13px; line-height: 18px; color: #545C57; text-wrap: balance">Nenhuma movimentação com esses filtros. Tente outro período ou limpe a busca.</span></div>');
+      vazio = c.querySelector('[data-vazio]');
+    }
+    vazio.style.display = total ? 'none' : 'flex';
+  }
+  function atualizarExtrato(c) {
+    c.querySelectorAll('[aria-pressed]').forEach(o => {
+      const t = norm(o.textContent);
+      if (!['Todos', 'Entradas', 'Saídas', 'A receber'].includes(t)) return;
+      const on = t === filtroExt.tipo;
+      o.setAttribute('aria-pressed', String(on));
+      Object.assign(o.style, { border: on ? '1.5px solid #338449' : '1px solid #DCE1DE', background: on ? '#DDEFE3' : '#FFFFFF', color: on ? '#1F5F35' : '#3E4541' });
+    });
+    const bt = c.querySelector('[aria-label="Filtrar por período"]');
+    if (bt) bt.lastChild.textContent = CURTO_PERIODO[filtroExt.periodo] || 'Período';
+    filtrarExtrato(c);
+  }
+  function ligarExtrato(c) {
+    extratoAtual = c;
+    c.querySelectorAll('[aria-pressed]').forEach(o => { const t = norm(o.textContent); if (['Todos', 'Entradas', 'Saídas', 'A receber'].includes(t)) o._acao = () => { filtroExt.tipo = t; atualizarExtrato(c); }; });
+    const inp = c.querySelector('input[type=search]');
+    if (inp) { inp.value = filtroExt.q; inp.addEventListener('input', () => { filtroExt.q = inp.value; filtrarExtrato(c); }); }
+    rotulo(c, 'Filtrar por período', () => folha('FiltroPeriodo'));
+    atualizarExtrato(c);
+  }
+  const aplicarPeriodo = p => {
+    filtroExt.periodo = p;
+    if (p === 'Escolher as datas') toast('No protótipo, escolher as datas mostra tudo');
+    if (extratoAtual && extratoAtual.isConnected) atualizarExtrato(extratoAtual);
+  };
+>>>
+
+@@@ meu cashback: linha de Prazos com 44px de toque, sem mexer no visual
+<<<
+data-validade style="display: flex; align-items: center; gap: 6px; margin-top: ${h.caminho ? 10 : 4}px;
+===
+data-validade style="display: flex; align-items: center; gap: 6px; min-height: 44px; margin: ${h.caminho ? -3 : -9}px 0 -13px;
+>>>
+
+@@@ arrastar com o mouse nao rouba o foco do campo de busca
+<<<
+    if (e.pointerType !== 'mouse' || e.button !== 0 || !atual || !atual.rol.contains(e.target)) return;
+===
+    if (e.pointerType !== 'mouse' || e.button !== 0 || !atual || !atual.rol.contains(e.target) || e.target.closest('input')) return;
+>>>
+
+@@@ links diretos: #fluxo/3 abre no terceiro passo do fluxo
+<<<
+  const doLink = FLUXOS.find(f => f.id === location.hash.slice(1));
+  irPara(doLink || FLUXOS[0]);
+===
+  // #fluxo/3 opens straight on the third step (links for reviewing one screen), on load and when a link is opened in the same tab
+  const abrirLink = () => {
+    const [idLink, passoLink] = location.hash.slice(1).split('/');
+    const doLink = FLUXOS.find(f => f.id === idLink);
+    if (!doLink) return false;
+    irPara(doLink);
+    if (+passoLink > 1) setTimeout(() => { const p = document.querySelectorAll('.passo')[+passoLink - 1]; if (p) p.click(); }, 400);
+    return true;
+  };
+  if (!abrirLink()) irPara(FLUXOS[0]);
+  addEventListener('hashchange', () => { if (location.hash.includes('/')) abrirLink(); });
+>>>

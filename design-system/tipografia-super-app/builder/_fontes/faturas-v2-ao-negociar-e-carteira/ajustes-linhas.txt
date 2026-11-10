@@ -1,0 +1,51 @@
+@@@ linhas de altura fixa crescem quando o texto quebra
+<<<
+  function ajustarAltura(m) {
+===
+  // list rows drawn with a fixed height grow when their text wraps: the height becomes a minimum and the room the
+  // one-line content leaves above and below turns into padding, so a one-line row keeps its exact height and a
+  // two-line one opens by one line. A short text on the right (a value, a period) keeps one line and the label wraps instead
+  let medirLinha = null;
+  function crescerLinhas(raiz) {
+    if (!medirLinha) {
+      medirLinha = document.createElement('style');
+      medirLinha.textContent = '.medir-linha, .medir-linha * { white-space: nowrap !important; text-wrap: nowrap !important }';
+      document.head.appendChild(medirLinha);
+    }
+    const linhas = [];
+    for (const el of raiz.querySelectorAll('[style*="height"]')) {
+      const alto = el.style.height;
+      if (el.dataset.cresce || !/^\d+(\.\d+)?px$/.test(alto) || el.style.minHeight || el.style.maxHeight) continue;
+      if (parseFloat(alto) < 28 || parseFloat(alto) > 96 || /^(INPUT|TEXTAREA|SELECT|IMG)$/.test(el.tagName) || el.closest('header, nav') || !el.textContent.trim()) continue;
+      const st = getComputedStyle(el);
+      if (st.position === 'absolute' || st.position === 'fixed') continue;
+      // only rows whose content sits in the vertical middle, so padding split evenly leaves it where it was; pills are buttons
+      const meio = /flex/.test(st.display) ? (st.flexDirection.startsWith('row') ? st.alignItems === 'center' : st.justifyContent === 'center') : st.display === 'grid' && st.alignItems === 'center';
+      if (!meio || st.borderTopLeftRadius.endsWith('%') || parseFloat(st.borderTopLeftRadius) >= parseFloat(alto) / 2 - 1) continue;
+      const H = el.offsetHeight, W = el.offsetWidth;
+      if (!H || W < 160 || W < 2 * H) continue;
+      linhas.push({ el, alto, H, pt: parseFloat(st.paddingTop), pb: parseFloat(st.paddingBottom), lados: st.justifyContent === 'space-between' });
+    }
+    // the height each row needs with every text on one line, all measured in one layout
+    linhas.forEach(({ el }) => { el.style.height = 'auto'; el.classList.add('medir-linha'); });
+    linhas.forEach(l => { l.uma = l.el.offsetHeight; });
+    linhas.forEach(({ el, alto, H, pt, pb, lados, uma }) => {
+      el.classList.remove('medir-linha');
+      if (uma > H + 0.5) { el.style.height = alto; return; }
+      const sobra = (H - uma) / 2;
+      Object.assign(el.style, { height: '', boxSizing: 'border-box', minHeight: H + 'px', paddingTop: pt + sobra + 'px', paddingBottom: pb + sobra + 'px' });
+      el.dataset.cresce = '1';
+      const k = el.firstElementChild, v = el.lastElementChild;
+      if (lados && v && v !== k && k.textContent.trim() && v.textContent.trim() && v.textContent.trim().length <= 20) Object.assign(v.style, { whiteSpace: 'nowrap', flexShrink: '0' });
+    });
+  }
+  function ajustarAltura(m) {
+    crescerLinhas(m.camada);
+>>>
+@@@ folha tambem cresce
+<<<
+    m.fixos.appendChild(f);
+===
+    m.fixos.appendChild(f);
+    crescerLinhas(f);
+>>>
