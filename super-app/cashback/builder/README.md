@@ -83,8 +83,8 @@ Para publicar, siga a seção 5 do ORQUESTRADOR.md, "Alterar um projeto que já 
 
 | O quê | Onde |
 |---|---|
-| Apresentação | [../index.html](../index.html) · no hub: https://snksergio.github.io/igreen-hub/super-app/cashback/ |
-| Protótipo | [../prototipo/prototipo-cashback.html](../prototipo/prototipo-cashback.html) · no hub: https://snksergio.github.io/igreen-hub/super-app/cashback/prototipo/prototipo-cashback.html |
+| Apresentação | [../index.html](../index.html) · no hub: https://igreen-hub.pages.dev/super-app/cashback/ |
+| Protótipo | [../prototipo/prototipo-cashback.html](../prototipo/prototipo-cashback.html) · no hub: https://igreen-hub.pages.dev/super-app/cashback/prototipo/prototipo-cashback.html |
 | Investigação: pergunta real, certezas e dúvidas, métodos e achados | [2026-10-16-pagamento-universal/README.md](2026-10-16-pagamento-universal/README.md) |
 | Benchmark de pagamento e cashback (rodada 1) | [2026-10-16-benchmark-pagamento-universal.md](2026-10-16-pagamento-universal/2026-10-16-benchmark-pagamento-universal.md) |
 | Benchmark de benefícios e clubes (rodada 2) | [2026-10-16-benchmark-beneficios-v2.md](2026-10-16-pagamento-universal/2026-10-16-benchmark-beneficios-v2.md) |
