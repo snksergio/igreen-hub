@@ -6,16 +6,20 @@
   "repo": "https://github.com/snksergio/igreen-cashback-prototipo",
   "paginas": [
     {
-      "nome": "Apresentação",
+      "nome": "Apresentação para os heads",
       "arquivo": "index.html"
     },
     {
-      "nome": "Protótipo",
+      "nome": "Protótipo com 32 fluxos",
       "arquivo": "prototipo/prototipo-cashback.html"
     }
   ],
   "tags": [
     "cashback",
-    "pagamento"
+    "pagamento",
+    "saldo",
+    "fatura",
+    "retorno igreen",
+    "pagamento universal"
   ]
 }

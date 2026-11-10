@@ -5,6 +5,12 @@
   "atualizado": "2026-02-25",
   "link": "https://backofficetable.vercel.app/",
   "repo": "https://github.com/snksergio/backofficetable",
+  "paginas": [
+    {
+      "nome": "DataGrid",
+      "arquivo": ""
+    }
+  ],
   "versoes": [
     {
       "nome": "v2 · DataGrid do backoffice",

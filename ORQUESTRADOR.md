@@ -72,25 +72,27 @@ Use builder e output quando o estudo for grande ou não puder ir para quem vai v
     { "nome": "Fluxo completo", "arquivo": "index.html" },
     { "nome": "Faturas de energia", "arquivo": "faturas-energia.html" }
   ],
-  "tags": ["fatura", "pix"]
+  "tags": ["fatura", "pix", "cartão", "boleto", "cashback", "comprovante"]
 }
 ```
 
 | Campo | Obrigatório | O que é |
 |---|---|---|
 | `nome` | sim | Nome curto, como aparece no card |
-| `descricao` | sim | Uma ou duas frases: o que é e para que serve (até uns 200 caracteres) |
+| `descricao` | sim | Uma ou duas frases, até uns 200 caracteres: o que é, para quem ou para que serve, e os assuntos principais. Sem nome de ferramenta ("como no Claude") nem instrução de navegação (zoom, arrastar) |
 | `tipo` | sim | Um dos tipos de `categorias.json`: `prototipo`, `poc`, `hotsite`, `landing`, `proposta`, `apresentacao`, `dashboard`, `documentacao` |
-| `atualizado` | sim | Data da última mudança, `AAAA-MM-DD`. Atualize a cada alteração |
-| `paginas` | não | As entradas do projeto, cada uma vira um botão. Sem o campo, a entrada é `index.html`. `arquivo` aceita `#ancora` e `?parametro` |
+| `atualizado` | sim | Data da última mudança no projeto, `AAAA-MM-DD`. Atualize a cada alteração do projeto. Mexer só na ficha (descrição, tags, nome de página) não muda a data: a vitrine ordena por ela |
+| `paginas` | não | As entradas do projeto, cada uma vira um botão. Sem o campo, a entrada é `index.html` e se chama "Abrir". `arquivo` aceita `#ancora` e `?parametro`. O `nome` diz o que a página mostra: "Abrir", "Protótipo" ou "Início" sozinhos não dizem nada na busca |
 | `acervo` | não | As variações do projeto em grupos, numa aba própria da ficha. Veja "Acervo" logo abaixo |
 | `versoes` | não | O histórico de versões, da mais nova para a mais antiga: `{ "nome": "v2 · com cashback", "arquivo": "faturas-v2.html", "data": "2026-10-29" }`. A primeira aparece como atual. `arquivo` segue a mesma regra das páginas e também aceita uma URL completa |
 | `link` | não | Só quando o projeto mora fora daqui: a URL dele. Aí o `arquivo` de cada página é relativo a esse link |
 | `repo` | não | Onde está o código-fonte, se for outro repositório |
 | `status` | não | `ativo` (padrão), `rascunho` ou `arquivado` (sai da lista principal e fica no filtro Arquivados) |
-| `tags` | não | Palavras extras para a busca |
+| `tags` | não | De 5 a 10 assuntos que alguém digitaria para achar o projeto e que não estão no nome: no singular, minúsculas, em português. Sem versão (`v3`) nem formato que o nome já diz (`canvas`). Projeto grande pode ter mais |
 
 A categoria e o slug saem do caminho da pasta, não repita no arquivo.
+
+**A busca da vitrine** lê o nome, a descrição e as tags do projeto, o nome de cada página, versão e item do acervo, e o texto das telas que são um arquivo só. Projeto que mora fora daqui (`link`) ou que é um app numa página só (telas por `#ancora`) não tem texto que a busca leia: nele, a ficha é tudo o que a busca lê, então capriche na descrição e nas tags.
 
 ### Acervo: as variações em grupos
 

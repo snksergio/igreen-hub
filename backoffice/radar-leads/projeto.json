@@ -5,10 +5,18 @@
   "atualizado": "2026-07-13",
   "link": "https://leads-igreen.vercel.app/",
   "repo": "https://github.com/snksergio/leads-igreen",
+  "paginas": [
+    {
+      "nome": "Protótipo do radar",
+      "arquivo": ""
+    }
+  ],
   "tags": [
     "crm",
     "leads",
     "mapa",
-    "licenciado"
+    "licenciado",
+    "captura",
+    "território"
   ]
 }

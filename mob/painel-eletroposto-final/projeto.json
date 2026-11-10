@@ -1,13 +1,13 @@
 {
   "nome": "Painel do eletroposto",
-  "descricao": "Painel do dono de eletroposto, versão final (V3): maquete 3D e planta 2D ao vivo, construtor do posto e primeiro acesso, com a maquete montada no navegador. Dois formatos de posto: bombas de frente e vagas paralelas (o carro para ao lado da ilha, em linha). Inclui o POC (V1), com a maquete feita no Blender, e o protótipo do construtor.",
+  "descricao": "Painel do dono de eletroposto, versão final: maquete 3D e planta 2D do posto ao vivo, construtor do posto e primeiro acesso. Inclui o POC com a maquete feita no Blender.",
   "tipo": "prototipo",
   "atualizado": "2026-11-09",
   "link": "https://snksergio.github.io/mob-dashboard-interativo/final/online/",
   "repo": "https://github.com/snksergio/mob-dashboard-interativo/tree/main/final",
   "paginas": [
     {
-      "nome": "Início",
+      "nome": "Início do painel",
       "arquivo": ""
     },
     {
@@ -48,13 +48,16 @@
     "3d",
     "dashboard",
     "construtor",
-    "vagas-paralelas",
+    "vagas paralelas",
     "maquete",
     "three.js",
     "ocpp",
-    "v3",
     "poc",
-    "blender"
+    "blender",
+    "dono",
+    "planta 2d",
+    "primeiro acesso",
+    "meus postos"
   ],
   "versoes": [
     {

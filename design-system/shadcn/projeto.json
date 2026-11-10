@@ -1,13 +1,23 @@
 {
   "nome": "Design System shadcn",
-  "descricao": "Sistema de design modular em React, com temas CSS personalizáveis e publicação no NPM.",
+  "descricao": "Design system modular em React, na base do shadcn: tokens, escalas de cor e temas personalizáveis, publicado no NPM.",
   "tipo": "documentacao",
   "atualizado": "2026-01-21",
   "link": "https://igreenshadcn.vercel.app/",
   "repo": "https://github.com/snksergio/igreenshadcn",
+  "paginas": [
+    {
+      "nome": "Documentação dos tokens",
+      "arquivo": ""
+    }
+  ],
   "tags": [
     "react",
     "componentes",
-    "tokens"
+    "tokens",
+    "design system",
+    "tema",
+    "cores",
+    "npm"
   ]
 }

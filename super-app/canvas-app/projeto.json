@@ -1,6 +1,6 @@
 {
   "nome": "Canvas do app iGreen",
-  "descricao": "As telas do app iGreen como no canvas do Claude: Home iGreen, Eletroposto, login, telecom e pagamento, Cadastro Pay e loja, com zoom, arrastar e foco em cada tela.",
+  "descricao": "Todas as telas do app iGreen num quadro só, para ver o app inteiro e comparar propostas: Home, Eletroposto, login, Telecom e pagamento, Cadastro Pay, loja e componentes.",
   "tipo": "proposta",
   "atualizado": "2026-11-10",
   "paginas": [
@@ -85,6 +85,7 @@
     "loja",
     "home",
     "banners",
-    "carteira"
+    "carteira",
+    "header"
   ]
 }

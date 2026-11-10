@@ -54,6 +54,10 @@
     "pix",
     "boleto",
     "cartão",
-    "cashback"
+    "cashback",
+    "saldo",
+    "comprovante",
+    "telecom",
+    "benchmark"
   ]
 }

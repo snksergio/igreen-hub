@@ -1,12 +1,12 @@
 {
   "nome": "Migre sua bandeira",
-  "descricao": "Hotsite que o licenciado envia a donos de eletroposto: proposta de migração de bandeira com simulador de receita e o eletroposto iGreen em 3D. Na aba de POCs: o site premium, o estúdio do simulador 3D e o teaser da contagem regressiva, que deram origem às páginas finais.",
+  "descricao": "Hotsite que o licenciado envia a donos de eletroposto para migrarem de bandeira: a proposta com o simulador de receita e o eletroposto iGreen em 3D. Na aba POCs, as versões que deram origem às páginas.",
   "tipo": "hotsite",
   "atualizado": "2026-11-06",
   "repo": "https://github.com/snksergio/mob-hotsite",
   "paginas": [
     {
-      "nome": "Proposta",
+      "nome": "Proposta de migração",
       "arquivo": "index.html"
     },
     {
@@ -23,7 +23,12 @@
     "simulador",
     "3d",
     "poc",
-    "contagem regressiva"
+    "contagem regressiva",
+    "licenciado",
+    "migração",
+    "bandeira",
+    "receita",
+    "conexões"
   ],
   "acervo": {
     "nome": "POCs",

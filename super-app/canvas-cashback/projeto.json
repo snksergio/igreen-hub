@@ -1,6 +1,6 @@
 {
   "nome": "Canvas do cashback",
-  "descricao": "O canvas do cashback como no Claude: pagamento universal, os topos do Retorno iGreen e o app com home, faturas e pagamento, com zoom, arrastar e foco em cada tela.",
+  "descricao": "O fluxo do cashback num quadro só, para ver tudo junto: o pagamento universal, os topos do Retorno iGreen e o app com home, faturas e pagamento.",
   "tipo": "proposta",
   "atualizado": "2026-11-10",
   "paginas": [
@@ -35,7 +35,8 @@
     "canvas",
     "cashback",
     "retorno igreen",
-    "faturas",
-    "pagamento"
+    "fatura",
+    "pagamento",
+    "pagamento universal"
   ]
 }

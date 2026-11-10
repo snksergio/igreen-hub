@@ -1,6 +1,6 @@
 {
   "nome": "Let's Go Cruzeiro 2026",
-  "descricao": "Site da viagem de premiação Let's Go Cruzeiro iGreen 2026: abertura em filme, as quatro experiências a bordo, o navio em 3D como mapa e o roteiro Santos–Búzios. Inclui a variação só com imagens e, como versão anterior, o protótipo do filme por scroll.",
+  "descricao": "Site da viagem de premiação Let's Go Cruzeiro iGreen 2026: abertura em filme, as quatro experiências a bordo, o navio em 3D como mapa e o roteiro Santos–Búzios. Inclui a variação só com imagens.",
   "tipo": "hotsite",
   "atualizado": "2026-11-05",
   "paginas": [
@@ -29,5 +29,5 @@
       }
     ]
   },
-  "tags": ["cruzeiro", "premiação", "evento", "3d", "three.js", "react", "vídeo", "scroll", "storytelling", "2026"]
+  "tags": ["cruzeiro", "premiação", "evento", "3d", "three.js", "react", "vídeo", "scroll", "storytelling", "2026", "viagem", "navio", "roteiro"]
 }

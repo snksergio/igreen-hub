@@ -1,6 +1,6 @@
 {
   "nome": "Recarga EV",
-  "descricao": "As telas de recarga em eletroposto do iGreen Mob: conectar o cabo e acompanhar a recarga. A versão final tem dois carros (Minimal SUV e Minimal raio-x), a bateria desenhada por código e o pacote para o dev implementar no app, com as imagens prontas para React Native. Inclui a apresentação, os fluxos e os moldes explorados.",
+  "descricao": "As duas telas de recarga do app iGreen Mob, conectar o cabo e acompanhar a recarga, prontas para o dev: dois carros ilustrados, a bateria desenhada por código e as imagens para React Native.",
   "tipo": "prototipo",
   "atualizado": "2026-11-06",
   "paginas": [
@@ -80,6 +80,10 @@
     "carregador",
     "app",
     "react-native",
-    "handoff"
+    "handoff",
+    "bateria",
+    "conector",
+    "cabo",
+    "mob"
   ]
 }

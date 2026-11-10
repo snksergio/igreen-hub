@@ -1,6 +1,6 @@
 {
   "nome": "Canvas Uber e iFood",
-  "descricao": "O canvas de Uber e iFood no app iGreen como no Claude: o estudo, a home com os banners, o crédito com cashback, a conta conectada e a visão com parceria.",
+  "descricao": "Como Uber e iFood podem entrar no app iGreen, num quadro só: o estudo, a home com os banners, o crédito com cashback, a conta conectada e a parceria.",
   "tipo": "proposta",
   "atualizado": "2026-11-10",
   "paginas": [
@@ -14,6 +14,9 @@
     "uber",
     "ifood",
     "cashback",
-    "parceiros"
+    "parceiros",
+    "banner",
+    "crédito",
+    "conta conectada"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "nome": "Proposta do investidor",
-  "descricao": "A página que o investidor recebe com a proposta gerada: o próximo passo e o andamento de proposta a entrega, com contrato, pagamento, vistoria e carregadores em pontos. Inclui a oferta da live, a tela de compra que leva à proposta.",
+  "descricao": "A página que o investidor recebe com a proposta gerada: o próximo passo e o andamento até a entrega, com contrato, pagamento, vistoria e carregadores. Inclui a oferta da live.",
   "tipo": "prototipo",
   "atualizado": "2026-11-06",
   "repo": "https://github.com/snksergio/igreen-mob-link",
@@ -146,6 +146,11 @@
     "vistoria",
     "pontos",
     "live",
-    "oferta"
+    "oferta",
+    "pagamento",
+    "instalação",
+    "entrega",
+    "carregador",
+    "cenário"
   ]
 }

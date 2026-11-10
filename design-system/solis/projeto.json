@@ -4,9 +4,17 @@
   "tipo": "documentacao",
   "atualizado": "2026-06-03",
   "repo": "https://github.com/snksergio/solis-desing",
+  "paginas": [
+    {
+      "nome": "Prévia das cores",
+      "arquivo": "index.html"
+    }
+  ],
   "tags": [
     "tokens",
     "cores",
-    "design system"
+    "design system",
+    "paleta",
+    "marca"
   ]
 }

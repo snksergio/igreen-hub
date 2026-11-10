@@ -45,8 +45,12 @@
     "invoice",
     "boleto",
     "pix",
-    "cobranca",
+    "cobrança",
     "conta dupla",
-    "acordo"
+    "acordo",
+    "cashback",
+    "desconto",
+    "vencimento",
+    "energia"
   ]
 }

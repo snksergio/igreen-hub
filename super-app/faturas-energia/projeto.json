@@ -56,6 +56,10 @@
     "fatura",
     "energia",
     "pix",
-    "boleto"
+    "boleto",
+    "comprovante",
+    "cashback",
+    "vencida",
+    "troca de unidade"
   ]
 }

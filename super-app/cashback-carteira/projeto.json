@@ -15,7 +15,7 @@
   ],
   "versoes": [
     {
-      "nome": "Atual",
+      "nome": "Atual · padrão do App V1",
       "arquivo": "cashback-carteira.html",
       "data": "2026-10-28"
     },
@@ -30,6 +30,10 @@
     "cashback",
     "carteira",
     "pix",
-    "resgate"
+    "resgate",
+    "saldo",
+    "extrato",
+    "comprovante",
+    "pay"
   ]
 }

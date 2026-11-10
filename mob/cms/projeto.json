@@ -5,5 +5,8 @@
   "atualizado": "2026-09-30",
   "link": "https://mob-csm.vercel.app/",
   "repo": "https://github.com/snksergio/igreen-mob-csm",
-  "tags": ["cms", "backoffice", "carregadores", "react"]
+  "paginas": [
+    { "nome": "Painel do CMS", "arquivo": "" }
+  ],
+  "tags": ["cms", "backoffice", "carregadores", "react", "recarga", "transação", "preço", "repasse", "cupom", "mob"]
 }

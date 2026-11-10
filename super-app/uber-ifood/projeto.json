@@ -5,11 +5,21 @@
   "atualizado": "2026-10-30",
   "link": "https://snksergio.github.io/igreen-uber-ifood/",
   "repo": "https://github.com/snksergio/igreen-uber-ifood",
+  "paginas": [
+    {
+      "nome": "Protótipo navegável",
+      "arquivo": ""
+    }
+  ],
   "tags": [
     "uber",
     "ifood",
     "parceiros",
     "cashback",
-    "home"
+    "home",
+    "crédito",
+    "corrida",
+    "pedido",
+    "banner"
   ]
 }

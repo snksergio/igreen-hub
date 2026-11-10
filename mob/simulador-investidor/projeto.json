@@ -6,7 +6,7 @@
   "repo": "https://github.com/snksergio/igreen-mob-link",
   "paginas": [
     {
-      "nome": "Início",
+      "nome": "Início do simulador",
       "arquivo": "index.html#investir"
     },
     {
@@ -93,6 +93,10 @@
     "investidor",
     "eletroposto",
     "dre",
-    "cadastro"
+    "cadastro",
+    "roi",
+    "premissa",
+    "investimento",
+    "proposta"
   ]
 }

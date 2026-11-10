@@ -1,6 +1,6 @@
 {
   "nome": "Minha jornada",
-  "descricao": "A tela Minha jornada do app do licenciado: a documentação e a proposta navegável.",
+  "descricao": "A tela Minha jornada do app do licenciado: a trilha das graduações, de Consultor a Acionista, com metas, qualificação e histórico. Com a documentação e a proposta navegável.",
   "tipo": "proposta",
   "atualizado": "2026-10-20",
   "link": "https://snksergio.github.io/app-licenciado-card/",
@@ -11,12 +11,16 @@
       "arquivo": "documentacao-jornada.html"
     },
     {
-      "nome": "Protótipo",
+      "nome": "Proposta navegável",
       "arquivo": "prototipo-jornada.html"
     }
   ],
   "tags": [
     "licenciado",
-    "jornada"
+    "jornada",
+    "graduação",
+    "meta",
+    "qualificação",
+    "histórico"
   ]
 }
