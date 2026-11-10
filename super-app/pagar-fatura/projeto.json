@@ -2,8 +2,52 @@
   "nome": "Pagar fatura",
   "descricao": "O fluxo completo do pagar fatura no app: Home iGreen, Telecom e o pagamento com Pix, cartão salvo em 3x, cartão novo, boleto, saldo iGreen e cashback, até o comprovante.",
   "tipo": "prototipo",
-  "atualizado": "2026-10-21",
-  "link": "https://snksergio.github.io/pagar-fatura-igreen/",
+  "atualizado": "2026-11-10",
+  "paginas": [
+    {
+      "nome": "Fluxo completo",
+      "arquivo": "index.html"
+    },
+    {
+      "nome": "Pix",
+      "arquivo": "index.html#pix"
+    },
+    {
+      "nome": "Cartão salvo em 3x",
+      "arquivo": "index.html#cartao"
+    },
+    {
+      "nome": "Boleto",
+      "arquivo": "index.html#boleto"
+    },
+    {
+      "nome": "Cashback + Pix",
+      "arquivo": "index.html#cb-pix"
+    },
+    {
+      "nome": "Escanear o código",
+      "arquivo": "index.html#escanear"
+    },
+    {
+      "nome": "Comprovante com status",
+      "arquivo": "index.html#seguro"
+    }
+  ],
+  "acervo": {
+    "nome": "Estudo",
+    "grupos": [
+      {
+        "nome": "Benchmark",
+        "prints": "estudo",
+        "paginas": [
+          {
+            "nome": "Como os apps deixam pagar uma fatura · 6 apps comparados",
+            "arquivo": "benchmark-pagar-fatura.html"
+          }
+        ]
+      }
+    ]
+  },
   "repo": "https://github.com/snksergio/pagar-fatura-igreen",
   "tags": [
     "fatura",
@@ -11,35 +55,5 @@
     "boleto",
     "cartão",
     "cashback"
-  ],
-  "paginas": [
-    {
-      "nome": "Fluxo completo",
-      "arquivo": ""
-    },
-    {
-      "nome": "Pix",
-      "arquivo": "#pix"
-    },
-    {
-      "nome": "Cartão salvo em 3x",
-      "arquivo": "#cartao"
-    },
-    {
-      "nome": "Boleto",
-      "arquivo": "#boleto"
-    },
-    {
-      "nome": "Cashback + Pix",
-      "arquivo": "#cb-pix"
-    },
-    {
-      "nome": "Escanear o código",
-      "arquivo": "#escanear"
-    },
-    {
-      "nome": "Comprovante com status",
-      "arquivo": "#seguro"
-    }
   ]
 }

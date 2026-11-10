@@ -1,0 +1,481 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Benchmark Pagar Fatura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: one reading column (max 880px) on the app's grey ground; white sheets only for the matrix, tables and decision blocks; wide tables scroll inside their own frame. */
+:root {
+  --bg: #EEF0EF;
+  --sheet: #FFFFFF;
+  --line: #E1E5E2;
+  --line-soft: #EEF0EF;
+  --fg: #111513;
+  --muted: #545C57;
+  --accent: #338449;
+  --accent-ink: #276638;
+  --accent-soft: #E5F1E8;
+  --accent-edge: #CFE6D6;
+  --warn: #B84D00;
+  --warn-soft: #FDEBDD;
+  --warn-edge: #F6CDAE;
+  --info-soft: #EEF1EF;
+  --font-ui: "Manrope", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1311; --sheet: #171C19; --line: #2A322D; --line-soft: #202722; --fg: #E8ECE9; --muted: #A3ADA7;
+    --accent: #5DBB78; --accent-ink: #8FD6A3; --accent-soft: #1C2E22; --accent-edge: #2D4A36;
+    --warn: #F59A5B; --warn-soft: #34231A; --warn-edge: #5A3A25; --info-soft: #202722;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1311; --sheet: #171C19; --line: #2A322D; --line-soft: #202722; --fg: #E8ECE9; --muted: #A3ADA7;
+  --accent: #5DBB78; --accent-ink: #8FD6A3; --accent-soft: #1C2E22; --accent-edge: #2D4A36;
+  --warn: #F59A5B; --warn-soft: #34231A; --warn-edge: #5A3A25; --info-soft: #202722;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-ui); font-size: 15px; line-height: 1.6; }
+.wrap { max-width: 880px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 72px; display: flex; flex-direction: column; gap: 52px; }
+a { color: var(--accent-ink); text-underline-offset: 2px; }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; letter-spacing: -0.02em; }
+h1 { font-size: clamp(30px, 6vw, 44px); line-height: 1.08; font-weight: 800; }
+h2 { font-size: 24px; line-height: 1.2; font-weight: 800; }
+h3 { font-size: 16px; line-height: 1.35; font-weight: 800; letter-spacing: -0.01em; }
+p { margin: 0; max-width: 66ch; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lead { font-size: 17px; line-height: 1.6; color: var(--fg); }
+.muted { color: var(--muted); }
+section { display: flex; flex-direction: column; gap: 16px; scroll-margin-top: 16px; }
+.sec-head { display: flex; flex-direction: column; gap: 6px; }
+
+/* header */
+header.top { display: flex; flex-direction: column; gap: 18px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 11px; border-radius: 14px; background: var(--sheet); border: 1px solid var(--line); font-size: 12.5px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+.pill.ok { background: var(--accent-soft); border-color: var(--accent-edge); color: var(--accent-ink); }
+.pill.warn { background: var(--warn-soft); border-color: var(--warn-edge); color: var(--warn); }
+.pill.neutral { background: var(--info-soft); border-color: var(--line); color: var(--muted); }
+nav.toc { display: flex; flex-wrap: wrap; gap: 6px 14px; padding-top: 4px; font-size: 14px; font-weight: 600; }
+nav.toc a { color: var(--muted); text-decoration: none; padding-block: 4px; }
+nav.toc a:hover { color: var(--accent-ink); }
+
+/* sheets */
+.sheet { background: var(--sheet); border: 1px solid var(--line); border-radius: 22px; }
+.frame { overflow-x: auto; border-radius: 22px; border: 1px solid var(--line); background: var(--sheet); }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; line-height: 1.45; }
+th, td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--line-soft); }
+thead th { font-size: 12px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: var(--sheet); white-space: nowrap; }
+tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0; }
+tbody th { font-weight: 800; font-size: 13.5px; }
+.matrix { min-width: 1080px; }
+.matrix th:first-child, .matrix td:first-child { position: sticky; left: 0; background: var(--sheet); box-shadow: 1px 0 0 var(--line); width: 170px; }
+.matrix td { width: 140px; }
+@media (max-width: 640px) { .matrix th:first-child, .matrix td:first-child { width: 118px; min-width: 118px; } .matrix tbody th { font-size: 12.5px; } }
+.ref { font-family: var(--font-data); font-size: 11px; font-weight: 600; color: var(--accent-ink); text-decoration: none; white-space: nowrap; }
+.ref:hover { text-decoration: underline; }
+.nv { color: var(--muted); font-style: italic; }
+.mat { display: inline-flex; height: 22px; padding: 0 8px; border-radius: 11px; font-size: 11.5px; font-weight: 800; align-items: center; white-space: nowrap; }
+.mat.c { background: var(--accent-soft); color: var(--accent-ink); }
+.mat.e { background: var(--warn-soft); color: var(--warn); }
+.mat.x { background: var(--info-soft); color: var(--muted); }
+code, .tela { font-family: var(--font-data); font-size: 12px; font-weight: 500; }
+.tela { display: inline-block; padding: 1px 7px; border-radius: 7px; background: var(--info-soft); border: 1px solid var(--line); color: var(--fg); white-space: nowrap; margin: 2px 2px 0 0; }
+
+/* principle list */
+.principios { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.princ { padding: 18px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.princ .k { font-family: var(--font-data); font-size: 12px; font-weight: 600; color: var(--muted); }
+.princ p { font-size: 14px; line-height: 1.55; }
+.princ .telas { margin-top: auto; padding-top: 4px; }
+@media (max-width: 640px) { .principios { grid-template-columns: minmax(0, 1fr); } }
+
+/* CSD */
+.csd { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.csd .sheet { padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
+.csd ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+.csd li::marker { color: var(--muted); }
+.csd-h { display: flex; align-items: center; gap: 10px; }
+.tag { font-size: 11.5px; font-weight: 800; padding: 2px 8px; border-radius: 8px; white-space: nowrap; }
+.tag.p0 { background: var(--warn-soft); color: var(--warn); }
+.tag.p1 { background: var(--accent-soft); color: var(--accent-ink); }
+.tag.p2, .tag.p3 { background: var(--info-soft); color: var(--muted); }
+
+/* recommendation */
+.rec { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.rec .sheet { padding: 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.rec ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 7px; font-size: 14px; }
+@media (max-width: 720px) { .rec { grid-template-columns: minmax(0, 1fr); } }
+
+/* journeys */
+details.jornada { background: var(--sheet); border: 1px solid var(--line); border-radius: 18px; }
+details.jornada + details.jornada { margin-top: 8px; }
+details.jornada summary { cursor: pointer; list-style: none; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-weight: 800; }
+details.jornada summary::-webkit-details-marker { display: none; }
+details.jornada summary::after { content: "+"; font-family: var(--font-data); color: var(--muted); font-size: 18px; }
+details.jornada[open] summary::after { content: "−"; }
+details.jornada .body { padding: 0 18px 16px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+details.jornada ol, details.jornada ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+.sum-sub { font-weight: 600; font-size: 13px; color: var(--muted); }
+
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.two .sheet { padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.two ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 7px; font-size: 14px; }
+@media (max-width: 640px) { .two { grid-template-columns: minmax(0, 1fr); } }
+
+.fontes td { font-size: 12.5px; }
+.fontes td:first-child { font-family: var(--font-data); font-weight: 600; white-space: nowrap; }
+.fontes a { overflow-wrap: anywhere; }
+.num { font-variant-numeric: tabular-nums; }
+footer { font-size: 13px; color: var(--muted); }
+</style>
+
+<div class="wrap">
+
+<header class="top">
+  <span class="eyebrow">iGreen · Telecom e Pagamento · benchmark de fluxo</span>
+  <h1>Como os apps brasileiros deixam a pessoa pagar uma fatura</h1>
+  <p class="lead">Seis apps comparados para desenhar um fluxo único de pagamento de fatura da iGreen: Pix, cartão ou boleto, cartão salvo ou novo, leitura do código, fatura vencida e comprovante. O fluxo desenhado está na página <strong>Telecom e Pagamento</strong> do <a href="https://claude.ai/artifact/5fVEVwo14fpjPfWpdqmxba">canvas do Eletroposto</a>; cada tela citada aqui tem o mesmo nome lá.</p>
+  <div class="meta">
+    <span class="pill">Consulta em 06/10/2026</span>
+    <span class="pill">Mercado Pago · Nubank · Inter · PicPay · Vivo · Claro</span>
+    <span class="pill">47 evidências de players</span>
+    <span class="pill">18 fontes de lei e norma</span>
+  </div>
+  <nav class="toc" aria-label="Seções">
+    <a href="#levamos">O que levamos</a>
+    <a href="#matriz">Matriz</a>
+    <a href="#regras">Lei e norma</a>
+    <a href="#jornadas">Jornadas</a>
+    <a href="#csd">Certezas e dúvidas</a>
+    <a href="#prioridades">Prioridades</a>
+    <a href="#recomendacao">Recomendação</a>
+    <a href="#fontes">Fontes</a>
+  </nav>
+</header>
+
+<section id="levamos">
+  <div class="sec-head">
+    <span class="eyebrow">Do benchmark para o canvas</span>
+    <h2>O que levamos para o fluxo</h2>
+    <p class="muted">Cada princípio vem de algo que os players repetem ou de uma regra que a tela precisa cumprir. Os números entre colchetes levam à fonte.</p>
+  </div>
+  <div class="principios">
+    <div class="sheet princ"><span class="k">Prazo por meio</span><h3>O seletor diz quando o pagamento vale</h3><p>Mercado Pago escreve "Aprovação: Imediata" no Pix e "Até 2 dias úteis" no boleto, no próprio seletor <a class="ref" href="#f2">[2]</a>. Fizemos o mesmo: "Aprovação na hora · sem taxa" e "Compensa em até 2 dias úteis".</p><div class="telas"><span class="tela">PgMetodo</span><span class="tela">PgMetodoSemCartao</span></div></div>
+    <div class="sheet princ"><span class="k">Cashback primeiro</span><h3>O saldo da casa abate antes, o resto vai em outro meio</h3><p>Mercado Pago usa saldo e Meli Dólar como meio de pagamento <a class="ref" href="#f1">[1]</a>. O PicPay deixa a pessoa dividir entre saldo e cartão e só cobra taxa na parte do cartão <a class="ref" href="#f31">[31]</a> <a class="ref" href="#f32">[32]</a>. No nosso fluxo o cashback abate e a tela mostra "Falta pagar".</p><div class="telas"><span class="tela">PgMetodoCashback</span><span class="tela">PgSoCashback</span><span class="tela">PgComprovanteCombinado</span></div></div>
+    <div class="sheet princ"><span class="k">Custo total</span><h3>Parcela, juros e total antes de pagar</h3><p>Todos os bancos mostram a parcela já com encargos e o total antes de confirmar <a class="ref" href="#f11">[11]</a> <a class="ref" href="#f16">[16]</a> <a class="ref" href="#f31">[31]</a>. O CDC pede ainda CET anual, total com e sem financiamento e quem financia <a class="ref" href="#r1">[R1]</a>.</p><div class="telas"><span class="tela">PgParcelas</span><span class="tela">PgConfirmar</span></div></div>
+    <div class="sheet princ"><span class="k">Pix da fatura</span><h3>QR e copia e cola gerados pelo app, com recebedor e validade</h3><p>Ninguém pede chave manual. O código vem vinculado à fatura <a class="ref" href="#f9">[9]</a>, com QR e copia e cola <a class="ref" href="#f41">[41]</a> <a class="ref" href="#f44">[44]</a>. Mostramos recebedor, CNPJ e até quando vale, e há o estado de código vencido.</p><div class="telas"><span class="tela">PgPix</span><span class="tela">PgPixExpirado</span></div></div>
+    <div class="sheet princ"><span class="k">Ler o código</span><h3>Câmera, digitação e foto ou PDF</h3><p>Inter lê QR pela galeria <a class="ref" href="#f28">[28]</a>; PicPay aceita PDF e imagem do boleto <a class="ref" href="#f30">[30]</a>. Só aceitamos faturas da iGreen, então a tela de resultado mostra beneficiário e CNPJ antes de pagar e explica código inválido ou fatura já paga.</p><div class="telas"><span class="tela">PgEscanear</span><span class="tela">PgDigitar</span><span class="tela">PgCodigoEncontrado</span><span class="tela">PgCodigoJaPaga</span><span class="tela">PgCodigoInvalido</span></div></div>
+    <div class="sheet princ"><span class="k">Fatura vencida</span><h3>Valor original, multa e juros em linhas separadas</h3><p>Mercado Pago mostra o valor original e os juros até o momento <a class="ref" href="#f7">[7]</a>. Na telecom a multa vai até 2% e os juros até 1% ao mês, pro rata <a class="ref" href="#r5">[R5]</a>. A tela traz a data do cálculo e o que acontece com a linha.</p><div class="telas"><span class="tela">PgFaturaVencida</span><span class="tela">TelecomHome</span><span class="tela">TelPlanoV1–V4 Pend</span></div></div>
+    <div class="sheet princ"><span class="k">Já paguei</span><h3>Atalho para quem pagou fora do app</h3><p>A Vivo tem "Avisar que já está paga", que religa em até 1 hora <a class="ref" href="#f41">[41]</a>; a Claro tem a promessa de pagamento <a class="ref" href="#f47">[47]</a>. Entrou como primeira opção em "Mais opções" da fatura vencida.</p><div class="telas"><span class="tela">PgFaturaVencida</span></div></div>
+    <div class="sheet princ"><span class="k">Sem pagar duas vezes</span><h3>Pagou ou gerou boleto, a cobrança automática da fatura pausa</h3><p>Pix manual somado ao débito automático é reclamação recorrente <a class="ref" href="#r19">[R19]</a>. Ao gerar o boleto, avisamos que a cobrança automática daquela fatura fica pausada até o vencimento do boleto.</p><div class="telas"><span class="tela">PgBoleto</span><span class="tela">PgBoletoAguardando</span><span class="tela">PgProcessando</span></div></div>
+    <div class="sheet princ"><span class="k">Comprovante</span><h3>Ticket com ID da transação, para compartilhar</h3><p>O Inter dá PDF com "ID da transação" <a class="ref" href="#f26">[26]</a> e o Nubank libera o comprovante logo após a senha <a class="ref" href="#f16">[16]</a>. Nosso ticket traz forma, data e hora, ID e beneficiário, com compartilhar e PDF.</p><div class="telas"><span class="tela">PgComprovante</span><span class="tela">PgComprovanteCartao</span><span class="tela">PgComprovanteCombinado</span></div></div>
+    <div class="sheet princ"><span class="k">Automação depois</span><h3>Oferecer o pagamento automático logo após pagar</h3><p>A Vivo dá 3 GB para quem adere ao débito automático <a class="ref" href="#f41">[41]</a>; a Claro dá desconto <a class="ref" href="#f44">[44]</a>; o Nubank já oferece Pix Automático <a class="ref" href="#f21">[21]</a>. A oferta aparece depois do comprovante.</p><div class="telas"><span class="tela">PgAutomatico</span></div></div>
+  </div>
+</section>
+
+<section id="matriz">
+  <div class="sec-head">
+    <span class="eyebrow">Comparação</span>
+    <h2>Matriz por critério</h2>
+    <p class="muted">Células em itálico não foram verificadas em fonte pública. A coluna de maturidade diz se o padrão já é comum (consolidado) ou se está aparecendo agora (emergente).</p>
+  </div>
+  <div class="frame" role="region" aria-label="Matriz comparativa" tabindex="0">
+    <table class="matrix">
+      <thead><tr><th scope="col">Critério</th><th scope="col">Mercado Pago</th><th scope="col">Nubank</th><th scope="col">Inter</th><th scope="col">PicPay</th><th scope="col">Vivo</th><th scope="col">Claro</th><th scope="col">Maturidade</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Valor antes do meio</th><td>Total, parcelar em 12x, mínimo ou outro valor <a class="ref" href="#f1">[1]</a></td><td>Total, parcelado, mínimo ou abaixo do mínimo <a class="ref" href="#f14">[14]</a></td><td>Escolhe data e valor no boleto da fatura <a class="ref" href="#f27">[27]</a></td><td>Mínimo, total ou outro valor <a class="ref" href="#f38">[38]</a></td><td class="nv">Valor fechado da fatura</td><td class="nv">Valor fechado da fatura</td><td><span class="mat c">Consolidado</span></td></tr>
+        <tr><th scope="row">Meios oferecidos</th><td>Saldo, Meli Dólar, Pix, boleto e lotérica <a class="ref" href="#f1">[1]</a></td><td>Saldo, boleto e Pix <a class="ref" href="#f18">[18]</a></td><td>Pix, boleto e débito automático <a class="ref" href="#f27">[27]</a> <a class="ref" href="#f28">[28]</a></td><td>Saldo, cartão, misto e PicPay Parcela <a class="ref" href="#f30">[30]</a></td><td>Pix, cartão avulso ou recorrente, débito, Pix Automático e boleto <a class="ref" href="#f41">[41]</a></td><td>Pix, cartão, boleto e débito <a class="ref" href="#f44">[44]</a></td><td><span class="mat c">Consolidado</span></td></tr>
+        <tr><th scope="row">Prazo de cada meio</th><td>No seletor: Pix "Imediata", boleto "Até 2 dias úteis" <a class="ref" href="#f2">[2]</a></td><td>Saldo em 30 min, Pix na hora, boleto em 3 dias úteis <a class="ref" href="#f18">[18]</a></td><td>Pix na hora, boleto em até 72 h <a class="ref" href="#f28">[28]</a></td><td>Bancário em 1 dia útil, convênio em 3 <a class="ref" href="#f33">[33]</a></td><td>Pix religa em 1 h, outros meios em 2 dias úteis <a class="ref" href="#f41">[41]</a></td><td class="nv">Não verificado</td><td><span class="mat c">Consolidado</span></td></tr>
+        <tr><th scope="row">Pix</th><td>Código gerado pelo app e vinculado à fatura; QR ou copia e cola <a class="ref" href="#f9">[9]</a></td><td>QR ou copia e cola <a class="ref" href="#f18">[18]</a></td><td>QR pela câmera ou galeria; confere "Pagamento de" <a class="ref" href="#f28">[28]</a></td><td>Na fatura do cartão; compensa em até 1 dia útil <a class="ref" href="#f38">[38]</a></td><td>QR ou copia e cola; vale "120" após o vencimento, sem unidade <a class="ref" href="#f41">[41]</a></td><td>No app, site, WhatsApp ou QR da fatura <a class="ref" href="#f44">[44]</a></td><td><span class="mat c">Consolidado</span></td></tr>
+        <tr><th scope="row">Cartão parcelado e custo</th><td>Até 12x; parcela já com taxa, juros e IOF; CET antes de confirmar <a class="ref" href="#f11">[11]</a></td><td>1 a 12x, pode começar em até 2 faturas; revisão com total, juros e IOF <a class="ref" href="#f15">[15]</a> <a class="ref" href="#f16">[16]</a></td><td>Até 4x; teto de 30% do limite e R$&nbsp;5 mil <a class="ref" href="#f25">[25]</a></td><td>Tarifa de 9,99% no cartão; total antes de confirmar <a class="ref" href="#f31">[31]</a> <a class="ref" href="#f39">[39]</a></td><td>Cartão avulso ou recorrente <a class="ref" href="#f41">[41]</a>; <span class="nv">parcelamento não verificado</span></td><td>Cartão no app ou site <a class="ref" href="#f45">[45]</a>; <span class="nv">parcelamento não verificado</span></td><td><span class="mat c">Consolidado</span> nos bancos</td></tr>
+        <tr><th scope="row">Combinar meios</th><td>"Combinar 2 meios", com divisão automática (checkout do Mercado Livre) <a class="ref" href="#f12">[12]</a></td><td class="nv">Não verificado</td><td class="nv">Não verificado</td><td>Saldo + cartão; a pessoa define quanto vai em cada um <a class="ref" href="#f32">[32]</a></td><td class="nv">Não oferece</td><td class="nv">Não oferece</td><td><span class="mat e">Emergente</span></td></tr>
+        <tr><th scope="row">Ler ou digitar código</th><td>Escanear ou digitar <a class="ref" href="#f11">[11]</a></td><td>Escanear <a class="ref" href="#f15">[15]</a></td><td>"Leitor de códigos" ou "Digitar código" <a class="ref" href="#f23">[23]</a></td><td>Escanear, digitar, PDF ou imagem <a class="ref" href="#f30">[30]</a></td><td>Ensina que o código começa com 846 ou 848 <a class="ref" href="#f41">[41]</a></td><td>846 ou 848, com validador de boleto <a class="ref" href="#f44">[44]</a></td><td><span class="mat c">Consolidado</span></td></tr>
+        <tr><th scope="row">Atraso: encargos e consequência</th><td>Multa e juros diários; crédito suspenso; negativação <a class="ref" href="#f5">[5]</a>; mostra valor original e juros <a class="ref" href="#f7">[7]</a></td><td>Mora de 1% ao mês + multa de 2% + IOF; cartão bloqueado <a class="ref" href="#f14">[14]</a></td><td class="nv">Não verificado</td><td>Paga sozinho com o Cofrinho a partir do 5º dia <a class="ref" href="#f38">[38]</a></td><td>2% + 1% ao mês, cobrados na próxima fatura; o mesmo código vale vencido <a class="ref" href="#f41">[41]</a></td><td class="nv">Percentuais não verificados</td><td><span class="mat c">Consolidado</span></td></tr>
+        <tr><th scope="row">Religar, "já paguei" e negociar</th><td>Botões "Pagar" e "Negociar", com simulação <a class="ref" href="#f7">[7]</a></td><td>Desenrola na Home; valor final antes de confirmar <a class="ref" href="#f20">[20]</a></td><td class="nv">Não verificado</td><td class="nv">Não verificado</td><td>"Avisar que já está paga" religa em 1 h; negociação <a class="ref" href="#f41">[41]</a> <a class="ref" href="#f43">[43]</a></td><td>Promessa de pagamento; "Parcelar dívida" até 45 dias <a class="ref" href="#f46">[46]</a> <a class="ref" href="#f47">[47]</a></td><td><span class="mat c">Consolidado</span> em telecom</td></tr>
+        <tr><th scope="row">Comprovante</th><td>Mensagem de confirmação <a class="ref" href="#f3">[3]</a></td><td>Logo após a senha; baixa em até 3 dias úteis <a class="ref" href="#f16">[16]</a></td><td>PDF com "ID da transação" <a class="ref" href="#f26">[26]</a></td><td>Não dá para cancelar depois <a class="ref" href="#f30">[30]</a></td><td class="nv">Não verificado</td><td class="nv">Não verificado</td><td><span class="mat c">Consolidado</span></td></tr>
+        <tr><th scope="row">Automação depois</th><td>Débito automático do saldo <a class="ref" href="#f2">[2]</a> <a class="ref" href="#f10">[10]</a></td><td>Débito automático, Pix Automático e buscador de boletos <a class="ref" href="#f21">[21]</a></td><td>Débito automático <a class="ref" href="#f27">[27]</a></td><td>Paga com Cofrinho ou saldo no atraso <a class="ref" href="#f38">[38]</a></td><td>Débito dá 3 GB de bônus; Pix Automático <a class="ref" href="#f41">[41]</a></td><td>Desconto com débito + fatura digital <a class="ref" href="#f44">[44]</a></td><td><span class="mat c">Consolidado</span>; Pix Automático <span class="mat e">Emergente</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="regras">
+  <div class="sec-head">
+    <span class="eyebrow">Regulatório</span>
+    <h2>Regras que mudam a tela</h2>
+    <p class="muted">Texto lido direto na norma, em 06/10/2026. A última coluna diz onde a regra aparece no fluxo, ou o que ainda falta.</p>
+  </div>
+  <div class="frame" role="region" aria-label="Regras e onde aparecem" tabindex="0">
+    <table style="min-width: 760px">
+      <thead><tr><th scope="col">Norma</th><th scope="col">O que pede</th><th scope="col">No fluxo</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">RGC Anatel, art. 78 §1 <a class="ref" href="#r5">[R5]</a>; CDC, art. 52 §1 <a class="ref" href="#r1">[R1]</a></td><td>Multa de até 2%, correção e juros de até 1% ao mês, pro rata por dia</td><td>Linhas separadas e "Calculado para pagar hoje" em <span class="tela">PgFaturaVencida</span></td></tr>
+        <tr><th scope="row">CDC, art. 42-A <a class="ref" href="#r1">[R1]</a></th><td>Nome, endereço e CNPJ do fornecedor em todo documento de cobrança</td><td>Nota no detalhe da fatura; recebedor e CNPJ no Pix, no boleto e no código lido</td></tr>
+        <tr><th scope="row">RGC, art. 54 <a class="ref" href="#r5">[R5]</a></th><td>Fatura disponível 5 dias antes, segunda via grátis, no mínimo 6 datas de vencimento</td><td>"Baixar fatura em PDF" e "Mudar o dia de vencimento" em Mais opções</td></tr>
+        <tr><th scope="row">RGC, arts. 60 a 62 <a class="ref" href="#r5">[R5]</a></th><td>Contestar em até 3 anos; valor contestado fica suspenso; resposta em até 30 dias</td><td>"Contestar um valor · Resposta em até 30 dias"</td></tr>
+        <tr><th scope="row">RGC, arts. 70 a 73 <a class="ref" href="#r5">[R5]</a></th><td>Suspensão só 15 dias após avisar a dívida; o celular recebe chamadas e SMS por 30 dias; rescisão possível 60 dias após a suspensão</td><td>Aviso com datas em <span class="tela">PgFaturaVencida</span></td></tr>
+        <tr><th scope="row">RGC, art. 78 <a class="ref" href="#r5">[R5]</a></th><td>Religação em até 1 dia após saber do pagamento, sem custo</td><td>"Depois do pagamento, ela volta em até 1 dia"</td></tr>
+        <tr><th scope="row">RGC, art. 67 <a class="ref" href="#r5">[R5]</a></th><td>Pagamento em dobro volta na próxima fatura ou em até 30 dias</td><td>Falta a tela de reembolso; hoje só prevenimos com a pausa da cobrança automática</td></tr>
+        <tr><th scope="row">Regulamento Pix, art. 11-A; Manual de Iniciação <a class="ref" href="#r8">[R8]</a> <a class="ref" href="#r11">[R11]</a></th><td>Pix Cobrança com vencimento aceita multa, juros e desconto; o QR imediato vale 24 h por padrão</td><td>"Vale até hoje, 23:59" em <span class="tela">PgPix</span>; validade final depende do PSP</td></tr>
+        <tr><th scope="row">Res. BCB 402 e 482 <a class="ref" href="#r9">[R9]</a></th><td>Pix Automático: autoriza uma vez, cancela quando quiser; recebedor com CNPJ ativo há 6 meses</td><td>Opção futura em <span class="tela">PgAutomatico</span></td></tr>
+        <tr><th scope="row">Febraban, 12/03/2024 <a class="ref" href="#r13">[R13]</a></th><td>Boleto liquida em D+0 ou D+1. "Até 3 dias úteis" não tem fonte normativa; é prazo de baixa do credor</td><td>"Compensa em até 2 dias úteis"</td></tr>
+        <tr><th scope="row">Layout Febraban v08 <a class="ref" href="#r14">[R14]</a></th><td>Código de convênio tem 48 dígitos e começa com 8; segmento 4 é telecom</td><td>"30 de 48 números" em <span class="tela">PgDigitar</span></td></tr>
+        <tr><th scope="row">Lei 13.455/2017; Lei 10.962, art. 5-A <a class="ref" href="#r4">[R4]</a></th><td>Pode haver preço diferente por meio de pagamento; o desconto precisa estar visível</td><td>Se houver desconto no Pix, ele vai no seletor, antes da escolha</td></tr>
+        <tr><th scope="row">CDC, arts. 52 e 54-B <a class="ref" href="#r1">[R1]</a></th><td>CET anual, taxa mensal, número de parcelas, total com e sem financiamento e agente financiador</td><td>Nota em <span class="tela">PgParcelas</span>; financiador "iGreen Pay" é provisório</td></tr>
+        <tr><th scope="row">Res. BCB 587/2026 <a class="ref" href="#r8">[R8]</a></th><td>Boleto com Pix na mesma cobrança só a partir de 01/02/2027</td><td>Fora do escopo agora</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="jornadas">
+  <div class="sec-head">
+    <span class="eyebrow">Passo a passo</span>
+    <h2>Jornada de cada player</h2>
+    <p class="muted">Caminhos tirados das centrais de ajuda e de tutoriais datados. Abra para ver os passos.</p>
+  </div>
+  <div>
+    <details class="jornada"><summary><span>Mercado Pago e Mercado Livre <span class="sum-sub">· fatura do cartão e parcelas</span></span></summary><div class="body">
+      <ol><li>Início, Cartão de crédito, Pagar <a class="ref" href="#f1">[1]</a>.</li><li>"Escolha o valor que quer pagar": total, parcelado, mínimo ou outro valor <a class="ref" href="#f1">[1]</a>.</li><li>"Escolha o meio de pagamento", com o prazo de cada um ao lado <a class="ref" href="#f2">[2]</a>.</li><li>No Pix, copia o código ou escaneia o QR; chega uma mensagem de confirmação <a class="ref" href="#f3">[3]</a>.</li></ol>
+      <p>Nas parcelas de crédito o débito sai sozinho do saldo no vencimento. Sem saldo, a pessoa escolhe as parcelas e paga por Pix ou boleto <a class="ref" href="#f2">[2]</a> <a class="ref" href="#f6">[6]</a>. Em atraso, o app mostra valor original, juros até hoje e os botões "Pagar" e "Negociar" <a class="ref" href="#f7">[7]</a>.</p>
+    </div></details>
+    <details class="jornada"><summary><span>Nubank <span class="sum-sub">· fatura e boleto no crédito</span></span></summary><div class="body">
+      <ol><li>Fatura, Pagar fatura, informa o valor <a class="ref" href="#f18">[18]</a>.</li><li>Escolhe saldo, boleto ("Gerar boleto") ou Pix <a class="ref" href="#f18">[18]</a>.</li><li>Senha de 4 dígitos <a class="ref" href="#f17">[17]</a>.</li></ol>
+      <p>Boleto no crédito: Pagar boletos, escanear, "Escolher forma de pagamento", parcelas de 1 a 12x com o mês de início, revisar e senha <a class="ref" href="#f15">[15]</a> <a class="ref" href="#f17">[17]</a>. A revisão mostra parcelas, total, juros e IOF <a class="ref" href="#f16">[16]</a>.</p>
+    </div></details>
+    <details class="jornada"><summary><span>Inter <span class="sum-sub">· leitor de códigos e agendamento</span></span></summary><div class="body">
+      <ol><li>Pagamentos, "Leitor de códigos" (câmera) ou "Digitar código" <a class="ref" href="#f23">[23]</a>.</li><li>No boleto da fatura, escolhe data de pagamento e valor <a class="ref" href="#f27">[27]</a>.</li><li>Confirma. Fora do horário, o pagamento vai para o próximo dia útil <a class="ref" href="#f24">[24]</a>.</li></ol>
+      <p>No Pix, o QR pode vir da câmera ou da galeria, e a pessoa confere "Pagamento de: seu nome" antes de pagar <a class="ref" href="#f28">[28]</a>. O comprovante sai em PDF com o ID da transação <a class="ref" href="#f26">[26]</a>.</p>
+    </div></details>
+    <details class="jornada"><summary><span>PicPay <span class="sum-sub">· boleto com pagamento misto</span></span></summary><div class="body">
+      <ol><li>Início, Pagar <a class="ref" href="#f30">[30]</a>.</li><li>Escanear, digitar ou enviar PDF ou imagem do boleto <a class="ref" href="#f30">[30]</a>.</li><li>Conferir, "Pagar ou Agendar", Hoje <a class="ref" href="#f30">[30]</a>.</li><li>Forma: saldo, cartão, misto ou PicPay Parcela; no misto, define quanto vai em cada um <a class="ref" href="#f32">[32]</a>.</li><li>Confirma; depois disso não dá para cancelar <a class="ref" href="#f30">[30]</a>.</li></ol>
+      <p>O total com taxa aparece antes de confirmar <a class="ref" href="#f31">[31]</a>. Desde 25/09/2026 a tarifa do cartão é de 9,99% do valor <a class="ref" href="#f39">[39]</a>.</p>
+    </div></details>
+    <details class="jornada"><summary><span>Vivo <span class="sum-sub">· fatura de telecom</span></span></summary><div class="body">
+      <ol><li>App Vivo, Meu Plano, "Ver minhas faturas" <a class="ref" href="#f41">[41]</a>.</li><li>Escolhe Pix (QR ou copia e cola), cartão, débito automático, Pix Automático ou boleto <a class="ref" href="#f41">[41]</a>.</li></ol>
+      <p>A fatura vencida se paga com o mesmo código, e multa e juros vêm na próxima fatura. Pagando com Pix, a linha volta em até 1 hora; pelos outros meios, em até 2 dias úteis. "Avisar que já está paga" religa em até 1 hora, até 60 dias de atraso <a class="ref" href="#f41">[41]</a>.</p>
+    </div></details>
+    <details class="jornada"><summary><span>Claro <span class="sum-sub">· fatura de telecom</span></span></summary><div class="body">
+      <ol><li>Minha Claro, Faturas, "2ª via da última fatura" ou "Minhas Faturas" <a class="ref" href="#f44">[44]</a>.</li><li>Forma de pagamento: Pix, cartão (pede os dados) ou boleto <a class="ref" href="#f44">[44]</a>.</li></ol>
+      <p>Até 45 dias de atraso, "Parcelar dívida" no app; depois disso, o portal Claro Negocia Fácil <a class="ref" href="#f46">[46]</a> <a class="ref" href="#f48">[48]</a>. A promessa de pagamento pode ser pedida logo depois de pagar <a class="ref" href="#f47">[47]</a>.</p>
+    </div></details>
+  </div>
+  <div class="two">
+    <div class="sheet"><h3>Onde todos convergem</h3><ul>
+      <li>O valor vem antes do meio, e "total" é a primeira opção <a class="ref" href="#f1">[1]</a> <a class="ref" href="#f14">[14]</a> <a class="ref" href="#f38">[38]</a>.</li>
+      <li>Pix é o meio mais rápido e sempre tem QR e copia e cola.</li>
+      <li>O boleto sempre diz o prazo, de 1 a 3 dias úteis.</li>
+      <li>Parcelado mostra parcela com encargos e total antes de confirmar.</li>
+      <li>Telecom tem religação por confiança e negociação dentro das faturas.</li>
+    </ul></div>
+    <div class="sheet"><h3>Onde divergem</h3><ul>
+      <li>Parcelas máximas: Inter 4x; Nubank, PicPay e Mercado Pago 12x.</li>
+      <li>Custo: PicPay cobra tarifa sobre o valor; Nubank cobra juros e IOF; Mercado Pago soma taxa, juros e IOF.</li>
+      <li>Pix no PicPay Card leva até 1 dia útil; no Mercado Pago, mesmo dia.</li>
+      <li>Atraso: o Mercado Pago suspende o crédito; Vivo e Claro cobram na próxima fatura e reduzem o serviço.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="csd">
+  <div class="sec-head">
+    <span class="eyebrow">Fechamento</span>
+    <h2>Certezas, suposições e dúvidas</h2>
+  </div>
+  <div class="csd">
+    <div class="sheet"><div class="csd-h"><span class="pill ok">Certezas</span><span class="muted" style="font-size: 13px">Fato com fonte</span></div><ul>
+      <li>Pix aparece como o meio mais rápido em todos os players, com QR e copia e cola <a class="ref" href="#f3">[3]</a> <a class="ref" href="#f28">[28]</a> <a class="ref" href="#f41">[41]</a> <a class="ref" href="#f44">[44]</a>.</li>
+      <li>Todo player diz o prazo do boleto no momento da escolha ou do pagamento <a class="ref" href="#f2">[2]</a> <a class="ref" href="#f4">[4]</a> <a class="ref" href="#f33">[33]</a>.</li>
+      <li>Na telecom, multa de até 2% e juros de até 1% ao mês, pro rata por dia <a class="ref" href="#r5">[R5]</a>.</li>
+      <li>A linha só pode ser suspensa 15 dias após o aviso da dívida e volta em até 1 dia após o pagamento <a class="ref" href="#r5">[R5]</a>.</li>
+      <li>Parcelado exige CET anual, total com e sem financiamento e o nome de quem financia <a class="ref" href="#r1">[R1]</a>.</li>
+    </ul></div>
+    <div class="sheet"><div class="csd-h"><span class="pill neutral">Suposições</span><span class="muted" style="font-size: 13px">Para testar</span></div><ul>
+      <li><span class="tag p1">P1</span> Mostrar o prazo de cada meio no seletor faz quem precisa da linha hoje escolher Pix em vez de boleto. Validamos pela fatia de boletos entre faturas vencidas.</li>
+      <li><span class="tag p1">P1</span> Abater o cashback antes do meio aumenta o uso do saldo sem confundir. Validamos em teste com 5 pessoas: elas entendem "Falta pagar"?</li>
+      <li><span class="tag p2">P2</span> O atalho "Já paguei" reduz contatos de quem pagou fora do app. Validamos pelo volume de "paguei e continua bloqueado" no atendimento.</li>
+      <li><span class="tag p2">P2</span> Oferecer o pagamento automático depois do comprovante converte mais do que deixar só em configurações. Validamos comparando a adesão nos dois pontos.</li>
+    </ul></div>
+    <div class="sheet"><div class="csd-h"><span class="pill warn">Dúvidas</span><span class="muted" style="font-size: 13px">E como descobrir</span></div><ul>
+      <li>A iGreen aceita pagar só parte da fatura (mínimo ou outro valor)? Financeiro.</li>
+      <li>Quem financia o parcelado e qual a taxa? Hoje usamos 2,99% ao mês e "iGreen Pay" como provisórios. Financeiro e adquirente.</li>
+      <li>Os boletos da iGreen são de convênio (48 dígitos) ou bancários (47)? Banco emissor.</li>
+      <li>Quanto tempo o Pix da fatura vale depois do vencimento? PSP do Pix.</li>
+      <li>Vai ter desconto no Pix ou bônus no pagamento automático, como os 3 GB da Vivo? Produto e marketing.</li>
+      <li>A iGreen pode religar a linha antes da baixa, quando a pessoa diz que já pagou? Por quantos dias? Operação.</li>
+      <li>O CNPJ da iGreen Telecom já tem 6 meses para receber Pix Automático? Jurídico.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="prioridades">
+  <div class="sec-head">
+    <span class="eyebrow">O que fazer</span>
+    <h2>Oportunidades por prioridade</h2>
+    <p class="muted">P0 bloqueia o pagamento ou expõe a pessoa a fraude; P1 é atrito importante; P2 é melhoria; P3 é refinamento.</p>
+  </div>
+  <div class="frame" role="region" aria-label="Oportunidades" tabindex="0">
+    <table style="min-width: 680px">
+      <thead><tr><th scope="col">Prioridade</th><th scope="col">Oportunidade</th><th scope="col">Evidência</th><th scope="col">Situação no fluxo</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag p0">P0</span></td><td>Mostrar beneficiário e CNPJ antes de confirmar qualquer código lido ou colado</td><td><a class="ref" href="#r16">[R16]</a> <a class="ref" href="#r18">[R18]</a></td><td><span class="mat c">Feito</span></td></tr>
+        <tr><td><span class="tag p0">P0</span></td><td>Marcar a fatura como "em processamento" e pausar a cobrança automática dela ao pagar</td><td><a class="ref" href="#r19">[R19]</a> <a class="ref" href="#r5">[R5]</a></td><td><span class="mat e">Parcial</span> boleto já avisa; falta o selo na lista de faturas</td></tr>
+        <tr><td><span class="tag p1">P1</span></td><td>Prazo e efeito na linha ao lado de cada meio</td><td><a class="ref" href="#f2">[2]</a> <a class="ref" href="#f41">[41]</a></td><td><span class="mat c">Feito</span></td></tr>
+        <tr><td><span class="tag p1">P1</span></td><td>Parcelas com CET anual, total com e sem juros e financiador</td><td><a class="ref" href="#r1">[R1]</a> <a class="ref" href="#f11">[11]</a></td><td><span class="mat c">Feito</span> com valores provisórios</td></tr>
+        <tr><td><span class="tag p1">P1</span></td><td>"Já paguei" e negociação na fatura vencida</td><td><a class="ref" href="#f41">[41]</a> <a class="ref" href="#f47">[47]</a></td><td><span class="mat e">Parcial</span> "Já paguei" feito; negociação não</td></tr>
+        <tr><td><span class="tag p2">P2</span></td><td>Ler o código de foto ou PDF</td><td><a class="ref" href="#f28">[28]</a> <a class="ref" href="#f30">[30]</a></td><td><span class="mat e">Parcial</span> botão no leitor; falta a tela de escolha</td></tr>
+        <tr><td><span class="tag p2">P2</span></td><td>Tela de reembolso para pagamento em dobro</td><td><a class="ref" href="#r5">[R5]</a></td><td><span class="mat x">A fazer</span></td></tr>
+        <tr><td><span class="tag p2">P2</span></td><td>Incentivo concreto para o pagamento automático</td><td><a class="ref" href="#f41">[41]</a> <a class="ref" href="#f44">[44]</a></td><td><span class="mat x">Depende de produto</span></td></tr>
+        <tr><td><span class="tag p3">P3</span></td><td>Pagar só parte da fatura</td><td><a class="ref" href="#f1">[1]</a> <a class="ref" href="#f38">[38]</a></td><td><span class="mat x">Só se a regra existir</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="recomendacao">
+  <div class="sec-head">
+    <span class="eyebrow">Para a iGreen</span>
+    <h2>Recomendação</h2>
+    <p class="muted">A iGreen cobra a própria fatura, como Vivo e Claro. O cartão é venda direta, não "boleto no crédito" de banco; os modelos de tarifa dos bancos servem para mostrar custo, não para cobrar.</p>
+  </div>
+  <div class="rec">
+    <div class="sheet"><span class="pill ok" style="align-self: flex-start">Adotar</span><ul>
+      <li>Pix gerado por fatura, com QR, copia e cola, recebedor e validade.</li>
+      <li>Prazo de cada meio no seletor.</li>
+      <li>Cashback abatido primeiro.</li>
+      <li>Parcelas com custo total antes de pagar.</li>
+      <li>Comprovante em ticket com ID, para compartilhar.</li>
+      <li>Oferta de pagamento automático depois de pagar.</li>
+    </ul></div>
+    <div class="sheet"><span class="pill neutral" style="align-self: flex-start">Considerar</span><ul>
+      <li>Dividir livremente entre cashback e cartão, como o PicPay. Mais controle, mais uma decisão na tela.</li>
+      <li>Pix Automático, que exige CNPJ com 6 meses e autorização com valor máximo.</li>
+      <li>Religar por confiança antes da baixa, com limite de dias.</li>
+    </ul></div>
+    <div class="sheet"><span class="pill warn" style="align-self: flex-start">Evitar</span><ul>
+      <li>Tarifa no cartão sem o total na mesma tela.</li>
+      <li>"A partir de" sem o total.</li>
+      <li>Boleto como sugestão para fatura vencida.</li>
+      <li>Prometer "até 3 dias úteis" sem saber o prazo real de baixa.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="lacunas">
+  <div class="sec-head">
+    <span class="eyebrow">Limites da pesquisa</span>
+    <h2>O que não conseguimos ver</h2>
+  </div>
+  <div class="sheet" style="padding: 18px 20px">
+    <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 7px; font-size: 14px">
+      <li>Telas do Mercado Pago para combinar saldo com outro meio na fatura e a fatura atrasada do cartão. Precisam de captura no app.</li>
+      <li>Campos do comprovante (código de autenticação) só têm evidência no Inter e no Nubank.</li>
+      <li>Se o CVV é pedido de novo a cada uso de cartão salvo: nenhum player documenta.</li>
+      <li>Validade do Pix no Mercado Pago, no Nubank e na Claro. O "120" da Vivo vem sem unidade.</li>
+      <li>Mensagens de erro do leitor de código: só há as causas de recusa do PicPay.</li>
+      <li>Páginas do Inter são de 2021 a 2025, e a ajuda de fatura do Nubank não foi localizada.</li>
+      <li>Regras de fatura de energia (ANEEL) e seguros (SUSEP) ficaram fora; o fluxo genérico vai precisar delas.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="fontes">
+  <div class="sec-head">
+    <span class="eyebrow">Evidências</span>
+    <h2>Fontes</h2>
+    <p class="muted">Tipo: Fato (documento oficial), Obs. (tela vista em tutorial datado). Páginas de ajuda sem data mostram só o acesso, em 06/10/2026.</p>
+  </div>
+  <h3>Players</h3>
+  <div class="frame" role="region" aria-label="Fontes dos players" tabindex="0">
+    <table class="fontes" style="min-width: 760px">
+      <thead><tr><th scope="col">ID</th><th scope="col">Player</th><th scope="col">Evidência</th><th scope="col">Fonte</th><th scope="col">Data</th><th scope="col">Tipo</th></tr></thead>
+      <tbody>
+        <tr id="f1"><td>1</td><td>Mercado Pago</td><td>4 tipos de pagamento; saldo, Meli Dólar e Pix liberam no mesmo dia, boleto em até 2 dias</td><td><a href="https://www.mercadopago.com.br/ajuda/como-pagar-a-fatura-do-meu-cartao-mercado-pago_18193">mercadopago.com.br/ajuda/…_18193</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f2"><td>2</td><td>Mercado Pago</td><td>Débito automático do saldo; Pix "Imediata", boleto "Até 2 dias úteis"</td><td><a href="https://www.mercadopago.com.br/ajuda/3582">mercadopago.com.br/ajuda/3582</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f3"><td>3</td><td>Mercado Pago</td><td>"Pix Copia e Cola", "Copiar código" e mensagem de confirmação</td><td><a href="https://www.mercadopago.com.br/ajuda/16998">mercadopago.com.br/ajuda/16998</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f4"><td>4</td><td>Mercado Pago</td><td>Gerar boleto; vale 3 dias úteis; crédito em até 2</td><td><a href="https://www.mercadopago.com.br/ajuda/4922">mercadopago.com.br/ajuda/4922</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f5"><td>5</td><td>Mercado Pago</td><td>Multa e juros diários; crédito suspenso; negativação</td><td><a href="https://www.mercadopago.com.br/ajuda/o-que-acontece-atraso-pagamento-parcelas_21316">mercadopago.com.br/ajuda/…_21316</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f6"><td>6</td><td>Mercado Pago</td><td>"Selecionar parcelas a pagar" e "Revisar pagamento"</td><td><a href="https://www.mercadopago.com.br/ajuda/16041">mercadopago.com.br/ajuda/16041</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f7"><td>7</td><td>Mercado Pago</td><td>Parcela atrasada com valor original e juros; "Pagar" e "Negociar"</td><td><a href="https://www.mercadopago.com.br/blog/como-saber-tem-divida-mercado-pago">blog Mercado Pago</a></td><td class="num">12/09/2026</td><td>Fato</td></tr>
+        <tr id="f8"><td>8</td><td>Mercado Pago</td><td>Ver fatura, Pagar fatura; total, mínimo e vencimento</td><td><a href="https://www.mercadopago.com.br/blog/pagar-fatura-cartao-mercado-pago">blog Mercado Pago</a></td><td class="num">12/09/2026</td><td>Fato</td></tr>
+        <tr id="f9"><td>9</td><td>Mercado Pago</td><td>Código Pix gerado pelo app e vinculado à fatura</td><td><a href="https://www.mercadopago.com.br/blog/ja-usou-o-pix-para-pagar-a-fatura-do-seu-cartao-mercado-pago">blog Mercado Pago</a></td><td class="num">28/09/2026</td><td>Fato</td></tr>
+        <tr id="f10"><td>10</td><td>Mercado Pago</td><td>Simulador com CET; débito automático</td><td><a href="https://www.mercadopago.com.br/blog/pagar-fatura-mercado-pago">blog Mercado Pago</a></td><td class="num">03/09/2026</td><td>Fato</td></tr>
+        <tr id="f11"><td>11</td><td>Mercado Pago</td><td>Boleto no crédito em até 12x; parcela com taxa, juros e IOF; CET antes de confirmar</td><td><a href="https://www.mercadopago.com.br/blog/como-pagar-boleto-cartao-credito">blog Mercado Pago</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f12"><td>12</td><td>Mercado Livre</td><td>"Combinar 2 meios de pagamento" com divisão automática</td><td><a href="https://www.mercadopago.com.br/blog/combinar-formas-de-pagamento-mercado-livre">blog Mercado Pago</a></td><td class="num">12/09/2026</td><td>Fato</td></tr>
+        <tr id="f14"><td>14</td><td>Nubank</td><td>Total, parcelado e mínimo; mora 1% ao mês + multa 2% + IOF</td><td><a href="https://nubank.com.br/contratos/termos-condicoes-cartao-credito-nubank">contrato do cartão</a></td><td class="num">19/08/2026</td><td>Fato</td></tr>
+        <tr id="f15"><td>15</td><td>Nubank</td><td>Boleto no crédito, até 12x, início em até 2 faturas</td><td><a href="https://nubank.com.br/nu/cartao/passa-tudo-no-credito">nubank.com.br/nu/cartao/passa-tudo-no-credito</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f16"><td>16</td><td>Nubank</td><td>Revisão com parcelas, total, juros e IOF; comprovante imediato</td><td><a href="https://comunidade.nubank.com.br/novidades/post/pague-seus-boletos-no-cartao-de-credito-oAQ47qGkAxx4a03">NuCommunity</a></td><td class="num">15/07/2021</td><td>Fato</td></tr>
+        <tr id="f17"><td>17</td><td>Nubank</td><td>Tela de parcelas com mês de início; senha</td><td><a href="https://www.techtudo.com.br/dicas-e-tutoriais/2024/10/tem-como-pagar-boleto-com-cartao-de-credito-do-nubank-entenda-se-e-possivel-edapps.ghtml">TechTudo</a></td><td class="num">07/10/2024</td><td>Obs.</td></tr>
+        <tr id="f18"><td>18</td><td>Nubank</td><td>Pagar fatura com saldo, boleto ou Pix; prazos de cada um</td><td><a href="https://www.techtudo.com.br/listas/2024/10/fatura-do-nubank-veja-como-pagar-parcelar-antecipar-e-mais-edapps.ghtml">TechTudo</a></td><td class="num">12/10/2024</td><td>Obs.</td></tr>
+        <tr id="f19"><td>19</td><td>Nubank</td><td>CET na simulação do parcelamento</td><td><a href="https://blog.nubank.com.br/parcelar-minimo-cartao/">blog Nubank</a></td><td class="num">28/09/2026</td><td>Fato</td></tr>
+        <tr id="f20"><td>20</td><td>Nubank</td><td>Desenrola na Home; valor final antes de confirmar</td><td><a href="https://nubank.com.br/novo-desenrola-brasil-2026">nubank.com.br/novo-desenrola-brasil-2026</a></td><td>2026</td><td>Fato</td></tr>
+        <tr id="f21"><td>21</td><td>Nubank</td><td>Débito automático, Pix Automático, buscador de boletos</td><td><a href="https://nubank.com.br/nu/conta/assistente-de-pagamentos">Assistente de Pagamentos</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f22"><td>22</td><td>Nubank</td><td>Contas em até 12x, a partir da fatura atual ou de 2 futuras</td><td><a href="https://nubank.com.br/nu/cartao">nubank.com.br/nu/cartao</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f23"><td>23</td><td>Inter</td><td>"Leitor de códigos" e "Digitar código"; DDA</td><td><a href="https://blog.inter.co/guia-pagamento-de-contas/">blog Inter</a></td><td class="num">08/09/2022</td><td>Fato</td></tr>
+        <tr id="f24"><td>24</td><td>Inter</td><td>Agendamento, horários de corte e novas tentativas</td><td><a href="https://blog.inter.co/pagamento-agendado/">blog Inter</a></td><td class="num">12/12/2022</td><td>Fato</td></tr>
+        <tr id="f25"><td>25</td><td>Inter</td><td>Boleto no crédito em até 4x; teto de 30% do limite</td><td><a href="https://blog.inter.co/como-pagar-boleto-com-cartao-de-credito/">blog Inter</a></td><td class="num">28/01/2025</td><td>Fato</td></tr>
+        <tr id="f26"><td>26</td><td>Inter</td><td>"Ver comprovante", PDF, ID da transação</td><td><a href="https://ajuda.inter.co/conta-digital-pessoa-fisica-e-mei/como-emitir-o-comprovante-de-uma-transacao-realizada">ajuda Inter</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f27"><td>27</td><td>Inter</td><td>Boleto da fatura com data e valor; débito automático</td><td><a href="https://blog.inter.co/como-pagar-a-fatura-do-cartao-de-credito/">blog Inter</a></td><td class="num">23/11/2022</td><td>Fato</td></tr>
+        <tr id="f28"><td>28</td><td>Inter</td><td>QR pela câmera ou galeria; "Pagamento de: seu nome"</td><td><a href="https://blog.inter.co/pagar-a-fatura-do-cartao-com-o-pix">blog Inter</a></td><td class="num">24/10/2022</td><td>Fato</td></tr>
+        <tr id="f29"><td>29</td><td>Inter</td><td>Fatura azul aberta, vermelha fechada; compartilhar PDF</td><td><a href="https://blog.inter.co/fatura-inter/">blog Inter</a></td><td class="num">29/05/2023</td><td>Fato</td></tr>
+        <tr id="f30"><td>30</td><td>PicPay</td><td>Escanear, digitar, PDF ou imagem; saldo, cartão, misto ou Parcela</td><td><a href="https://meajuda.picpay.com/hc/pt-br/articles/360044239432">ajuda PicPay</a></td><td class="num">04/09/2026</td><td>Fato</td></tr>
+        <tr id="f31"><td>31</td><td>PicPay</td><td>Total antes de confirmar; no misto, taxa só no cartão</td><td><a href="https://meajuda.picpay.com/hc/pt-br/articles/360044240072">ajuda PicPay</a></td><td class="num">30/09/2026</td><td>Fato</td></tr>
+        <tr id="f32"><td>32</td><td>PicPay</td><td>Define quanto paga com cada meio; Parcela a partir de 3x</td><td><a href="https://meajuda.picpay.com/hc/pt-br/articles/38437952009363">ajuda PicPay</a></td><td class="num">01/09/2026</td><td>Fato</td></tr>
+        <tr id="f33"><td>33</td><td>PicPay</td><td>Boleto bancário em 1 dia útil, convênio em 3</td><td><a href="https://meajuda.picpay.com/hc/pt-br/articles/360044239712">ajuda PicPay</a></td><td class="num">17/09/2026</td><td>Fato</td></tr>
+        <tr id="f34"><td>34</td><td>PicPay</td><td>Recusa por apostas ou por limite</td><td><a href="https://meajuda.picpay.com/hc/pt-br/articles/360044239952">ajuda PicPay</a></td><td class="num">02/10/2026</td><td>Fato</td></tr>
+        <tr id="f35"><td>35</td><td>PicPay</td><td>Parcelar depois, em até 90 dias, a partir de R$&nbsp;100</td><td><a href="https://meajuda.picpay.com/hc/pt-br/articles/44636416642963">ajuda PicPay</a></td><td class="num">04/09/2026</td><td>Fato</td></tr>
+        <tr id="f36"><td>36</td><td>PicPay</td><td>Campos do cartão novo</td><td><a href="https://meajuda.picpay.com/hc/pt-br/articles/4830974508563">ajuda PicPay</a></td><td class="num">02/09/2026</td><td>Fato</td></tr>
+        <tr id="f37"><td>37</td><td>PicPay</td><td>Cobrança-teste de até R$&nbsp;0,50 ou Open Finance</td><td><a href="https://meajuda.picpay.com/hc/pt-br/articles/4833059231251">ajuda PicPay</a></td><td class="num">02/09/2026</td><td>Fato</td></tr>
+        <tr id="f38"><td>38</td><td>PicPay</td><td>Mínimo, total ou outro valor; senha ou digital; paga sozinho a partir do 5º dia</td><td><a href="https://meajuda.picpay.com/hc/pt-br/articles/360049446172">ajuda PicPay</a></td><td class="num">01/10/2026</td><td>Fato</td></tr>
+        <tr id="f39"><td>39</td><td>PicPay</td><td>Cartão para boleto ou Pix: 9,99% do valor</td><td><a href="https://www.picpay.com/docs/bu/taxas-e-tarifas/tabela-de-tarifas-pessoa-fisica-25-09-2026.pdf">tabela de tarifas</a></td><td class="num">25/09/2026</td><td>Fato</td></tr>
+        <tr id="f40"><td>40</td><td>PicPay</td><td>Taxas antigas de parcelamento (desatualizadas)</td><td><a href="https://canaltech.com.br/apps/como-parcelar-boleto-picpay/">Canaltech</a></td><td class="num">30/08/2021</td><td>Obs.</td></tr>
+        <tr id="f41"><td>41</td><td>Vivo</td><td>Meios, validade do QR, 2% + 1% ao mês, religação, "Avisar que já está paga", 3 GB</td><td><a href="https://www.vivo.com.br/para-voce/ajuda/minha-fatura/pagamento">ajuda Vivo, pagamento</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f42"><td>42</td><td>Vivo</td><td>Religação em 24 h; caminho antigo (diverge de 41)</td><td><a href="https://www.vivo.com.br/para-voce/ajuda/minha-fatura/bloqueio-de-linha">ajuda Vivo, bloqueio</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f43"><td>43</td><td>Vivo</td><td>Negociação: 10315, Vivo em Dia, app</td><td><a href="https://www.vivo.com.br/para-voce/ajuda/minha-fatura/negociacao-de-debitos">ajuda Vivo, negociação</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f44"><td>44</td><td>Claro</td><td>Pix, cartão, boleto e débito; desconto; promessa; 846/848</td><td><a href="https://www.claro.com.br/atendimento/pagamento">atendimento Claro</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f45"><td>45</td><td>Claro</td><td>Controle: cartão pelo site, também recorrente</td><td><a href="https://www.claro.com.br/faq/fatura/quais-sao-as-formas-de-pagamento-da-fatura-claro-controle">FAQ Claro</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f46"><td>46</td><td>Claro</td><td>"Parcelar dívida" até 45 dias; depois, Negocia Fácil</td><td><a href="https://www.claro.com.br/faq/fatura/como-fazer-a-negociacao-da-fatura-claro-movel">FAQ Claro</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f47"><td>47</td><td>Claro</td><td>Promessa de pagamento</td><td><a href="https://www.claro.com.br/faq/fatura/como-fazer-a-promessa-de-pagamento-de-uma-fatura-claro-movel">FAQ Claro</a></td><td>s/d</td><td>Fato</td></tr>
+        <tr id="f48"><td>48</td><td>Claro</td><td>Baixa em 48 h, sinal em 72 h; "Minhas negociações"</td><td><a href="https://www.claro.com.br/atendimento/renegocie-sua-fatura">atendimento Claro</a></td><td>s/d</td><td>Fato</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Lei, norma e risco</h3>
+  <div class="frame" role="region" aria-label="Fontes de lei e norma" tabindex="0">
+    <table class="fontes" style="min-width: 680px">
+      <thead><tr><th scope="col">ID</th><th scope="col">Fonte</th><th scope="col">O que confirma</th><th scope="col">Link</th></tr></thead>
+      <tbody>
+        <tr id="r1"><td>R1</td><td>CDC (compilado)</td><td>arts. 42, 42-A, 52 e 54-B</td><td><a href="https://www.planalto.gov.br/ccivil_03/leis/l8078compilado.htm">planalto.gov.br</a></td></tr>
+        <tr id="r2"><td>R2</td><td>Código Civil (compilado)</td><td>arts. 389, 395 e 406</td><td><a href="https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm">planalto.gov.br</a></td></tr>
+        <tr id="r3"><td>R3</td><td>Lei 14.905/2024</td><td>taxa legal de juros</td><td><a href="https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2024/lei/l14905.htm">planalto.gov.br</a></td></tr>
+        <tr id="r4"><td>R4</td><td>Lei 13.455/2017 e Lei 10.962/2004</td><td>preço por meio de pagamento; desconto visível</td><td><a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2017/lei/l13455.htm">Lei 13.455</a> · <a href="https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2004/lei/l10.962.htm">Lei 10.962</a></td></tr>
+        <tr id="r5"><td>R5</td><td>Anatel, Res. 765/2023 (RGC), em vigor desde 01/09/2025</td><td>arts. 54 a 80: fatura, contestação, suspensão, religação, duplicidade</td><td><a href="https://informacoes.anatel.gov.br/legislacao/resolucoes/2023/1900-resolucao-765">anatel.gov.br</a></td></tr>
+        <tr id="r6"><td>R6</td><td>Res. CMN 4.881/2020</td><td>CET anual com duas casas</td><td><a href="https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20CMN&amp;numero=4881">bcb.gov.br</a></td></tr>
+        <tr id="r7"><td>R7</td><td>Res. CMN 5.171/2024</td><td>cálculo da taxa legal</td><td><a href="https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20CMN&amp;numero=5171">bcb.gov.br</a></td></tr>
+        <tr id="r8"><td>R8</td><td>Res. BCB 1/2020 (Regulamento Pix) e Res. BCB 587/2026</td><td>Pix Cobrança com vencimento; cobrança híbrida em 2027</td><td><a href="https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&amp;numero=1">bcb.gov.br</a></td></tr>
+        <tr id="r9"><td>R9</td><td>Res. BCB 402/2024 e 482/2025</td><td>Pix Automático</td><td><a href="https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&amp;numero=402">bcb.gov.br</a></td></tr>
+        <tr id="r10"><td>R10</td><td>Res. BCB 443/2024</td><td>dados obrigatórios do boleto</td><td><a href="https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&amp;numero=443">bcb.gov.br</a></td></tr>
+        <tr id="r11"><td>R11</td><td>Manual de Padrões para Iniciação do Pix v2.10.0</td><td>validade do QR, cobv, tela de confirmação</td><td><a href="https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Regulamento_Pix/II_ManualdePadroesparaIniciacaodoPix.pdf">bcb.gov.br (PDF)</a></td></tr>
+        <tr id="r12"><td>R12</td><td>Febraban, 08/11/2018</td><td>boleto vencido em qualquer banco</td><td><a href="https://portal.febraban.org.br/noticia/3226/pt-br/">febraban.org.br</a></td></tr>
+        <tr id="r13"><td>R13</td><td>Febraban, 12/03/2024</td><td>liquidação em D+0 ou D+1</td><td><a href="https://portal.febraban.org.br/noticia/4072/pt-br/">febraban.org.br</a></td></tr>
+        <tr id="r14"><td>R14</td><td>Febraban, Layout de Arrecadação v08</td><td>48 dígitos, começa com 8, segmento 4 telecom</td><td><a href="https://cmsarquivos.febraban.org.br/Arquivos/documentos/PDF/Layout%20-%20C%C3%B3digo%20de%20Barras%20-%20Vers%C3%A3o%208%20-%2011_05_2026.pdf">febraban.org.br (PDF)</a></td></tr>
+        <tr id="r15"><td>R15</td><td>Santander, Código de Barras v36</td><td>linha bancária de 47 dígitos</td><td><a href="https://cms.santander.com.br/sites/WPS/documentos/arq-cobranca-barras-port-jul22/25-05-06_134319_codigo-de+barras-santander-abril-2025-v36-ptbr.pdf">santander.com.br (PDF)</a></td></tr>
+        <tr id="r16"><td>R16</td><td>Febraban, dicas de boleto e ficha antifraude</td><td>conferir beneficiário; boleto adulterado</td><td><a href="https://portal.febraban.org.br/noticia/4077/pt-br/">notícia</a> · <a href="https://portal.febraban.org.br/DetalheAntifraude/14/pt-br/">ficha</a></td></tr>
+        <tr id="r17"><td>R17</td><td>Febraban, 24/02/2021</td><td>golpes com Pix</td><td><a href="https://portal.febraban.org.br/noticia/3602/pt-br/">febraban.org.br</a></td></tr>
+        <tr id="r18"><td>R18</td><td>Procon São José dos Campos, 07/06/2022</td><td>conferir nome e CNPJ do beneficiário</td><td><a href="https://www.sjc.sp.gov.br/noticias/2022/junho/07/procon-alerta-consumidor-para-pagamento-de-boletos-falsos/">sjc.sp.gov.br</a></td></tr>
+        <tr id="r19"><td>R19</td><td>Reclame Aqui (TIM, Vivo, Claro, 2021 a 2026)</td><td>cobrança em dobro, "paguei e continua em aberto", linha suspensa após pagar</td><td>reclameaqui.com.br</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>Benchmark feito em 06/10/2026 para a página Telecom e Pagamento. Valores, CNPJ e nomes da iGreen nas telas são provisórios.</footer>
+
+</div>
+
+</body></html>
