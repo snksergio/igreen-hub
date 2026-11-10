@@ -15,6 +15,22 @@
     {
       "nome": "App: home, faturas e pagamento",
       "arquivo": "app.html"
+    },
+    {
+      "nome": "Protótipo · Cashback com 32 fluxos",
+      "arquivo": "https://igreen-hub.pages.dev/super-app/cashback/prototipo/prototipo-cashback.html"
+    },
+    {
+      "nome": "Protótipo · Cashback e carteira",
+      "arquivo": "https://igreen-hub.pages.dev/super-app/cashback-carteira/cashback-carteira.html"
+    },
+    {
+      "nome": "Protótipo · Pagar fatura com cashback",
+      "arquivo": "https://igreen-hub.pages.dev/super-app/pagar-fatura/#cb-pix"
+    },
+    {
+      "nome": "Protótipo · Faturas de energia",
+      "arquivo": "https://igreen-hub.pages.dev/super-app/faturas-energia/faturas-energia-v2.html"
     }
   ],
   "acervo": {

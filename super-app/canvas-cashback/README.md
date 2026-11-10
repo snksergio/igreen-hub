@@ -14,3 +14,14 @@ Cada página mostra as telas nas posições do canvas, em fundo escuro: arraste 
 | Versões anteriores · Cashback | https://igreen-hub.pages.dev/super-app/canvas-cashback/anteriores.html |
 
 As imagens das telas estão em `assets/`, com o nome do arquivo igual ao do canvas. As notas de bastidor do canvas (os post-its) não vieram; os títulos das linhas vieram.
+
+## Protótipos
+
+Os protótipos navegáveis feitos a partir deste canvas. Também têm card próprio na vitrine; os links ficam aqui e na ficha para quem chega pelo canvas.
+
+| Protótipo | Endereço |
+|---|---|
+| Cashback com 32 fluxos | https://igreen-hub.pages.dev/super-app/cashback/prototipo/prototipo-cashback.html |
+| Cashback e carteira | https://igreen-hub.pages.dev/super-app/cashback-carteira/cashback-carteira.html |
+| Pagar fatura com cashback | https://igreen-hub.pages.dev/super-app/pagar-fatura/#cb-pix |
+| Faturas de energia | https://igreen-hub.pages.dev/super-app/faturas-energia/faturas-energia-v2.html |
