@@ -12,8 +12,9 @@
 <style>
 /* Vitrine do hub: lê window.CATALOGO (catalogo.js, gerado por scripts/gerar-catalogo.mjs).
    Na página inicial cada categoria é um carrossel (arrasta com o mouse ou usa as setas);
-   filtro mostra grade. A busca mostra os projetos num carrossel e, embaixo, as páginas, versões e itens
-   do acervo que batem com ela, com o link direto, agrupados por projeto. Card abre a ficha do projeto: slider de telas à esquerda,
+   filtro mostra grade. A busca mostra os projetos em grade e, embaixo, as páginas, versões e itens do acervo
+   que batem com ela, com o link direto, agrupados por projeto; as telas que só citam a busca no conteúdo
+   (busca.js) ficam fechadas no fim de cada projeto. Card abre a ficha do projeto: slider de telas à esquerda,
    detalhes e ações na barra lateral, que rola por conta própria. Projeto com acervo (variações em grupos)
    ganha abas na lateral: Projeto e o acervo, com grupos colapsáveis que trocam os prints da galeria. Uma fonte só, a do hotsite iGreen MOB (Instrument Sans);
    números com algarismos tabulares. Tema escuro por padrão; a escolha no topo fica salva neste navegador. */
@@ -177,6 +178,7 @@ button{font:inherit;color:inherit}
 .achado mark{background:var(--leaf);color:var(--green-text);border-radius:3px}
 .achado .mais button{width:100%;padding:9px 12px;border:0;background:none;text-align:left;font-size:13px;font-weight:500;color:var(--green-text);cursor:pointer}
 .achado .mais button:hover{background:var(--neutro)}
+.secao-nota{font-size:13px;color:var(--soft)}
 
 /* Card do projeto */
 .card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sombra);padding:12px;text-decoration:none;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s}
@@ -622,7 +624,7 @@ button{font:inherit;color:inherit}
     };
     for (const pg of p.paginas) juntar(pg.nome, pg.url, '');
     p.versoes.forEach((v, i) => juntar(v.nome, v.url, `Versão${i === 0 ? ' atual' : ''}${v.data ? ` · ${data(v.data)}` : ''}`));
-    for (const g of p.acervo?.grupos ?? []) for (const pg of g.paginas) juntar(pg.nome, pg.url, `${p.acervo.nome} · ${g.nome}`, g.nome);
+    for (const g of p.acervo?.grupos ?? []) for (const pg of g.paginas) juntar(pg.nome, pg.url, p.acervo.nome === g.nome ? g.nome : `${p.acervo.nome} · ${g.nome}`, g.nome);
     for (const o of p.outras ?? []) juntar(o.nome, o.url, 'Outras telas da pasta', '', true);
     return achados.sort((a, b) => b.direto - a.direto);
   }
@@ -653,23 +655,100 @@ button{font:inherit;color:inherit}
     return html;
   }
 
-  const achado = ({ p, achados }, palavras) => {
+  // Conteúdo das telas (busca.js, gerado na publicação): as palavras do texto visível de cada tela que é um
+  // arquivo só, com quantas vezes aparecem. Só carrega quando alguém usa a busca.
+  let conteudo = null;
+  let carregandoConteudo = false;
+  function carregarConteudo() {
+    if (conteudo || carregandoConteudo) return;
+    carregandoConteudo = true;
+    carregarScript('busca.js').then(
+      () => {
+        conteudo = new Map(
+          Object.entries(window.BUSCA ?? {}).map(([url, texto]) => [url, texto.split(' ').map((t) => { const [w, n] = t.split(':'); return [w, Number(n) || 1]; })]),
+        );
+        if (estado.busca) render();
+      },
+      () => (carregandoConteudo = false),
+    );
+  }
+
+  // Telas que citam a busca só no conteúdo (não no nome): ficam fechadas no fim do projeto, as que mais citam primeiro.
+  // Cada palavra precisa estar no conteúdo, no nome da tela ou no nome do projeto, e pelo menos uma no conteúdo.
+  function citacoesDe(p, palavras, vistos) {
+    if (!conteudo) return [];
+    const contexto = norm(p.nome);
+    const telas = [...p.paginas, ...p.versoes, ...(p.acervo?.grupos ?? []).flatMap((g) => g.paginas), ...(p.outras ?? [])];
+    const citacoes = [];
+    for (const t of telas) {
+      const palavrasDaTela = conteudo.get(t.url);
+      if (!palavrasDaTela || vistos.has(t.url)) continue;
+      vistos.add(t.url);
+      const proprio = norm(t.nome);
+      let vezes = 0;
+      const todas = palavras.every((w) => {
+        const n = palavrasDaTela.reduce((soma, [pw, c]) => soma + (pw.includes(w) ? c : 0), 0);
+        vezes += n;
+        return n || proprio.includes(w) || contexto.includes(w);
+      });
+      if (todas && vezes) citacoes.push({ nome: t.nome, url: t.url, extra: `Citada no conteúdo · ${vezes} ${vezes === 1 ? 'vez' : 'vezes'}`, vezes });
+    }
+    return citacoes.sort((a, b) => b.vezes - a.vezes);
+  }
+
+  const achado = ({ p, achados, citacoes }, palavras) => {
     const sobra = achados.length - LIMITE_ACHADOS;
-    const linha = (a, i) => `<li${i >= LIMITE_ACHADOS ? ' hidden' : ''}><a href="${esc(a.url)}" target="_blank" rel="noopener">
+    const linha = (a, bloco) => `<li${bloco ? ` hidden data-bloco="${bloco}"` : ''}><a href="${esc(a.url)}" target="_blank" rel="noopener">
       <span class="achado-txt"><span>${marcar(a.nome, palavras)}</span>${a.extra ? `<small>${marcar(a.extra, palavras)}</small>` : ''}</span>${icone(FORA, 14)}</a></li>`;
+    const citam = citacoes.length === 1 ? 'Mais 1 tela cita' : `Mais ${citacoes.length} telas citam`;
     return `<article class="achado">
       <a class="achado-cab" href="#${esc(p.id)}">
         ${capa(p)}
         <span class="achado-nome"><b>${esc(p.nome)}</b><small>${esc(categorias.get(p.categoria)?.nome)} · ${esc(tipo(p))}</small></span>
         <span class="achado-ver">Ver projeto</span>
       </a>
-      <ul class="paginas">${achados.map(linha).join('')}${sobra > 0 ? `<li class="mais"><button type="button" data-mais>Mostrar mais ${sobra}</button></li>` : ''}</ul>
+      <ul class="paginas">
+        ${achados.map((a, i) => linha(a, i >= LIMITE_ACHADOS ? 'mais' : '')).join('')}
+        ${sobra > 0 ? `<li class="mais"><button type="button" data-mais="mais">Mostrar mais ${sobra}</button></li>` : ''}
+        ${citacoes.map((a) => linha(a, 'cita')).join('')}
+        ${citacoes.length ? `<li class="mais"><button type="button" data-mais="cita">${citam} “${esc(estado.busca)}” no conteúdo</button></li>` : ''}
+      </ul>
     </article>`;
   };
+
+  // Busca: os projetos em grade e embaixo as páginas e links que batem com ela, um projeto abaixo do outro.
+  // Projeto que só cita a busca no conteúdo das telas entra só na lista, depois dos outros.
+  function renderBusca(itens) {
+    carregarConteudo();
+    const palavras = norm(estado.busca).split(/\s+/).filter(Boolean);
+    const base = (estado.arquivados ? arquivados : ativos).filter((p) => estado.categoria === 'todos' || p.categoria === estado.categoria);
+    const grupos = base
+      .map((p) => {
+        const achados = achadosDe(p, palavras);
+        return { p, achados, citacoes: citacoesDe(p, palavras, new Set(achados.map((a) => a.url))) };
+      })
+      .filter((g) => g.achados.length || g.citacoes.length)
+      .sort((a, b) => (b.achados.length > 0) - (a.achados.length > 0));
+    const diretos = grupos.reduce((n, g) => n + g.achados.length, 0);
+    const citados = grupos.reduce((n, g) => n + g.citacoes.length, 0);
+    if (!itens.length && !grupos.length) return false;
+    lista.innerHTML = `
+      ${itens.length ? `<section class="secao">
+        <div class="secao-topo"><h2>Projetos</h2><span class="num">${itens.length}</span></div>
+        <div class="grade">${itens.map((p) => card(p, estado.categoria === 'todos')).join('')}</div>
+      </section>` : ''}
+      ${grupos.length ? `<section class="secao">
+        <div class="secao-topo"><h2>Páginas e links</h2>${diretos ? `<span class="num">${diretos}</span>` : ''}${citados ? `<span class="secao-nota">+ ${citados} ${citados === 1 ? 'cita' : 'citam'} no conteúdo</span>` : ''}</div>
+        <div class="achados">${grupos.map((g) => achado(g, palavras)).join('')}</div>
+      </section>` : ''}`;
+    return true;
+  }
 
   function render() {
     filtros();
     const itens = visiveis();
+
+    if (estado.busca && renderBusca(itens)) return;
 
     if (!itens.length) {
       lista.innerHTML = estado.busca
@@ -711,28 +790,6 @@ button{font:inherit;color:inherit}
           })
           .join('');
       for (const secao of lista.querySelectorAll('[data-carrossel]')) ligarSetas(secao, secao.querySelector('.trilho'));
-      return;
-    }
-
-    // Busca: os projetos num carrossel, como na página inicial, e embaixo as páginas e links que batem com ela
-    if (estado.busca) {
-      const palavras = norm(estado.busca).split(/\s+/).filter(Boolean);
-      const grupos = itens.map((p) => ({ p, achados: achadosDe(p, palavras) })).filter((g) => g.achados.length);
-      const total = grupos.reduce((n, g) => n + g.achados.length, 0);
-      lista.innerHTML = `
-        <section class="secao" data-carrossel>
-          <div class="secao-topo">
-            <h2>Projetos</h2><span class="num">${itens.length}</span>
-            <div class="secao-acoes">${seta(-1, 'Projetos: anteriores')}${seta(1, 'Projetos: próximos')}</div>
-          </div>
-          <div class="trilho" data-arrasta>${itens.map((p) => card(p, estado.categoria === 'todos')).join('')}</div>
-        </section>
-        ${total ? `<section class="secao">
-          <div class="secao-topo"><h2>Páginas e links</h2><span class="num">${total}</span></div>
-          <div class="achados">${grupos.map((g) => achado(g, palavras)).join('')}</div>
-        </section>` : ''}`;
-      const carrossel = lista.querySelector('[data-carrossel]');
-      ligarSetas(carrossel, carrossel.querySelector('.trilho'));
       return;
     }
 
@@ -817,7 +874,7 @@ button{font:inherit;color:inherit}
     }
     const mais = e.target.closest('[data-mais]');
     if (mais) {
-      const escondidas = mais.closest('ul').querySelectorAll('li[hidden]');
+      const escondidas = mais.closest('ul').querySelectorAll(`li[data-bloco="${mais.dataset.mais}"]`);
       for (const li of escondidas) li.hidden = false;
       escondidas[0]?.querySelector('a').focus();
       mais.closest('li').remove();
@@ -839,6 +896,7 @@ button{font:inherit;color:inherit}
     busca.focus({ preventScroll: true });
   };
   busca.addEventListener('input', () => buscar(busca.value));
+  busca.addEventListener('focus', carregarConteudo);
   document.addEventListener('click', (e) => {
     if (e.target.closest('[data-limpar]')) {
       e.preventDefault();

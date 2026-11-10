@@ -18,7 +18,7 @@ Cada projeto mora em `<categoria>/<slug>/`, com uma ficha `projeto.json` e os pr
 | `MIGRACAO.md` | O passo a passo para trazer um projeto que já existe em outro repositório |
 | `categorias.json` | As categorias e os tipos de projeto |
 | `index.html` | A vitrine |
-| `scripts/gerar-catalogo.mjs` | Junta as fichas em `catalogo.js`, que a vitrine lê (roda sozinho na publicação) |
+| `scripts/gerar-catalogo.mjs` | Junta as fichas em `catalogo.js`, que a vitrine lê, e o texto das telas em `busca.js`, que a busca usa (roda sozinho na publicação) |
 | `scripts/capturar-telas.mjs` | Tira os prints da vitrine com o Chrome ou o Edge |
 | `.github/workflows/cloudflare.yml` | Publica no Cloudflare Pages, o endereço principal, a cada push na `main`. Envia só os arquivos que mudaram |
 | `.github/workflows/publicar.yml` | Publica no GitHub Pages, o endereço antigo, a cada push na `main` |

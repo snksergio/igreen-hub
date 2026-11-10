@@ -1,5 +1,6 @@
 # Gerado por scripts/gerar-catalogo.mjs
 catalogo.js
+busca.js
 
 .claude/launch.json
 node_modules/

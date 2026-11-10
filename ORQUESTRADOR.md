@@ -32,7 +32,7 @@ Não entra. O projeto fica onde está e aqui vai só a ficha com o link (seção
 - **Um projeto, uma pasta.** Várias telas do mesmo assunto ficam na mesma pasta, listadas em `paginas`. Versões do mesmo assunto (`faturas-v1.html`, `faturas-v2.html`) também, listadas em `versoes`.
 - **Variações vão no acervo, não em projetos novos.** Opções de design de partes do mesmo projeto (heros, rodapés, selos, explorações de um componente) entram no `acervo` da mesma ficha, em grupos (seção 3). Assim a vitrine mostra um card só, e as variações ficam numa aba da ficha.
 - **Caminhos sempre relativos** (`assets/logo.svg`, nunca `/assets/logo.svg`): o hub abre em dois endereços, e no antigo o site mora numa subpasta.
-- **Não mexa** em pasta de outro projeto, no `index.html` da raiz (é a vitrine) nem no `catalogo.js` (é gerado na publicação).
+- **Não mexa** em pasta de outro projeto, no `index.html` da raiz (é a vitrine) nem no `catalogo.js` e no `busca.js` (são gerados na publicação).
 
 ### Builder e output
 

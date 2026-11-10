@@ -35,6 +35,37 @@ const textoPuro = (s) =>
     )
     .replace(/\s+/g, ' ')
     .trim();
+// Conteúdo das telas: as palavras do texto visível de cada tela que é um arquivo só, com quantas vezes aparecem.
+// Vai para busca.js, que a vitrine só carrega quando alguém usa a busca. Protótipo com todas as telas num arquivo
+// (as que abrem por #âncora) fica de fora: não dá para saber de qual tela é cada texto.
+const PALAVRAS_VAZIAS = new Set(
+  'que com para por uma uns umas dos das nos nas aos sua seu suas seus nao sim mais como ate sem sob pelo pela pelos pelas este esta isso isto esse essa voce voces ele ela eles elas the and for'.split(' '),
+);
+const conteudo = {};
+function indexarConteudo(urlTela) {
+  if (/^https?:\/\//.test(urlTela) || urlTela.includes('#') || conteudo[urlTela] !== undefined) return;
+  let arquivo = urlTela.split('?')[0];
+  if (arquivo.endsWith('/')) arquivo += 'index.html';
+  if (!existsSync(join(raiz, arquivo))) {
+    try {
+      arquivo = decodeURI(arquivo);
+    } catch {
+      return;
+    }
+  }
+  if (!/\.html?$/i.test(arquivo) || !existsSync(join(raiz, arquivo))) return;
+  const corpo = readFileSync(join(raiz, arquivo), 'utf8')
+    .replace(/<head[\s\S]*?<\/head>/i, ' ')
+    .replace(/<(script|style|svg|template)\b[\s\S]*?<\/\1>/gi, ' ');
+  const vezes = new Map();
+  const palavras = textoPuro(corpo).normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase().match(/[a-z0-9]{3,}/g) ?? [];
+  for (const w of palavras) if (!PALAVRAS_VAZIAS.has(w) && !/^\d+$/.test(w)) vezes.set(w, (vezes.get(w) ?? 0) + 1);
+  if (!vezes.size) return;
+  conteudo[urlTela] = [...vezes]
+    .sort((a, b) => b[1] - a[1])
+    .map(([w, n]) => (n > 1 ? `${w}:${n}` : w))
+    .join(' ');
+}
 const paginasHtml = (dir, rel = '') =>
   readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
     if (e.name.startsWith('.')) return [];
@@ -168,6 +199,15 @@ for (const categoria of categorias) {
             return [{ nome, url: url(rel) }];
           });
 
+    if (!p.link) {
+      const telasDaFicha = [...paginas, ...versoes, ...(acervo?.grupos ?? []).flatMap((g) => g.paginas)];
+      for (const x of telasDaFicha) {
+        if (typeof x?.url === 'string') indexarConteudo(x.url);
+        else if (typeof x?.arquivo === 'string') indexarConteudo(url(x.arquivo));
+      }
+      for (const o of outras) indexarConteudo(o.url);
+    }
+
     projetos.push({
       id,
       categoria: categoria.id,
@@ -194,6 +234,10 @@ const catalogo = { gerado: new Date().toISOString(), categorias, tipos, projetos
 writeFileSync(
   join(raiz, 'catalogo.js'),
   `// Gerado por scripts/gerar-catalogo.mjs. Não edite.\nwindow.CATALOGO = ${JSON.stringify(catalogo, null, 1)};\n`,
+);
+writeFileSync(
+  join(raiz, 'busca.js'),
+  `// Gerado por scripts/gerar-catalogo.mjs. Não edite. Texto das telas para a busca da vitrine: endereço da tela -> palavras (palavra:vezes).\nwindow.BUSCA = ${JSON.stringify(conteudo)};\n`,
 );
 
 console.log(`catalogo.js: ${projetos.length} projeto(s)`);
