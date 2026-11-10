@@ -1,0 +1,41 @@
+{
+  "nome": "Canvas do cashback",
+  "descricao": "O canvas do cashback como no Claude: pagamento universal, os topos do Retorno iGreen e o app com home, faturas e pagamento, com zoom, arrastar e foco em cada tela.",
+  "tipo": "proposta",
+  "atualizado": "2026-11-10",
+  "paginas": [
+    {
+      "nome": "Pagamento universal",
+      "arquivo": "index.html"
+    },
+    {
+      "nome": "Topos do Retorno iGreen",
+      "arquivo": "topos.html"
+    },
+    {
+      "nome": "App: home, faturas e pagamento",
+      "arquivo": "app.html"
+    }
+  ],
+  "acervo": {
+    "nome": "Versões anteriores",
+    "grupos": [
+      {
+        "nome": "Versões anteriores",
+        "paginas": [
+          {
+            "nome": "Cashback",
+            "arquivo": "anteriores.html"
+          }
+        ]
+      }
+    ]
+  },
+  "tags": [
+    "canvas",
+    "cashback",
+    "retorno igreen",
+    "faturas",
+    "pagamento"
+  ]
+}
