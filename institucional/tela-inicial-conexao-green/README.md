@@ -13,6 +13,10 @@ Cópia da pasta `06-sandbox/2026-10-20-simulador-conexao-green` do workspace loc
 ```
 index.html              a tela inteira: HTML, CSS e JS num arquivo só. As árvores da floresta
                         e a imagem parada do tema Light vão embutidas no próprio HTML
+img/
+  igreen-logo-full.svg        logo colorida (tema Light)
+  igreen-logo-full-white.svg  logo branca (tema Escuro)
+  poster-escuro.webp          último quadro do vídeo do tema Escuro, usado só se o vídeo não carregar
 video/
   hero-2160.mp4         ilustração do tema Escuro (2160×1440, H.264, sem áudio)
   hero-light-2160.mp4   ilustração do tema Light, com fundo branco puro (2160×1440, H.264, sem áudio)
@@ -52,8 +56,11 @@ O botão "Garantir meu desconto" dispara o evento `simulador:continuar` no `docu
 
 ## Dependências externas
 
-- Fonte Inter, pelo Google Fonts.
-- As logos (as duas versões) e, no tema Escuro, a imagem parada e o vídeo de reserva vêm de `dev-green.igreenenergy.com.br`. Se esse ambiente mudar ou tirar os arquivos, eles deixam de carregar.
+Só a fonte Inter, pelo Google Fonts. O resto está nesta pasta.
+
+## Diferença em relação ao original
+
+No original, as logos, a imagem parada do tema Escuro e um vídeo de reserva vêm do ambiente de desenvolvimento do site. Nesta cópia, as logos e a imagem parada são arquivos da pasta `img/` e o vídeo de reserva saiu, porque o vídeo local já cobre esse papel. A logo colorida é a mesma do hub (`mob/simulador-investidor`); a branca é essa mesma logo pintada de branco.
 
 ## No original
 
