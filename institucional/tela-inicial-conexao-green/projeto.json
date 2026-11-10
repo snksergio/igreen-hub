@@ -1,0 +1,23 @@
+{
+  "nome": "Tela inicial do Conexão Green",
+  "descricao": "Proposta da tela inicial do cadastro Conexão Green com simulador: a pessoa informa a conta de luz e vê a economia por mês e por ano com 20% de desconto e a conta nova, nos temas escuro e light.",
+  "tipo": "prototipo",
+  "atualizado": "2026-10-27",
+  "paginas": [
+    {
+      "nome": "Tela inicial com simulador",
+      "arquivo": "index.html"
+    }
+  ],
+  "tags": [
+    "simulador",
+    "cadastro",
+    "conta de luz",
+    "economia",
+    "desconto",
+    "energia limpa",
+    "hero",
+    "tema escuro",
+    "tema claro"
+  ]
+}
