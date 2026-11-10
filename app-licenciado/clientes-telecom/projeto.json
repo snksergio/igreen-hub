@@ -1,0 +1,25 @@
+{
+  "nome": "Clientes telecom",
+  "descricao": "O novo card da lista de clientes telecom do app do licenciado: a lista, o resumo da promo de portabilidade e as sheets de PRO, bônus, rastreio e ações.",
+  "tipo": "proposta",
+  "atualizado": "2026-11-10",
+  "paginas": [
+    {
+      "nome": "Uma tela por vez",
+      "arquivo": "index.html"
+    },
+    {
+      "nome": "Canvas",
+      "arquivo": "canvas.html"
+    }
+  ],
+  "tags": [
+    "telecom",
+    "clientes",
+    "licenciado",
+    "portabilidade",
+    "promo",
+    "pro",
+    "canvas"
+  ]
+}
