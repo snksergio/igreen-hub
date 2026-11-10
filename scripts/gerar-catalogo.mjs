@@ -109,6 +109,13 @@ for (const categoria of categorias) {
     if (p.atualizado && !DATA.test(p.atualizado)) aviso('"atualizado" deve ser AAAA-MM-DD');
     if (p.status && !STATUS.includes(p.status)) aviso(`"status" deve ser ${STATUS.join(', ')}`);
 
+    // O padrão da ficha para a busca (seção 3 do ORQUESTRADOR): descrição curta, tags de assunto, página com nome.
+    if (typeof p.descricao === 'string' && p.descricao.length > 220) aviso(`"descricao" com ${p.descricao.length} caracteres: o padrão é até uns 200`);
+    const nTags = Array.isArray(p.tags) ? p.tags.length : 0;
+    if (nTags < 3) aviso(`${nTags === 0 ? 'sem tags' : `só ${nTags} ${nTags === 1 ? 'tag' : 'tags'}`}: ponha de 5 a 10 assuntos, para a busca achar o projeto`);
+    if (!p.paginas?.length) aviso('sem "paginas": a entrada aparece como "Abrir"; dê a ela o nome do que mostra');
+    else for (const pg of p.paginas) if (/^\s*abrir\s*$/i.test(pg.nome ?? '')) aviso('página chamada "Abrir": dê o nome do que ela mostra');
+
     // "arquivo" é relativo à pasta do projeto, ou ao "link" quando o projeto mora fora daqui.
     // Uma URL completa também vale (uma versão antiga que mora em outro endereço, por exemplo).
     const paginas = p.paginas?.length ? p.paginas : [{ nome: 'Abrir', arquivo: p.link ? '' : 'index.html' }];

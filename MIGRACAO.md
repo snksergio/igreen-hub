@@ -37,7 +37,7 @@ Exemplo de resposta: "cashback só o resultado; faturas e os outros completos".
 - O `builder/` não aparece na vitrine: não entra em `paginas` nem em `versoes` (seção 2 do orquestrador).
 - O `builder/README.md` é a porta de entrada do próximo chat (seção 8). O README do original, se houver, vira `builder/README-original.md`, com o texto como está.
 
-**Fica de fora, nos dois modos**, e é listado no README do `builder/` quando for o modo completo: `.git`, `node_modules`, cache e pastas de build intermediárias, `.env`, chave, token e senha, arquivo acima de 50 MB e fonte pesada (psd, fig, vídeo bruto). O hub é público, e o `builder/` também: dado real de cliente e documento interno sensível ficam de fora. Na dúvida, pergunte.
+**Fica de fora, nos dois modos**, e é listado no README do `builder/` quando for o modo completo: `.git`, `node_modules`, cache e pastas de build intermediárias, `.env`, chave, token e senha, arquivo acima de 25 MB (seção 6) e fonte pesada (psd, fig, vídeo bruto). O hub é público, e o `builder/` também: dado real de cliente e documento interno sensível ficam de fora. Na dúvida, pergunte.
 
 ## 3. O que pode mudar na cópia, e o que não pode
 
@@ -77,16 +77,16 @@ Procure o nome do repositório e a URL publicada em https://igreen-hub.pages.dev
 - **Pasta migrada no modo completo** (tem `builder/README.md` dizendo que a fonte é o hub): **não substitua.** O trabalho pode ter continuado aqui depois da migração. Mostre ao usuário o que mudou no original e no hub desde a migração e pergunte o que fazer.
 - **Não achou:** projeto novo.
 
-Em todos os casos, `repo` fica apontando para o repositório original e `atualizado` leva a data de hoje.
+Em todos os casos, `repo` fica apontando para o repositório original. `atualizado` leva a data da última mudança no original, não a de hoje: o último commit (`git log -1 --format=%cs`) ou, sem git, a data do arquivo mais novo. Migrar não é mexer no projeto, e a vitrine ordena por essa data.
 
 ## 6. Decida como cada item vai
 
 - **Estático** (HTML, CSS, JS, imagens): copia os arquivos.
 - **Com build:** build com caminho relativo, copia o `dist` para a raiz da pasta. O build não muda o projeto, só gera os arquivos. No modo completo, o código-fonte vai para o `builder/`.
-- **Não cabe no hub** (servidor, API própria, chave, mais de 50 MB, app que segue sendo desenvolvido fora): não copia, só a ficha com `link` (seção 6 do orquestrador).
+- **Não cabe no hub** (servidor, API própria, chave, projeto com mais de 50 MB, app que segue sendo desenvolvido fora): não copia, só a ficha com `link` (seção 6 do orquestrador). Aí a busca da vitrine não lê o texto do projeto, só a ficha: capriche na `descricao` e nas `tags`.
 - **Arquivo acima de 25 MB** (em geral, vídeo): não copie. O Cloudflare recusa e a publicação do hub inteiro falha, não só a deste projeto. Mostre no passo 9 e pergunte: comprimir muda o projeto, então só com o ok do usuário.
 - **Repositório com mais de um assunto:** um projeto do hub por assunto, cada um na sua pasta e com o seu modo. As páginas vão como estão; só a separação em pastas é nova. Variações do mesmo assunto vão no `acervo`.
-- **Navegação por hash** (`#fluxo/tela`): o link antigo `.../#x/y` tem que abrir igual em `https://igreen-hub.pages.dev/<categoria>/<slug>/#x/y`. Use esses hashes nas `paginas`.
+- **Navegação por hash** (`#fluxo/tela`): o link antigo `.../#x/y` tem que abrir igual em `https://igreen-hub.pages.dev/<categoria>/<slug>/#x/y`. Use esses hashes nas `paginas`. A busca não separa o texto de cada tela de um app numa página só, então cada página precisa do nome do que a tela mostra.
 
 ## 7. Nada de Vercel na cópia
 
@@ -100,7 +100,7 @@ Em todos os casos, `repo` fica apontando para o repositório original e `atualiz
 
 - uma ou duas frases do que é;
 - `Cópia de <repo> (commit <hash>). O original continua lá e é a fonte: ajustes são feitos nele e copiados de novo para esta pasta.`;
-- tabela das páginas com o endereço no hub;
+- tabela das páginas com o endereço no hub (`https://igreen-hub.pages.dev/<categoria>/<slug>/...`);
 - o que mais for útil do README original (estrutura, parâmetros de URL, pontos de integração).
 
 Exemplos: `mob/hotsite-migre-bandeira`, `mob/live-lancamento`.
@@ -124,12 +124,18 @@ Para continuar depois, num outro chat: "Continua o projeto `<categoria>/<slug>` 
 
 ## 9. Antes de publicar, mostre e espere o ok
 
+**A ficha** (`projeto.json`) segue a seção 3 do orquestrador. Numa migração:
+
+- a `descricao` diz o que é, para quem ou para que serve e os assuntos principais. Tire do README e da conversa com o usuário. Se o objetivo não está claro pelos arquivos, pergunte; não invente;
+- as `tags` são os assuntos das telas principais (os títulos, os botões, o que a tela resolve), não o que aparece só no menu;
+- cada página tem o nome do que mostra, nunca "Abrir": projeto de uma entrada só também ganha `paginas`, com um nome.
+
 Numa mensagem só:
 
 - os itens e o modo de cada um, com categoria, slug, nome e tipo (se a categoria não for óbvia, pergunte);
 - para cada item, se é projeto novo, ficha que já existia ou atualização;
 - o que vai ser copiado e o tamanho; no modo completo, o que vai para o `builder/` e o que fica de fora;
-- as `paginas` que viram botão na vitrine;
+- a ficha de cada item: a `descricao`, as `tags` e as `paginas` que viram botão na vitrine, com o nome de cada uma. É a parte que o usuário mais corrige: você conhece os arquivos, ele conhece o objetivo;
 - o que mudou na cópia em relação ao original. Deve caber na lista da seção 3: caminhos, rotas, links, referências, READMEs;
 - visto no original: o que parece quebrado ou estranho e foi copiado como está.
 

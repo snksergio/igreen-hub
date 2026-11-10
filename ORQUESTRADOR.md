@@ -94,6 +94,8 @@ A categoria e o slug saem do caminho da pasta, não repita no arquivo.
 
 **A busca da vitrine** lê o nome, a descrição e as tags do projeto, o nome de cada página, versão e item do acervo, e o texto das telas que são um arquivo só. Projeto que mora fora daqui (`link`) ou que é um app numa página só (telas por `#ancora`) não tem texto que a busca leia: nele, a ficha é tudo o que a busca lê, então capriche na descrição e nas tags.
 
+A validação (`node scripts/gerar-catalogo.mjs --checar`, passo 6 da seção 5) avisa quando a descrição passa de 220 caracteres, quando a ficha tem menos de 3 tags e quando falta nome de página (sem `paginas`, a entrada aparece como "Abrir").
+
 ### Acervo: as variações em grupos
 
 Use quando o projeto tem muitas variações que se dividem em grupos: as propostas de cada seção de um site, as explorações de um componente, as telas de cada fluxo. Regra prática: mais de 8 entradas, ou entradas que caem em grupos naturais. `paginas` continua com as entradas principais (o projeto em si); o acervo guarda as variações.
@@ -161,7 +163,7 @@ Olhe a capa antes de subir. Se pegou tela de carregamento ou animação de entra
 
 ### Subir um projeto novo
 
-1. **Decida categoria, slug, nome e tipo** olhando o projeto, e mostre ao usuário numa linha antes de subir. Se a categoria não for óbvia, pergunte.
+1. **Decida categoria, slug, nome e tipo** olhando o projeto, e mostre ao usuário antes de subir, junto com a `descricao`, as `tags` e o nome de cada página (seção 3). Se a categoria ou o objetivo do projeto não forem óbvios, pergunte; não invente.
 2. **Clone esparso** numa pasta temporária fora do projeto atual. Ele baixa só os arquivos da raiz, `scripts/` e a pasta do projeto, nunca o repositório inteiro:
    ```bash
    git clone --depth 1 --filter=blob:none --sparse https://github.com/snksergio/igreen-hub.git <tmp>/igreen-hub
@@ -189,7 +191,7 @@ Olhe a capa antes de subir. Se pegou tela de carregamento ou animação de entra
 
 ### Alterar um projeto que já está aqui
 
-Mesmo clone esparso do passo 2, com a pasta do projeto. Substitua ou edite os arquivos, atualize `atualizado` (e `descricao` ou `paginas`, se mudaram), refaça os prints se a tela mudou, valide e publique com a mensagem `<categoria>/<slug>: <o que mudou>`.
+Mesmo clone esparso do passo 2, com a pasta do projeto. Substitua ou edite os arquivos, atualize `atualizado` (e `descricao`, `tags` ou `paginas`, se mudaram), refaça os prints se a tela mudou, valide e publique com a mensagem `<categoria>/<slug>: <o que mudou>`.
 
 Não crie pastas paralelas para versões. Se a versão anterior precisa continuar visível, ela fica na mesma pasta com o número no nome (`faturas-v1.html`), a nova assume a entrada principal e as duas entram em `versoes`, a mais nova primeiro, com a data. Se ninguém precisa ver a anterior, só substitua: o git guarda o histórico.
 
