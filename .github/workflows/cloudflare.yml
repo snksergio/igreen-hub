@@ -1,0 +1,44 @@
+# Publica o hub no Cloudflare Pages a cada push na main, em paralelo ao GitHub Pages (publicar.yml).
+# O Cloudflare só recebe os arquivos que mudaram desde a última publicação.
+# A chave mora nos segredos do repositório (CLOUDFLARE_API_TOKEN e CLOUDFLARE_ACCOUNT_ID), nunca num arquivo.
+name: Publicar no Cloudflare
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PROJETO: igreen-hub
+      WRANGLER: npx --yes wrangler@4.151.3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/gerar-catalogo.mjs
+      # O mesmo conteúdo que vai pro GitHub Pages: o repositório inteiro, sem o .git e o .github
+      - name: Separar o que vai pro ar
+        run: rsync -a --exclude .git --exclude .github ./ "$RUNNER_TEMP/site/"
+      # Na primeira vez o projeto ainda não existe no Cloudflare; nas outras, este passo só confere que ele está lá
+      - name: Criar o projeto no Cloudflare, se faltar
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: $WRANGLER pages project list | grep -qw "$PROJETO" || $WRANGLER pages project create "$PROJETO" --production-branch main
+      - name: Publicar
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: $WRANGLER pages deploy "$RUNNER_TEMP/site" --project-name "$PROJETO" --branch main --commit-dirty=true
