@@ -140,6 +140,7 @@ button{font:inherit;color:inherit}
 .busca.com-texto .limpar{display:grid}
 .busca.com-texto kbd{display:none}
 .filtros{display:flex;gap:6px;flex-wrap:wrap;margin-top:var(--a-filtros)}
+.filtros-divisor{flex:none;width:1px;height:20px;align-self:center;margin:0 4px;background:var(--line)}
 .chip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 5px 0 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:500;font-size:13px;letter-spacing:-.005em;white-space:nowrap}
 .chip .num{min-width:20px;height:20px;padding:0 6px;font-size:11px}
 .chip:hover{border-color:var(--soft)}
@@ -534,7 +535,9 @@ button{font:inherit;color:inherit}
 
   const categorias = new Map(C.categorias.map((c) => [c.id, c]));
   const porId = new Map(C.projetos.map((p) => [p.id, p]));
-  const estado = { categoria: 'todos', busca: '', arquivados: false };
+  const estado = { categoria: 'todos', busca: '', arquivados: false, tipo: null };
+  // Os tipos que ganham um filtro próprio na fileira das categorias, depois delas
+  const TIPOS_NO_FILTRO = { tarefa: 'Tarefas' };
 
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const norm = (s) => String(s ?? '').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
@@ -558,19 +561,31 @@ button{font:inherit;color:inherit}
 
   function filtros() {
     const contar = (id) => ativos.filter((p) => p.categoria === id).length;
+    const geral = !estado.arquivados && !estado.tipo;
     const chip = (id, nome, n) =>
-      `<button class="chip" type="button" data-categoria="${id}" aria-pressed="${estado.categoria === id && !estado.arquivados}">${esc(nome)} <span class="num">${n}</span></button>`;
+      `<button class="chip" type="button" data-categoria="${id}" aria-pressed="${estado.categoria === id && geral}">${esc(nome)} <span class="num">${n}</span></button>`;
+    // Depois das categorias, separados por um traço: os filtros por tipo (Tarefas) e os Arquivados
+    const porTipo = Object.entries(TIPOS_NO_FILTRO)
+      .map(([t, nome]) => [t, nome, ativos.filter((p) => p.tipo === t).length])
+      .filter(([, , n]) => n)
+      .map(([t, nome, n]) => `<button class="chip" type="button" data-tipo="${t}" aria-pressed="${estado.tipo === t}">${esc(nome)} <span class="num">${n}</span></button>`)
+      .join('');
+    const outros = porTipo + (arquivados.length ? `<button class="chip" type="button" data-arquivados aria-pressed="${estado.arquivados}">Arquivados <span class="num">${arquivados.length}</span></button>` : '');
     // Categoria sem projeto não aparece; ganha o filtro quando o primeiro projeto dela for publicado.
     $('#filtros').innerHTML =
       chip('todos', 'Todos', ativos.length) +
       C.categorias.filter((c) => contar(c.id)).map((c) => chip(c.id, c.nome, contar(c.id))).join('') +
-      (arquivados.length ? `<button class="chip" type="button" data-arquivados aria-pressed="${estado.arquivados}">Arquivados <span class="num">${arquivados.length}</span></button>` : '');
+      (outros ? `<span class="filtros-divisor" aria-hidden="true"></span>${outros}` : '');
   }
 
-  function filtrar(categoria, arquivadosOn = false) {
+  // O filtro vai no endereço: #mob filtra a categoria, #tarefa os projetos desse tipo
+  const hashDoFiltro = () => (estado.tipo ? `#${estado.tipo}` : estado.categoria === 'todos' ? '' : `#${estado.categoria}`);
+
+  function filtrar(categoria, arquivadosOn = false, tipoOn = null) {
     estado.arquivados = arquivadosOn;
     estado.categoria = categoria;
-    history.replaceState(null, '', categoria === 'todos' ? location.pathname + location.search : `#${categoria}`);
+    estado.tipo = tipoOn;
+    history.replaceState(null, '', location.pathname + location.search + hashDoFiltro());
     render();
   }
 
@@ -578,6 +593,7 @@ button{font:inherit;color:inherit}
     const b = e.target.closest('button');
     if (!b) return;
     if ('arquivados' in b.dataset) filtrar('todos', !estado.arquivados);
+    else if (b.dataset.tipo) filtrar('todos', false, estado.tipo === b.dataset.tipo ? null : b.dataset.tipo);
     else filtrar(b.dataset.categoria);
   });
 
@@ -587,6 +603,7 @@ button{font:inherit;color:inherit}
     const palavras = norm(estado.busca).split(/\s+/).filter(Boolean);
     return (estado.arquivados ? arquivados : ativos).filter((p) => {
       if (estado.categoria !== 'todos' && p.categoria !== estado.categoria) return false;
+      if (estado.tipo && p.tipo !== estado.tipo) return false;
       if (!palavras.length) return true;
       const acervo = (p.acervo?.grupos ?? []).flatMap((g) => [g.nome, ...g.paginas.map((pg) => pg.nome)]);
       const outras = (p.outras ?? []).map((o) => o.nome);
@@ -732,7 +749,9 @@ button{font:inherit;color:inherit}
   function renderBusca(itens) {
     carregarConteudo();
     const palavras = norm(estado.busca).split(/\s+/).filter(Boolean);
-    const base = (estado.arquivados ? arquivados : ativos).filter((p) => estado.categoria === 'todos' || p.categoria === estado.categoria);
+    const base = (estado.arquivados ? arquivados : ativos).filter(
+      (p) => (estado.categoria === 'todos' || p.categoria === estado.categoria) && (!estado.tipo || p.tipo === estado.tipo),
+    );
     const grupos = base
       .map((p) => {
         const achados = achadosDe(p, palavras);
@@ -768,7 +787,7 @@ button{font:inherit;color:inherit}
       return;
     }
 
-    if (estado.categoria === 'todos' && !estado.busca && !estado.arquivados) {
+    if (estado.categoria === 'todos' && !estado.busca && !estado.arquivados && !estado.tipo) {
       // O destaque do topo: o projeto marcado com "destaque" na ficha ou, sem nenhum, o atualizado por último
       const d = itens.find((p) => p.destaque) ?? itens[0];
       lista.innerHTML = `
@@ -805,7 +824,7 @@ button{font:inherit;color:inherit}
       return;
     }
 
-    const titulo = estado.arquivados ? 'Arquivados' : esc(categorias.get(estado.categoria)?.nome);
+    const titulo = estado.tipo ? esc(TIPOS_NO_FILTRO[estado.tipo]) : estado.arquivados ? 'Arquivados' : esc(categorias.get(estado.categoria)?.nome);
     lista.innerHTML = `<section class="secao">
       <div class="secao-topo"><h2>${titulo}</h2><span class="num">${itens.length}</span></div>
       <div class="grade">${itens.map((p) => card(p, estado.categoria === 'todos')).join('')}</div>
@@ -1196,7 +1215,7 @@ button{font:inherit;color:inherit}
   function pedirFechar() {
     if (abertoNaPagina) history.back();
     else {
-      history.replaceState(null, '', estado.categoria === 'todos' ? location.pathname + location.search : `#${estado.categoria}`);
+      history.replaceState(null, '', location.pathname + location.search + hashDoFiltro());
       fechar();
     }
   }
@@ -1320,8 +1339,15 @@ button{font:inherit;color:inherit}
       const termo = tentativas.find((t) => ((estado.busca = t), visiveis().length)) ?? tentativas[0];
       return buscar(termo);
     }
-    if (categorias.has(alvo) && alvo !== estado.categoria) {
-      estado.categoria = alvo;
+    if (TIPOS_NO_FILTRO[alvo]) {
+      if (estado.tipo !== alvo) {
+        Object.assign(estado, { tipo: alvo, categoria: 'todos', arquivados: false });
+        render();
+      }
+      return;
+    }
+    if (categorias.has(alvo) && (alvo !== estado.categoria || estado.tipo)) {
+      Object.assign(estado, { categoria: alvo, tipo: null });
       render();
     }
   }
