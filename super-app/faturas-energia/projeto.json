@@ -1,7 +1,7 @@
 {
   "nome": "Faturas de energia",
   "descricao": "As faturas de energia no app: ver as faturas da Casa, pagar no Pix e no boleto, boleto em emissão, consulta fora do ar, Pix expirado e troca de unidade.",
-  "tipo": "prototipo",
+  "tipo": "tarefa",
   "atualizado": "2026-11-10",
   "paginas": [
     {

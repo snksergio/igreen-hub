@@ -1,7 +1,7 @@
 {
   "nome": "Pagar e negociar faturas",
   "descricao": "As faturas em aberto da Casa no padrão do app: pagar no Pix da energia ou com desconto, parcelar, agrupar e desmembrar, e as seis variações do destaque do Pix.",
-  "tipo": "prototipo",
+  "tipo": "tarefa",
   "atualizado": "2026-11-10",
   "paginas": [
     {

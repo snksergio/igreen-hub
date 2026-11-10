@@ -80,7 +80,7 @@ Use builder e output quando o estudo for grande ou não puder ir para quem vai v
 |---|---|---|
 | `nome` | sim | Nome curto, como aparece no card |
 | `descricao` | sim | Uma ou duas frases, até uns 200 caracteres: o que é, para quem ou para que serve, e os assuntos principais. Sem nome de ferramenta ("como no Claude") nem instrução de navegação (zoom, arrastar) |
-| `tipo` | sim | Um dos tipos de `categorias.json`: `prototipo`, `poc`, `hotsite`, `landing`, `proposta`, `apresentacao`, `dashboard`, `documentacao` |
+| `tipo` | sim | Um dos tipos de `categorias.json`: `prototipo`, `poc`, `hotsite`, `landing`, `proposta`, `apresentacao`, `dashboard`, `documentacao`, `tarefa` (telas feitas para atender um pedido, e não um protótipo próprio) |
 | `atualizado` | sim | Data da última mudança no projeto, `AAAA-MM-DD`. Atualize a cada alteração do projeto. Mexer só na ficha (descrição, tags, nome de página) não muda a data: a vitrine ordena por ela |
 | `paginas` | não | As entradas do projeto, cada uma vira um botão. Sem o campo, a entrada é `index.html` e se chama "Abrir". `arquivo` aceita `#ancora` e `?parametro`. O `nome` diz o que a página mostra: "Abrir", "Protótipo" ou "Início" sozinhos não dizem nada na busca |
 | `acervo` | não | As variações do projeto em grupos, numa aba própria da ficha. Veja "Acervo" logo abaixo |

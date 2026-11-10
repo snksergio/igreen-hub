@@ -1,7 +1,7 @@
 {
   "nome": "Cashback e carteira",
   "descricao": "O resgate do cashback sem web view: levar para a carteira, ver o saldo e o que vence, resgatar via Pix, comprovante, extrato e a ajuda que mostra como o cashback vira dinheiro.",
-  "tipo": "prototipo",
+  "tipo": "tarefa",
   "atualizado": "2026-11-10",
   "paginas": [
     {
