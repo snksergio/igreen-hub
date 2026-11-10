@@ -1,0 +1,32 @@
+{
+  "nome": "Canvas da pré-reserva da bomba",
+  "descricao": "A pré-reserva da bomba no app do Eletroposto: reservar horário e cabo, o preço em dobro, lembretes e agenda, a tolerância, quem não vem e o que os outros motoristas veem.",
+  "tipo": "proposta",
+  "atualizado": "2026-11-10",
+  "paginas": [
+    {
+      "nome": "Pré-reserva da bomba",
+      "arquivo": "index.html"
+    },
+    {
+      "nome": "Regras, impactos e o que falta decidir",
+      "arquivo": "index.html#Main"
+    },
+    {
+      "nome": "Como funciona a reserva · 3 variações",
+      "arquivo": "index.html#ReservaRegras"
+    }
+  ],
+  "tags": [
+    "eletroposto",
+    "reserva",
+    "agendamento",
+    "bomba",
+    "recarga",
+    "tolerância",
+    "não comparecimento",
+    "lembrete",
+    "agenda",
+    "pix"
+  ]
+}
