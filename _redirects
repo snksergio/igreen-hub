@@ -1,0 +1,6 @@
+# Redirecionamentos do endereço principal (Cloudflare Pages; o GitHub Pages ignora este arquivo).
+# Quando um projeto muda de nome ou de categoria, acrescente as duas linhas abaixo, trocando os caminhos,
+# para o link antigo continuar abrindo o projeto (seção 5 do ORQUESTRADOR, "Mudar um projeto de categoria ou de nome"):
+#
+#   /<categoria>/<slug-antigo>    /<categoria>/<slug-novo>/         301
+#   /<categoria>/<slug-antigo>/*  /<categoria>/<slug-novo>/:splat   301

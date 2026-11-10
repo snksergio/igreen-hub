@@ -885,11 +885,25 @@ button{font:inherit;color:inherit}
 
   const busca = $('#busca');
   const caixaBusca = $('#caixa-busca');
+  // A busca vai para o endereço (?busca=fatura), para o link abrir com a busca feita. Espera a pessoa parar de digitar.
+  let esperaEndereco = null;
+  const buscaNoEndereco = () => {
+    clearTimeout(esperaEndereco);
+    esperaEndereco = setTimeout(() => {
+      const url = new URL(location.href);
+      if (estado.busca) url.searchParams.set('busca', estado.busca);
+      else url.searchParams.delete('busca');
+      try {
+        history.replaceState(history.state, '', url.pathname + url.search + url.hash);
+      } catch {}
+    }, 400);
+  };
   const buscar = (texto) => {
     busca.value = texto;
     estado.busca = texto.trim();
     caixaBusca.classList.toggle('com-texto', Boolean(texto));
     render();
+    buscaNoEndereco();
   };
   const irParaBusca = () => {
     caixaBusca.scrollIntoView({ block: 'center', behavior: suave() });
@@ -1285,12 +1299,29 @@ button{font:inherit;color:inherit}
     if (alvo === GUIA.id) return abrirGuia();
     fechar();
     abertoNaPagina = false;
+    // Link de um projeto que não existe mais (mudou de nome ou de categoria): vira uma busca pelo nome dele.
+    // Se o nome inteiro não acha nada, tenta cada palavra, a mais longa primeiro.
+    if (/^[a-z0-9-]+\/[a-z0-9-]+$/.test(alvo)) {
+      history.replaceState(null, '', location.pathname + location.search);
+      const palavras = alvo.split('/')[1].split('-').filter((w) => w.length > 2);
+      const tentativas = [palavras.join(' '), ...[...palavras].sort((a, b) => b.length - a.length)];
+      const termo = tentativas.find((t) => ((estado.busca = t), visiveis().length)) ?? tentativas[0];
+      return buscar(termo);
+    }
     if (categorias.has(alvo) && alvo !== estado.categoria) {
       estado.categoria = alvo;
       render();
     }
   }
   window.addEventListener('hashchange', lerEndereco);
+
+  // Link com busca (?busca=fatura): abre com a busca feita
+  const buscaDoLink = new URLSearchParams(location.search).get('busca');
+  if (buscaDoLink?.trim()) {
+    busca.value = buscaDoLink;
+    estado.busca = buscaDoLink.trim();
+    caixaBusca.classList.add('com-texto');
+  }
 
   render();
   lerEndereco();

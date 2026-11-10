@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pt-BR" data-tema="escuro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Página não encontrada · iGreen Hub</title>
+<script>try{const t=localStorage.getItem('hub-tema');if(t)document.documentElement.dataset.tema=t}catch{}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Página de "não encontrado" do hub: o Cloudflare (e o GitHub Pages) servem este arquivo para qualquer endereço
+   que não existe. Ela mostra o endereço pedido, sugere os projetos com nome parecido (lendo o catalogo.js) e
+   oferece a busca da vitrine com o nome do link. Funciona nos dois endereços: no antigo, o site mora em /igreen-hub/.
+   As cores são as da vitrine (index.html). */
+:root{
+  color-scheme:light;
+  --paper:#EDF1EE;--surface:#FFFFFF;--ink:#121A15;--muted:#5E6B63;--soft:#8A958E;--line:#E0E6E2;
+  --green:#009222;--green-ink:#FFFFFF;--green-text:#0A7A20;--leaf:#E4F3E7;--hero:#DCEFE1;--neutro:#EEF1EF;
+  --sombra:0 1px 2px rgba(16,40,24,.05),0 6px 20px rgba(16,40,24,.07);
+  --f:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+}
+:root[data-tema="escuro"]{
+  color-scheme:dark;
+  --paper:#1C1D20;--surface:#26282C;--ink:#ECEDEF;--muted:#A6ABB2;--soft:#7E848C;--line:#383B40;
+  --green:#30C55A;--green-ink:#07230F;--green-text:#5DD884;--leaf:rgba(48,197,90,.15);--hero:#212A24;--neutro:rgba(255,255,255,.07);
+  --sombra:0 1px 2px rgba(0,0,0,.25),0 6px 18px rgba(0,0,0,.22);
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(1100px 380px at 20% -10%,var(--hero),transparent 70%),var(--paper);color:var(--ink);font:15px/1.5 var(--f);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px;border-radius:8px}
+.miolo{max-width:720px;margin:0 auto;padding:72px 28px 56px}
+.marca{font-size:19px;font-weight:600;letter-spacing:-.035em;text-decoration:none}
+.marca b{color:var(--green);font-weight:600}
+.rotulo{margin:48px 0 10px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--green-text)}
+h1{margin:0;font-size:clamp(28px,4vw,40px);font-weight:500;line-height:1.08;letter-spacing:-.04em}
+.pedido{margin:14px 0 0;color:var(--muted);overflow-wrap:anywhere}
+.pedido code{font-family:ui-monospace,Consolas,Menlo,monospace;font-size:13px;color:var(--ink);background:var(--neutro);border-radius:6px;padding:2px 7px}
+.acoes{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 22px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:500;font-size:14.5px;letter-spacing:-.01em;text-decoration:none;white-space:nowrap}
+.btn:hover{border-color:var(--soft)}
+.btn.primario{background:var(--green);border-color:var(--green);color:var(--green-ink)}
+.sugestoes{margin-top:40px}
+.sugestoes[hidden]{display:none}
+.sugestoes h2{margin:0 0 10px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
+.sugestoes ul{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:14px;background:var(--surface);box-shadow:var(--sombra);overflow:hidden}
+.sugestoes li + li{border-top:1px solid var(--line)}
+.sugestoes a{display:flex;flex-direction:column;gap:2px;padding:12px 16px;text-decoration:none}
+.sugestoes a:hover{background:var(--neutro)}
+.sugestoes b{font-weight:600;letter-spacing:-.01em}
+.sugestoes small{font-size:12.5px;color:var(--muted)}
+@media (max-width:760px){.miolo{padding:48px 16px 40px}.rotulo{margin-top:36px}}
+</style>
+</head>
+<body>
+<main class="miolo">
+  <a class="marca" href="./" data-base>i<b>Green</b> Hub</a>
+  <p class="rotulo">Página não encontrada</p>
+  <h1>Este endereço não existe no hub</h1>
+  <p class="pedido">O link pode ter mudado ou estar incompleto: <code id="pedido"></code></p>
+  <div class="acoes">
+    <a class="btn primario" href="./" data-base>Ir para a vitrine</a>
+    <a class="btn" id="buscar" href="./" hidden></a>
+  </div>
+  <section class="sugestoes" id="sugestoes" hidden>
+    <h2>Talvez seja um destes</h2>
+    <ul id="lista"></ul>
+  </section>
+</main>
+<script>
+(() => {
+  // No endereço antigo (GitHub Pages) o site mora em /igreen-hub/; no principal (Cloudflare), na raiz
+  const base = location.pathname.startsWith('/igreen-hub/') ? '/igreen-hub/' : '/';
+  const caminho = decodeURIComponent(location.pathname).slice(base.length);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const norm = (s) => String(s ?? '').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+
+  for (const a of document.querySelectorAll('[data-base]')) a.href = base;
+  document.getElementById('pedido').textContent = location.pathname;
+
+  // O nome do projeto no link: a segunda parte (categoria/slug/...) ou, se só houver uma, ela mesma
+  const partes = caminho.split('/').filter(Boolean);
+  const nome = (partes[1] ?? partes[0] ?? '').replace(/\.html?$/i, '').replace(/[-_]+/g, ' ').trim();
+  if (nome && !/^index$/i.test(nome)) {
+    const b = document.getElementById('buscar');
+    b.href = `${base}?busca=${encodeURIComponent(nome)}`;
+    b.textContent = `Buscar “${nome}”`;
+    b.hidden = false;
+  }
+
+  // Projetos com nome parecido. Contam as palavras do link depois da categoria: no nome do projeto valem 2,
+  // no endereço ou nas tags valem 1. A mesma categoria só desempata; o mesmo slug em outra categoria vale 3.
+  const categoriaDoLink = partes.length > 1 ? norm(partes[0]) : '';
+  const palavras = [...new Set(partes.slice(categoriaDoLink ? 1 : 0).flatMap((p) => norm(p.replace(/\.html?$/i, '')).split(/[-_.\s]+/)))].filter((w) => w.length > 2 && w !== 'index');
+  if (!palavras.length) return;
+  const s = document.createElement('script');
+  s.src = `${base}catalogo.js`;
+  s.onload = () => {
+    const projetos = window.CATALOGO?.projetos ?? [];
+
+    // O botão de busca usa o nome do link inteiro se ele acha algum projeto; senão, a palavra mais longa que acha
+    const textoDe = (p) =>
+      norm([p.id, p.nome, p.descricao, ...(p.tags ?? []), ...[...(p.paginas ?? []), ...(p.versoes ?? []), ...(p.outras ?? [])].map((x) => x.nome),
+        ...(p.acervo?.grupos ?? []).flatMap((g) => [g.nome, ...g.paginas.map((x) => x.nome)])].join(' '));
+    const textos = projetos.filter((p) => p.status !== 'arquivado').map(textoDe);
+    const acha = (termo) => textos.some((t) => norm(termo).split(/\s+/).every((w) => t.includes(w)));
+    const tentativas = [nome, ...nome.split(/\s+/).filter((w) => w.length > 2).sort((a, b) => b.length - a.length)].filter(Boolean);
+    const termo = tentativas.find(acha);
+    const b = document.getElementById('buscar');
+    if (termo) {
+      b.href = `${base}?busca=${encodeURIComponent(termo)}`;
+      b.textContent = `Buscar “${termo}”`;
+      b.hidden = false;
+    } else b.hidden = true;
+
+    const achados = projetos
+      .map((p) => {
+        const doNome = norm(p.nome);
+        const resto = norm([p.id, ...(p.tags ?? [])].join(' '));
+        let pontos = palavras.reduce((n, w) => n + (doNome.includes(w) ? 2 : resto.includes(w) ? 1 : 0), 0);
+        if (partes[1] && p.id.endsWith(`/${partes[1]}`)) pontos += 3;
+        if (pontos && p.categoria === categoriaDoLink) pontos += 0.5;
+        return { p, pontos };
+      })
+      .filter((a) => a.pontos >= 1)
+      .sort((a, b) => b.pontos - a.pontos)
+      .slice(0, 4);
+    if (!achados.length) return;
+    const categorias = new Map((window.CATALOGO.categorias ?? []).map((c) => [c.id, c.nome]));
+    document.getElementById('lista').innerHTML = achados
+      .map(({ p }) => `<li><a href="${base}#${esc(p.id)}"><b>${esc(p.nome)}</b><small>${esc(categorias.get(p.categoria) ?? p.categoria)} · ${esc(p.id)}</small></a></li>`)
+      .join('');
+    document.getElementById('sugestoes').hidden = false;
+  };
+  document.head.append(s);
+})();
+</script>
+</body>
+</html>

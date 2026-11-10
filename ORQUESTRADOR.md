@@ -32,7 +32,7 @@ Não entra. O projeto fica onde está e aqui vai só a ficha com o link (seção
 - **Um projeto, uma pasta.** Várias telas do mesmo assunto ficam na mesma pasta, listadas em `paginas`. Versões do mesmo assunto (`faturas-v1.html`, `faturas-v2.html`) também, listadas em `versoes`.
 - **Variações vão no acervo, não em projetos novos.** Opções de design de partes do mesmo projeto (heros, rodapés, selos, explorações de um componente) entram no `acervo` da mesma ficha, em grupos (seção 3). Assim a vitrine mostra um card só, e as variações ficam numa aba da ficha.
 - **Caminhos sempre relativos** (`assets/logo.svg`, nunca `/assets/logo.svg`): o hub abre em dois endereços, e no antigo o site mora numa subpasta.
-- **Não mexa** em pasta de outro projeto, no `index.html` da raiz (é a vitrine) nem no `catalogo.js` e no `busca.js` (são gerados na publicação).
+- **Não mexa** em pasta de outro projeto, no `index.html` e no `404.html` da raiz (a vitrine e a página de "não encontrado") nem no `catalogo.js` e no `busca.js` (são gerados na publicação). No `_redirects` da raiz, só acrescente linhas, ao mudar um projeto de nome ou de categoria (seção 5).
 
 ### Builder e output
 
@@ -201,7 +201,14 @@ Um projeto é um assunto. Telas de assuntos diferentes, mesmo que nasçam no mes
 
 ### Mudar um projeto de categoria ou de nome
 
-Inclua as duas pastas no `git sparse-checkout set`, rode `git mv <antiga> <nova>` e publique. Avise o usuário que o link antigo deixa de funcionar.
+Inclua as duas pastas no `git sparse-checkout set`, rode `git mv <antiga> <nova>` e, para o link antigo continuar abrindo o projeto no endereço principal, acrescente no `_redirects` da raiz as duas linhas do modelo que está nele:
+
+```
+/mob/teaser    /mob/teaser-lancamento/         301
+/mob/teaser/*  /mob/teaser-lancamento/:splat   301
+```
+
+Publique e abra o link antigo para conferir. No endereço antigo (GitHub Pages) não há redirecionamento: lá o link antigo cai na página de "não encontrado" (`404.html`), que sugere o projeto pelo nome. Um link antigo da vitrine (`#categoria/slug`) vira uma busca pelo nome do projeto. Avise o usuário disso.
 
 ## 6. Projeto que mora fora
 

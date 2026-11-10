@@ -17,7 +17,9 @@ Cada projeto mora em `<categoria>/<slug>/`, com uma ficha `projeto.json` e os pr
 | `ORQUESTRADOR.md` | As regras e o pipeline de subir e alterar projetos |
 | `MIGRACAO.md` | O passo a passo para trazer um projeto que já existe em outro repositório |
 | `categorias.json` | As categorias e os tipos de projeto |
-| `index.html` | A vitrine |
+| `index.html` | A vitrine. A busca vai no endereço: `?busca=fatura` abre a vitrine com a busca feita |
+| `404.html` | A página de "não encontrado": mostra o endereço pedido e sugere os projetos com nome parecido |
+| `_redirects` | Os redirecionamentos do endereço principal, para o link antigo de um projeto que mudou de nome continuar funcionando |
 | `scripts/gerar-catalogo.mjs` | Junta as fichas em `catalogo.js`, que a vitrine lê, e o texto das telas em `busca.js`, que a busca usa (roda sozinho na publicação) |
 | `scripts/capturar-telas.mjs` | Tira os prints da vitrine com o Chrome ou o Edge |
 | `.github/workflows/cloudflare.yml` | Publica no Cloudflare Pages, o endereço principal, a cada push na `main`. Envia só os arquivos que mudaram |
