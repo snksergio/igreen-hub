@@ -1,6 +1,6 @@
 {
   "nome": "Painel do eletroposto",
-  "descricao": "Painel do dono de eletroposto, versão final: maquete 3D e planta 2D do posto ao vivo, construtor do posto e primeiro acesso. Inclui o POC com a maquete feita no Blender.",
+  "descricao": "Painel do dono de eletroposto, versão final: maquete 3D e planta 2D ao vivo, construtor do posto, primeiro acesso e o passo a passo para deixar o posto pronto. Inclui o POC com a maquete do Blender.",
   "tipo": "prototipo",
   "atualizado": "2026-11-09",
   "link": "https://snksergio.github.io/mob-dashboard-interativo/final/online/",
@@ -41,6 +41,10 @@
     {
       "nome": "Meus postos",
       "arquivo": "meu-posto.html"
+    },
+    {
+      "nome": "Deixe o posto pronto",
+      "arquivo": "painel.html?posto=mobi"
     }
   ],
   "tags": [
@@ -57,7 +61,9 @@
     "dono",
     "planta 2d",
     "primeiro acesso",
-    "meus postos"
+    "meus postos",
+    "configuração do posto",
+    "preço do kwh"
   ],
   "versoes": [
     {
