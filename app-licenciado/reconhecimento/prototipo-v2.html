@@ -1,0 +1,1155 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reconhecimento V2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- Tokens ---------- */
+:root{
+  color-scheme:light;
+  --page:#E6E9EB; --page-ink:#15191B; --page-muted:#5E666B; --page-line:#D2D8DB; --page-card:#FFFFFF; --page-chip:#EEF1F2;
+  --app-bg:#EFF1F2; --surface:#FFFFFF; --ink:#0D0F0F; --muted:#6A6E71; --line:#ECEEEF; --soft:#F1F2F3;
+  --primary:#338449; --accent:#EBF3ED;
+  --lime:#B6E36B; --gold:#E7A84B; --base:#22A45A; --elite:#E8890C; --warn-ink:#A75A05; --warn-bg:#FFF4E5;
+  --energia:#22A45A; --telecom:#3BA6DA; --seguros:#A070DB; --expansao:#E39A2D;
+  --hot:#7F77F1;
+  --font:"Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--page);color:var(--page-ink);font-family:var(--font);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+button:disabled{cursor:default;opacity:.35}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:6px}
+h1,h2,h3,h4,p{margin:0}
+a{color:inherit}
+
+/* ---------- Palco ---------- */
+.stage{min-height:100vh;display:flex;gap:40px;align-items:flex-start;justify-content:center;padding:32px 24px 48px}
+.panel{width:340px;flex:none;display:flex;flex-direction:column;gap:24px;padding-top:8px}
+.panel h1{font-size:22px;font-weight:600;line-height:1.2}
+.panel .lead{font-size:14px;line-height:1.5;color:var(--page-muted);margin-top:8px}
+.panel .v1{display:inline-flex;margin-top:12px;font-size:13px;font-weight:500;padding:7px 12px;border:1px solid var(--page-line);border-radius:999px;background:var(--page-card);text-decoration:none}
+.pblock{display:flex;flex-direction:column;gap:10px}
+.pblock h2{font-size:14px;font-weight:600}
+.seg{display:flex;background:var(--page-chip);border-radius:10px;padding:3px;gap:3px}
+.seg button{flex:1;padding:8px 10px;border-radius:8px;font-size:13px;font-weight:500;color:var(--page-muted);text-align:center}
+.seg button[aria-pressed="true"]{background:var(--page-card);color:var(--page-ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.seg-label{font-size:12px;color:var(--page-muted)}
+.check{display:flex;gap:8px;align-items:center;font-size:13px}
+.check input{accent-color:var(--hot);width:16px;height:16px}
+.jumps{display:flex;flex-wrap:wrap;gap:6px}
+.jumps button{font-size:12.5px;padding:6px 10px;border:1px solid var(--page-line);border-radius:999px;background:var(--page-card)}
+.legend{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;font-size:13px;line-height:1.45}
+.legend li{display:grid;grid-template-columns:22px 1fr;gap:8px}
+.legend .n{width:20px;height:20px;border-radius:50%;background:var(--hot);color:#fff;font-size:11px;font-weight:600;display:grid;place-items:center;margin-top:1px}
+.todo{padding-left:18px;margin:0;display:flex;flex-direction:column;gap:7px;font-size:13px;line-height:1.45}
+.todo li::marker{color:var(--page-muted)}
+
+/* ---------- Celular (tela de 360) ---------- */
+.device{position:relative;width:376px;height:790px;flex:none;border-radius:48px;background:#0B0D0E;padding:8px;box-shadow:0 30px 60px -20px rgba(0,0,0,.45)}
+.viewport{position:relative;width:100%;height:100%;border-radius:40px;overflow:hidden;background:var(--app-bg);color:var(--ink);isolation:isolate;container-type:inline-size}
+/* celular pequeno: tela de 320 */
+.device.narrow{width:336px}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;overflow-anchor:none;scrollbar-width:none;transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+.screen::-webkit-scrollbar{display:none}
+#screen-dash{transform:translateX(100%);background:var(--app-bg)}
+.viewport.on-dash #screen-dash{transform:none}
+.viewport.on-dash #screen-home{transform:translateX(-24%)}
+
+.statusbar{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 26px 0 32px;font-size:15px;font-weight:600;color:#fff}
+.statusbar .icons{display:flex;gap:6px;align-items:center}
+
+/* Início */
+.home-top{background:radial-gradient(120% 90% at 20% 0%,#1F4A31 0%,#12291C 60%,#0E2016 100%);padding-bottom:40px}
+.user{display:flex;align-items:center;gap:10px;padding:14px 24px 0}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#55605B,#1E2422);flex:none;border:1.5px solid rgba(255,255,255,.25)}
+.user .who{flex:1;min-width:0;color:#fff}
+.user .name{font-size:14px;font-weight:600}
+.user .name span{font-weight:400;font-size:12px;opacity:.7;margin-left:4px}
+.user .bal{font-size:12px;opacity:.85;margin-top:2px}
+.user .bal b{color:var(--lime);font-weight:600;margin-left:4px}
+.bell{position:relative;color:#fff}
+.bell::after{content:"";position:absolute;top:0;right:0;width:6px;height:6px;border-radius:50%;background:var(--lime)}
+.home-body{background:var(--app-bg);border-radius:24px 24px 0 0;margin-top:-24px;padding:24px;position:relative}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sec-head h2{font-size:16px;font-weight:600}
+.link{display:inline-flex;align-items:center;gap:4px;color:var(--primary);font-weight:600;font-size:14px;position:relative}
+.stub{margin-top:28px}
+.stub-card{border-radius:16px;border:1px dashed #C9CED1;padding:22px 16px;font-size:13px;color:var(--muted);text-align:center}
+.tabbar{position:sticky;bottom:0;display:flex;justify-content:space-around;background:#fff;border-top:.5px solid #E3E6E8;padding:10px 4px 18px;margin-top:24px;z-index:2}
+.tabbar span{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10.5px;color:var(--muted)}
+.tabbar span.on{color:var(--primary);font-weight:600}
+
+/* Card enxuto (modelo do Figma) */
+.rec{display:block;width:100%;position:relative;border-radius:24px;overflow:hidden;color:#fff;padding:24px 16px 8px;
+  background:
+    radial-gradient(90% 42% at 50% 0%,rgba(255,206,110,.95) 0%,rgba(236,150,52,.85) 35%,rgba(170,88,30,0) 78%),
+    linear-gradient(180deg,#C9772C 0%,#8F4C1E 32%,#4A2614 58%,#24150F 100%)}
+.rec::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.09) 1px,transparent 1px);
+  background-size:52px 52px;mask-image:linear-gradient(180deg,#000 0%,#000 38%,transparent 60%)}
+.rec > *{position:relative}
+.rec-more{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:#fff;color:var(--ink);display:grid;place-items:center;z-index:1}
+.rec-badge{width:64px;height:64px;margin:0 auto;display:block}
+.rec-level{display:block;text-align:center;font-size:20px;font-weight:600;line-height:1.2;margin-top:10px}
+.rec-kwh{display:block;text-align:center;font-size:14px;font-weight:600;margin-top:4px}
+.rec-kwh span{font-weight:400;opacity:.65;font-size:12px}
+.rec-row{display:grid;grid-template-columns:1fr 62px 1fr;align-items:center;gap:8px;margin-top:16px;padding:0 8px}
+.rec-stat .lbl{display:flex;align-items:center;gap:5px;font-size:13px;opacity:.85}
+.rec-stat strong{display:block;font-size:14px;font-weight:600;margin-top:6px;white-space:nowrap}
+.rec-stat strong small{font-weight:400;font-size:12px;opacity:.75}
+.rec-stat.right{justify-self:end;text-align:left}
+.ring{width:62px;height:62px;position:relative;display:grid;place-items:center}
+.ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ring b{font-size:14px;font-weight:600}
+.dline{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;margin-top:16px;padding:0 8px;font-size:13px;line-height:18px}
+.dline .t{opacity:.85}
+.dline b{font-weight:600;display:inline-flex;align-items:center;gap:4px}
+.dline b.ok{color:var(--lime)}
+.bar{display:block;height:6px;border-radius:99px;background:rgba(255,255,255,.22);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:inherit;background:var(--lime)}
+.rec-panel{display:block;width:calc(100% + 16px);margin:16px -8px 0;border-radius:16px;background:rgba(48,32,24,.6);border:1px solid rgba(255,255,255,.08);padding:16px 20px}
+
+/* Painel escuro: compartilhado entre card e "Este mês" */
+.gp-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.gp-head .k{display:block;font-size:12px;color:inherit;opacity:.8;line-height:16px;white-space:nowrap}
+.gp-head .r{text-align:right}
+.gp-head strong{display:block;font-size:22px;font-weight:600;line-height:28px;margin-top:2px}
+.gp-head .r strong{font-size:18px;color:var(--lime)}
+.bands{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px}
+.bands .bl{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:12px;margin-top:6px;line-height:14px}
+.bands .bl b{font-weight:600}
+.pill{display:block;margin-top:16px;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.12);font-size:13px;line-height:16px;text-align:center;white-space:nowrap}
+
+/* Hotspots */
+.hot{position:relative}
+.device.show-hot .hot{outline:2px dashed var(--hot);outline-offset:3px}
+.device.show-hot .hot::after{content:attr(data-n);position:absolute;top:-11px;left:-11px;width:22px;height:22px;border-radius:50%;background:var(--hot);color:#fff;font-size:11.5px;font-weight:600;display:grid;place-items:center;z-index:3}
+
+/* ---------- Painel da jornada ---------- */
+.dash-top{position:relative;color:#fff;padding-bottom:44px;
+  background:
+    radial-gradient(85% 55% at 88% 0%,rgba(242,154,31,.5) 0%,rgba(242,154,31,0) 70%),
+    linear-gradient(180deg,#2B1A10 0%,#150D08 100%)}
+.dash-top::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:52px 52px;mask-image:linear-gradient(180deg,#000 0%,transparent 70%)}
+.dash-top > *{position:relative}
+/* Paralaxe: o topo anda mais devagar, encolhe e escurece; o conteúdo sobe por cima */
+.dash-top{z-index:0;will-change:transform}
+.dash-top::after{content:"";position:absolute;inset:0;background:#000;opacity:calc(var(--p, 0) * .55);pointer-events:none}
+.dt-fade{opacity:calc(1 - var(--p, 0) * 1.15);transform:scale(calc(1 - var(--p, 0) * .06));transform-origin:50% 0}
+.dash-body{z-index:1;box-shadow:0 -14px 30px -10px rgba(0,0,0,.5)}
+
+/* Barra branca que aparece ao rolar (topo recolhido) */
+.dash-bar{position:absolute;left:0;right:0;top:0;z-index:5;background:#fff;box-shadow:0 1px 0 #E6E9EB,0 8px 18px -12px rgba(0,0,0,.28);opacity:0;transform:translateY(-12px);pointer-events:none;transition:opacity .22s,transform .22s}
+.dash-bar.show{opacity:1;transform:none;pointer-events:auto}
+.dash-bar .statusbar{color:var(--ink)}
+.bar-row{display:flex;align-items:center;gap:10px;padding:2px 24px 10px}
+.bar-row .back{width:28px;height:28px;background:var(--soft)}
+.bar-row .back svg{width:14px;height:14px}
+.bar-title{flex:1;min-width:0}
+.bar-title b{display:block;font-size:16px;font-weight:600;line-height:20px}
+.bar-title span{font-size:12px;color:var(--muted)}
+.bar-row svg{width:30px;height:30px;flex:none}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:0 24px 12px;scrollbar-width:none;scroll-behavior:smooth}
+.chips::-webkit-scrollbar{display:none}
+.chips button{flex:none;font-size:13px;font-weight:500;line-height:18px;padding:6px 12px;border-radius:99px;background:var(--soft);color:var(--muted);transition:background .15s,color .15s}
+.chips button[aria-current="true"]{background:var(--ink);color:#fff}
+.back-row{display:flex;align-items:center;gap:12px;padding:12px 24px 0}
+.back{width:40px;height:40px;border-radius:50%;background:#fff;color:var(--ink);display:grid;place-items:center}
+.back-row h2{font-size:16px;font-weight:500}
+.lvl{display:flex;align-items:center;gap:12px;padding:20px 24px 0}
+.lvl svg{width:56px;height:56px;flex:none}
+.lvl h3{font-size:22px;font-weight:600;line-height:26px}
+.lvl p{font-size:13px;opacity:.75;margin-top:2px}
+.lvl p b{color:var(--lime);font-weight:600;opacity:1}
+.lvl-prog{padding:14px 24px 0}
+.lvl-prog .meta{display:flex;justify-content:space-between;font-size:12px;margin-top:8px;opacity:.85}
+.lvl-prog .meta b{color:var(--lime);font-weight:600}
+.kgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:18px 24px 0}
+.kt{display:block;width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:10px 12px;color:#fff;position:relative}
+.kt .k{display:flex;align-items:center;justify-content:space-between;font-size:12px;line-height:16px;color:inherit;opacity:.75}
+.kt strong{display:block;font-size:17px;font-weight:600;line-height:22px;margin-top:4px;white-space:nowrap}
+.kt strong small{font-size:12px;font-weight:400;opacity:.7}
+.kt strong.lime{color:var(--lime)}
+.kt .bar{margin-top:7px;height:4px}
+
+.dash-body{background:var(--app-bg);border-radius:24px 24px 0 0;margin-top:-24px;padding:8px 24px 32px;position:relative}
+.dsec{padding-top:24px;scroll-margin-top:12px}
+.dsec-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.dsec-h h4{font-size:17px;font-weight:600;line-height:24px}
+.dsec-h .live{margin-left:0}
+/* ---- Sua faixa: três variações (seletor no painel) ---- */
+.cap{font-size:12px;line-height:16px;color:var(--muted)}
+
+/* A · Destaque: faixa atual em evidência, Novembro numa linha abaixo */
+.fa-top{display:grid;grid-template-columns:44px 1fr auto;column-gap:12px;align-items:center;padding:16px 18px}
+.fa-top svg{width:44px;height:44px}
+.fa-main{display:flex;flex-direction:column;min-width:0}
+.fa-main b{font-size:16px;font-weight:600;line-height:20px;margin-top:1px}
+.fa-main .cap{margin-top:2px}
+.fa-pct{font-size:26px;font-weight:600;line-height:1;color:var(--primary)}
+.fa-next{display:grid;grid-template-columns:28px 1fr auto;column-gap:10px;align-items:center;margin:0 16px 16px;padding:10px 12px;border-radius:12px;background:var(--soft)}
+.fa-next .ic{width:28px;height:28px;border-radius:50%;background:#fff;display:grid;place-items:center;color:var(--muted)}
+.fa-next .t{font-size:13px;line-height:18px;color:var(--muted)}
+.fa-next .t b{color:var(--ink);font-weight:600}
+.fa-next .v{font-size:16px;font-weight:600}
+
+/* B · Régua: as faixas lado a lado e onde Novembro está hoje */
+.fb{padding:16px 18px 18px}
+.fb-head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+.fb-head b{display:block;font-size:16px;font-weight:600;line-height:20px;margin-top:1px}
+.fb-head .pct{font-size:22px;font-weight:600;line-height:1;color:var(--primary)}
+.fb-track{position:relative;display:grid;grid-template-columns:62fr 38fr;gap:4px;margin-top:40px}
+.fb-seg{border-radius:10px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;font-size:12px;line-height:16px}
+.fb-seg b{font-weight:600}
+.fb-seg.base{background:var(--accent);color:var(--primary);box-shadow:inset 0 0 0 1.5px var(--primary)}
+.fb-seg.elite{background:var(--soft);color:var(--muted)}
+.fb-pin{position:absolute;bottom:calc(100% + 6px);transform:translateX(-50%);background:var(--ink);color:#fff;font-size:11.5px;font-weight:600;line-height:14px;padding:4px 8px;border-radius:8px;white-space:nowrap}
+.fb-pin::after{content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--ink)}
+.fb-scale{position:relative;height:16px;margin-top:6px;font-size:11px;color:var(--muted)}
+.fb-scale span{position:absolute;top:0;transform:translateX(-50%)}
+.fb-scale span:first-child{transform:none}
+.fb .cap{margin-top:10px}
+
+/* C · Linha do tempo: Setembro → Outubro → Novembro */
+.fc{padding:18px 12px 16px}
+.fc-line{position:relative;display:grid;grid-template-columns:repeat(3,1fr);text-align:center}
+.fc-line::before{content:"";position:absolute;left:16.6%;right:16.6%;top:9px;border-top:2px solid var(--line)}
+.fc-node{position:relative;display:flex;flex-direction:column;align-items:center;padding:0 4px}
+.fc-dot{width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid #C9CFD3;display:grid;place-items:center}
+.fc-node.past .fc-dot{background:#C9CFD3;border-color:#C9CFD3}
+.fc-node.now .fc-dot{background:var(--primary);border-color:var(--primary);box-shadow:0 0 0 5px var(--accent)}
+.fc-node.next .fc-dot{border-style:dashed}
+.fc-m{font-size:12px;line-height:16px;color:var(--muted);margin-top:10px}
+.fc-node.now .fc-m{color:var(--primary);font-weight:600}
+.fc-node b{font-size:16px;font-weight:600;line-height:20px;margin-top:2px;white-space:nowrap}
+.fc-node.now b{color:var(--primary)}
+.fc-node .cap{margin-top:2px}
+.fc-rule{display:flex;gap:8px;align-items:center;margin:16px 6px 0;padding:10px 12px;border-radius:12px;background:var(--soft);font-size:12.5px;line-height:17px;color:var(--muted)}
+.fc-rule svg{flex:none}
+
+/* Sua prévia: card em destaque com o fundo da graduação.
+   Cada graduação tem o seu: Gestor laranja (abaixo); Sênior seria
+   --lv-1:#1F6B43; --lv-2:#13432B; --lv-3:#0C2418; --lv-glow:rgba(120,230,160,.45) */
+:root{ --lv-1:#5C3016; --lv-2:#2C1A10; --lv-3:#18100A; --lv-glow:rgba(242,154,31,.42); }
+.money{position:relative;overflow:hidden;border-radius:20px;color:#fff;padding:18px 18px 6px;
+  background:radial-gradient(75% 38% at 90% 0%,var(--lv-glow) 0%,rgba(0,0,0,0) 72%),linear-gradient(180deg,var(--lv-1) 0%,var(--lv-2) 32%,var(--lv-3) 100%)}
+.money::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);
+  background-size:52px 52px;mask-image:linear-gradient(180deg,#000 0%,transparent 45%)}
+.money > *{position:relative}
+.money .k{color:inherit;opacity:.75;font-size:12px;line-height:16px}
+.m-top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.m-big{display:block;font-size:28px;font-weight:600;line-height:34px;margin-top:2px;white-space:nowrap}
+.m-elite{text-align:right}
+.m-elite strong{display:block;font-size:15px;font-weight:600;line-height:20px;margin-top:2px;white-space:nowrap;opacity:.9}
+/* aviso de ponta a ponta, em vidro claro */
+.m-status{display:flex;width:100%;align-items:center;gap:8px;margin-top:14px;padding:9px 12px;border-radius:12px;font-size:12.5px;font-weight:500;line-height:17px;color:rgba(255,255,255,.9);
+  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.09);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.m-status svg{flex:none}
+.m-status b{font-weight:600}
+.m-status.warn svg,.m-status.warn b{color:#FFC977}
+.m-status.ok svg,.m-status.ok b{color:var(--lime)}
+.m-sep{border-top:1px solid rgba(255,255,255,.14);margin:16px -18px 0}
+.m-h{margin:14px 0 2px;font-size:14px;font-weight:600;line-height:20px;opacity:.95}
+.money .lrow{padding:12px 0;border-top:1px solid rgba(255,255,255,.1)}
+.money .m-h + .lrow{border-top:0}
+.money .lic.pro{background:rgba(255,255,255,.12);color:var(--lime)}
+.money .lic.elite{background:rgba(255,255,255,.12);color:#FFC977}
+.money .lic.done{background:var(--lime);color:#0D0F0F}
+.money .amt.g{color:var(--lime)}
+.money .l2{color:rgba(255,255,255,.68)}
+.money .mbar{background:rgba(255,255,255,.18)}
+.money .mbar.e i{background:#FFC977}
+
+/* ---------- Componentes claros (padrão do app) ---------- */
+.box{border:1px solid var(--line);border-radius:20px;background:#fff;overflow:hidden}
+.k{font-size:13px;color:var(--muted);line-height:18px}
+.chip{font-size:12px;font-weight:600;padding:4px 9px;border-radius:99px;white-space:nowrap}
+.chip.up{color:var(--primary);background:var(--accent)}
+.chip.down{color:var(--warn-ink);background:var(--warn-bg)}
+.chip.neutral{color:var(--muted);background:var(--soft)}
+.live{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--primary);background:var(--accent);border-radius:99px;padding:3px 9px;margin-left:6px;white-space:nowrap}
+.live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--primary)}
+.live.solid{background:var(--primary);color:#fff}
+.live.solid::before{background:#fff}
+.mbar{display:block;height:6px;border-radius:9px;background:#DFE2E4;overflow:hidden}
+.mbar i{display:block;height:100%;border-radius:inherit;background:var(--base)}
+.mbar.e i{background:var(--elite)}
+
+.kpis{display:grid;grid-template-columns:1fr 1fr}
+.kpis > div{padding:16px 18px 14px}
+.kpis > div + div{border-left:1px solid var(--line)}
+.kpis strong{display:block;font-size:20px;font-weight:600;line-height:26px;margin-top:2px;white-space:nowrap}
+/* aviso dentro do card (não mais rodapé encostado na borda) */
+.inset{display:flex;align-items:center;gap:8px;margin:0 16px 16px;padding:10px 12px;border-radius:12px;font-size:13px;line-height:18px}
+.inset svg{flex:none}
+.inset b{font-weight:600}
+.inset.warn{background:var(--warn-bg);color:var(--warn-ink);border:1px solid #F4D9B0}
+.inset.ok{background:var(--accent);color:var(--primary);border:1px solid #CFE5D6}
+.inset.plain{background:var(--soft);color:var(--muted);border:1px solid #E6E8EA}
+.lrow + .inset{margin-top:4px}
+
+.lrow{display:grid;grid-template-columns:36px 1fr auto;column-gap:12px;align-items:center;padding:14px 18px;border-top:1px solid var(--line)}
+.lrow:first-child{border-top:0}
+.lic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;grid-row:span 2}
+.lrow.single .lic{grid-row:auto}
+.lic.pro{background:#E6F3EA;color:var(--primary)}
+.lic.elite{background:#FDEFDC;color:#C06E06}
+.lic.done{background:var(--primary);color:#fff}
+.lic.energia{background:#E6F5EC;color:#1E8F4E}
+.lic.telecom{background:#E4F2FA;color:#2484B8}
+.lic.seguros{background:#F0EAFB;color:#7E52D0}
+.lic.expansao{background:#FCEFDD;color:#BD7210}
+.l1{grid-column:2;grid-row:1;display:flex;align-items:center;gap:6px;min-width:0;font-size:15px;font-weight:500;line-height:20px}
+.l1 .chip{font-size:11px;line-height:15px;padding:0 6px}
+.l2{grid-column:2 / -1;grid-row:2;font-size:12.5px;color:var(--muted);line-height:17px;margin-top:2px}
+.lrow:has(.amt2) .l2{grid-column:2}
+.amt{grid-column:3;grid-row:1;text-align:right;font-size:15px;font-weight:600;line-height:20px;white-space:nowrap}
+.amt.g{color:var(--primary)}
+.amt2{grid-column:3;grid-row:2;text-align:right;font-size:12px;color:var(--muted);line-height:17px;margin-top:2px;white-space:nowrap}
+.lrow .mbar{grid-column:2 / -1;grid-row:3;margin-top:8px;height:5px}
+
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:#EEF0F1;border-radius:10px;padding:3px}
+.tabs button{padding:8px;border-radius:8px;text-align:center;font-size:14px;color:var(--muted)}
+.tabs button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.vtabs{padding:16px 18px 4px}
+.vcap{font-size:12.5px;color:var(--muted);padding:10px 18px 6px}
+/* PRO por vertical: mesmo ritmo da lista do histórico */
+.vlist .lrow{padding:16px 18px;column-gap:14px;row-gap:4px}
+.vlist .l1{gap:8px}
+.vlist .l2,.vlist .amt2{margin-top:0;line-height:18px}
+.vlist + details.why summary{padding:14px 18px}
+details.why{border-top:1px solid var(--line)}
+details.why summary{list-style:none;cursor:pointer;padding:12px 18px;font-size:13px;color:var(--primary);font-weight:500;display:flex;align-items:center;justify-content:space-between}
+details.why summary::-webkit-details-marker{display:none}
+details.why[open] summary svg{transform:rotate(90deg)}
+details.why p{padding:0 18px 14px;font-size:13px;color:var(--muted);line-height:1.5}
+
+/* rumo à próxima graduação */
+.dq{display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line)}
+.dq .ring2{width:64px;height:64px;position:relative;display:grid;place-items:center}
+.dq .ring2 svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.dq .ring2 b{font-size:14px;font-weight:600}
+.dq .ring2 .ck{color:var(--primary)}
+.dq h5{margin:0;font-size:15px;font-weight:600;line-height:20px}
+.dq .dq-v{font-size:13px;color:var(--muted);line-height:18px;margin-top:2px}
+.dq .dq-v b{font-size:17px;font-weight:600;color:var(--ink)}
+.dq-tag{display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-size:12px;font-weight:600;line-height:16px;padding:3px 9px;border-radius:99px;background:var(--warn-bg);color:var(--warn-ink)}
+.dq-tag.ok{background:var(--accent);color:var(--primary)}
+.req{display:grid;grid-template-columns:20px 1fr auto;grid-template-rows:auto auto;column-gap:12px;row-gap:6px;align-items:center;padding:14px 18px;border-top:1px solid var(--line)}
+.dq + .req{border-top:0}
+.req .st{grid-column:1;grid-row:1 / span 2;align-self:center;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;border:1.5px solid #CDD2D5}
+.req .l{grid-column:2;grid-row:1}
+.req .v{grid-column:3;grid-row:1}
+.frac{font-size:15px;font-weight:600;color:var(--muted)}
+/* meia-lua (proposta nova) */
+.rg{display:flex;flex-direction:column;align-items:center;text-align:center;padding:20px 18px 18px;border-bottom:1px solid var(--line)}
+.rg + .req{border-top:0}
+.gauge{position:relative;width:min(220px,100%)}
+.gauge svg{display:block;width:100%;height:auto}
+.g-center{position:absolute;left:0;right:0;bottom:4px;display:flex;flex-direction:column;align-items:center}
+.g-center b{font-size:36px;font-weight:600;line-height:40px}
+.g-center span{font-size:12.5px;color:var(--muted);line-height:16px}
+.g-min,.g-max{position:absolute;bottom:-18px;font-size:11px;color:var(--muted)}
+.g-min{left:6%}
+.g-max{right:5%}
+.g-title{margin:24px 0 0;font-size:16px;font-weight:600;line-height:22px}
+.rg .dq-tag{margin-top:8px}
+.g-sub{font-size:12.5px;line-height:17px;color:var(--muted);margin-top:10px;max-width:240px}
+.frac b{color:var(--primary);font-weight:700}
+.req .st.ok{background:var(--primary);border-color:var(--primary);color:#fff}
+.req .l{font-size:14px}
+.req .v{font-size:13px;color:var(--muted);text-align:right;white-space:nowrap}
+.req .v b{color:var(--ink);font-weight:600}
+.req .mbar{grid-column:2 / -1;grid-row:2;height:5px}
+.note{font-size:12px;color:var(--muted);line-height:1.5;margin-top:10px}
+
+/* histórico */
+.chart-card{padding:16px}
+.chart-title{margin-top:16px;font-size:18px;font-weight:600}
+.chart-sub{font-size:13px;color:var(--muted)}
+.chart{position:relative;height:130px;margin-top:16px;display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end}
+.chart .thr{position:absolute;left:0;right:0;border-top:1.5px dotted #1E2422;pointer-events:none}
+.chart .thr span{position:absolute;left:0;top:-11px;background:#1E2422;color:#fff;font-size:11px;padding:2px 7px;border-radius:5px}
+.chart button{display:block;border-radius:8px 8px 4px 4px;background:var(--base);width:100%}
+.chart button.elite{background:var(--elite)}
+.chart button.cur{background:repeating-linear-gradient(135deg,#2DAA5F 0 5px,#8BD3A6 5px 9px);outline:2px solid #2DAA5F;outline-offset:2px}
+.chart-x{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:10px;font-size:12px;color:#9AA0A4;text-align:center}
+.chart-x .cur{color:var(--primary);font-weight:600}
+.chart-legend{display:flex;gap:16px;border-top:1px solid var(--line);margin:14px -16px 0;padding:12px 16px 0;font-size:13px;color:var(--muted)}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.mlist{margin-top:10px}
+.mrow{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border-top:1px solid var(--line)}
+.mrow:first-child{border-top:0}
+.mrow svg.b{width:36px;height:36px;flex:none}
+.mrow .mt{flex:1;min-width:0}
+.mrow .mt b{font-weight:600;font-size:15px}
+.mrow .mt span.y{color:var(--muted);font-weight:400}
+.mrow .mt small{display:block;font-size:13px;margin-top:2px;color:var(--muted)}
+.mrow .mt small.base{color:var(--base)} .mrow .mt small.elite{color:var(--elite)}
+.mrow .mv{text-align:right;font-size:13px;color:var(--muted)}
+.mrow .mv b{display:block;font-size:15px;color:var(--ink);font-weight:600}
+.foot{font-size:12px;color:var(--muted);line-height:1.5;margin-top:28px;text-align:center}
+
+/* ---------- Sheet do mês ---------- */
+.scrim{position:absolute;inset:0;background:rgba(13,15,15,.55);opacity:0;transition:opacity .25s;z-index:10}
+.scrim.open{opacity:1}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:88%;background:#fff;border-radius:24px 24px 0 0;z-index:11;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+.sheet.open{transform:none}
+.sheet:focus{outline:none}
+.sheet-handle{display:block;width:100%;padding:12px 0 8px;flex:none}
+.sheet-handle::before{content:"";display:block;width:38px;height:4px;border-radius:9px;background:#D6DADC;margin:0 auto}
+.sheet-body{overflow-y:auto;padding:4px 24px 32px;scrollbar-width:none}
+.sheet-body::-webkit-scrollbar{display:none}
+.sh-head{display:grid;grid-template-columns:32px 1fr 32px;align-items:center;gap:8px;margin:4px 0 18px}
+.sh-head h3{font-size:20px;font-weight:600;text-align:center;line-height:24px}
+.sh-head .sub{display:block;text-align:center;margin-top:4px}
+.circ{width:32px;height:32px;border-radius:50%;border:1px solid #D9DDE0;display:grid;place-items:center;color:var(--ink)}
+.sec{margin-top:28px}
+.sec > h4{font-size:17px;font-weight:600;line-height:24px;margin-bottom:10px}
+.mon-head{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.mon-head svg{width:36px;height:36px;flex:none}
+.mon-head .t{flex:1;min-width:0}
+.mon-head .t b{display:block;font-size:17px;font-weight:600;line-height:20px}
+.mon-head .t span{font-size:13px;color:var(--muted)}
+.mon-head .r{text-align:right;font-size:13px;color:var(--muted);line-height:18px}
+.mon-head .r b{display:block;font-size:16px;color:var(--ink);font-weight:600}
+.mon-body{padding:18px}
+.gpgen{display:flex;justify-content:space-between;align-items:flex-start}
+.gpgen strong{display:block;font-size:30px;font-weight:600;line-height:34px;margin-top:2px}
+.gpgen strong small{font-size:15px;color:var(--muted);font-weight:500}
+.lbands{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.lbands span.l{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:13px;line-height:16px;margin-top:8px}
+.lbands span.l b{font-weight:600}
+.lbands .dim{color:#A9AEB1}
+.infobar{display:flex;gap:10px;align-items:center;margin-top:16px;background:var(--soft);border-radius:10px;padding:10px 12px;font-size:13px;line-height:18px;color:var(--muted)}
+.infobar svg{flex:none}
+.infobar b{color:var(--ink);font-weight:600}
+.orig{padding:10px 18px}
+.orig div{display:grid;grid-template-columns:76px 1fr 44px;gap:14px;align-items:center;padding:8px 0;font-size:14px;color:var(--muted)}
+.orig div b{color:var(--ink);text-align:right;font-weight:600}
+
+.toast{position:absolute;left:50%;bottom:96px;transform:translate(-50%,10px);background:#1E2422;color:#fff;font-size:13px;padding:9px 14px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:20;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* Telas estreitas (320): só aperta o que quebraria */
+@container (max-width: 340px){
+  .home-body,.dash-body{padding-left:20px;padding-right:20px}
+  .rec-row{padding:0;gap:4px}
+  .rec-stat strong{font-size:13px}
+  .rec-panel{padding:14px 14px}
+  .gp-head .k{font-size:11px;white-space:normal}
+  .gp-head .r{max-width:42%}
+  .dline{padding:0}
+  .l1{flex-wrap:wrap;row-gap:2px}
+  /* PRO por vertical em 320: nome e valor / selo (e "se bater o PRO") / detalhe */
+  .vlist .lrow{grid-template-columns:32px 1fr auto;column-gap:12px;row-gap:4px;padding:14px 16px;align-items:center}
+  .vlist .lic{width:32px;height:32px;grid-row:1 / span 3;align-self:start}
+  .vlist .lic svg{width:15px;height:15px}
+  .vlist .l1{display:contents}
+  .vlist .nm{grid-column:2;grid-row:1;font-size:15px;font-weight:500;line-height:20px}
+  .vlist .l1 .chip{grid-column:2;grid-row:2;justify-self:start}
+  .vlist .amt{grid-column:3;grid-row:1}
+  .vlist .amt2{grid-column:3;grid-row:2;margin-top:0}
+  .vlist .l2,.vlist .lrow:has(.amt2) .l2{grid-column:2 / -1;grid-row:3;margin-top:0}
+  .vlist .lrow:not(:has(.chip)) .l2{grid-row:2}
+  .vlist .lrow:not(:has(.chip)) .lic{grid-row:1 / span 2}
+  .vtabs{padding:14px 16px 4px}
+  .vcap{padding:10px 16px 6px}
+  .kgrid{padding-left:20px;padding-right:20px}
+  .kt strong{font-size:15px}
+  .m-big{font-size:24px}
+  .fc-node b{font-size:15px}
+  .fc{padding-left:6px;padding-right:6px}
+}
+
+@media (max-width:860px){
+  .stage{flex-direction:column;align-items:center;padding:16px 16px 40px;gap:28px}
+  .panel{width:100%;max-width:420px;order:2}
+  .device{order:1;width:min(100%,376px);border-radius:42px;padding:6px}
+  .viewport{border-radius:36px}
+}
+@media (prefers-reduced-motion:reduce){ *{transition:none !important} }
+/* Modo embutido (documentação): só a tela do app, sem moldura e sem painel */
+body.embed{background:var(--app-bg)}
+body.embed .stage{display:block;padding:0;min-height:0}
+body.embed .panel{display:none}
+body.embed .device{width:100vw;height:100vh;padding:0;border-radius:0;background:none;box-shadow:none}
+body.embed .viewport{border-radius:0}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="device" id="device">
+    <div class="viewport" id="viewport">
+
+      <!-- ================= INÍCIO ================= -->
+      <section class="screen" id="screen-home" aria-label="Início">
+        <header class="home-top">
+          <div class="statusbar"><span>9:41</span><span class="icons" aria-hidden="true">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M1.5 4.2a9.5 9.5 0 0 1 13 0M4 7a5.8 5.8 0 0 1 8 0"/><circle cx="8" cy="10" r="1" fill="#fff"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x=".5" y=".5" width="22" height="11" rx="3.5" stroke="#fff" opacity=".5"/><rect x="2" y="2" width="19" height="8" rx="2" fill="#fff"/><rect x="24" y="4" width="1.5" height="4" rx=".7" fill="#fff" opacity=".5"/></svg>
+          </span></div>
+          <div class="user">
+            <span class="avatar" aria-hidden="true"></span>
+            <div class="who">
+              <div class="name">Leandro Freire <span>ID: 30393820</span></div>
+              <div class="bal">Saldo: R$ 7.600,00 <b>Ver extrato</b></div>
+            </div>
+            <span class="bell" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg></span>
+          </div>
+        </header>
+
+        <div class="home-body">
+          <div class="sec-head">
+            <h2>Reconhecimento</h2>
+            <button type="button" class="link hot" data-n="2" data-go="dash">Ver toda jornada
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 3 5 5-5 5"/></svg></button>
+          </div>
+          <button type="button" class="rec hot" data-n="1" data-go="dash" id="rec" aria-label="Reconhecimento. Abrir minha jornada"></button>
+
+          <div class="stub">
+            <div class="sec-head"><h2>Meu saldo</h2></div>
+            <div class="stub-card">O resto da home não muda nesta proposta.</div>
+          </div>
+        </div>
+
+        <nav class="tabbar" aria-label="Navegação principal">
+          <span class="on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></svg>Início</span>
+          <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="10" r="3"/><path d="M7 18c1-2.5 3-3.5 5-3.5s4 1 5 3.5"/></svg>Clientes</span>
+          <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/></svg>Conexões</span>
+          <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>Rede</span>
+          <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</span>
+        </nav>
+      </section>
+
+      <!-- ================= MINHA JORNADA (painel) ================= -->
+      <section class="screen" id="screen-dash" aria-label="Minha jornada">
+        <header class="dash-top">
+          <div class="statusbar"><span>9:41</span><span class="icons" aria-hidden="true">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x=".5" y=".5" width="22" height="11" rx="3.5" stroke="#fff" opacity=".5"/><rect x="2" y="2" width="19" height="8" rx="2" fill="#fff"/></svg>
+          </span></div>
+          <div class="back-row">
+            <button type="button" class="back" data-go="home" aria-label="Voltar"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10 3-5 5 5 5"/></svg></button>
+            <h2>Minha jornada</h2>
+          </div>
+          <div id="dash-top"></div>
+        </header>
+        <div class="dash-body" id="dash-body"></div>
+      </section>
+
+      <!-- Barra que aparece quando o topo escuro recolhe -->
+      <div class="dash-bar" id="dash-bar">
+        <div class="statusbar"><span>9:41</span><span class="icons" aria-hidden="true">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="#0D0F0F"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x=".5" y=".5" width="22" height="11" rx="3.5" stroke="#0D0F0F" opacity=".4"/><rect x="2" y="2" width="19" height="8" rx="2" fill="#0D0F0F"/></svg>
+        </span></div>
+        <div class="bar-row">
+          <button type="button" class="back" data-go="home" aria-label="Voltar"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10 3-5 5 5 5"/></svg></button>
+          <div class="bar-title"><b>Minha jornada</b><span>Gestor · 152.340 kWh</span></div>
+          <span id="bar-badge"></span>
+        </div>
+        <nav class="chips" id="chips" aria-label="Seções"></nav>
+      </div>
+
+      <div class="scrim" id="scrim" hidden></div>
+      <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabindex="-1" hidden>
+        <button type="button" class="sheet-handle" data-close aria-label="Fechar"></button>
+        <div class="sheet-body" id="sheet-body"></div>
+      </div>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <!-- ================= PAINEL DE APRESENTAÇÃO ================= -->
+  <aside class="panel" aria-label="Controles do protótipo">
+    <div>
+      <h1>V2 · Card enxuto e painel da jornada</h1>
+      <p class="lead">A mesma necessidade, organizada de outro jeito. O card da home fica perto do original do Figma, com só o principal. A tela de histórico vira o painel da jornada, com todo o detalhe. Os números e o selo são de exemplo.</p>
+      <a class="v1" href="prototipo.html">Abrir a V1 pra comparar</a>
+    </div>
+
+    <div class="pblock">
+      <h2>Cenário</h2>
+      <span class="seg-label">Dias qualificados</span>
+      <div class="seg" data-ctl="dias">
+        <button type="button" data-v="andamento" aria-pressed="true">Em andamento</button>
+        <button type="button" data-v="batida" aria-pressed="false">Meta batida</button>
+      </div>
+      <span class="seg-label">PRO 360</span>
+      <div class="seg" data-ctl="pro">
+        <button type="button" data-v="sem" aria-pressed="true">Sem PRO</button>
+        <button type="button" data-v="pro" aria-pressed="false">PRO garantido</button>
+      </div>
+      <label class="check"><input type="checkbox" id="hot-toggle"> Mostrar onde tocar</label>
+    </div>
+
+    <div class="pblock">
+      <h2>Tamanho da tela</h2>
+      <div class="seg" data-ctl="w">
+        <button type="button" data-v="360" aria-pressed="true">360 px</button>
+        <button type="button" data-v="320" aria-pressed="false">320 px (celular pequeno)</button>
+      </div>
+    </div>
+
+    <div class="pblock">
+      <h2>Rumo a Executivo</h2>
+      <div class="seg" data-ctl="rumo">
+        <button type="button" data-v="gauge" aria-pressed="true">Meia-lua (nova)</button>
+        <button type="button" data-v="lista" aria-pressed="false">Anel e lista</button>
+      </div>
+    </div>
+
+    <div class="pblock">
+      <h2>Variações de "Sua faixa"</h2>
+      <div class="seg" data-ctl="fx">
+        <button type="button" data-v="a" aria-pressed="false">A · Destaque</button>
+        <button type="button" data-v="b" aria-pressed="false">B · Régua</button>
+        <button type="button" data-v="c" aria-pressed="true">C · Meses</button>
+      </div>
+      <ul class="todo">
+        <li><b>C (escolhida):</b> Setembro → Outubro → Novembro, pra mostrar que os GP de um mês definem a faixa do seguinte.</li>
+        <li><b>A:</b> a faixa de agora em destaque, com o selo, e Novembro numa linha cinza abaixo.</li>
+        <li><b>B:</b> Base e Elite numa régua, com um marcador mostrando onde os GP de Outubro deixam Novembro.</li>
+      </ul>
+    </div>
+
+    <div class="pblock">
+      <h2>Ir direto para</h2>
+      <div class="jumps">
+        <button type="button" data-go="home">Início</button>
+        <button type="button" data-go="dash">Minha jornada</button>
+        <button type="button" data-go="dash" data-scroll="sec-grad">Dias qualificados</button>
+        <button type="button" data-month="2026-10">Mês atual</button>
+        <button type="button" data-month="2026-09">Mês fechado</button>
+      </div>
+    </div>
+
+    <div class="pblock">
+      <h2>Onde tocar</h2>
+      <ol class="legend">
+        <li><span class="n">1</span><span><b>O card inteiro</b> abre a Minha jornada.</span></li>
+        <li><span class="n">2</span><span><b>Ver toda jornada</b> leva pro mesmo lugar, como hoje.</span></li>
+        <li><span class="n">3</span><span><b>Os 4 números do topo</b> da jornada levam à seção de cada um.</span></li>
+        <li><span class="n">4</span><span><b>Cada mês</b> do gráfico ou da lista abre o detalhe daquele mês.</span></li>
+        <li><span class="n">5</span><span><b>Os atalhos da barra branca</b>, que aparece ao rolar, levam a cada seção.</span></li>
+      </ol>
+    </div>
+
+    <div class="pblock">
+      <h2>O que muda em relação à V1</h2>
+      <ul class="todo">
+        <li><b>Card:</b> igual ao original, mais uma linha de dias qualificados. O card da faixa e o detalhe por toque saem da home.</li>
+        <li><b>Minha jornada:</b> a tela de histórico vira o painel. No topo, a graduação e 4 números. Abaixo: este mês, prévia, como ganhar mais, PRO por vertical, rumo a Executivo e o histórico.</li>
+        <li><b>Detalhe do mês:</b> fica só com o que é do mês: faixa, PRO naquele mês e origem dos pontos.</li>
+        <li>A ordem do painel vai do agora pro futuro e depois pro passado: este mês, dinheiro, graduação, histórico.</li>
+        <li><b>Rolagem:</b> o topo escuro recolhe numa barra branca com atalhos pras seções, e o atalho da seção visível fica marcado.</li>
+        <li><b>Sem repetição:</b> "Sua faixa" mostra só agora e Novembro, num card branco dividido ao meio. A meta de Elite aparece só em "Para ganhar mais".</li>
+        <li><b>Ritmo visual:</b> "Sua prévia" e "Para ganhar mais em Novembro" viraram um card só, com o fundo da graduação (laranja no Gestor), pra quebrar a sequência de cards brancos. A cor vem de uma variável por graduação.</li>
+      </ul>
+    </div>
+
+    <div class="pblock">
+      <h2>Para validar antes de enviar</h2>
+      <ul class="todo">
+        <li>O nome da tela: "Minha jornada" ou manter "Histórico de Green Points"?</li>
+        <li>Os dias qualificados são seguidos? Se ele perder a qualificação, a contagem zera?</li>
+        <li>Bater 90 dias é requisito pra subir de graduação? O protótipo assume que sim, por uma pista no código do escritório virtual.</li>
+        <li>Quais são os requisitos e as metas oficiais pra Executivo?</li>
+        <li>PRO 360 é ter as 3 verticais PRO e 2 conexões Expansão? É a leitura do print do web.</li>
+        <li>Com tudo numa tela, ela fica longa. Os 4 números do topo bastam pra navegar? Vale testar com 5 licenciados.</li>
+      </ul>
+    </div>
+  </aside>
+</div>
+
+<script>
+/* ---------- Dados de exemplo (os mesmos da V1) ---------- */
+const PRESETS = {
+  sem: {
+    previaHoje: 1362.25, previaCheia: 3482.90, previaElite: 1418.90,
+    proSet: false, proOut: false, verticaisPro: 0, expansao: 0,
+    verticais: [
+      { id:'energia', nome:'Energia', cnx:'1 conexão este mês',   proSet:false, proOut:false, gp:1107.15, rede:0, gpCheio:2214.30, redeCheia:640.10 },
+      { id:'telecom', nome:'Telecom', cnx:'1 conexão este mês',   proSet:false, proOut:false, gp:206.00,  rede:0, gpCheio:412.00,  redeCheia:96.40 },
+      { id:'seguros', nome:'Seguros', cnx:'Sem conexão este mês', proSet:false, proOut:false, gp:49.10,   rede:0, gpCheio:98.20,   redeCheia:21.90 },
+    ],
+  },
+  pro: {
+    previaHoje: 3482.90, previaCheia: 3482.90, previaElite: 3712.40,
+    proSet: true, proOut: true, verticaisPro: 3, expansao: 2,
+    verticais: [
+      { id:'energia', nome:'Energia', cnx:'4 conexões este mês', proSet:true, proOut:true, gp:2214.30, rede:640.10, gpCheio:2214.30, redeCheia:640.10 },
+      { id:'telecom', nome:'Telecom', cnx:'2 conexões este mês', proSet:true, proOut:true, gp:412.00,  rede:96.40,  gpCheio:412.00,  redeCheia:96.40 },
+      { id:'seguros', nome:'Seguros', cnx:'1 conexão este mês',  proSet:true, proOut:true, gp:98.20,   rede:21.90,  gpCheio:98.20,   redeCheia:21.90 },
+    ],
+  },
+};
+const ELITE_MIN = 2000;
+const MESES = [
+  { key:'2026-05', nome:'Maio',     curto:'MAI', gp:1320, vs:'+8% vs abr',  origem:[900,280,90,50] },
+  { key:'2026-06', nome:'Junho',    curto:'JUN', gp:2140, vs:'+62% vs mai', origem:[1460,420,160,100] },
+  { key:'2026-07', nome:'Julho',    curto:'JUL', gp:1760, vs:'-18% vs jun', origem:[1200,350,130,80] },
+  { key:'2026-08', nome:'Agosto',   curto:'AGO', gp:1410, vs:'-20% vs jul', origem:[960,300,90,60] },
+  { key:'2026-09', nome:'Setembro', curto:'SET', gp:1580, vs:'+12% vs ago', origem:[1120,310,90,60] },
+  { key:'2026-10', nome:'Outubro',  curto:'OUT', gp:1240, atual:true, ate:'Até 20/10', origem:[820,260,100,60] },
+];
+const REQUISITOS = [
+  { label:'kWh qualificáveis', atual:152340, meta:300000 },
+  { label:'Licenciados diretos ativos', atual:8, meta:10 },
+  { label:'Clientes diretos', atual:24, meta:20 },
+  { label:'Linhas de gestores', atual:1, meta:2 },
+];
+const DIAS = { andamento:62, batida:195, meta:90 };
+const ATUAL = MESES[MESES.length - 1];
+
+const state = { dias:'andamento', pro:'sem', fx:'c', rumo:'gauge', vtab:'hoje', screen:'home', sheet:false, month:null, lastFocus:null };
+
+/* ---------- Utilitários ---------- */
+const brl = v => 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits:2, maximumFractionDigits:2 });
+const num = v => v.toLocaleString('pt-BR');
+const $ = s => document.querySelector(s);
+const P = () => PRESETS[state.pro];
+const nextName = key => { const i = MESES.findIndex(m => m.key === key); return (MESES[i+1] || { nome:'Novembro' }).nome; };
+const isElite = gp => gp >= ELITE_MIN;
+const diasInfo = () => { const d = DIAS[state.dias]; return { d, ok: d >= DIAS.meta, pct: Math.min(100, d / DIAS.meta * 100) }; };
+
+const ICON = {
+  chev:'<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 3 5 5-5 5"/></svg>',
+  chevS:'<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 3 5 5-5 5"/></svg>',
+  chevL:'<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10 3-5 5 5 5"/></svg>',
+  check:'<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2.5 6.2 2.3 2.3 4.7-5"/></svg>',
+  checkL:'<svg width="22" height="22" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m2.5 6.2 2.3 2.3 4.7-5"/></svg>',
+  checkC:'<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><path d="m5.3 8.2 1.9 1.9 3.6-3.9"/></svg>',
+  flag:'<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#B6E36B" stroke-width="1.6" stroke-linejoin="round"><path d="M3.5 14V2.5M3.5 3h8l-1.6 3 1.6 3h-8" fill="#B6E36B"/></svg>',
+  info:'<svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#6A6E71"/><path d="M9 8v4.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="5.6" r="1.1" fill="#fff"/></svg>',
+  warn:'<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.8v3.8"/><circle cx="8" cy="11.2" r=".6" fill="currentColor"/></svg>',
+  crown:'<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3 15h14M3.5 6.5 7 9.5 10 4l3 5.5 3.5-3L15.5 13h-11z"/></svg>',
+  trophy:'<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h8v4a4 4 0 0 1-8 0zM6 5H3.5a2.5 2.5 0 0 0 2.6 3M14 5h2.5a2.5 2.5 0 0 1-2.6 3M10 11.5v3M7 16.5h6"/></svg>',
+  energia:'<svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M9 1.5 3.5 9H8l-1 5.5L12.5 7H8z"/></svg>',
+  telecom:'<svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4.5" y="1.5" width="7" height="13" rx="1.8"/><path d="M7 12.2h2" stroke-linecap="round"/></svg>',
+  seguros:'<svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M8 1.5 13 3.5v4c0 3.2-2.2 5.6-5 7-2.8-1.4-5-3.8-5-7v-4z"/></svg>',
+  expansao:'<svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="2" y="5" width="12" height="9" rx="1.5"/><path d="M5.5 5V3.2h5V5M2 9h12"/></svg>',
+};
+
+/* Selo ilustrativo: não é a marca real */
+function badge(ring, cls){
+  let rays = '';
+  for (let i = 0; i < 24; i++){
+    const a = i * Math.PI / 12, x1 = 50 + Math.cos(a)*24, y1 = 50 + Math.sin(a)*24, x2 = 50 + Math.cos(a)*35, y2 = 50 + Math.sin(a)*35;
+    rays += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${ring}" stroke-opacity=".45" stroke-width="1.2"/>`;
+  }
+  return `<svg class="${cls||''}" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48" fill="${ring}"/><circle cx="50" cy="50" r="41" fill="#0D0F0F"/>${rays}<circle cx="50" cy="50" r="19" fill="#0D0F0F"/><text x="50" y="61" text-anchor="middle" font-family="Outfit, sans-serif" font-size="31" font-weight="700" fill="${ring}">G</text></svg>`;
+}
+function ring(size, stroke, pct, color, track, inner){
+  const r = (size - stroke) / 2, C = 2 * Math.PI * r;
+  return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}"><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${track}" stroke-width="${stroke}"/><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${stroke}" stroke-linecap="round" stroke-dasharray="${(C*pct/100).toFixed(1)} ${C.toFixed(1)}"/></svg>${inner}`;
+}
+
+/* Painel escuro de Green Points: card da home e "Este mês" usam o mesmo */
+function gpPanel(){
+  const gp = ATUAL.gp;
+  return `<span class="gp-head">
+      <span><span class="k">Green Points de Outubro</span><strong>${num(gp)}</strong></span>
+      <span class="r"><span class="k">Vale em Novembro</span><strong>0,6%</strong></span>
+    </span>
+    <span class="bands">
+      <span><span class="bar"><i style="width:${(gp/ELITE_MIN*100).toFixed(0)}%"></i></span><span class="bl"><span>Gestor</span><b style="color:var(--lime)">0,6%</b></span></span>
+      <span><span class="bar"><i style="width:0"></i></span><span class="bl"><span style="opacity:.65">Elite</span><b style="color:var(--gold)">0,8%</b></span></span>
+    </span>
+    <span class="pill">Faltam <b>${num(ELITE_MIN - gp)} GP</b> para Elite (0,8%)</span>`;
+}
+
+/* ---------- Card enxuto ---------- */
+function renderCard(){
+  const p = P(), di = diasInfo();
+  $('#rec').innerHTML = `
+    <span class="rec-more" aria-hidden="true">${ICON.chevS}</span>
+    ${badge('#F29A1F','rec-badge')}
+    <span class="rec-level">Gestor</span>
+    <span class="rec-kwh">152.340 <span>kWh</span></span>
+    <span class="rec-row">
+      <span class="rec-stat"><span class="lbl">Prévia</span><strong>${brl(p.previaHoje)}</strong></span>
+      <span class="ring">${ring(62, 6, 51, '#B6E36B', 'rgba(255,255,255,.28)', '<b>51%</b>')}</span>
+      <span class="rec-stat right"><span class="lbl">${ICON.flag}Executivo</span><strong>300.000 <small>kWh</small></strong></span>
+    </span>
+    <span class="dline"><span class="t">Dias qualificados</span><span class="bar"><i style="width:${di.pct.toFixed(0)}%"></i></span>
+      ${di.ok ? `<b class="ok">${ICON.checkC}${di.d} dias</b>` : `<b>${di.d}/${DIAS.meta}</b>`}</span>
+    <span class="rec-panel">${gpPanel()}</span>`;
+}
+
+/* ---------- Sua faixa: três variações ---------- */
+function faixaVariante(){
+  const set = MESES[MESES.length - 2], gp = ATUAL.gp;
+  if (state.fx === 'b'){
+    const pos = (gp / ELITE_MIN) * 62; // a régua: Base ocupa 62%, Elite 38%
+    return `<div class="box fb">
+      <div class="fb-head"><div><span class="k">Sua faixa em Outubro</span><b>Gestor Base</b></div><span class="pct">0,6%</span></div>
+      <div class="fb-track">
+        <span class="fb-pin" style="left:${pos.toFixed(1)}%">Novembro · ${num(gp)} GP</span>
+        <div class="fb-seg base"><b>Base</b><span>0,6%</span></div>
+        <div class="fb-seg elite"><b>Elite</b><span>0,8%</span></div>
+      </div>
+      <div class="fb-scale"><span style="left:0">0</span><span style="left:62%">${num(ELITE_MIN)} GP</span></div>
+      <p class="cap">Outubro está em Base pelos ${num(set.gp)} GP de Setembro. Os ${num(gp)} GP de Outubro, até agora, mantêm Novembro em Base.</p>
+    </div>`;
+  }
+  if (state.fx === 'c'){
+    return `<div class="box fc">
+      <div class="fc-line">
+        <div class="fc-node past"><span class="fc-dot"></span><span class="fc-m">Setembro</span><b>${num(set.gp)} GP</b><span class="cap">gerados</span></div>
+        <div class="fc-node now"><span class="fc-dot"></span><span class="fc-m">Outubro</span><b>0,6%</b><span class="cap">Gestor Base</span></div>
+        <div class="fc-node next"><span class="fc-dot"></span><span class="fc-m">Novembro</span><b>0,6%</b><span class="cap">se fechar hoje</span></div>
+      </div>
+      <p class="fc-rule">${ICON.info}<span>Os GP de cada mês definem a faixa do mês seguinte.</span></p>
+    </div>`;
+  }
+  return `<div class="box">
+    <div class="fa-top">${badge('#F29A1F')}
+      <div class="fa-main"><span class="k">Sua faixa em Outubro</span><b>Gestor Base</b><span class="cap">Pelos ${num(set.gp)} GP de Setembro</span></div>
+      <strong class="fa-pct">0,6%</strong></div>
+    <div class="fa-next"><span class="ic">${ICON.chevS}</span>
+      <span class="t"><b>Em Novembro</b>, se fechar hoje<br>${num(gp)} GP até agora</span>
+      <span class="v">0,6%</span></div>
+  </div>`;
+}
+
+/* ---------- Rumo a Executivo: meia-lua dos dias qualificados ---------- */
+function gaugeDias(di){
+  const R = 90, cx = 110, cy = 112, len = Math.PI * R, f = di.pct / 100;
+  const kx = cx - R * Math.cos(Math.PI * f), ky = cy - R * Math.sin(Math.PI * f);
+  const arc = `M ${cx - R} ${cy} A ${R} ${R} 0 0 1 ${cx + R} ${cy}`;
+  return `<div class="rg">
+    <div class="gauge" role="img" aria-label="Dias qualificados: ${di.d} de ${DIAS.meta}">
+      <svg viewBox="0 0 220 124" aria-hidden="true">
+        <defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9FDCB2"/><stop offset="1" stop-color="#338449"/></linearGradient></defs>
+        <path d="${arc}" fill="none" stroke="#E6E9EB" stroke-width="14" stroke-linecap="round"/>
+        <path d="${arc}" fill="none" stroke="url(#gg)" stroke-width="14" stroke-linecap="round" stroke-dasharray="${(len * f).toFixed(1)} ${len.toFixed(1)}"/>
+        <circle cx="${kx.toFixed(1)}" cy="${ky.toFixed(1)}" r="9" fill="#fff" stroke="#338449" stroke-width="4"/>
+      </svg>
+      <div class="g-center"><b>${di.d}</b><span>${di.ok ? 'dias seguidos' : `de ${DIAS.meta} dias`}</span></div>
+      <span class="g-min">0</span><span class="g-max">${DIAS.meta}</span>
+    </div>
+    <h5 class="g-title">Dias qualificados</h5>
+    ${di.ok ? `<span class="dq-tag ok">${ICON.check}Meta de 90 dias batida</span>` : `<span class="dq-tag">Faltam ${DIAS.meta - di.d} dias para a meta</span>`}
+    <p class="g-sub">Dias seguidos em que você se manteve qualificado como Gestor.</p>
+  </div>`;
+}
+
+/* ---------- Painel da jornada ---------- */
+function renderDash(){
+  const p = P(), di = diasInfo();
+  $('#dash-top').innerHTML = `<div class="dt-fade">
+    <div class="lvl">${badge('#F29A1F')}<div><h3>Gestor</h3><p>Faltam <b>147.660 kWh</b> para Executivo</p></div></div>
+    <div class="lvl-prog"><span class="bar"><i style="width:51%"></i></span>
+      <div class="meta"><span><b>152.340</b> de 300.000 kWh</span><span>51%</span></div></div>
+    <div class="kgrid">
+      <button type="button" class="kt hot" data-n="3" data-scroll="sec-previa"><span class="k">Prévia de hoje ${ICON.chevS}</span><strong>${brl(p.previaHoje)}</strong></button>
+      <button type="button" class="kt" data-scroll="sec-mes"><span class="k">Green Points ${ICON.chevS}</span><strong>${num(ATUAL.gp)} <small>em Outubro</small></strong></button>
+      <button type="button" class="kt" data-scroll="sec-mes"><span class="k">Faixa atual ${ICON.chevS}</span><strong class="lime">0,6% <small style="color:#fff">Gestor Base</small></strong></button>
+      <button type="button" class="kt" data-scroll="sec-grad"><span class="k">Dias qualificados ${ICON.chevS}</span>
+        <strong ${di.ok ? 'class="lime"' : ''}>${di.ok ? di.d + ' dias' : di.d + '/' + DIAS.meta}</strong><span class="bar"><i style="width:${di.pct.toFixed(0)}%"></i></span></button>
+    </div></div>`;
+
+  /* dinheiro */
+  const ganhoPro = p.previaCheia - p.previaHoje, ganhoElite = p.previaElite - p.previaHoje;
+  const opps = [
+    p.proOut
+      ? { done:true, html:`<div class="lrow"><span class="lic done">${ICON.check}</span>
+          <span class="l1">PRO 360 batido</span><span class="amt g">Garantido</span>
+          <span class="l2">3 de 3 verticais · 2 de 2 Expansão</span></div>` }
+      : { valor:ganhoPro, html:`<div class="lrow"><span class="lic pro">${ICON.crown}</span>
+          <span class="l1">Ser PRO 360</span><span class="amt g">+${brl(ganhoPro)}</span>
+          <span class="l2">${p.verticaisPro} de 3 verticais · ${p.expansao} de 2 Expansão</span></div>` },
+    { valor:ganhoElite, html:`<div class="lrow"><span class="lic elite">${ICON.trophy}</span>
+          <span class="l1">Fechar na faixa Elite</span><span class="amt g">+${brl(ganhoElite)}</span>
+          <span class="l2">${num(ATUAL.gp)} de ${num(ELITE_MIN)} GP · faltam ${num(ELITE_MIN - ATUAL.gp)}</span>
+          <span class="mbar e"><i style="width:${(ATUAL.gp/ELITE_MIN*100).toFixed(0)}%"></i></span></div>` },
+  ];
+  const ordered = [...opps.filter(o => !o.done).sort((a,b) => b.valor - a.valor), ...opps.filter(o => o.done)];
+
+  const hoje = p.verticais.map(v => `<div class="lrow"><span class="lic ${v.id}">${ICON[v.id]}</span>
+      <span class="l1"><span class="nm">${v.nome}</span><span class="chip ${v.proSet ? 'up' : 'neutral'}">${v.proSet ? 'PRO' : 'Sem PRO'}</span></span>
+      <span class="amt">${brl(v.gp + v.rede)}</span>
+      <span class="l2">GP ${brl(v.gp)} · Rede ${brl(v.rede)}</span></div>`).join('');
+  const nov = p.verticais.map(v => {
+    const ganho = (v.gpCheio - v.gp) + (v.redeCheia - v.rede);
+    return `<div class="lrow"><span class="lic ${v.id}">${ICON[v.id]}</span>
+      <span class="l1"><span class="nm">${v.nome}</span><span class="chip ${v.proOut ? 'up' : 'down'}">${v.proOut ? 'PRO batido' : 'Falta bater'}</span></span>
+      <span class="amt ${v.proOut ? '' : 'g'}">${v.proOut ? 'Garantido' : '+' + brl(ganho)}</span>
+      <span class="l2">${v.cnx}</span>${v.proOut ? '' : '<span class="amt2">se bater o PRO</span>'}</div>`;
+  }).join('') + `<div class="lrow"><span class="lic expansao">${ICON.expansao}</span>
+      <span class="l1"><span class="nm">Expansão</span></span><span class="amt">${p.expansao}/2</span>
+      <span class="l2">Conexões que contam pro PRO 360</span></div>`;
+  const isHoje = state.vtab === 'hoje';
+
+  /* graduação */
+  const reqs = REQUISITOS.map(r => {
+    const ok = r.atual >= r.meta;
+    return `<div class="req"><span class="st ${ok ? 'ok' : ''}">${ok ? ICON.check : ''}</span><span class="l">${r.label}</span>
+      <span class="v"><b>${num(r.atual)}</b> de ${num(r.meta)}</span><span class="mbar"><i style="width:${Math.min(100, r.atual/r.meta*100).toFixed(0)}%"></i></span></div>`;
+  }).join('');
+  const okCount = REQUISITOS.filter(r => r.atual >= r.meta).length + (di.ok ? 1 : 0);
+
+  /* histórico */
+  const max = 2400, H = 130;
+  const bars = MESES.map(m => {
+    const h = Math.round(m.gp / max * H);
+    const cls = m.atual ? 'cur' : (isElite(m.gp) ? 'elite' : '');
+    return `<button type="button" class="${cls} ${m.atual ? 'hot' : ''}" ${m.atual ? 'data-n="4"' : ''} data-month="${m.key}" style="height:${h}px" aria-label="${m.nome}, ${num(m.gp)} GP${m.atual ? ', em andamento' : ''}"></button>`;
+  }).join('') + `<div class="thr" style="bottom:${Math.round(ELITE_MIN / max * H)}px"><span>Elite</span></div>`;
+  const rows = MESES.slice(1).reverse().map(m => {
+    const el = isElite(m.gp);
+    return `<button type="button" class="mrow" data-month="${m.key}">${badge(m.atual ? '#22A45A' : el ? '#E8890C' : '#22A45A','b')}
+      <span class="mt"><b>${m.nome}</b> <span class="y">/ 2026</span>${m.atual ? '<span class="live">Em andamento</span>' : ''}
+        <small class="${m.atual ? '' : el ? 'elite' : 'base'}">${m.atual ? `Faltam ${num(ELITE_MIN - m.gp)} GP para Elite` : 'Gestor ' + (el ? 'Elite' : 'Base')}</small></span>
+      <span class="mv"><b>${num(m.gp)}</b>${el ? '0,8%' : '0,6%'}</span>${ICON.chev}</button>`;
+  }).join('');
+
+  $('#dash-body').innerHTML = `
+    <section class="dsec" id="sec-mes">
+      <div class="dsec-h"><h4>Sua faixa</h4><span class="live solid">Outubro ${ATUAL.ate.toLowerCase()}</span></div>
+      ${faixaVariante()}
+    </section>
+
+    <section class="dsec" id="sec-previa">
+      <div class="dsec-h"><h4>Sua prévia</h4></div>
+      <div class="money">
+        <div class="m-top">
+          <div><span class="k">Prévia de hoje</span><strong class="m-big">${brl(p.previaHoje)}</strong></div>
+          <div class="m-elite"><span class="k">Prévia Elite</span><strong>${brl(p.previaElite)}</strong></div>
+        </div>
+        <span class="m-status ${p.proSet ? 'ok' : 'warn'}">${p.proSet ? ICON.checkC + '<span><b>Cheia:</b> você foi PRO 360 em Setembro</span>' : ICON.warn + '<span><b>Reduzida:</b> sem PRO 360 em Setembro</span>'}</span>
+        <div class="m-sep"></div>
+        <h5 class="m-h">Para ganhar mais em Novembro</h5>
+        ${ordered.map(o => o.html).join('')}
+      </div>
+    </section>
+
+    <section class="dsec" id="sec-pro">
+      <div class="dsec-h"><h4>PRO por vertical</h4></div>
+      <div class="box">
+        <div class="vtabs"><div class="tabs" role="group" aria-label="Período">
+          <button type="button" data-vtab="hoje" aria-pressed="${isHoje}">Hoje</button>
+          <button type="button" data-vtab="nov" aria-pressed="${!isHoje}">Em Novembro</button>
+        </div></div>
+        <p class="vcap">${isHoje ? 'Pago agora, pelo PRO de Setembro.' : 'Pago em Novembro, pelo PRO de Outubro.'}</p>
+        <div class="vlist">${isHoje ? hoje : nov}</div>
+        <details class="why"><summary>O que é GP e Rede? ${ICON.chevS}</summary>
+          <p>GP é o que vem das suas próprias conexões. Rede soma GI, royalties e equiparação.</p></details>
+      </div>
+    </section>
+
+    <section class="dsec" id="sec-grad">
+      <div class="dsec-h"><h4>Rumo a Executivo</h4><span class="frac" aria-label="${okCount} de ${REQUISITOS.length + 1} requisitos cumpridos"><b>${okCount}</b>/${REQUISITOS.length + 1}</span></div>
+      <div class="box">
+        ${state.rumo === 'gauge' ? gaugeDias(di) : `<div class="dq">
+          <span class="ring2">${ring(64, 7, di.pct, di.ok ? '#338449' : '#22A45A', '#E3E6E8', di.ok ? `<span class="ck">${ICON.checkL}</span>` : `<b>${di.d}/${DIAS.meta}</b>`)}</span>
+          <div><h5>Dias qualificados</h5>
+            <p class="dq-v"><b>${di.d}</b> ${di.ok ? 'dias seguidos' : `de ${DIAS.meta} dias seguidos`}</p>
+            ${di.ok ? `<span class="dq-tag ok">${ICON.check}Meta de 90 dias batida</span>` : `<span class="dq-tag">Faltam ${DIAS.meta - di.d} dias</span>`}</div>
+        </div>`}
+        ${reqs}
+      </div>
+      ${state.rumo === 'gauge' ? '' : '<p class="note">Dias qualificados contam os dias seguidos em que você se manteve qualificado como Gestor.</p>'}
+    </section>
+
+    <section class="dsec" id="sec-hist">
+      <div class="dsec-h"><h4>Histórico de Green Points</h4></div>
+      <div class="box chart-card">
+        <div class="tabs" role="group" aria-label="Visão">
+          <button type="button" aria-pressed="true">Por mês</button>
+          <button type="button" aria-pressed="false" data-toast="Acumulado não muda nesta proposta">Acumulado</button>
+        </div>
+        <div class="chart-title">Últimos 6 meses</div>
+        <div class="chart">${bars}</div>
+        <div class="chart-x">${MESES.map(m => `<span class="${m.atual ? 'cur' : ''}">${m.curto}</span>`).join('')}</div>
+        <div class="chart-legend"><span><i class="dot" style="background:var(--base)"></i>Gestor Base</span><span><i class="dot" style="background:var(--elite)"></i>Elite</span></div>
+      </div>
+      <div class="box mlist">${rows}</div>
+    </section>
+    <p class="foot">Valores estimados sobre o consumo contratado dos clientes.</p>`;
+}
+
+/* ---------- Sheet do mês (atual ou fechado, mesmo formato) ---------- */
+function sheetMes(key){
+  const p = P();
+  const i = MESES.findIndex(x => x.key === key), m = MESES[i], prev = MESES[i-1], next = MESES[i+1];
+  const el = isElite(m.gp), prox = nextName(key);
+  const chip = m.atual ? `<span class="chip neutral">${m.ate}</span>` : `<span class="chip ${m.vs.startsWith('-') ? 'down' : 'up'}">${m.vs}</span>`;
+  const info = el ? `Bateu a faixa Elite com <b>${num(m.gp - ELITE_MIN)} GP</b> de folga`
+    : m.atual ? `Faltam <b>${num(ELITE_MIN - m.gp)} GP</b> para Elite (0,8%)` : `Fechou a <b>${num(ELITE_MIN - m.gp)} GP</b> da faixa Elite (0,8%)`;
+  const pro = m.atual ? p.proOut : p.proSet;
+  const verbo = m.atual ? 'paga' : (next && next.atual ? 'paga' : 'pagou');
+  const status = v => m.atual ? (v.proOut ? ['up','PRO batido'] : ['down','Falta bater']) : (p.proSet ? ['up','PRO'] : ['neutral','Sem PRO']);
+  const rows = p.verticais.map(v => { const [c,t] = status(v); return `<div class="lrow single"><span class="lic ${v.id}">${ICON[v.id]}</span>
+      <span class="l1">${v.nome}</span><span class="amt"><span class="chip ${c}">${t}</span></span></div>`; }).join('');
+  const foot = pro
+    ? `<b>PRO 360${m.atual ? ' batido' : ''}.</b> ${prox} ${verbo} a prévia cheia.`
+    : m.atual ? `<b>PRO 360 ainda não batido.</b> Se fechar assim, ${prox} paga a prévia reduzida.` : `<b>Sem PRO 360.</b> ${prox} ${verbo} a prévia reduzida.`;
+  const vals = m.origem, nomes = ['Energia','Telecom','Seguros','Expansão'], cores = ['var(--energia)','var(--telecom)','var(--seguros)','var(--expansao)'], mx = Math.max(...vals);
+  return `
+    <div class="sh-head">
+      <button type="button" class="circ" ${prev ? `data-month="${prev.key}"` : 'disabled'} aria-label="Mês anterior">${ICON.chevL}</button>
+      <div><h3 id="sheet-title">${m.nome} de 2026</h3>${m.atual ? '<span class="sub"><span class="live solid">Em andamento</span></span>' : ''}</div>
+      <button type="button" class="circ" ${next ? `data-month="${next.key}"` : 'disabled'} aria-label="Próximo mês">${ICON.chev}</button>
+    </div>
+    <div class="box">
+      <div class="mon-head">${badge(el ? '#E8890C' : '#22A45A')}
+        <div class="t"><b>Gestor</b><span>${el ? 'Elite' : 'Base'}</span></div>
+        <div class="r">Vale em ${prox}<b>${el ? '0,8%' : '0,6%'}</b></div></div>
+      <div class="mon-body">
+        <div class="gpgen"><div><span class="k">${m.atual ? 'Green Points até agora' : 'Green Points gerados'}</span><strong>${num(m.gp)} <small>GP</small></strong></div>${chip}</div>
+        <div class="lbands">
+          <span><span class="mbar"><i style="width:${el ? 100 : (m.gp/ELITE_MIN*100).toFixed(0)}%"></i></span><span class="l ${el ? 'dim' : ''}">Gestor<b>0,6%</b></span></span>
+          <span><span class="mbar e"><i style="width:${el ? 100 : 0}%"></i></span><span class="l ${el ? '' : 'dim'}">Elite<b style="color:${el ? 'var(--elite)' : '#F2C287'}">0,8%</b></span></span>
+        </div>
+        <div class="infobar">${ICON.info}<span>${info}</span></div>
+      </div>
+    </div>
+    <section class="sec"><h4>PRO em ${m.nome}</h4>
+      <div class="box">${rows}<div class="inset ${pro ? 'ok' : 'plain'}">${pro ? ICON.checkC : ICON.info}<span>${foot}</span></div></div>
+    </section>
+    <section class="sec"><h4>Origem dos pontos</h4>
+      <div class="box orig">${vals.map((v,j) => `<div><span>${nomes[j]}</span><span class="mbar"><i style="width:${(v/mx*92).toFixed(0)}%;background:${cores[j]}"></i></span><b>${num(v)}</b></div>`).join('')}</div>
+    </section>`;
+}
+
+/* ---------- Navegação ---------- */
+function go(screen){
+  state.screen = screen;
+  $('#viewport').classList.toggle('on-dash', screen === 'dash');
+  $('#screen-dash').inert = screen !== 'dash';
+  $('#screen-home').inert = screen === 'dash';
+  if (screen !== 'dash') $('#dash-bar').classList.remove('show');
+  $('#dash-bar').inert = screen !== 'dash';
+}
+
+/* Topo que recolhe: o cabeçalho escuro some aos poucos e a barra branca entra */
+const SECS = [
+  { id:'sec-mes', t:'Faixa' }, { id:'sec-previa', t:'Prévia' }, { id:'sec-pro', t:'PRO por vertical' }, { id:'sec-grad', t:'Executivo' }, { id:'sec-hist', t:'Histórico' },
+];
+$('#chips').innerHTML = SECS.map(s => `<button type="button" data-scroll="${s.id}">${s.t}</button>`).join('');
+$('#bar-badge').innerHTML = badge('#F29A1F');
+let activeSec = null;
+function onDashScroll(){
+  const scr = $('#screen-dash'), y = scr.scrollTop, bar = $('#dash-bar'), top = $('.dash-top');
+  const fadeEnd = Math.max(1, top.offsetHeight - bar.offsetHeight);
+  top.style.setProperty('--p', Math.min(1, y / fadeEnd).toFixed(3));
+  // paralaxe: o topo anda a ~40% da velocidade, e o conteúdo passa por cima
+  top.style.transform = `translateY(${(Math.min(y, top.offsetHeight) * 0.6).toFixed(1)}px)`;
+  bar.classList.toggle('show', state.screen === 'dash' && y > fadeEnd - 24);
+  const line = scr.getBoundingClientRect().top + bar.offsetHeight + 40;
+  let cur = SECS[0].id;
+  for (const s of SECS){ const el = document.getElementById(s.id); if (el && el.getBoundingClientRect().top <= line) cur = s.id; }
+  if (cur !== activeSec){
+    activeSec = cur;
+    if (typeof postState === 'function') postState();
+    $('#chips').querySelectorAll('button').forEach(b => {
+      const on = b.dataset.scroll === cur;
+      b.setAttribute('aria-current', on);
+      if (on){ const c = $('#chips'); c.scrollLeft = b.offsetLeft - (c.clientWidth - b.offsetWidth) / 2; }
+    });
+  }
+}
+$('#screen-dash').addEventListener('scroll', onDashScroll, { passive:true });
+
+function scrollToSec(id){
+  const scr = $('#screen-dash'), el = document.getElementById(id);
+  if (!el) return;
+  const barH = $('#dash-bar').offsetHeight;
+  const top = el.getBoundingClientRect().top - scr.getBoundingClientRect().top + scr.scrollTop + 24 - barH - 12;
+  scr.scrollTo({ top, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+}
+function openSheet(month, keepScroll){
+  if ($('#sheet').hidden) state.lastFocus = document.activeElement;
+  state.sheet = true; state.month = month;
+  const body = $('#sheet-body'), y = body.scrollTop;
+  body.innerHTML = sheetMes(month);
+  body.scrollTop = keepScroll ? y : 0;
+  const sheet = $('#sheet'), scrim = $('#scrim');
+  sheet.hidden = false; scrim.hidden = false;
+  requestAnimationFrame(() => { sheet.classList.add('open'); scrim.classList.add('open'); if (!keepScroll) sheet.focus(); });
+}
+function closeSheet(){
+  const sheet = $('#sheet'), scrim = $('#scrim');
+  if (sheet.hidden) return;
+  sheet.classList.remove('open'); scrim.classList.remove('open');
+  state.sheet = false;
+  setTimeout(() => { if (!state.sheet){ sheet.hidden = true; scrim.hidden = true; } }, 300);
+  if (state.lastFocus && document.contains(state.lastFocus)) state.lastFocus.focus();
+}
+let toastT;
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 1800);
+}
+function renderAll(){ renderCard(); renderDash(); activeSec = null; onDashScroll(); if (state.sheet) openSheet(state.month, true); }
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-go],[data-scroll],[data-month],[data-close],[data-toast],[data-vtab],#scrim,[data-ctl] button');
+  if (!el) return;
+  if (el.id === 'scrim' || el.hasAttribute('data-close')) return closeSheet();
+  if (el.closest('[data-ctl]')){
+    const ctl = el.closest('[data-ctl]').dataset.ctl;
+    state[ctl] = el.dataset.v;
+    el.parentElement.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b === el));
+    if (ctl === 'w') $('#device').classList.toggle('narrow', state.w === '320');
+    return renderAll();
+  }
+  if (el.dataset.vtab){ state.vtab = el.dataset.vtab; const scr = $('#screen-dash'), y = scr.scrollTop; renderDash(); scr.scrollTop = y; return; }
+  if (el.dataset.toast) return toast(el.dataset.toast);
+  if (el.dataset.month) return openSheet(el.dataset.month);
+  if (el.dataset.go){
+    closeSheet(); go(el.dataset.go);
+    if (el.dataset.go === 'dash' && !el.dataset.scroll){ $('#screen-dash').scrollTop = 0; onDashScroll(); }
+  }
+  if (el.dataset.scroll) setTimeout(() => scrollToSec(el.dataset.scroll), el.dataset.go ? 340 : 0);
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+$('#hot-toggle').addEventListener('change', e => $('#device').classList.toggle('show-hot', e.target.checked));
+
+renderCard(); renderDash(); go('home'); onDashScroll();
+
+/* ---------- Modo embutido: a documentação comanda o protótipo por mensagem ---------- */
+/* embutido por ?embed ou dentro da documentação (iframe srcdoc) */
+if (new URLSearchParams(location.search).has('embed') || location.protocol === 'about:') document.body.classList.add('embed');
+if (parent !== window) parent.postMessage({ type:'proto-ready', proto:'v2' }, '*');
+function postState(){
+  if (parent === window) return;
+  parent.postMessage({ type:'proto-state', proto:'v2', screen:state.screen, sheet:state.sheet, month:state.month,
+    sec: state.screen === 'dash' ? activeSec : null, top: $('#screen-dash').scrollTop < 120 }, '*');
+}
+document.addEventListener('click', () => setTimeout(postState, 0));
+window.addEventListener('message', e => {
+  const m = e.data;
+  if (!m || m.type !== 'proto') return;
+  const click = sel => { const el = document.querySelector(sel); if (el) el.click(); };
+  if (m.action === 'set') click(`[data-ctl="${m.ctl}"] [data-v="${m.v}"]`);
+  if (m.action === 'go'){
+    closeSheet(); go(m.screen);
+    if (m.screen === 'home') $('#screen-home').scrollTop = 0;
+    if (m.screen === 'dash'){
+      if (m.sec) setTimeout(() => scrollToSec(m.sec), 340);
+      else { $('#screen-dash').scrollTop = 0; activeSec = null; onDashScroll(); }
+    }
+  }
+  if (m.action === 'month'){ if (m.screen) go(m.screen); openSheet(m.month); }
+  setTimeout(postState, 0);
+});
+</script>
+</body>
+</html>

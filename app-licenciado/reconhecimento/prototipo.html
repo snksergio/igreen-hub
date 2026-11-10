@@ -1,0 +1,975 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reconhecimento e prévia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ---------- Tokens ---------- */
+:root{
+  color-scheme:light;
+  /* moldura de apresentação (fora do celular) */
+  --page:#E6E9EB; --page-ink:#15191B; --page-muted:#5E666B; --page-line:#D2D8DB; --page-card:#FFFFFF; --page-chip:#EEF1F2;
+  /* app (valores do Figma App-iGreen-Energy) */
+  --app-bg:#EFF1F2; --surface:#FFFFFF; --ink:#0D0F0F; --muted:#6A6E71; --line:#ECEEEF; --soft:#F1F2F3;
+  --primary:#338449; --accent:#EBF3ED;
+  --lime:#B6E36B; --gold:#E7A84B; --base:#22A45A; --elite:#E8890C; --warn-ink:#A75A05; --warn-bg:#FFF4E5;
+  --energia:#22A45A; --telecom:#3BA6DA; --seguros:#A070DB; --expansao:#E39A2D;
+  --hot:#7F77F1;
+  --font:"Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--page);color:var(--page-ink);font-family:var(--font);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+button:disabled{cursor:default;opacity:.35}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:6px}
+h1,h2,h3,h4,p{margin:0}
+
+/* ---------- Palco ---------- */
+.stage{min-height:100vh;display:flex;gap:40px;align-items:flex-start;justify-content:center;padding:32px 24px 48px}
+.panel{width:340px;flex:none;display:flex;flex-direction:column;gap:24px;padding-top:8px}
+.panel h1{font-size:22px;font-weight:600;line-height:1.2}
+.panel .lead{font-size:14px;line-height:1.5;color:var(--page-muted);margin-top:8px}
+.pblock{display:flex;flex-direction:column;gap:10px}
+.pblock h2{font-size:14px;font-weight:600}
+.seg{display:flex;background:var(--page-chip);border-radius:10px;padding:3px;gap:3px}
+.seg button{flex:1;padding:8px 10px;border-radius:8px;font-size:13px;font-weight:500;color:var(--page-muted);text-align:center}
+.seg button[aria-pressed="true"]{background:var(--page-card);color:var(--page-ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.seg-label{font-size:12px;color:var(--page-muted)}
+.check{display:flex;gap:8px;align-items:center;font-size:13px}
+.check input{accent-color:var(--hot);width:16px;height:16px}
+.jumps{display:flex;flex-wrap:wrap;gap:6px}
+.jumps button{font-size:12.5px;padding:6px 10px;border:1px solid var(--page-line);border-radius:999px;background:var(--page-card)}
+.legend{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;font-size:13px;line-height:1.45}
+.legend li{display:grid;grid-template-columns:22px 1fr;gap:8px}
+.legend .n{width:20px;height:20px;border-radius:50%;background:var(--hot);color:#fff;font-size:11px;font-weight:600;display:grid;place-items:center;margin-top:1px}
+.todo{padding-left:18px;margin:0;display:flex;flex-direction:column;gap:7px;font-size:13px;line-height:1.45}
+.todo li::marker{color:var(--page-muted)}
+
+/* ---------- Celular (tela de 360, como no Figma) ---------- */
+.device{position:relative;width:376px;height:790px;flex:none;border-radius:48px;background:#0B0D0E;padding:8px;box-shadow:0 30px 60px -20px rgba(0,0,0,.45)}
+.viewport{position:relative;width:100%;height:100%;border-radius:40px;overflow:hidden;background:var(--app-bg);color:var(--ink);isolation:isolate;container-type:inline-size}
+.device.narrow{width:336px}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;overflow-anchor:none;scrollbar-width:none;transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+.screen::-webkit-scrollbar{display:none}
+#screen-history{transform:translateX(100%);background:var(--app-bg)}
+.viewport.on-history #screen-history{transform:none}
+.viewport.on-history #screen-home{transform:translateX(-24%)}
+
+.statusbar{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 26px 0 32px;font-size:15px;font-weight:600;color:#fff}
+.statusbar .icons{display:flex;gap:6px;align-items:center}
+
+/* Início */
+.home-top{background:radial-gradient(120% 90% at 20% 0%,#1F4A31 0%,#12291C 60%,#0E2016 100%);padding-bottom:40px}
+.user{display:flex;align-items:center;gap:10px;padding:14px 24px 0}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#55605B,#1E2422);flex:none;border:1.5px solid rgba(255,255,255,.25)}
+.user .who{flex:1;min-width:0;color:#fff}
+.user .name{font-size:14px;font-weight:600}
+.user .name span{font-weight:400;font-size:12px;opacity:.7;margin-left:4px}
+.user .bal{font-size:12px;opacity:.85;margin-top:2px}
+.user .bal b{color:var(--lime);font-weight:600;margin-left:4px}
+.bell{position:relative;color:#fff}
+.bell::after{content:"";position:absolute;top:0;right:0;width:6px;height:6px;border-radius:50%;background:var(--lime)}
+.home-body{background:var(--app-bg);border-radius:24px 24px 0 0;margin-top:-24px;padding:24px 24px 24px;position:relative}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sec-head h2{font-size:16px;font-weight:600}
+.link{display:inline-flex;align-items:center;gap:4px;color:var(--primary);font-weight:600;font-size:14px;position:relative}
+.stub{margin-top:28px}
+.stub-card{border-radius:16px;border:1px dashed #C9CED1;padding:22px 16px;font-size:13px;color:var(--muted);text-align:center}
+.tabbar{position:sticky;bottom:0;display:flex;justify-content:space-around;background:#fff;border-top:.5px solid #E3E6E8;padding:10px 4px 18px;margin-top:24px;z-index:2}
+.tabbar span{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10.5px;color:var(--muted)}
+.tabbar span.on{color:var(--primary);font-weight:600}
+
+/* Card de reconhecimento — medidas do card original (312 de largura) */
+.rec{position:relative;border-radius:24px;overflow:hidden;color:#fff;padding:24px 16px 8px;
+  background:
+    radial-gradient(90% 40% at 50% 0%,rgba(255,206,110,.95) 0%,rgba(236,150,52,.85) 35%,rgba(170,88,30,0) 78%),
+    linear-gradient(180deg,#C9772C 0%,#8F4C1E 30%,#4A2614 55%,#24150F 100%)}
+.rec::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.09) 1px,transparent 1px);
+  background-size:52px 52px;mask-image:linear-gradient(180deg,#000 0%,#000 35%,transparent 55%)}
+.rec > *{position:relative}
+.rec-more{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:#fff;color:var(--ink);display:grid;place-items:center;z-index:1}
+.rec-badge{width:64px;height:64px;margin:0 auto;display:block}
+.rec-level{text-align:center;font-size:20px;font-weight:600;line-height:1.2;margin-top:10px}
+.rec-kwh{text-align:center;font-size:14px;font-weight:600;margin-top:4px}
+.rec-kwh span{font-weight:400;opacity:.65;font-size:12px}
+.rec-row{display:grid;grid-template-columns:1fr 62px 1fr;align-items:center;gap:8px;margin-top:16px;padding:0 8px}
+.rec-stat .lbl{display:flex;align-items:center;gap:5px;font-size:13px;opacity:.85}
+.rec-stat strong{display:block;font-size:14px;font-weight:600;margin-top:6px;white-space:nowrap}
+.rec-stat strong small{font-weight:400;font-size:12px;opacity:.75}
+.rec-stat.right{justify-self:end}
+.ring{width:62px;height:62px;position:relative;display:grid;place-items:center}
+.ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ring b{font-size:14px;font-weight:600}
+
+/* Linhas do card: dias qualificados (novo) e faixa do mês */
+.rows{margin:16px 0 0;padding:0 8px}
+.rline{display:block;width:100%;position:relative;border-radius:8px}
+.rline + .rline{margin-top:14px}
+.rtop{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;line-height:18px}
+.rtop .t{opacity:.85}
+.rtop .v{display:inline-flex;align-items:center;gap:4px;font-weight:600;white-space:nowrap}
+.rtop .v.lime{color:var(--lime)}
+.rcap{display:block;font-size:12px;opacity:.6;margin-top:2px;white-space:nowrap}
+.bar{display:block;height:6px;border-radius:99px;background:rgba(255,255,255,.22);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:inherit;background:var(--lime)}
+.rline .bar{margin-top:8px}
+.rok{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12px;line-height:16px;color:var(--lime);font-weight:500}
+
+/* Faixa do mês: card transparente próprio, acima do painel */
+.faixa-card{display:grid;grid-template-columns:1fr auto;column-gap:12px;align-items:center;width:calc(100% + 16px);margin:16px -8px 0;padding:12px 20px;border-radius:16px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14)}
+.faixa-card .k{grid-column:1;font-size:12px;line-height:16px;color:inherit;opacity:.75}
+.faixa-card strong{grid-column:1;font-size:17px;font-weight:600;line-height:22px;margin-top:2px}
+.faixa-card .fp{grid-column:2;grid-row:1 / span 2;font-size:22px;font-weight:600;color:var(--lime);line-height:1}
+.faixa-card .cap{grid-column:1 / -1;font-size:12px;line-height:16px;opacity:.6;margin-top:2px;white-space:nowrap}
+
+/* Painel escuro: mesmo desenho do original */
+.rec-panel{display:block;width:calc(100% + 16px);margin:8px -8px 0;border-radius:16px;background:rgba(48,32,24,.6);border:1px solid rgba(255,255,255,.08);padding:16px 20px;position:relative}
+.gp-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.gp-head .k{display:flex;align-items:center;gap:2px;font-size:12px;color:inherit;opacity:.8;line-height:16px;white-space:nowrap}
+.gp-head .r{text-align:right}
+.gp-head .r .k{justify-content:flex-end}
+.gp-head strong{display:block;font-size:22px;font-weight:600;line-height:28px;margin-top:2px}
+.gp-head .r strong{font-size:18px;color:var(--lime)}
+.bands{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px}
+.bands .bl{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:12px;margin-top:6px;line-height:14px}
+.bands .bl b{font-weight:600}
+.pill{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:16px;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.12);font-size:13px;line-height:16px;white-space:nowrap}
+.pill svg{opacity:.8}
+
+/* Hotspots */
+.hot{position:relative}
+.device.show-hot .hot{outline:2px dashed var(--hot);outline-offset:3px}
+.device.show-hot .hot::after{content:attr(data-n);position:absolute;top:-11px;left:-11px;width:22px;height:22px;border-radius:50%;background:var(--hot);color:#fff;font-size:11.5px;font-weight:600;display:grid;place-items:center;z-index:3}
+
+/* Histórico */
+.hist-top{background:radial-gradient(110% 80% at 85% 10%,#2A3A30 0%,#121815 55%,#0B0E0D 100%);color:#fff;padding-bottom:44px}
+.back-row{display:flex;align-items:center;gap:12px;padding:12px 24px 0}
+.back{width:40px;height:40px;border-radius:50%;background:#fff;color:var(--ink);display:grid;place-items:center}
+.back-row h2{font-size:16px;font-weight:500}
+.hist-level{display:flex;align-items:center;gap:12px;padding:22px 24px 0}
+.hist-level svg{width:56px;height:56px;flex:none}
+.hist-level h3{font-size:22px;font-weight:600}
+.hist-level p{font-size:13px;opacity:.75;margin-top:2px}
+.hist-level p b{color:var(--lime);font-weight:600}
+.hist-prog{padding:16px 24px 0}
+.hist-prog .bar{height:6px;background:rgba(255,255,255,.2)}
+.hist-prog .bar i{background:#30C76A}
+.hist-prog .meta{display:flex;justify-content:space-between;font-size:13px;margin-top:8px;opacity:.9}
+.hist-prog .meta b{color:#3BD176;font-weight:600}
+.hist-body{background:var(--app-bg);border-radius:24px 24px 0 0;margin-top:-24px;padding:20px 24px 32px;position:relative}
+.panel-card{background:var(--surface);border-radius:20px}
+.chart-card{padding:16px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:#EEF0F1;border-radius:10px;padding:3px}
+.tabs button{padding:8px;border-radius:8px;text-align:center;font-size:14px;color:var(--muted)}
+.tabs button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.chart-title{margin-top:16px;font-size:20px;font-weight:600;display:flex;align-items:center;gap:6px}
+.chart-sub{font-size:13px;color:var(--muted)}
+.chart{position:relative;height:140px;margin-top:16px;display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end}
+.chart .thr{position:absolute;left:0;right:0;border-top:1.5px dotted #1E2422;pointer-events:none}
+.chart .thr span{position:absolute;left:0;top:-11px;background:#1E2422;color:#fff;font-size:11px;padding:2px 7px;border-radius:5px}
+.chart button{display:block;border-radius:8px 8px 4px 4px;background:var(--base);width:100%}
+.chart button.elite{background:var(--elite)}
+.chart button.cur{background:repeating-linear-gradient(135deg,#2DAA5F 0 5px,#8BD3A6 5px 9px);outline:2px solid #2DAA5F;outline-offset:2px}
+.chart-x{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:10px;font-size:12px;color:#9AA0A4;text-align:center}
+.chart-x .cur{color:var(--primary);font-weight:600}
+.chart-legend{display:flex;gap:16px;border-top:1px solid var(--line);margin:14px -16px 0;padding:12px 16px 0;font-size:13px;color:var(--muted)}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.list-title{font-size:18px;font-weight:600;margin:28px 0 12px}
+.mrow{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border-top:1px solid var(--line)}
+.mrow:first-child{border-top:0}
+.mrow svg.b{width:36px;height:36px;flex:none}
+.mrow .mt{flex:1;min-width:0}
+.mrow .mt b{font-weight:600;font-size:15px}
+.mrow .mt span.y{color:var(--muted);font-weight:400}
+.mrow .mt small{display:block;font-size:13px;margin-top:2px;color:var(--muted)}
+.mrow .mt small.base{color:var(--base)} .mrow .mt small.elite{color:var(--elite)}
+.mrow .mv{text-align:right;font-size:13px;color:var(--muted)}
+.mrow .mv b{display:block;font-size:15px;color:var(--ink);font-weight:600}
+.live{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--primary);background:var(--accent);border-radius:99px;padding:2px 8px;margin-left:6px;vertical-align:2px}
+.live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--primary)}
+.live.solid{background:var(--primary);color:#fff;padding:3px 9px}
+.live.solid::before{background:#fff}
+
+/* ---------- Bottom sheet (medidas do sheet do Figma) ---------- */
+.scrim{position:absolute;inset:0;background:rgba(13,15,15,.55);opacity:0;transition:opacity .25s;z-index:10}
+.scrim.open{opacity:1}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:88%;background:#fff;border-radius:24px 24px 0 0;z-index:11;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+.sheet.open{transform:none}
+.sheet:focus{outline:none}
+.sheet-handle{display:block;width:100%;padding:12px 0 8px;flex:none}
+.sheet-handle::before{content:"";display:block;width:38px;height:4px;border-radius:9px;background:#D6DADC;margin:0 auto}
+.sheet-body{overflow-y:auto;padding:4px 24px 32px;scrollbar-width:none}
+.sheet-body::-webkit-scrollbar{display:none}
+.sh-head{display:grid;grid-template-columns:32px 1fr 32px;align-items:center;gap:8px;margin:4px 0 18px}
+.sh-head h3{font-size:20px;font-weight:600;text-align:center;line-height:24px}
+.sh-head .sub{display:block;text-align:center;margin-top:4px}
+.sh-head .sub .live{margin-left:0}
+.circ{width:32px;height:32px;border-radius:50%;border:1px solid #D9DDE0;display:grid;place-items:center;color:var(--ink)}
+
+.box{border:1px solid var(--line);border-radius:20px;background:#fff;overflow:hidden}
+.sec{margin-top:28px}
+.sec > h4{font-size:17px;font-weight:600;line-height:24px;margin-bottom:10px}
+.k{font-size:13px;color:var(--muted);line-height:18px}
+
+/* topo comum: mês atual e mês fechado */
+.mon-head{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.mon-head svg{width:36px;height:36px;flex:none}
+.mon-head .t{flex:1;min-width:0}
+.mon-head .t b{display:block;font-size:17px;font-weight:600;line-height:20px}
+.mon-head .t span{font-size:13px;color:var(--muted)}
+.mon-head .r{text-align:right;font-size:13px;color:var(--muted);line-height:18px}
+.mon-head .r b{display:block;font-size:16px;color:var(--ink);font-weight:600}
+.mon-body{padding:18px}
+.gpgen{display:flex;justify-content:space-between;align-items:flex-start}
+.gpgen strong{display:block;font-size:30px;font-weight:600;line-height:34px;margin-top:2px}
+.gpgen strong small{font-size:15px;color:var(--muted);font-weight:500}
+.chip{font-size:12px;font-weight:600;padding:4px 9px;border-radius:99px;white-space:nowrap}
+.chip.up{color:var(--primary);background:var(--accent)}
+.chip.down{color:var(--warn-ink);background:var(--warn-bg)}
+.chip.neutral{color:var(--muted);background:var(--soft)}
+.lbands{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.mbar{display:block;height:6px;border-radius:9px;background:#DFE2E4;overflow:hidden}
+.mbar i{display:block;height:100%;border-radius:inherit;background:var(--base)}
+.mbar.e i{background:var(--elite)}
+.lbands span.l{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:13px;line-height:16px;margin-top:8px}
+.lbands span.l b{font-weight:600}
+.lbands .dim{color:#A9AEB1}
+.infobar{display:flex;gap:10px;align-items:center;margin-top:16px;background:var(--soft);border-radius:10px;padding:10px 12px;font-size:13px;line-height:18px;color:var(--muted)}
+.infobar svg{flex:none}
+.infobar b{color:var(--ink);font-weight:600}
+
+/* prévia */
+.kpis{display:grid;grid-template-columns:1fr 1fr}
+.kpis > div{padding:16px 18px}
+.kpis > div + div{border-left:1px solid var(--line)}
+.kpis strong{display:block;font-size:20px;font-weight:600;line-height:26px;margin-top:2px;white-space:nowrap}
+/* aviso dentro do card, com respiro (não mais colado na borda) */
+.boxfoot{display:flex;align-items:center;gap:8px;margin:4px 16px 16px;padding:10px 12px;border-radius:12px;font-size:13px;line-height:18px}
+.boxfoot svg{flex:none}
+.boxfoot.warn{background:var(--warn-bg);color:var(--warn-ink)}
+.boxfoot.ok{background:var(--accent);color:var(--primary)}
+.boxfoot.plain{background:var(--soft);color:var(--muted)}
+.boxfoot b{font-weight:600}
+
+/* Sua prévia: card com o fundo da graduação (Gestor), escuro com brilho no topo */
+:root{ --lv-1:#5C3016; --lv-2:#2C1A10; --lv-3:#18100A; --lv-glow:rgba(242,154,31,.42); }
+.money{position:relative;overflow:hidden;border-radius:20px;color:#fff;padding:18px 18px 18px;
+  background:radial-gradient(75% 60% at 90% 0%,var(--lv-glow) 0%,rgba(0,0,0,0) 72%),linear-gradient(180deg,var(--lv-1) 0%,var(--lv-2) 45%,var(--lv-3) 100%)}
+.money::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);
+  background-size:52px 52px;mask-image:linear-gradient(180deg,#000 0%,transparent 60%)}
+.money > *{position:relative}
+.money .k{color:inherit;opacity:.75;font-size:12px;line-height:16px}
+.m-top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.m-big{display:block;font-size:28px;font-weight:600;line-height:34px;margin-top:2px;white-space:nowrap}
+.m-elite{text-align:right}
+.m-elite strong{display:block;font-size:15px;font-weight:600;line-height:20px;margin-top:2px;white-space:nowrap;opacity:.9}
+.m-status{display:flex;width:100%;align-items:center;gap:8px;margin-top:14px;padding:9px 12px;border-radius:12px;font-size:12.5px;font-weight:500;line-height:17px;color:rgba(255,255,255,.9);
+  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.09);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.m-status svg{flex:none}
+.m-status b{font-weight:600}
+.m-status.warn svg,.m-status.warn b{color:#FFC977}
+.m-status.ok svg,.m-status.ok b{color:var(--lime)}
+
+/* linhas de lista (padrão "Meus números") */
+.lrow{display:grid;grid-template-columns:36px 1fr auto;column-gap:12px;align-items:center;padding:14px 18px;border-top:1px solid var(--line)}
+.lrow:first-child{border-top:0}
+.lic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;grid-row:span 2}
+.lic.pro{background:#E6F3EA;color:var(--primary)}
+.lic.elite{background:#FDEFDC;color:#C06E06}
+.lic.done{background:var(--primary);color:#fff}
+.lic.energia{background:#E6F5EC;color:#1E8F4E}
+.lic.telecom{background:#E4F2FA;color:#2484B8}
+.lic.seguros{background:#F0EAFB;color:#7E52D0}
+.lic.expansao{background:#FCEFDD;color:#BD7210}
+.l1{grid-column:2;grid-row:1;display:flex;align-items:center;gap:6px;min-width:0;font-size:15px;font-weight:500;line-height:20px}
+.l1 .chip{font-size:11px;line-height:15px;padding:0 6px}
+.l2{grid-column:2/-1;grid-row:2;font-size:12.5px;color:var(--muted);line-height:17px;margin-top:2px}
+.lrow:has(.amt2) .l2{grid-column:2}
+.amt{grid-column:3;grid-row:1;text-align:right;font-size:15px;font-weight:600;line-height:20px;white-space:nowrap}
+.amt.g{color:var(--primary)}
+.amt2{grid-column:3;grid-row:2;text-align:right;font-size:12px;color:var(--muted);line-height:17px;margin-top:2px;white-space:nowrap}
+.lrow.single .lic{grid-row:auto}
+.lrow .mbar{grid-column:2/-1;grid-row:3;margin-top:8px;height:5px}
+.vtabs{padding:16px 18px 4px}
+.vcap{font-size:12.5px;color:var(--muted);padding:10px 18px 6px}
+/* listas com o mesmo ritmo da lista do histórico */
+.vlist .lrow,.opps .lrow{padding:16px 18px;column-gap:14px;row-gap:4px}
+.vlist .l1{gap:8px}
+.vlist .l2,.vlist .amt2,.opps .l2{margin-top:0;line-height:18px}
+.vlist + details.why summary{padding:14px 18px}
+.sec-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.sec-row h4{margin:0;font-size:17px;font-weight:600;line-height:24px}
+.frac{font-size:15px;font-weight:600;color:var(--muted)}
+.frac b{color:var(--primary);font-weight:700}
+details.why{border-top:1px solid var(--line)}
+details.why summary{list-style:none;cursor:pointer;padding:12px 18px;font-size:13px;color:var(--primary);font-weight:500;display:flex;align-items:center;justify-content:space-between}
+details.why summary::-webkit-details-marker{display:none}
+details.why[open] summary svg{transform:rotate(90deg)}
+details.why p{padding:0 18px 14px;font-size:13px;color:var(--muted);line-height:1.5}
+
+/* origem dos pontos (igual ao Figma) */
+.orig{padding:10px 18px}
+.orig div{display:grid;grid-template-columns:76px 1fr 44px;gap:14px;align-items:center;padding:8px 0;font-size:14px;color:var(--muted)}
+.orig div b{color:var(--ink);text-align:right;font-weight:600}
+.foot{font-size:12px;color:var(--muted);line-height:1.5;margin-top:24px;text-align:center}
+
+/* dias qualificados */
+/* dias qualificados: meia-lua no centro */
+.rg{display:flex;flex-direction:column;align-items:center;text-align:center;padding:22px 18px 20px}
+.gauge{position:relative;width:min(220px,100%)}
+.gauge svg{display:block;width:100%;height:auto}
+.g-center{position:absolute;left:0;right:0;bottom:4px;display:flex;flex-direction:column;align-items:center}
+.g-center b{font-size:36px;font-weight:600;line-height:40px}
+.g-center span{font-size:12.5px;color:var(--muted);line-height:16px}
+.g-min,.g-max{position:absolute;bottom:-18px;font-size:11px;color:var(--muted)}
+.g-min{left:6%}
+.g-max{right:5%}
+.dq-tag{display:inline-flex;align-items:center;gap:4px;margin-top:26px;font-size:12px;font-weight:600;line-height:16px;padding:4px 10px;border-radius:99px;background:var(--warn-bg);color:var(--warn-ink)}
+.dq-tag.ok{background:var(--accent);color:var(--primary)}
+.g-sub{font-size:12.5px;line-height:17px;color:var(--muted);margin-top:10px;max-width:240px}
+/* requisitos: check centralizado entre título e barra */
+.req{display:grid;grid-template-columns:20px 1fr auto;grid-template-rows:auto auto;column-gap:12px;row-gap:6px;align-items:center;padding:14px 18px;border-top:1px solid var(--line)}
+.req:first-child{border-top:0}
+.req .st{grid-column:1;grid-row:1 / span 2;align-self:center;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;border:1.5px solid #CDD2D5}
+.req .st.ok{background:var(--primary);border-color:var(--primary);color:#fff}
+.req .l{grid-column:2;grid-row:1;font-size:14px}
+.req .v{grid-column:3;grid-row:1;font-size:13px;color:var(--muted);text-align:right;white-space:nowrap}
+.req .v b{color:var(--ink);font-weight:600}
+.req .mbar{grid-column:2/-1;grid-row:2;height:5px}
+.close-x{width:32px;height:32px;border-radius:50%;border:1px solid #D9DDE0;display:grid;place-items:center}
+
+.toast{position:absolute;left:50%;bottom:96px;transform:translate(-50%,10px);background:#1E2422;color:#fff;font-size:13px;padding:9px 14px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:20;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* Telas estreitas (320): só aperta o que quebraria */
+@container (max-width: 340px){
+  .home-body{padding-left:20px;padding-right:20px}
+  .sheet-body{padding-left:20px;padding-right:20px}
+  .rec-row{padding:0;gap:4px}
+  .rec-stat strong{font-size:13px}
+  .rows{padding:0}
+  .faixa-card{padding:12px 14px}
+  .faixa-card .cap{white-space:normal}
+  .rec-panel{padding:14px}
+  .gp-head .k{font-size:11px;white-space:normal}
+  .gp-head .r{max-width:42%}
+  .pill{white-space:normal;text-align:center}
+  .m-big{font-size:24px}
+  .kpis strong{font-size:17px}
+  /* PRO por vertical: nome e valor / selo / detalhe */
+  .vlist .lrow{grid-template-columns:32px 1fr auto;column-gap:12px;row-gap:4px;padding:14px 16px}
+  .vlist .lic{width:32px;height:32px;grid-row:1 / span 3;align-self:start}
+  .vlist .l1{display:contents}
+  .vlist .nm{grid-column:2;grid-row:1;font-size:15px;font-weight:500;line-height:20px}
+  .vlist .l1 .chip{grid-column:2;grid-row:2;justify-self:start}
+  .vlist .amt{grid-column:3;grid-row:1}
+  .vlist .amt2{grid-column:3;grid-row:2;margin-top:0}
+  .vlist .l2,.vlist .lrow:has(.amt2) .l2{grid-column:2 / -1;grid-row:3;margin-top:0}
+  .vlist .lrow:not(:has(.chip)) .l2{grid-row:2}
+  .vlist .lrow:not(:has(.chip)) .lic{grid-row:1 / span 2}
+  .opps .l1{flex-wrap:wrap}
+  .req .l{font-size:13.5px}
+}
+
+@media (max-width:860px){
+  .stage{flex-direction:column;align-items:center;padding:16px 16px 40px;gap:28px}
+  .panel{width:100%;max-width:420px;order:2}
+  .device{order:1;width:min(100%,376px);border-radius:42px;padding:6px}
+  .viewport{border-radius:36px}
+}
+@media (prefers-reduced-motion:reduce){ *{transition:none !important} }
+/* Modo embutido (documentação): só a tela do app, sem moldura e sem painel */
+body.embed{background:var(--app-bg)}
+body.embed .stage{display:block;padding:0;min-height:0}
+body.embed .panel{display:none}
+body.embed .device{width:100vw;height:100vh;padding:0;border-radius:0;background:none;box-shadow:none}
+body.embed .viewport{border-radius:0}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="device" id="device">
+    <div class="viewport" id="viewport">
+
+      <!-- ================= INÍCIO ================= -->
+      <section class="screen" id="screen-home" aria-label="Início">
+        <header class="home-top">
+          <div class="statusbar"><span>9:41</span><span class="icons" aria-hidden="true">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M1.5 4.2a9.5 9.5 0 0 1 13 0M4 7a5.8 5.8 0 0 1 8 0"/><circle cx="8" cy="10" r="1" fill="#fff"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x=".5" y=".5" width="22" height="11" rx="3.5" stroke="#fff" opacity=".5"/><rect x="2" y="2" width="19" height="8" rx="2" fill="#fff"/><rect x="24" y="4" width="1.5" height="4" rx=".7" fill="#fff" opacity=".5"/></svg>
+          </span></div>
+          <div class="user">
+            <span class="avatar" aria-hidden="true"></span>
+            <div class="who">
+              <div class="name">Leandro Freire <span>ID: 30393820</span></div>
+              <div class="bal">Saldo: R$ 7.600,00 <b>Ver extrato</b></div>
+            </div>
+            <span class="bell" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg></span>
+          </div>
+        </header>
+
+        <div class="home-body">
+          <div class="sec-head">
+            <h2>Reconhecimento</h2>
+            <button type="button" class="link hot" data-n="3" data-go="history">Ver toda jornada
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 3 5 5-5 5"/></svg></button>
+          </div>
+          <article class="rec" id="rec" aria-label="Reconhecimento"></article>
+
+          <div class="stub">
+            <div class="sec-head"><h2>Meu saldo</h2></div>
+            <div class="stub-card">O resto da home não muda nesta proposta.</div>
+          </div>
+        </div>
+
+        <nav class="tabbar" aria-label="Navegação principal">
+          <span class="on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></svg>Início</span>
+          <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="10" r="3"/><path d="M7 18c1-2.5 3-3.5 5-3.5s4 1 5 3.5"/></svg>Clientes</span>
+          <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/></svg>Conexões</span>
+          <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>Rede</span>
+          <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</span>
+        </nav>
+      </section>
+
+      <!-- ================= HISTÓRICO ================= -->
+      <section class="screen" id="screen-history" aria-label="Histórico de Green Points">
+        <header class="hist-top">
+          <div class="statusbar"><span>9:41</span><span class="icons" aria-hidden="true">
+            <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+            <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x=".5" y=".5" width="22" height="11" rx="3.5" stroke="#fff" opacity=".5"/><rect x="2" y="2" width="19" height="8" rx="2" fill="#fff"/></svg>
+          </span></div>
+          <div class="back-row">
+            <button type="button" class="back" data-go="home" aria-label="Voltar"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10 3-5 5 5 5"/></svg></button>
+            <h2>Histórico de Green Points</h2>
+          </div>
+          <div class="hist-level" id="hist-level"></div>
+          <div class="hist-prog">
+            <span class="bar"><i style="width:51%"></i></span>
+            <div class="meta"><span><b>152.340</b> de 300.000 kWh acumulados</span><span>51%</span></div>
+          </div>
+        </header>
+        <div class="hist-body">
+          <div class="panel-card chart-card">
+            <div class="tabs" role="group" aria-label="Visão">
+              <button type="button" aria-pressed="true">Por mês</button>
+              <button type="button" aria-pressed="false" data-toast="Acumulado não muda nesta proposta">Acumulado</button>
+            </div>
+            <div class="chart-title">Outubro de 2026 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m4 6 4 4 4-4"/></svg></div>
+            <div class="chart-sub">Últimos 6 meses</div>
+            <div class="chart" id="chart"></div>
+            <div class="chart-x" id="chart-x"></div>
+            <div class="chart-legend"><span><i class="dot" style="background:var(--base)"></i>Gestor Base</span><span><i class="dot" style="background:var(--elite)"></i>Elite</span></div>
+          </div>
+          <h3 class="list-title">Histórico</h3>
+          <div class="panel-card" id="mlist"></div>
+        </div>
+      </section>
+
+      <div class="scrim" id="scrim" hidden></div>
+      <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabindex="-1" hidden>
+        <button type="button" class="sheet-handle" data-close aria-label="Fechar"></button>
+        <div class="sheet-body" id="sheet-body"></div>
+      </div>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <!-- ================= PAINEL DE APRESENTAÇÃO ================= -->
+  <aside class="panel" aria-label="Controles do protótipo">
+    <div>
+      <h1>Reconhecimento e prévia do mês</h1>
+      <p class="lead">O que o escritório virtual já mostra, levado pro app do licenciado. Tudo que é tocável no celular abre o próximo passo. Os números e o selo são de exemplo.</p>
+    </div>
+
+    <div class="pblock">
+      <h2>Cenário</h2>
+      <span class="seg-label">Dias qualificados</span>
+      <div class="seg" data-ctl="dias">
+        <button type="button" data-v="andamento" aria-pressed="true">Em andamento</button>
+        <button type="button" data-v="batida" aria-pressed="false">Meta batida</button>
+      </div>
+      <span class="seg-label">PRO 360</span>
+      <div class="seg" data-ctl="pro">
+        <button type="button" data-v="sem" aria-pressed="true">Sem PRO</button>
+        <button type="button" data-v="pro" aria-pressed="false">PRO garantido</button>
+      </div>
+      <label class="check"><input type="checkbox" id="hot-toggle"> Mostrar onde tocar</label>
+    </div>
+
+    <div class="pblock">
+      <h2>Tamanho da tela</h2>
+      <div class="seg" data-ctl="w">
+        <button type="button" data-v="360" aria-pressed="true">360 px</button>
+        <button type="button" data-v="320" aria-pressed="false">320 px (celular pequeno)</button>
+      </div>
+    </div>
+
+    <div class="pblock">
+      <h2>Ir direto para</h2>
+      <div class="jumps">
+        <button type="button" data-go="home">Início</button>
+        <button type="button" data-sheet="dias">Dias qualificados</button>
+        <button type="button" data-sheet="atual">Mês atual</button>
+        <button type="button" data-month="2026-09">Mês fechado</button>
+        <button type="button" data-go="history">Histórico</button>
+      </div>
+    </div>
+
+    <div class="pblock">
+      <h2>O que entra no app</h2>
+      <ol class="legend">
+        <li><span class="n">1</span><span><b>Dias qualificados</b> no card. O toque abre a meta e o que falta pra subir de graduação.</span></li>
+        <li><span class="n">2</span><span><b>Painel de Green Points</b> abre o mês atual: prévia de hoje, Prévia Elite, quanto dá pra ganhar em Novembro e PRO por vertical.</span></li>
+        <li><span class="n">3</span><span><b>Ver toda jornada</b> leva ao histórico, como hoje. O mês fechado ganha o PRO de cada vertical naquele mês.</span></li>
+        <li><span class="n">4</span><span>No histórico, <b>o mês atual</b> aparece em andamento e abre o mesmo detalhe do item 2.</span></li>
+      </ol>
+    </div>
+
+    <div class="pblock">
+      <h2>Decisões de desenho</h2>
+      <ul class="todo">
+        <li>O card segue as medidas do original: selo de 64, anel de 62, textos de 12 a 14. Dias qualificados é uma linha com barra e seta.</li>
+        <li>A faixa do mês ganhou um card transparente próprio, logo acima do painel de Green Points. Percentuais sempre no fim da linha.</li>
+        <li>O painel escuro voltou ao desenho do original. "Valem para Novembro" virou a coluna da direita: "Vale em Novembro 0,6%", a faixa que esses pontos garantem hoje.</li>
+        <li>Mês atual e mês fechado começam com o mesmo bloco. Abaixo, cada um responde a sua pergunta.</li>
+        <li>PRO por vertical em abas "Hoje" e "Em Novembro", no padrão "Total | Mês atual" que o app já usa.</li>
+        <li>"195/90" virou "195 dias · meta batida": um número maior que o total parece erro.</li>
+        <li>Polimento visual, igual ao da V2: "Sua prévia" no fundo da graduação, com o aviso em vidro; dias qualificados em meia-lua; listas com mais respiro; avisos dentro dos cards.</li>
+      </ul>
+    </div>
+
+    <div class="pblock">
+      <h2>Para validar antes de enviar</h2>
+      <ul class="todo">
+        <li>Os dias qualificados são seguidos? Se ele perder a qualificação, a contagem zera?</li>
+        <li>Bater 90 dias é requisito pra subir de graduação? O protótipo assume que sim, por uma pista no código do escritório virtual.</li>
+        <li>Quais são os requisitos e as metas oficiais pra Executivo?</li>
+        <li>PRO 360 é ter as 3 verticais PRO e 2 conexões Expansão? É a leitura do print do web.</li>
+        <li>O app tem o histórico de PRO por vertical dos meses fechados?</li>
+        <li>A seta na pílula do painel de Green Points basta pra pessoa achar o detalhe? Vale testar com 5 licenciados.</li>
+      </ul>
+    </div>
+  </aside>
+</div>
+
+<script>
+/* ---------- Dados de exemplo ---------- */
+const PRESETS = {
+  sem: {
+    previaHoje: 1362.25, previaCheia: 3482.90, previaElite: 1418.90,
+    proSet: false, proOut: false, verticaisPro: 0, expansao: 0,
+    verticais: [
+      { id:'energia', nome:'Energia', cnx:'1 conexão este mês',   proSet:false, proOut:false, gp:1107.15, rede:0, gpCheio:2214.30, redeCheia:640.10 },
+      { id:'telecom', nome:'Telecom', cnx:'1 conexão este mês',   proSet:false, proOut:false, gp:206.00,  rede:0, gpCheio:412.00,  redeCheia:96.40 },
+      { id:'seguros', nome:'Seguros', cnx:'Sem conexão este mês', proSet:false, proOut:false, gp:49.10,   rede:0, gpCheio:98.20,   redeCheia:21.90 },
+    ],
+  },
+  pro: {
+    previaHoje: 3482.90, previaCheia: 3482.90, previaElite: 3712.40,
+    proSet: true, proOut: true, verticaisPro: 3, expansao: 2,
+    verticais: [
+      { id:'energia', nome:'Energia', cnx:'4 conexões este mês', proSet:true, proOut:true, gp:2214.30, rede:640.10, gpCheio:2214.30, redeCheia:640.10 },
+      { id:'telecom', nome:'Telecom', cnx:'2 conexões este mês', proSet:true, proOut:true, gp:412.00,  rede:96.40,  gpCheio:412.00,  redeCheia:96.40 },
+      { id:'seguros', nome:'Seguros', cnx:'1 conexão este mês',  proSet:true, proOut:true, gp:98.20,   rede:21.90,  gpCheio:98.20,   redeCheia:21.90 },
+    ],
+  },
+};
+const ELITE_MIN = 2000;
+const MESES = [
+  { key:'2026-05', nome:'Maio',     curto:'MAI', gp:1320, vs:'+8% vs abr',  origem:[900,280,90,50] },
+  { key:'2026-06', nome:'Junho',    curto:'JUN', gp:2140, vs:'+62% vs mai', origem:[1460,420,160,100] },
+  { key:'2026-07', nome:'Julho',    curto:'JUL', gp:1760, vs:'-18% vs jun', origem:[1200,350,130,80] },
+  { key:'2026-08', nome:'Agosto',   curto:'AGO', gp:1410, vs:'-20% vs jul', origem:[960,300,90,60] },
+  { key:'2026-09', nome:'Setembro', curto:'SET', gp:1580, vs:'+12% vs ago', origem:[1120,310,90,60] },
+  { key:'2026-10', nome:'Outubro',  curto:'OUT', gp:1240, atual:true, ate:'Até 20/10', origem:[820,260,100,60] },
+];
+const REQUISITOS = [
+  { label:'kWh qualificáveis', atual:152340, meta:300000 },
+  { label:'Licenciados diretos ativos', atual:8, meta:10 },
+  { label:'Clientes diretos', atual:24, meta:20 },
+  { label:'Linhas de gestores', atual:1, meta:2 },
+];
+const DIAS = { andamento:62, batida:195, meta:90 };
+
+const state = { dias:'andamento', pro:'sem', vtab:'hoje', screen:'home', sheet:null, month:null, lastFocus:null };
+
+/* ---------- Utilitários ---------- */
+const brl = v => 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits:2, maximumFractionDigits:2 });
+const num = v => v.toLocaleString('pt-BR');
+const $ = s => document.querySelector(s);
+const P = () => PRESETS[state.pro];
+const nextName = key => { const i = MESES.findIndex(m => m.key === key); return (MESES[i+1] || { nome:'Novembro' }).nome; };
+const isElite = gp => gp >= ELITE_MIN;
+
+const ICON = {
+  chev:'<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 3 5 5-5 5"/></svg>',
+  chevS:'<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 3 5 5-5 5"/></svg>',
+  chevL:'<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10 3-5 5 5 5"/></svg>',
+  check:'<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2.5 6.2 2.3 2.3 4.7-5"/></svg>',
+  checkC:'<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><path d="m5.3 8.2 1.9 1.9 3.6-3.9"/></svg>',
+  x:'<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l8 8M11 3l-8 8"/></svg>',
+  flag:'<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#B6E36B" stroke-width="1.6" stroke-linejoin="round"><path d="M3.5 14V2.5M3.5 3h8l-1.6 3 1.6 3h-8" fill="#B6E36B"/></svg>',
+  info:'<svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#6A6E71"/><path d="M9 8v4.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="5.6" r="1.1" fill="#fff"/></svg>',
+  warn:'<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.8v3.8"/><circle cx="8" cy="11.2" r=".6" fill="currentColor"/></svg>',
+  crown:'<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3 15h14M3.5 6.5 7 9.5 10 4l3 5.5 3.5-3L15.5 13h-11z"/></svg>',
+  trophy:'<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h8v4a4 4 0 0 1-8 0zM6 5H3.5a2.5 2.5 0 0 0 2.6 3M14 5h2.5a2.5 2.5 0 0 1-2.6 3M10 11.5v3M7 16.5h6"/></svg>',
+  energia:'<svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M9 1.5 3.5 9H8l-1 5.5L12.5 7H8z"/></svg>',
+  telecom:'<svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4.5" y="1.5" width="7" height="13" rx="1.8"/><path d="M7 12.2h2" stroke-linecap="round"/></svg>',
+  seguros:'<svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M8 1.5 13 3.5v4c0 3.2-2.2 5.6-5 7-2.8-1.4-5-3.8-5-7v-4z"/></svg>',
+  expansao:'<svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="2" y="5" width="12" height="9" rx="1.5"/><path d="M5.5 5V3.2h5V5M2 9h12"/></svg>',
+};
+
+/* Selo ilustrativo: não é a marca real */
+function badge(ring, cls){
+  let rays = '';
+  for (let i = 0; i < 24; i++){
+    const a = i * Math.PI / 12, x1 = 50 + Math.cos(a)*24, y1 = 50 + Math.sin(a)*24, x2 = 50 + Math.cos(a)*35, y2 = 50 + Math.sin(a)*35;
+    rays += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${ring}" stroke-opacity=".45" stroke-width="1.2"/>`;
+  }
+  return `<svg class="${cls||''}" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48" fill="${ring}"/><circle cx="50" cy="50" r="41" fill="#0D0F0F"/>${rays}<circle cx="50" cy="50" r="19" fill="#0D0F0F"/><text x="50" y="61" text-anchor="middle" font-family="Outfit, sans-serif" font-size="31" font-weight="700" fill="${ring}">G</text></svg>`;
+}
+
+/* ---------- Card de Reconhecimento ---------- */
+function renderCard(){
+  const p = P();
+  const dias = DIAS[state.dias], batida = dias >= DIAS.meta;
+  const C = 2 * Math.PI * 28, pct = 0.51;
+  const gpOut = MESES[5].gp, faltam = ELITE_MIN - gpOut;
+  $('#rec').innerHTML = `
+    <button type="button" class="rec-more" data-toast="Sem mudança nesta proposta" aria-label="Ver nível">${ICON.chevS}</button>
+    ${badge('#F29A1F','rec-badge')}
+    <div class="rec-level">Gestor</div>
+    <div class="rec-kwh">152.340 <span>kWh</span></div>
+    <div class="rec-row">
+      <div class="rec-stat"><span class="lbl">Prévia</span><strong>${brl(p.previaHoje)}</strong></div>
+      <div class="ring" aria-label="51% do caminho para Executivo">
+        <svg viewBox="0 0 62 62" width="62" height="62"><circle cx="31" cy="31" r="28" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="6"/><circle cx="31" cy="31" r="28" fill="none" stroke="#B6E36B" stroke-width="6" stroke-linecap="round" stroke-dasharray="${(C*pct).toFixed(1)} ${C.toFixed(1)}"/></svg>
+        <b>51%</b>
+      </div>
+      <div class="rec-stat right"><span class="lbl">${ICON.flag}Executivo</span><strong>300.000 <small>kWh</small></strong></div>
+    </div>
+
+    <div class="rows">
+      <button type="button" class="rline hot" data-n="1" data-sheet="dias" aria-label="Dias qualificados: ${batida ? dias + ' dias, meta de 90 batida' : dias + ' de 90'}">
+        <span class="rtop"><span class="t">Dias qualificados</span>
+          <span class="v">${batida ? dias + ' dias' : dias + '/' + DIAS.meta}${ICON.chevS}</span></span>
+        <span class="bar"><i style="width:${Math.min(100, dias / DIAS.meta * 100).toFixed(0)}%"></i></span>
+        ${batida ? `<span class="rok">${ICON.checkC}Meta de 90 dias batida</span>` : ''}
+      </button>
+    </div>
+
+    <div class="faixa-card">
+      <span class="k">Sua faixa em Outubro</span><strong>Gestor Base</strong>
+      <span class="fp">0,6%</span>
+      <span class="cap">Definida pelos Green Points de Setembro</span>
+    </div>
+
+    <button type="button" class="rec-panel hot" data-n="2" data-sheet="atual" aria-label="Green Points de Outubro: ${num(gpOut)}. Ver detalhes do mês">
+      <span class="gp-head">
+        <span><span class="k">Green Points de Outubro</span><strong>${num(gpOut)}</strong></span>
+        <span class="r"><span class="k">Vale em Novembro</span><strong>0,6%</strong></span>
+      </span>
+      <span class="bands">
+        <span><span class="bar"><i style="width:${(gpOut/ELITE_MIN*100).toFixed(0)}%"></i></span><span class="bl"><span>Gestor</span><b style="color:var(--lime)">0,6%</b></span></span>
+        <span><span class="bar"><i style="width:0"></i></span><span class="bl"><span style="opacity:.65">Elite</span><b style="color:var(--gold)">0,8%</b></span></span>
+      </span>
+      <span class="pill"><span>Faltam <b>${num(faltam)} GP</b> para Elite (0,8%)</span>${ICON.chevS}</span>
+    </button>`;
+}
+
+/* ---------- Histórico ---------- */
+function renderHistory(){
+  $('#hist-level').innerHTML = `${badge('#F29A1F')}<div><h3>Gestor</h3><p>Faltam <b>147.660 kWh</b> para Executivo</p></div>`;
+  const max = 2400, H = 140;
+  $('#chart').innerHTML = MESES.map(m => {
+    const h = Math.round(m.gp / max * H);
+    const cls = m.atual ? 'cur hot' : (isElite(m.gp) ? 'elite' : '');
+    const label = m.atual ? `${m.nome}, em andamento, ${num(m.gp)} GP` : `${m.nome}, ${num(m.gp)} GP`;
+    return `<button type="button" class="${cls}" ${m.atual ? 'data-n="4" data-sheet="atual"' : `data-month="${m.key}"`} style="height:${h}px" aria-label="${label}"></button>`;
+  }).join('') + `<div class="thr" style="bottom:${Math.round(ELITE_MIN / max * H)}px"><span>Elite</span></div>`;
+  $('#chart-x').innerHTML = MESES.map(m => `<span class="${m.atual ? 'cur' : ''}">${m.curto}</span>`).join('');
+
+  const rows = MESES.slice(1).reverse();
+  $('#mlist').innerHTML = rows.map(m => {
+    const el = isElite(m.gp);
+    if (m.atual) return `<button type="button" class="mrow hot" data-n="4" data-sheet="atual">${badge('#22A45A','b')}
+        <span class="mt"><b>${m.nome}</b> <span class="y">/ 2026</span><span class="live">Em andamento</span><small>Faltam ${num(ELITE_MIN - m.gp)} GP para Elite</small></span>
+        <span class="mv"><b>${num(m.gp)}</b>0,6%</span>${ICON.chev}</button>`;
+    return `<button type="button" class="mrow" data-month="${m.key}">${badge(el ? '#E8890C' : '#22A45A','b')}
+        <span class="mt"><b>${m.nome}</b> <span class="y">/ 2026</span><small class="${el ? 'elite' : 'base'}">Gestor ${el ? 'Elite' : 'Base'}</small></span>
+        <span class="mv"><b>${num(m.gp)}</b>${el ? '0,8%' : '0,6%'}</span>${ICON.chev}</button>`;
+  }).join('');
+}
+
+/* ---------- Sheets: peças comuns ---------- */
+function sheetHead(m){
+  const i = MESES.indexOf(m), prev = MESES[i-1], next = MESES[i+1];
+  const nextAttr = !next ? 'disabled' : next.atual ? 'data-sheet="atual"' : `data-month="${next.key}"`;
+  return `<div class="sh-head">
+      <button type="button" class="circ" ${prev ? `data-month="${prev.key}"` : 'disabled'} aria-label="Mês anterior">${ICON.chevL}</button>
+      <div><h3 id="sheet-title">${m.nome} de 2026</h3>${m.atual ? '<span class="sub"><span class="live solid">Em andamento</span></span>' : ''}</div>
+      <button type="button" class="circ" ${nextAttr} aria-label="Próximo mês">${ICON.chev}</button>
+    </div>`;
+}
+
+/* Bloco do topo, igual para mês atual e mês fechado */
+function monthTop(m){
+  const el = isElite(m.gp), prox = nextName(m.key);
+  const chip = m.atual ? `<span class="chip neutral">${m.ate}</span>` : `<span class="chip ${m.vs.startsWith('-') ? 'down' : 'up'}">${m.vs}</span>`;
+  const info = el
+    ? `Bateu a faixa Elite com <b>${num(m.gp - ELITE_MIN)} GP</b> de folga`
+    : m.atual ? `Faltam <b>${num(ELITE_MIN - m.gp)} GP</b> para Elite (0,8%)`
+              : `Fechou a <b>${num(ELITE_MIN - m.gp)} GP</b> da faixa Elite (0,8%)`;
+  return `<div class="box">
+      <div class="mon-head">${badge(el ? '#E8890C' : '#22A45A')}
+        <div class="t"><b>Gestor</b><span>${el ? 'Elite' : 'Base'}</span></div>
+        <div class="r">Vale em ${prox}<b>${el ? '0,8%' : '0,6%'}</b></div></div>
+      <div class="mon-body">
+        <div class="gpgen"><div><span class="k">${m.atual ? 'Green Points até agora' : 'Green Points gerados'}</span><strong>${num(m.gp)} <small>GP</small></strong></div>${chip}</div>
+        <div class="lbands">
+          <span><span class="mbar"><i style="width:${el ? 100 : (m.gp/ELITE_MIN*100).toFixed(0)}%"></i></span><span class="l ${el ? 'dim' : ''}">Gestor<b>0,6%</b></span></span>
+          <span><span class="mbar e"><i style="width:${el ? 100 : 0}%"></i></span><span class="l ${el ? '' : 'dim'}">Elite<b style="color:${el ? 'var(--elite)' : '#F2C287'}">0,8%</b></span></span>
+        </div>
+        <div class="infobar">${ICON.info}<span>${info}</span></div>
+      </div>
+    </div>`;
+}
+
+function origem(vals){
+  const nomes = ['Energia','Telecom','Seguros','Expansão'], cores = ['var(--energia)','var(--telecom)','var(--seguros)','var(--expansao)'];
+  const max = Math.max(...vals);
+  return `<div class="box orig">${vals.map((v,i) => `<div><span>${nomes[i]}</span><span class="mbar"><i style="width:${(v/max*92).toFixed(0)}%;background:${cores[i]}"></i></span><b>${num(v)}</b></div>`).join('')}</div>`;
+}
+
+/* ---------- Sheet: mês atual ---------- */
+function sheetAtual(){
+  const p = P(), m = MESES[5];
+  const ganhoPro = p.previaCheia - p.previaHoje;
+  const ganhoElite = p.previaElite - p.previaHoje;
+
+  const opps = [
+    p.proOut
+      ? { done:true, html:`<div class="lrow"><span class="lic done">${ICON.check}</span>
+          <span class="l1">PRO 360 batido</span><span class="amt g">Garantido</span>
+          <span class="l2">3 de 3 verticais · 2 de 2 Expansão</span></div>` }
+      : { valor:ganhoPro, html:`<div class="lrow"><span class="lic pro">${ICON.crown}</span>
+          <span class="l1">Ser PRO 360</span><span class="amt g">+${brl(ganhoPro)}</span>
+          <span class="l2">${p.verticaisPro} de 3 verticais · ${p.expansao} de 2 Expansão</span></div>` },
+    { valor:ganhoElite, html:`<div class="lrow"><span class="lic elite">${ICON.trophy}</span>
+          <span class="l1">Fechar na faixa Elite</span><span class="amt g">+${brl(ganhoElite)}</span>
+          <span class="l2">${num(m.gp)} de ${num(ELITE_MIN)} GP · faltam ${num(ELITE_MIN - m.gp)}</span>
+          <span class="mbar e"><i style="width:${(m.gp/ELITE_MIN*100).toFixed(0)}%"></i></span></div>` },
+  ];
+  const ordered = [...opps.filter(o => !o.done).sort((a,b) => b.valor - a.valor), ...opps.filter(o => o.done)];
+
+  const hoje = p.verticais.map(v => `<div class="lrow"><span class="lic ${v.id}">${ICON[v.id]}</span>
+      <span class="l1"><span class="nm">${v.nome}</span><span class="chip ${v.proSet ? 'up' : 'neutral'}">${v.proSet ? 'PRO' : 'Sem PRO'}</span></span>
+      <span class="amt">${brl(v.gp + v.rede)}</span>
+      <span class="l2">GP ${brl(v.gp)} · Rede ${brl(v.rede)}</span></div>`).join('');
+
+  const nov = p.verticais.map(v => {
+    const ganho = (v.gpCheio - v.gp) + (v.redeCheia - v.rede);
+    return `<div class="lrow"><span class="lic ${v.id}">${ICON[v.id]}</span>
+      <span class="l1"><span class="nm">${v.nome}</span><span class="chip ${v.proOut ? 'up' : 'down'}">${v.proOut ? 'PRO batido' : 'Falta bater'}</span></span>
+      <span class="amt ${v.proOut ? '' : 'g'}">${v.proOut ? 'Garantido' : '+' + brl(ganho)}</span>
+      <span class="l2">${v.cnx}</span>${v.proOut ? '' : '<span class="amt2">se bater o PRO</span>'}</div>`;
+  }).join('') + `<div class="lrow"><span class="lic expansao">${ICON.expansao}</span>
+      <span class="l1"><span class="nm">Expansão</span></span><span class="amt">${p.expansao}/2</span>
+      <span class="l2">Conexões que contam pro PRO 360</span></div>`;
+
+  const isHoje = state.vtab === 'hoje';
+  return `${sheetHead(m)}
+    ${monthTop(m)}
+
+    <section class="sec"><h4>Sua prévia</h4>
+      <div class="money">
+        <div class="m-top">
+          <div><span class="k">Prévia de hoje</span><strong class="m-big">${brl(p.previaHoje)}</strong></div>
+          <div class="m-elite"><span class="k">Prévia Elite</span><strong>${brl(p.previaElite)}</strong></div>
+        </div>
+        <span class="m-status ${p.proSet ? 'ok' : 'warn'}">${p.proSet ? ICON.checkC + '<span><b>Cheia:</b> você foi PRO 360 em Setembro</span>' : ICON.warn + '<span><b>Reduzida:</b> sem PRO 360 em Setembro</span>'}</span>
+      </div>
+    </section>
+
+    <section class="sec"><h4>Para ganhar mais em Novembro</h4>
+      <div class="box opps">${ordered.map(o => o.html).join('')}</div>
+    </section>
+
+    <section class="sec"><h4>PRO por vertical</h4>
+      <div class="box">
+        <div class="vtabs"><div class="tabs" role="group" aria-label="Período">
+          <button type="button" data-vtab="hoje" aria-pressed="${isHoje}">Hoje</button>
+          <button type="button" data-vtab="nov" aria-pressed="${!isHoje}">Em Novembro</button>
+        </div></div>
+        <p class="vcap">${isHoje ? 'Pago agora, pelo PRO de Setembro.' : 'Pago em Novembro, pelo PRO de Outubro.'}</p>
+        <div class="vlist">${isHoje ? hoje : nov}</div>
+        <details class="why"><summary>O que é GP e Rede? ${ICON.chevS}</summary>
+          <p>GP é o que vem das suas próprias conexões. Rede soma GI, royalties e equiparação.</p></details>
+      </div>
+    </section>
+
+    <section class="sec"><h4>Origem dos pontos</h4>${origem(m.origem)}</section>
+    <p class="foot">Valores estimados sobre o consumo contratado dos clientes.</p>`;
+}
+
+/* ---------- Sheet: mês fechado ---------- */
+function sheetFechado(key){
+  const p = P();
+  const m = MESES.find(x => x.key === key);
+  const prox = nextName(key);
+  const next = MESES[MESES.indexOf(m) + 1];
+  const verbo = next && next.atual ? 'paga' : 'pagou';
+  const pro = p.proSet; // no exemplo, o histórico de PRO segue o cenário
+  const rows = p.verticais.map(v => `<div class="lrow single"><span class="lic ${v.id}">${ICON[v.id]}</span>
+      <span class="l1">${v.nome}</span>
+      <span class="amt"><span class="chip ${pro ? 'up' : 'neutral'}">${pro ? 'PRO' : 'Sem PRO'}</span></span></div>`).join('');
+  return `${sheetHead(m)}
+    ${monthTop(m)}
+    <section class="sec"><h4>PRO em ${m.nome}</h4>
+      <div class="box">${rows}
+        <div class="boxfoot ${pro ? 'ok' : 'plain'}">${pro ? ICON.checkC : ICON.info}<span>${pro ? `<b>PRO 360.</b> ${prox} ${verbo} a prévia cheia.` : `<b>Sem PRO 360.</b> ${prox} ${verbo} a prévia reduzida.`}</span></div>
+      </div>
+    </section>
+    <section class="sec"><h4>Origem dos pontos</h4>${origem(m.origem)}</section>`;
+}
+
+/* ---------- Sheet: dias qualificados ---------- */
+function sheetDias(){
+  const dias = DIAS[state.dias], batida = dias >= DIAS.meta, f = Math.min(1, dias / DIAS.meta);
+  /* meia-lua: arco de 180°, com a bolinha na ponta do progresso */
+  const R = 90, cx = 110, cy = 112, len = Math.PI * R;
+  const kx = cx - R * Math.cos(Math.PI * f), ky = cy - R * Math.sin(Math.PI * f);
+  const arc = `M ${cx - R} ${cy} A ${R} ${R} 0 0 1 ${cx + R} ${cy}`;
+  const reqs = REQUISITOS.map(r => {
+    const ok = r.atual >= r.meta;
+    return `<div class="req"><span class="st ${ok ? 'ok' : ''}">${ok ? ICON.check : ''}</span><span class="l">${r.label}</span>
+      <span class="v"><b>${num(r.atual)}</b> de ${num(r.meta)}</span><span class="mbar"><i style="width:${Math.min(100, r.atual/r.meta*100).toFixed(0)}%"></i></span></div>`;
+  }).join('') + `<div class="req"><span class="st ${batida ? 'ok' : ''}">${batida ? ICON.check : ''}</span><span class="l">Dias qualificados</span>
+      <span class="v">${batida ? '<b>Meta batida</b>' : `<b>${dias}</b> de ${DIAS.meta}`}</span><span class="mbar"><i style="width:${(f * 100).toFixed(0)}%"></i></span></div>`;
+  const okCount = REQUISITOS.filter(r => r.atual >= r.meta).length + (batida ? 1 : 0);
+  return `
+    <div class="sh-head">
+      <span></span>
+      <div><h3 id="sheet-title">Dias qualificados</h3></div>
+      <button type="button" class="close-x" data-close aria-label="Fechar">${ICON.x}</button>
+    </div>
+    <div class="box rg">
+      <div class="gauge" role="img" aria-label="Dias qualificados: ${dias} de ${DIAS.meta}">
+        <svg viewBox="0 0 220 124" aria-hidden="true">
+          <defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9FDCB2"/><stop offset="1" stop-color="#338449"/></linearGradient></defs>
+          <path d="${arc}" fill="none" stroke="#E6E9EB" stroke-width="14" stroke-linecap="round"/>
+          <path d="${arc}" fill="none" stroke="url(#gg)" stroke-width="14" stroke-linecap="round" stroke-dasharray="${(len * f).toFixed(1)} ${len.toFixed(1)}"/>
+          <circle cx="${kx.toFixed(1)}" cy="${ky.toFixed(1)}" r="9" fill="#fff" stroke="#338449" stroke-width="4"/>
+        </svg>
+        <div class="g-center"><b>${dias}</b><span>${batida ? 'dias seguidos' : `de ${DIAS.meta} dias`}</span></div>
+        <span class="g-min">0</span><span class="g-max">${DIAS.meta}</span>
+      </div>
+      ${batida ? `<span class="dq-tag ok">${ICON.check}Meta de 90 dias batida</span>` : `<span class="dq-tag">Faltam ${DIAS.meta - dias} dias para a meta</span>`}
+      <p class="g-sub">Dias seguidos em que você se manteve qualificado como Gestor.</p>
+    </div>
+    <section class="sec">
+      <div class="sec-row"><h4>Para subir para Executivo</h4><span class="frac" aria-label="${okCount} de ${REQUISITOS.length + 1} requisitos cumpridos"><b>${okCount}</b>/${REQUISITOS.length + 1}</span></div>
+      <div class="box">${reqs}</div>
+    </section>`;
+}
+
+/* ---------- Navegação ---------- */
+function go(screen){
+  state.screen = screen;
+  $('#viewport').classList.toggle('on-history', screen === 'history');
+  $('#screen-history').inert = screen !== 'history';
+  $('#screen-home').inert = screen === 'history';
+}
+
+function openSheet(kind, month, keepScroll){
+  const already = !$('#sheet').hidden;
+  if (!already) state.lastFocus = document.activeElement;
+  state.sheet = kind; state.month = month || null;
+  const body = $('#sheet-body'), y = body.scrollTop;
+  body.innerHTML = kind === 'atual' ? sheetAtual() : kind === 'dias' ? sheetDias() : sheetFechado(month);
+  body.scrollTop = keepScroll ? y : 0;
+  const sheet = $('#sheet'), scrim = $('#scrim');
+  sheet.hidden = false; scrim.hidden = false;
+  requestAnimationFrame(() => { sheet.classList.add('open'); scrim.classList.add('open'); if (!keepScroll) sheet.focus(); });
+}
+function closeSheet(){
+  const sheet = $('#sheet'), scrim = $('#scrim');
+  if (sheet.hidden) return;
+  sheet.classList.remove('open'); scrim.classList.remove('open');
+  state.sheet = null;
+  setTimeout(() => { if (!state.sheet){ sheet.hidden = true; scrim.hidden = true; } }, 300);
+  if (state.lastFocus && document.contains(state.lastFocus)) state.lastFocus.focus();
+}
+function refreshSheet(){ if (state.sheet) openSheet(state.sheet, state.month, true); }
+
+let toastT;
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-go],[data-sheet],[data-month],[data-close],[data-toast],[data-vtab],#scrim,[data-ctl] button');
+  if (!el) return;
+  if (el.id === 'scrim' || el.hasAttribute('data-close')) return closeSheet();
+  if (el.closest('[data-ctl]')){
+    const ctl = el.closest('[data-ctl]').dataset.ctl;
+    state[ctl] = el.dataset.v;
+    el.parentElement.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b === el));
+    if (ctl === 'w') $('#device').classList.toggle('narrow', state.w === '320');
+    renderCard(); refreshSheet();
+    return;
+  }
+  if (el.dataset.vtab){ state.vtab = el.dataset.vtab; return refreshSheet(); }
+  if (el.dataset.toast) return toast(el.dataset.toast);
+  if (el.dataset.go){ closeSheet(); return go(el.dataset.go); }
+  if (el.dataset.sheet) return openSheet(el.dataset.sheet);
+  if (el.dataset.month) return openSheet('fechado', el.dataset.month);
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+$('#hot-toggle').addEventListener('change', e => $('#device').classList.toggle('show-hot', e.target.checked));
+
+renderCard(); renderHistory(); go('home');
+
+/* ---------- Modo embutido: a documentação comanda o protótipo por mensagem ---------- */
+/* embutido por ?embed ou dentro da documentação (iframe srcdoc) */
+if (new URLSearchParams(location.search).has('embed') || location.protocol === 'about:') document.body.classList.add('embed');
+function postState(){
+  if (parent !== window) parent.postMessage({ type:'proto-state', proto:'v1', screen:state.screen, sheet:state.sheet, month:state.month }, '*');
+}
+if (parent !== window) parent.postMessage({ type:'proto-ready', proto:'v1' }, '*');
+document.addEventListener('click', () => setTimeout(postState, 0));
+window.addEventListener('message', e => {
+  const m = e.data;
+  if (!m || m.type !== 'proto') return;
+  const click = sel => { const el = document.querySelector(sel); if (el) el.click(); };
+  if (m.action === 'set') click(`[data-ctl="${m.ctl}"] [data-v="${m.v}"]`);
+  if (m.action === 'go'){
+    closeSheet(); go(m.screen);
+    $('#screen-home').scrollTop = 0; $('#screen-history').scrollTop = 0;
+  }
+  if (m.action === 'sheet'){
+    if (m.screen) go(m.screen);
+    if (m.vtab) state.vtab = m.vtab;
+    openSheet(m.kind, m.month);
+    if (m.text) setTimeout(() => {
+      const body = $('#sheet-body');
+      const h = [...body.querySelectorAll('h4')].find(x => x.textContent.trim().startsWith(m.text));
+      if (h) body.scrollTo({ top: h.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop - 12, behavior:'smooth' });
+    }, 380);
+  }
+  setTimeout(postState, 0);
+});
+</script>
+</body>
+</html>
