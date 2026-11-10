@@ -1,0 +1,19 @@
+{
+  "nome": "Canvas Uber e iFood",
+  "descricao": "O canvas de Uber e iFood no app iGreen como no Claude: o estudo, a home com os banners, o crédito com cashback, a conta conectada e a visão com parceria.",
+  "tipo": "proposta",
+  "atualizado": "2026-11-10",
+  "paginas": [
+    {
+      "nome": "Fluxo proposto",
+      "arquivo": "index.html"
+    }
+  ],
+  "tags": [
+    "canvas",
+    "uber",
+    "ifood",
+    "cashback",
+    "parceiros"
+  ]
+}
