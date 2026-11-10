@@ -11,3 +11,11 @@ Cada página mostra as telas nas posições do canvas, em fundo escuro: arraste 
 | Fluxo proposto | https://igreen-hub.pages.dev/super-app/canvas-uber-ifood/index.html |
 
 As imagens das telas estão em `assets/`, com o nome do arquivo igual ao do canvas. As notas de bastidor do canvas (os post-its) não vieram; os títulos das linhas vieram.
+
+## Protótipos
+
+Os protótipos navegáveis feitos a partir deste canvas. Também têm card próprio na vitrine; os links ficam aqui e na ficha para quem chega pelo canvas.
+
+| Protótipo | Endereço |
+|---|---|
+| Uber e iFood no iGreen | https://snksergio.github.io/igreen-uber-ifood/ |
