@@ -2,9 +2,7 @@
   "nome": "Cashback e carteira",
   "descricao": "O resgate do cashback sem web view: levar para a carteira, ver o saldo e o que vence, resgatar via Pix, comprovante, extrato e a ajuda que mostra como o cashback vira dinheiro.",
   "tipo": "prototipo",
-  "atualizado": "2026-10-28",
-  "link": "https://snksergio.github.io/pagar-fatura-igreen/",
-  "repo": "https://github.com/snksergio/pagar-fatura-igreen",
+  "atualizado": "2026-11-10",
   "paginas": [
     {
       "nome": "Cashback e carteira",
@@ -15,6 +13,19 @@
       "arquivo": "cashback-carteira.html#ajuda"
     }
   ],
+  "versoes": [
+    {
+      "nome": "Atual",
+      "arquivo": "cashback-carteira.html",
+      "data": "2026-10-28"
+    },
+    {
+      "nome": "Variação 2 · com a página Pay",
+      "arquivo": "cashback-carteira-pix-app-variacao2-pay.html",
+      "data": "2026-10-28"
+    }
+  ],
+  "repo": "https://github.com/snksergio/pagar-fatura-igreen",
   "tags": [
     "cashback",
     "carteira",
