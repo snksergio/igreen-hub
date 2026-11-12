@@ -1,0 +1,962 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Recorrência no cadastro · Link iGreen</title>
+<!-- Protótipo local (12/11/2026, fase 2 da tarefa da recorrência), versão 2: o link de cadastro (autoconexão), passo 4 de 5.
+     Ao tocar em "Prosseguir", um modal promocional oferece a recorrência no cartão; "Quero garantir" vira o cadastro do cartão
+     dentro do modal; "Agora não" segue o cadastro. Tokens, tipografia, campos, abas, botões, cards e o modal copiados do
+     link do mob (github.com/snksergio/igreen-mob-link: tokens.css, global.css, Field, Controls, Button, Modal, PageShell,
+     Steps e cadastroSimplificado). Dados fictícios. Versão 3: rodapé do modal fora da rolagem, "Agora não" como link, card
+     cinza, seletor de tipo do cartão (CategorySelect do mob), carregamento no campo inteiro, realce na miniatura e botão
+     sempre visível. As versões anteriores estão em link-cadastro-recorrencia-v1.html e -v2.html. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- tokens do mob (src/styles/tokens.css, tema claro) ---------- */
+  :root {
+    --primitives-brand-50: #ebfbf1; --primitives-brand-600: #00a859; --primitives-brand-700: #008949;
+    --primitives-neutral-100: #f3f4f6; --primitives-neutral-200: #e9eaec; --primitives-neutral-300: #cbd0d4;
+    --primitives-neutral-500: #9ca3af; --primitives-neutral-600: #7e8994; --primitives-neutral-950: #111111;
+    --bg-surface: #fff; --bg-background: #fff; --bg-elevated: #fff; --bg-secondary: #fff;
+    --bg-muted: var(--primitives-neutral-100); --bg-fill: var(--primitives-neutral-600);
+    --bg-primary: var(--primitives-brand-600); --bg-primary-hover: #009a52; --bg-primary-active: #008949; --bg-primary-subtle: var(--primitives-brand-50);
+    --bg-hover: rgba(17, 17, 17, 0.04); --bg-glass: rgba(255, 255, 255, 0.95); --bg-input: #fff;
+    --fg-strong: var(--primitives-neutral-950); --fg-main: var(--primitives-neutral-600); --fg-muted: var(--primitives-neutral-500); --fg-subtle: var(--primitives-neutral-300);
+    --fg-primary: var(--primitives-brand-600); --fg-on-primary: #fff; --fg-on-secondary: var(--primitives-neutral-600); --fg-critical: #ef4444;
+    --border: var(--primitives-neutral-200); --border-muted: var(--primitives-neutral-100); --border-input: var(--primitives-neutral-200);
+    --border-primary: var(--primitives-brand-600); --border-critical: #dc2626; --border-primary-subtle: rgba(0, 119, 44, 0.1);
+    --ring-base: 4px; --ring-primary: rgba(0, 168, 89, 0.15); --ring-critical: rgba(239, 68, 68, 0.15);
+    --radius-md: 6px; --radius-sm: 10px; --radius-xl-flag: 12px; --radius-base: 14px; --radius-lg: 18px; --radius-xl: 32px; --radius-full: 100px;
+    --h-form-lg: 52px;
+    --shadow-base: 0 1px 1px 0 rgba(156, 163, 175, 0.1); --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05); --shadow-icon: 0 1px 1px 0 rgba(0, 0, 0, 0.02);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --overlay: rgba(17, 17, 17, 0.56); --sheen: rgba(255, 255, 255, 0.85);
+    --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color-scheme: light;
+  }
+
+  /* ---------- base (src/styles/global.css) ---------- */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  body { overflow-x: clip; font-family: var(--font-sans); color: var(--fg-strong); background: var(--bg-surface); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  p, h1, h2, h3, ul, ol { margin: 0; }
+  ul, ol { padding: 0; list-style: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+  input { font: inherit; }
+  img { display: block; max-width: 100%; }
+  :focus-visible { outline: 2px solid var(--border-primary); outline-offset: 2px; }
+  [hidden] { display: none !important; }
+
+  /* estilos de texto do design system */
+  .t-page-title { font-family: var(--font-sans); font-weight: 700; font-size: 26px; line-height: 34px; letter-spacing: -0.04em; }
+  .t-modal-title { font-family: var(--font-sans); font-weight: 700; font-size: 24px; line-height: 26px; letter-spacing: -0.04em; text-wrap: balance; }
+  .t-page-subtitle, .t-body-lg-medium { font-family: var(--font-sans); font-weight: 500; font-size: 14px; line-height: 20px; letter-spacing: -0.01em; }
+  .t-body-lg-semibold { font-family: var(--font-sans); font-weight: 600; font-size: 14px; line-height: 20px; letter-spacing: -0.01em; }
+  .t-body-md-semibold { font-family: var(--font-sans); font-weight: 600; font-size: 13px; line-height: 18px; letter-spacing: -0.01em; }
+  .t-body-md-medium { font-family: var(--font-sans); font-weight: 500; font-size: 13px; line-height: 18px; letter-spacing: -0.01em; }
+  .t-body-sm-medium { font-family: var(--font-sans); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: -0.01em; }
+  .t-caption { font-family: var(--font-sans); font-weight: 500; font-size: 12px; line-height: 16px; letter-spacing: -0.01em; }
+  .t-body-xs-medium { font-family: var(--font-sans); font-weight: 500; font-size: 11px; line-height: 16px; letter-spacing: 0.005em; }
+  .t-label { font-family: var(--font-sans); font-weight: 700; font-size: 11px; line-height: 16px; letter-spacing: 0.01em; }
+  .t-button-md { font-family: var(--font-sans); font-weight: 700; font-size: 14px; line-height: 20px; letter-spacing: -0.01em; }
+  .t-overline { font-family: var(--font-inter); font-weight: 600; font-size: 10px; line-height: normal; letter-spacing: 0.01em; }
+  @media (max-width: 560px) {
+    .t-page-title { font-size: 22px; line-height: 28px; }
+    .t-page-subtitle { font-size: 13px; line-height: 19px; }
+  }
+  .strong { color: var(--fg-strong); }
+  .mainText { color: var(--fg-main); }
+  .mutedText { color: var(--fg-muted); }
+  .highlight { color: var(--fg-primary); }
+
+  /* ---------- página (PageShell) ---------- */
+  .page { min-height: 100vh; min-height: 100svh; display: flex; justify-content: center; padding: 56px 16px 96px; background: var(--bg-surface); }
+  .column { display: flex; flex-direction: column; gap: 42px; width: 100%; max-width: 480px; animation: enter 0.35s ease-out; }
+  .headerController { display: flex; flex-direction: column; gap: 32px; width: 100%; }
+  .headerTop { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .isotipo { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 36px; height: 36px; background: var(--bg-primary); border-radius: var(--radius-sm); }
+  .responsavel { display: inline-flex; align-items: center; gap: 7px; min-width: 0; height: 30px; padding: 2px 12px 2px 2px; border: 1px solid var(--border); border-radius: var(--radius-full); }
+  .avatar { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--bg-primary-subtle); color: var(--fg-primary); font-weight: 700; font-size: 10px; letter-spacing: 0.02em; }
+  .respName { overflow: hidden; max-width: 180px; font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: -0.01em; color: var(--fg-main); white-space: nowrap; text-overflow: ellipsis; }
+  .stepper { display: flex; gap: 6px; width: 100%; border-radius: 96px; overflow: hidden; }
+  .stepItem { flex: 1 0 0; min-width: 1px; height: 6px; background: var(--bg-muted); }
+  .stepActive { background: var(--bg-primary); }
+  .pageHeader { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; width: 100%; padding-bottom: 32px; }
+  .badge { display: inline-flex; align-items: center; height: 26px; padding: 0 12px; background: var(--bg-muted); border-radius: var(--radius-full); color: var(--fg-main); line-height: 18px; white-space: nowrap; }
+  .badgeTop { display: none; }
+  .titleRow { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+  .subtitle { color: var(--fg-muted); }
+  .container { display: flex; flex-direction: column; gap: 40px; width: 100%; }
+  .stack { display: flex; flex-direction: column; gap: var(--gap); width: 100%; }
+  .labeled { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+  .groupLabel { color: var(--fg-main); }
+  @keyframes enter { from { opacity: 0; transform: translateY(8px); } }
+  @media (max-width: 560px) {
+    .page { padding: 20px 16px 40px; }
+    .column { gap: 20px; }
+    .headerController { gap: 16px; }
+    .headerTop { gap: 8px; }
+    .isotipo { width: 32px; height: 32px; }
+    .badgeTop { display: inline-flex; flex-shrink: 0; height: 24px; padding: 0 10px; margin-right: auto; }
+    .badgePage { display: none; }
+    .respName { max-width: 120px; }
+    .pageHeader { gap: 12px; padding-bottom: 20px; }
+    .container { gap: 28px; }
+    /* 40 → 28, 28 → 20, 18 → 13; espaçamentos de até 12 px ficam como estão */
+    .stack { gap: max(calc(var(--gap) * 0.7), min(var(--gap), 12px)); }
+  }
+
+  /* ---------- escolha do benefício (como em produção, com os tokens do mob) ---------- */
+  .escolhas { display: flex; flex-direction: column; gap: 8px; padding: 8px; background: var(--bg-muted); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+  .escolha { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 18px 10px 10px; border-radius: var(--radius-base); text-align: left; color: var(--fg-strong); transition: background-color 0.15s ease, box-shadow 0.15s ease; }
+  .escolha[aria-checked="true"] { background: var(--bg-surface); box-shadow: var(--shadow-sm); }
+  .escolha .ic { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: var(--radius-sm); background: var(--bg-surface); box-shadow: var(--shadow-icon), var(--shadow-icon); color: var(--fg-strong); }
+  .escolha[aria-checked="true"] .ic { background: var(--bg-primary-subtle); box-shadow: none; color: var(--fg-primary); }
+  .escolha .t { flex: 1 0 0; min-width: 1px; }
+  .radio { flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--fg-muted); background: #fff; transition: border 0.15s ease; }
+  .escolha[aria-checked="true"] .radio { border: 5px solid var(--bg-primary); }
+  .como { border-bottom: 1px solid var(--border-muted); }
+  .como > button { display: flex; align-items: center; justify-content: space-between; width: 100%; height: 44px; padding: 0 12px; color: var(--fg-main); }
+  .como > button svg { transition: transform 0.2s ease; }
+  .como > button[aria-expanded="true"] svg { transform: rotate(45deg); }
+  .como p { margin: 0 12px 14px; color: var(--fg-main); }
+  .como b { color: var(--fg-strong); font-weight: 600; }
+
+  /* ---------- ToggleCard (Steps.module.css) e Sim/Não (Controls.module.css) ---------- */
+  .toggleCard { display: flex; align-items: center; gap: 12px; width: 100%; padding: 13px 17px; background: var(--bg-muted); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-base); }
+  .toggleIcon { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 42px; height: 42px; background: var(--bg-surface); border-radius: var(--radius-sm); box-shadow: var(--shadow-icon), var(--shadow-icon); color: var(--fg-strong); }
+  .toggleText { display: flex; flex: 1 0 0; min-width: 1px; flex-direction: column; justify-content: center; gap: 1px; }
+  .toggle { display: flex; flex-shrink: 0; gap: 4px; width: 120px; height: 42px; padding: 4px; background: var(--bg-background); border: 1px solid var(--border); border-radius: var(--radius-base); box-shadow: var(--shadow-icon); }
+  .toggleButton { flex: 1 0 0; min-width: 1px; border: 1px solid transparent; border-radius: var(--radius-sm); font-family: var(--font-inter); font-weight: 700; font-size: 12px; letter-spacing: 0.01em; color: var(--fg-muted); transition: background-color 0.15s ease, color 0.15s ease; }
+  .toggleOn { background: var(--bg-fill); border-color: rgba(0, 0, 0, 0.05); box-shadow: var(--shadow-sm); color: #fff; }
+
+  /* ---------- lista com ícones (vantagens) ---------- */
+  .lista { width: 100%; background: var(--bg-background); border: 1px solid var(--border); border-radius: var(--radius-base); box-shadow: var(--shadow-base); overflow: hidden; }
+  .lista li { display: flex; align-items: center; gap: 14px; padding: 14px 17px; color: var(--fg-strong); }
+  .lista li + li { box-shadow: inset 0 1px 0 var(--border-muted); }
+  .lista .ic { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--bg-primary-subtle); box-shadow: inset 0 0 0 1px var(--border-primary-subtle); color: var(--fg-primary); }
+
+  /* ---------- botões (Button.module.css) ---------- */
+  .footer { display: flex; gap: 14px; width: 100%; }
+  .btn { position: relative; display: flex; flex: 1 0 0; align-items: center; justify-content: center; gap: 12px; height: var(--h-form-lg); padding: 0 20px; border: 1px solid transparent; border-radius: var(--radius-base); white-space: nowrap; transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease; }
+  .btn:active:not(:disabled) { transform: translateY(1px); }
+  .primary { background: var(--bg-primary); color: var(--fg-on-primary); }
+  .primary:hover { background: var(--bg-primary-hover); }
+  .primary:active { background: var(--bg-primary-active); }
+  .secondary { background: var(--bg-secondary); border-color: var(--border); color: var(--fg-on-secondary); }
+  .secondary:hover { background: var(--bg-muted); }
+  .btn .spinner { position: absolute; width: 20px; height: 20px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin 0.7s linear infinite; }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .btn.carregando { color: transparent; pointer-events: none; opacity: 1; }
+  /* link de texto (TextLink do mob): a saída discreta */
+  .linkBtn { display: inline-flex; align-self: center; align-items: center; justify-content: center; gap: 10px; min-height: 40px; padding: 0 12px; border-radius: var(--radius-sm); color: var(--fg-main); white-space: nowrap; transition: opacity 0.15s ease; }
+  .linkBtn:hover { opacity: 0.75; }
+  .btn.carregando .spinner { color: #fff; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- card de resumo e flag (Steps.module.css / Controls.module.css) ---------- */
+  .summaryCard { display: flex; flex-direction: column; gap: 16px; width: 100%; padding: 11px 11px 17px; background: var(--bg-background); border: 1px solid var(--border); border-radius: var(--radius-base); box-shadow: var(--shadow-base); }
+  .flag { display: flex; align-items: center; gap: 12px; width: 100%; padding: 16px; border-radius: var(--radius-xl-flag); }
+  .flagMuted { background: var(--bg-muted); }
+  .flagPrimary { background: var(--bg-primary-subtle); }
+  .flagText { display: flex; flex: 1 0 0; min-width: 1px; flex-direction: column; justify-content: center; gap: 4px; }
+  .flagOverlineMuted { color: var(--fg-muted); }
+  .flagOverlinePrimary { color: var(--fg-primary); }
+  .flagName { font-family: var(--font-inter); font-weight: 700; font-size: 14px; line-height: 18px; letter-spacing: 0.01em; color: var(--fg-strong); }
+  .iconeBranco { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--bg-surface); box-shadow: var(--shadow-icon), var(--shadow-icon); color: var(--fg-main); }
+  /* versão compacta do flag, para avisos curtos dentro do modal */
+  .flagCompacta { gap: 12px; padding: 12px 14px; }
+  .flagCompacta .iconeBranco { width: 32px; height: 32px; border-radius: 8px; }
+  .flagCompacta .flagText { gap: 1px; }
+  .fancy { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: var(--radius-sm); color: #fff; }
+  .summaryLines { display: flex; flex-direction: column; padding: 0 12px; color: var(--fg-main); }
+  .summaryLines b { font-weight: 600; color: var(--fg-strong); }
+
+  /* ---------- campos (Field.module.css) ---------- */
+  .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; scroll-margin: 16px 0 140px; }
+  .field .label { color: var(--fg-main); transition: color 0.15s ease; }
+  .control { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px; height: var(--h-form-lg); padding: 0 18px; background: var(--bg-input); border: 1px solid var(--border-input); border-radius: var(--radius-base); box-shadow: var(--shadow-base); transition: border-color 0.15s ease, box-shadow 0.15s ease; cursor: text; }
+  .control input { flex: 1 1 auto; width: 100%; min-width: 0; height: 100%; padding: 0; border: 0; outline: 0; background: transparent; color: var(--fg-strong); font-variant-numeric: tabular-nums; }
+  .control input::placeholder { color: var(--fg-subtle); opacity: 1; }
+  .control input:focus-visible { outline: none; }
+  .field:focus-within .label { color: var(--fg-primary); }
+  .field:focus-within .control { border-color: var(--border-primary); box-shadow: 0 0 0 var(--ring-base) var(--ring-primary); }
+  .field.erro .label, .field.erro .message { color: var(--fg-critical); }
+  .field.erro .control { border-color: var(--border-critical); box-shadow: 0 0 0 var(--ring-base) var(--ring-critical); }
+  .field .message { color: var(--fg-main); }
+  .row { display: flex; gap: 18px; align-items: flex-start; width: 100%; }
+  .row > * { flex: 1 0 0; min-width: 0; }
+  @media (max-width: 420px) { .row { gap: 12px; } }
+  .marcaCampo { display: flex; flex: none; align-items: center; justify-content: center; width: 38px; height: 24px; border-radius: 5px; background: #fff; border: 1px solid var(--border); box-shadow: var(--shadow-base); animation: popInSelo 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; }
+  .bandeira { flex: none; padding: 2px 8px; border-radius: var(--radius-full); background: var(--bg-muted); font-weight: 700; font-size: 11px; line-height: 16px; color: var(--fg-main); }
+  .fimCampo { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+  .fieldSpinner { display: block; flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--fg-primary); border-right-color: transparent; animation: spin 0.7s linear infinite; }
+  .field .message.info { color: var(--fg-primary); }
+  /* carregamento no campo inteiro: um brilho verde atravessando (o shimmer do mapa do mob) e uma linha enchendo embaixo */
+  .control.carregando { overflow: hidden; border-color: var(--border-primary); }
+  /* o brilho anda com transform (leve, roda na placa de vídeo), não com background-position */
+  .control.carregando::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 100%; background: linear-gradient(100deg, transparent 30%, rgba(0, 168, 89, 0.12) 50%, transparent 70%); transform: translateX(-100%); animation: shimmer 1.1s linear infinite; pointer-events: none; }
+  .control.carregando::before { content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; background: var(--bg-primary); transform-origin: left; animation: encher var(--dur, 0.9s) cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+  @keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+  @keyframes encher { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .okIcon { flex-shrink: 0; color: var(--fg-primary); }
+  .previa { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 500; font-size: 12px; line-height: 16px; color: var(--fg-muted); text-align: center; }
+  .previa svg { flex-shrink: 0; }
+
+  /* ---------- tipo do cartão: lista aberta que recolhe na escolha (CategorySelect.module.css do mob) ---------- */
+  .tipos { display: flex; flex-direction: column; width: 100%; background: var(--bg-background); border: 1px solid var(--border); border-radius: var(--radius-base); box-shadow: var(--shadow-base); overflow: hidden; transition: background-color 0.25s ease, border-color 0.25s ease, border-radius 0.25s ease; }
+  /* escolhido: continua neutro (fundo branco e borda cinza), como no design original */
+  .tipoWrap { display: grid; grid-template-rows: 1fr; transition: grid-template-rows 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease; }
+  .tipoWrap.oculto { grid-template-rows: 0fr; opacity: 0; }
+  .tipoInner { min-height: 0; overflow: hidden; overflow: clip; }
+  .tipo { display: flex; align-items: center; gap: 14px; width: 100%; padding: 12px 16px 12px 14px; text-align: left; background: transparent; transition: background-color 0.15s ease, padding 0.25s ease; }
+  /* ícone: fundo verde clarinho e desenho verde forte (como as escolhas do design system) */
+  .tipoIc { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: var(--radius-sm); background: var(--bg-primary-subtle); color: var(--fg-primary); transition: width 0.25s ease, height 0.25s ease, border-radius 0.25s ease; }
+  .tipoIc svg { width: 20px; height: 20px; transition: width 0.25s ease, height 0.25s ease; }
+  .tipoIc.off { background: var(--bg-muted); color: var(--fg-muted); }
+  button.tipo:hover:not(:disabled) { background: var(--bg-hover); }
+  .tipo.divisor { box-shadow: inset 0 1px 0 var(--border-muted); }
+  .tipos.recolhida .tipo { box-shadow: none; }
+  .tipo:disabled { cursor: default; }
+  .tipoTexto { display: flex; flex: 1 0 0; min-width: 1px; flex-direction: column; gap: 2px; }
+  .seta { display: flex; color: var(--fg-subtle); transition: color 0.15s ease, transform 0.15s ease; }
+  button.tipo:hover .seta { color: var(--fg-primary); transform: translateX(2px); }
+  .breve { flex-shrink: 0; display: inline-flex; align-items: center; height: 18px; padding: 0 8px; border-radius: var(--radius-full); background: var(--bg-muted); color: var(--fg-muted); font-size: 9px; line-height: 18px; letter-spacing: 0.04em; }
+  .editar { display: none; flex-shrink: 0; align-items: center; justify-content: center; width: 32px; height: 32px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow-base); color: var(--fg-main); transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease; }
+  /* escolhido: a linha fica com a altura de um campo (52 px) e o ícone diminui */
+  .tipo.escolhido { padding: 9px 10px 9px 10px; gap: 12px; }
+  .tipo.escolhido .tipoIc { width: 32px; height: 32px; border-radius: 8px; }
+  .tipo.escolhido .tipoIc svg { width: 18px; height: 18px; }
+  .tipo.escolhido .seta { display: none; }
+  .tipo.escolhido .editar { display: flex; }
+  .tipo.escolhido:hover { background: transparent; }
+  .tipo.escolhido:hover .editar { border-color: var(--border-primary); color: var(--fg-primary); }
+  @media (max-width: 420px) {
+    .tipo { gap: 12px; padding: 12px 14px 12px 12px; }
+  }
+  @media (max-width: 340px) { .seta { display: none; } }
+
+  /* revela os campos seguintes (Steps.module.css .reveal) */
+  /* espaço entre os campos do cartão: 20 px no computador, 15 px no celular (2 px a mais que o mob) */
+  .campos { --gc: 20px; display: flex; flex-direction: column; gap: var(--gc); width: 100%; }
+  @media (max-width: 560px) { .campos { --gc: 15px; } }
+  .reveal { display: grid; grid-template-rows: 0fr; opacity: 0; margin-top: calc(-1 * var(--gc, 13px)); transition: grid-template-rows 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.25s ease, margin-top 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .reveal.aberto { grid-template-rows: 1fr; opacity: 1; margin-top: 0; }
+  .revealInner { min-height: 0; overflow: hidden; overflow: clip; display: flex; flex-direction: column; gap: var(--gc, 13px); }
+  .reveal:not(.aberto) .revealInner { visibility: hidden; }
+  /* depois de aberto, solta o recorte para o anel de foco dos campos não ficar cortado */
+  .reveal.solto .revealInner { overflow: visible; }
+
+  /* ---------- modal (Modal.module.css): folha de baixo no celular, centralizado no computador ---------- */
+  .fundo { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 24px 16px; background: var(--overlay); backdrop-filter: blur(2px); animation: fadeIn 0.2s ease-out; overscroll-behavior: contain; }
+  /* o modal não rola: quem rola é a área do conteúdo; o rodapé fica fora dela, sempre inteiro dentro dos cantos arredondados */
+  .modal { position: relative; display: flex; flex-direction: column; width: 100%; max-width: 500px; max-height: calc(100vh - 48px); max-height: calc(100dvh - 48px); overflow: hidden; background: var(--bg-elevated); border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); animation: popIn 0.24s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
+  .rolagem { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+  .rolagem::-webkit-scrollbar { display: none; }
+  .corpo { display: flex; flex-direction: column; gap: 32px; padding: 40px 36px 28px; }
+  .corpo.flush { padding-top: 32px; gap: 28px; }
+  .botoes { position: relative; z-index: 3; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; padding: 16px 36px 28px; background: var(--bg-elevated); transition: box-shadow 0.15s ease; }
+  /* linha e sombra só quando há conteúdo rolando por baixo */
+  .botoes.sombra { box-shadow: 0 -1px 0 var(--border-muted), 0 -12px 20px -14px rgba(17, 17, 17, 0.22); }
+  .botoes .btn { flex: none; width: 100%; }
+  .botoes .previa { margin-top: 4px; }
+  .mHeader { display: flex; gap: 18px; align-items: flex-start; width: 100%; padding-right: 24px; }
+  .mHeaderIcon { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 52px; height: 52px; background: var(--bg-primary-subtle); border-radius: var(--radius-sm); color: var(--fg-primary); }
+  .mHeaderText { display: flex; flex: 1 0 0; min-width: 1px; flex-direction: column; gap: 6px; }
+  .fechar { position: absolute; top: 26px; right: 26px; z-index: 5; display: flex; border-radius: 8px; color: var(--fg-main); }
+  .fechar:hover { color: var(--fg-strong); }
+  @keyframes fadeIn { from { opacity: 0; } }
+  @keyframes popIn { from { opacity: 0; transform: translateY(12px) scale(0.98); } }
+  @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } }
+  @media (max-width: 560px) {
+    .fundo { flex-direction: column; align-items: stretch; justify-content: flex-end; padding: 24px 0 0; touch-action: none; }
+    .modal { max-width: none; max-height: calc(100vh - 24px); max-height: calc(100dvh - 24px); border-radius: 24px 24px 0 0; animation-name: slideUp; touch-action: pan-y; }
+    .corpo { gap: 24px; padding: 28px 20px 24px; }
+    .corpo.flush { padding-top: 24px; gap: 24px; }
+    .botoes { padding: 14px 20px calc(18px + env(safe-area-inset-bottom)); }
+    .mHeader { gap: 12px; align-items: center; padding-right: 36px; }
+    .mHeaderIcon { width: 40px; height: 40px; }
+    .mHeaderIcon svg { width: 20px; height: 20px; }
+    .mHeaderText { gap: 2px; }
+    .mHeaderText .t-modal-title { font-size: 22px; line-height: 26px; letter-spacing: -0.04em; }
+    .mHeaderText .subtitle { font-size: 13px; line-height: 18px; }
+    /* X discreto e flutuante: sem círculo nem sombra, um pouco para dentro do canto; segue preso no topo ao rolar */
+    .fechar { position: sticky; top: 16px; right: auto; align-self: flex-end; flex-shrink: 0; margin: -12px -6px -44px 0; padding: 4px; background: transparent; border-radius: 50%; box-shadow: none; }
+    .tituloOferta .t-modal-title { font-size: 22px; line-height: 26px; }
+    .tituloOferta .t-page-subtitle { font-size: 13px; line-height: 19px; }
+  }
+
+  /* ---------- a faixa verde da oferta (Figma 3160:6421), com movimento ---------- */
+  /* fundo: o verde já com a textura aplicada num JPEG de 25 KB (antes: PNG de 1,9 MB com mix-blend-mode, o mesmo visual) */
+  .faixa { position: relative; flex-shrink: 0; height: 180px; margin: 6px 6px 0; border-radius: 26px; background: var(--bg-primary) url(assets/faixa-fundo.jpg) left top / 533px 180px no-repeat; overflow: hidden; animation: bannerIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  /* brilho que atravessa a faixa de tempos em tempos (o mesmo "sheen" do card verde do mob) */
+  .faixa .sheen { position: absolute; inset: 0; z-index: 2; background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%); transform: translateX(-100%); animation: sheen 5.5s 1.1s ease-in-out infinite; pointer-events: none; }
+  /* ilustração maior e cortada embaixo, como a do celular na referência. A entrada fica no invólucro e a flutuação
+     na imagem: cada uma num elemento, as duas só com transform, sem se somar (antes, juntas, custavam 32% da CPU) */
+  .faixa .iluWrap { position: absolute; z-index: 1; right: 22px; bottom: -18px; width: 250px; animation: iluIn 0.7s 0.15s cubic-bezier(0.16, 1, 0.3, 1) backwards; pointer-events: none; }
+  .faixa .ilu { display: block; width: 100%; max-width: none; height: auto; animation: flutua 4s 0.9s ease-in-out infinite; transform-origin: 60% 80%; }
+  .faixa .selo { position: absolute; z-index: 3; left: 18px; top: 18px; display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px 0 10px; border-radius: var(--radius-full); background: rgba(0, 179, 39, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); font-family: var(--font-inter); font-weight: 700; font-size: 12px; line-height: 14px; letter-spacing: 0.01em; color: #fff; white-space: nowrap; animation: popInSelo 0.5s 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; }
+  /* ponto pulsando: a onda é um círculo que cresce e some (transform e opacity), não mais box-shadow (antes: 29% da CPU) */
+  .faixa .selo i { position: relative; width: 6px; height: 6px; border-radius: 50%; background: #c6ff6e; }
+  .faixa .selo i::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: rgba(198, 255, 110, 0.7); animation: pulso 2s 1s ease-out infinite; }
+  .faixa .faisca { position: absolute; z-index: 2; width: 14px; height: 14px; color: #e7ffd0; animation: brilha 2.6s ease-in-out infinite; pointer-events: none; }
+  /* no celular, a oferta inteira cabe sem rolar a partir de 360 × 780: faixa, espaços e linhas um pouco mais baixos */
+  @media (max-width: 560px) {
+    .faixa { height: 158px; border-radius: 18px; }
+    .faixa .iluWrap { width: 206px; right: 8px; bottom: -12px; }
+    .corpo.flush { gap: 20px; padding-bottom: 14px; }
+    .corpo.flush .lista li { padding-top: 12px; padding-bottom: 12px; }
+    /* "Como funciona" no celular: texto de 13 px (era 14) */
+    .corpo.flush .lista li .t-body-lg-semibold { font-size: 13px; line-height: 18px; }
+    .botoes { padding-top: 12px; }
+  }
+  @keyframes bannerIn { from { opacity: 0; transform: translateY(14px) scale(0.97); } }
+  @keyframes iluIn { from { opacity: 0; transform: translateY(34px) rotate(4deg) scale(0.9); } }
+  @keyframes flutua { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-6px) rotate(-1.2deg); } }
+  @keyframes sheen { 0% { transform: translateX(-100%); } 22%, 100% { transform: translateX(100%); } }
+  @keyframes popInSelo { from { opacity: 0; transform: scale(0.6); } }
+  @keyframes pulso { 0% { transform: scale(1); opacity: 0.8; } 70%, 100% { transform: scale(3.3); opacity: 0; } }
+  @keyframes brilha { 0%, 100% { opacity: 0.25; transform: scale(0.6) rotate(0); } 50% { opacity: 1; transform: scale(1) rotate(45deg); } }
+  @keyframes riseIn { from { opacity: 0; transform: translateY(12px); } }
+  .sobe { animation: riseIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) backwards; animation-delay: var(--d, 0s); }
+  /* troca de vista no modal: o cartão chega primeiro, com um leve giro e mola, e os itens vêm depois */
+  .cartaoEntra { animation: cartaoIn 0.65s cubic-bezier(0.34, 1.3, 0.64, 1) backwards; animation-delay: var(--d, 0s); }
+  @keyframes cartaoIn { from { opacity: 0; transform: translateY(22px) scale(0.9) rotate(-4deg); } }
+
+  /* ---------- a miniatura do cartão, com giro para o verso no CVV ---------- */
+  .cartao3d { width: 100%; max-width: 288px; margin: 0 auto; perspective: 1000px; }
+  .giro { position: relative; width: 100%; aspect-ratio: 1.586; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .giro.virado { transform: rotateY(180deg); }
+  .face { position: absolute; inset: 0; overflow: hidden; border-radius: 16px; color: #fff; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: radial-gradient(130% 170% at 0% 0%, #2fd47e 0%, #00a859 44%, #006a36 100%); box-shadow: 0 14px 24px -14px rgba(0, 117, 61, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.15); }
+  .frente { display: flex; flex-direction: column; justify-content: space-between; padding: 14px 18px 15px; }
+  .verso { transform: rotateY(180deg); }
+  .face .marcaAgua { position: absolute; right: 22px; top: 12px; width: 88px; height: auto; opacity: 0.1; }
+  .face .brilho { position: absolute; right: -70px; top: -90px; width: 230px; height: 230px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 68%); }
+  .linhaC { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .tipoC { font-size: 10px; line-height: 14px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.9; }
+  /* realce: um contorno que mostra, no cartão, onde fica o que ele está preenchendo */
+  /* a posição anda com transform (translate); só o tamanho usa width e height */
+  .realce { position: absolute; left: 0; top: 0; z-index: 4; border-radius: 8px; border: 1.5px solid rgba(255, 255, 255, 0.9); background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 0 3px rgba(198, 255, 110, 0.28); opacity: 0; pointer-events: none; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease; }
+  .realce.on { opacity: 1; }
+  /* o número só aparece no cartão depois que ele escolhe o tipo */
+  .numeroC.semTipo { opacity: 0; }
+  .numeroC { transition: opacity 0.3s ease; position: relative; align-self: flex-start; font-size: 17px; line-height: 22px; font-weight: 600; letter-spacing: 0.1em; font-variant-numeric: tabular-nums; white-space: nowrap; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.18); }
+  .rotC { display: block; font-size: 8px; line-height: 11px; font-weight: 700; letter-spacing: 0.1em; opacity: 0.7; }
+  .valC { display: block; overflow: hidden; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; text-overflow: ellipsis; }
+  .fraco { opacity: 0.5; }
+  .marcaC { display: flex; align-items: center; height: 24px; }
+  .tarja { position: absolute; left: 0; right: 0; top: 22px; height: 36px; background: #06331c; }
+  /* faixa zebrada e campo do CVV na mesma altura e na mesma linha; o rótulo "CVV" fica em cima do campo */
+  .assinatura { position: absolute; left: 18px; right: 18px; top: 70px; display: flex; align-items: flex-end; gap: 10px; }
+  .assinatura .faixaAss { flex: 1; min-width: 0; height: 28px; border-radius: 4px; background: repeating-linear-gradient(-45deg, #f2f5f3 0 6px, #e3e9e5 6px 12px); }
+  .cvvC { display: flex; flex-shrink: 0; flex-direction: column; align-items: center; gap: 2px; }
+  /* largura fixa: os números digitados não mudam o tamanho do campo nem da faixa */
+  .cvvC b { display: flex; align-items: center; justify-content: center; width: 56px; height: 28px; border-radius: 4px; background: #fff; color: var(--fg-strong); font-size: 14px; font-weight: 700; font-style: italic; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; box-shadow: 0 0 0 2px #c6ff6e; }
+  .versoBase { position: absolute; left: 18px; right: 18px; bottom: 14px; display: flex; align-items: flex-end; justify-content: space-between; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+
+  /* ---------- tela de sucesso ---------- */
+  .feito { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+  /* anel mais largo em volta do check, com mais respiro */
+  .feito .check { display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; margin: 10px 0 20px; border-radius: 50%; background: var(--bg-primary); color: #fff; box-shadow: 0 0 0 10px rgba(0, 168, 89, 0.12); animation: popInSelo 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+  .nota { margin-top: 4px; }
+
+  /* ---------- painel de teste (só para quem avalia o protótipo; não faz parte do design) ---------- */
+  .painelTeste { position: fixed; z-index: 1100; top: 24px; left: calc(50% + 266px); width: 214px; font-family: var(--font-sans); color: #fff; animation: fadeIn 0.25s ease-out; }
+  .ptAbre { display: none; }
+  .ptCorpo { padding: 14px; border-radius: 14px; background: #1b1d1f; box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35); }
+  .ptTit { font-weight: 700; font-size: 13px; line-height: 18px; }
+  .ptSub { margin-top: 2px; color: #9ca3af; font-weight: 500; font-size: 11px; line-height: 15px; }
+  .ptGrupo { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .ptGrupo > span { width: 100%; color: #9ca3af; font-weight: 700; font-size: 10px; line-height: 14px; letter-spacing: 0.06em; }
+  .painelTeste button[data-pt] { height: 30px; padding: 0 10px; border-radius: 8px; background: #2d3033; color: #fff; font-weight: 600; font-size: 12px; transition: background-color 0.15s ease; }
+  .painelTeste button[data-pt]:hover { background: #3c4044; }
+  .painelTeste button[data-pt="limpar"] { width: 100%; margin-top: 12px; background: transparent; box-shadow: inset 0 0 0 1px #3c4044; color: #cbd0d4; }
+  /* sem espaço ao lado do modal (celular e telas estreitas): vira um botão "Teste" flutuante que abre o painel */
+  @media (max-width: 1060px) {
+    .painelTeste { top: 10px; left: 12px; width: auto; }
+    .ptAbre { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 100px; background: #1b1d1f; color: #fff; font-weight: 700; font-size: 12px; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3); }
+    .ptCorpo { display: none; width: 236px; margin-top: 8px; }
+    .painelTeste.aberto .ptCorpo { display: block; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ======================================================= passo 4 de 5 -->
+<main class="page" id="passo4">
+  <div class="column">
+    <header class="headerController">
+      <div class="headerTop">
+        <span class="isotipo" aria-label="iGreen"><img src="assets/logo.svg" width="15" height="21" alt=""></span>
+        <span class="badge badgeTop t-label">PASSO 4 DE 5</span>
+        <div class="responsavel" title="Licenciado: Juliana Martins" aria-label="Licenciado: Juliana Martins"><span class="avatar" aria-hidden="true">JM</span><span class="respName" aria-hidden="true">Juliana Martins</span></div>
+      </div>
+      <div class="stepper" role="progressbar" aria-label="Progresso do cadastro" aria-valuemin="1" aria-valuemax="5" aria-valuenow="4"><span class="stepItem stepActive"></span><span class="stepItem stepActive"></span><span class="stepItem stepActive"></span><span class="stepItem stepActive"></span><span class="stepItem"></span></div>
+    </header>
+
+    <div>
+      <div class="pageHeader">
+        <span class="badge badgePage t-label">PASSO 4 DE 5</span>
+        <div class="titleRow">
+          <h1 class="t-page-title">Últimos detalhes da <span class="highlight">sua contratação</span></h1>
+          <p class="t-page-subtitle subtitle">Informe suas preferências e compartilhe os detalhes complementares</p>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="stack" style="--gap: 28px">
+          <div class="labeled">
+            <p class="t-label groupLabel">COMO VOCÊ QUER RECEBER SEU BENEFÍCIO?</p>
+            <div class="escolhas" role="radiogroup" aria-label="Como você quer receber seu benefício">
+              <button type="button" class="escolha" role="radio" aria-checked="true" data-beneficio="economia">
+                <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 2a1 1 0 0 1 1 1v3h6V3a1 1 0 1 1 2 0v3h1a2 2 0 0 1 2 2v4a8 8 0 0 1-7 7.94V22a1 1 0 1 1-2 0v-2.06A8 8 0 0 1 4 12V8a2 2 0 0 1 2-2h1V3a1 1 0 0 1 1-1zm4.6 7.2-3 4.2a.6.6 0 0 0 .5.95h1.6l-.6 2.85 3.3-4.45a.6.6 0 0 0-.48-.95h-1.62l.8-2.6z"/></svg></span>
+                <span class="t t-body-lg-semibold">Economia na conta</span><span class="radio" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="escolha" role="radio" aria-checked="false" data-beneficio="pix">
+                <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 3.2c.4-.4 1.1-.1 1 .5l-.3 1.6h1.4c.5 0 .8.6.4 1L13.6 9c-.4.4-1.1.1-1-.5l.3-1.5h-1.4c-.5 0-.8-.6-.4-1zM10 7.3c.1.6.6 1 1.2 1h.5c.3 1 1.2 1.7 2.3 1.7 1 0 1.8-.6 2.2-1.4A7 7 0 0 1 20.5 12h.5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-.9a7 7 0 0 1-2.1 2.6V20a1 1 0 0 1-1 1h-1.5a1 1 0 0 1-1-.8l-.1-.5a8 8 0 0 1-2.8 0l-.1.5a1 1 0 0 1-1 .8H8a1 1 0 0 1-1-1v-1.6A7 7 0 0 1 4 12.7c0-.9.2-1.7.5-2.5L3 9.3a.6.6 0 0 1 .3-1.1c1.3-.1 2.5.3 3.4 1A7 7 0 0 1 10 7.3zm6 5.2a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg></span>
+                <span class="t t-body-lg-semibold">PIX da Energia</span><span class="radio" aria-hidden="true"></span>
+              </button>
+            </div>
+            <div class="como">
+              <button type="button" class="t-body-md-semibold" aria-expanded="false" aria-controls="comoTxt" id="comoBtn">Como funciona?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+              <p class="t-body-sm-medium" hidden id="comoTxt">Na <b>Economia na conta</b>, o desconto já vem na sua fatura. No <b>PIX da Energia</b>, você paga a fatura cheia e recebe o valor do benefício por Pix.</p>
+            </div>
+          </div>
+
+          <div class="toggleCard">
+            <span class="toggleIcon"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V8a1 1 0 0 0 1 1h4.5zM8 13a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2zm0 4a1 1 0 1 0 0 2h5a1 1 0 1 0 0-2z"/></svg></span>
+            <div class="toggleText"><p class="t-body-lg-semibold strong">Cliente possui procurador?</p><p class="t-body-xs-medium mutedText">Anexe a procuração e o documento pessoal do procurador</p></div>
+            <div class="toggle" role="group" aria-label="Cliente possui procurador"><button type="button" class="toggleButton" aria-pressed="false" data-proc="sim">Sim</button><button type="button" class="toggleButton toggleOn" aria-pressed="true" data-proc="nao">Não</button></div>
+          </div>
+
+          <ul class="lista">
+            <li><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 2a1 1 0 0 1 1 1v3h6V3a1 1 0 1 1 2 0v3h1a2 2 0 0 1 2 2v4a8 8 0 0 1-7 7.94V22a1 1 0 1 1-2 0v-2.06A8 8 0 0 1 4 12V8a2 2 0 0 1 2-2h1V3a1 1 0 0 1 1-1zm4.6 7.2-3 4.2a.6.6 0 0 0 .5.95h1.6l-.6 2.85 3.3-4.45a.6.6 0 0 0-.48-.95h-1.62l.8-2.6z"/></svg></span><span class="t-body-lg-semibold">Sem instalação, obras ou manutenção</span></li>
+            <li><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.6-4.6"/></svg></span><span class="t-body-lg-semibold">Transparência e controle 100% digital</span></li>
+            <li><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 7.3c.1.6.6 1 1.2 1h.5c.3 1 1.2 1.7 2.3 1.7 1 0 1.8-.6 2.2-1.4A7 7 0 0 1 20.5 12h.5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-.9a7 7 0 0 1-2.1 2.6V20a1 1 0 0 1-1 1h-1.5a1 1 0 0 1-1-.8l-.1-.5a8 8 0 0 1-2.8 0l-.1.5a1 1 0 0 1-1 .8H8a1 1 0 0 1-1-1v-1.6A7 7 0 0 1 4 12.7c0-.9.2-1.7.5-2.5L3 9.3a.6.6 0 0 1 .3-1.1c1.3-.1 2.5.3 3.4 1A7 7 0 0 1 10 7.3z"/></svg></span><span class="t-body-lg-semibold">Zero taxas e mensalidades com garantia de descontos</span></li>
+          </ul>
+        </div>
+
+        <div class="footer">
+          <button type="button" class="btn secondary t-button-md" id="voltar4">Voltar</button>
+          <button type="button" class="btn primary t-button-md" id="prosseguir">Prosseguir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ======================================================= passo 5 de 5 (só para fechar o fluxo do protótipo) -->
+<main class="page" id="passo5" hidden>
+  <div class="column">
+    <header class="headerController">
+      <div class="headerTop">
+        <span class="isotipo" aria-label="iGreen"><img src="assets/logo.svg" width="15" height="21" alt=""></span>
+        <span class="badge badgeTop t-label">PASSO 5 DE 5</span>
+        <div class="responsavel" title="Licenciado: Juliana Martins" aria-label="Licenciado: Juliana Martins"><span class="avatar" aria-hidden="true">JM</span><span class="respName" aria-hidden="true">Juliana Martins</span></div>
+      </div>
+      <div class="stepper" role="progressbar" aria-label="Progresso do cadastro" aria-valuemin="1" aria-valuemax="5" aria-valuenow="5"><span class="stepItem stepActive"></span><span class="stepItem stepActive"></span><span class="stepItem stepActive"></span><span class="stepItem stepActive"></span><span class="stepItem stepActive"></span></div>
+    </header>
+    <div>
+      <div class="pageHeader">
+        <span class="badge badgePage t-label">PASSO 5 DE 5</span>
+        <div class="titleRow">
+          <h1 class="t-page-title">Revise e <span class="highlight">finalize</span></h1>
+          <p class="t-page-subtitle subtitle">Confira seus dados antes de concluir a contratação</p>
+        </div>
+      </div>
+      <div class="container">
+        <div class="stack" style="--gap: 18px">
+          <div class="toggleCard" id="estadoRec"></div>
+          <p class="t-caption mutedText">O resto do passo 5 fica fora deste protótipo. Ele está aqui só para mostrar o que segue depois do modal.</p>
+        </div>
+        <div class="footer"><button type="button" class="btn secondary t-button-md" id="voltar5">Voltar ao passo 4</button></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ======================================================= o modal -->
+<div class="fundo" id="fundo" hidden>
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitulo"></div>
+</div>
+
+<!-- painel de teste: preenche o cartão para quem avalia o protótipo (não faz parte do design) -->
+<div class="painelTeste" id="painelTeste" hidden>
+  <button type="button" class="ptAbre" aria-expanded="false" aria-controls="ptCorpo">Teste<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+  <div class="ptCorpo" id="ptCorpo">
+    <p class="ptTit">Preencher para teste</p>
+    <p class="ptSub">Só para avaliar o fluxo. Não faz parte do design.</p>
+    <div class="ptGrupo"><span>SÓ O NÚMERO (COM O CARREGAMENTO)</span>
+      <button type="button" data-pt="numero" data-marca="Visa">Visa</button><button type="button" data-pt="numero" data-marca="Mastercard">Mastercard</button><button type="button" data-pt="numero" data-marca="Elo">Elo</button><button type="button" data-pt="numero" data-marca="Amex">Amex</button><button type="button" data-pt="numero" data-marca="Hipercard">Hipercard</button>
+    </div>
+    <div class="ptGrupo"><span>O CARTÃO INTEIRO</span>
+      <button type="button" data-pt="tudo" data-marca="Visa">Tudo com Visa</button><button type="button" data-pt="tudo" data-marca="Mastercard">Tudo com Mastercard</button>
+    </div>
+    <button type="button" data-pt="limpar">Limpar o cartão</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const TAXA = 16;
+  // tipo: null até ele escolher; listaAberta: a lista de tipos aberta; fase: 0 número, 1 verificando, 2 nome/validade/CVV abertos
+  const E = { beneficio: 'economia', proc: 'nao', vista: 'oferta', tipo: null, listaAberta: true, numero: '', nome: '', validade: '', cvv: '', fase: 0, recorrencia: null };
+
+  // ---------- ícones
+  const svg = (p, s = 18, vb = 24) => `<svg width="${s}" height="${s}" viewBox="0 0 ${vb} ${vb}" aria-hidden="true">${p}</svg>`;
+  const L = (d, w = 2) => `<g fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${d}</g>`;
+  const ic = {
+    rec: L('<path d="M3.5 12a8.5 8.5 0 0 1 14.6-5.9L20 8"/><path d="M20 3.5V8h-4.5"/><path d="M20.5 12a8.5 8.5 0 0 1-14.6 5.9L4 16"/><path d="M8.5 16H4v4.5"/>'),
+    sino: L('<path d="M6 9a6 6 0 0 1 12 0c0 6.5 3 8.5 3 8.5H3S6 15.5 6 9"/><path d="M10.3 21a2 2 0 0 0 3.4 0"/>'),
+    cadeado: L('<rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'),
+    cartao: L('<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6.5 15h4"/>'),
+    check: L('<path d="M20 6 9 17l-5-5"/>', 2.6),
+    app: L('<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10.5 18.5h3"/><path d="m9.2 10.4 2 2 3.8-4"/>'),
+    seta: L('<circle cx="12" cy="12" r="9.5"/><path d="m10.5 8.5 3.5 3.5-3.5 3.5"/>', 1.8),
+    // ícone de editar e de fechar do mob (public/assets/icons/icon-edit.svg e icon-close.svg)
+    editar: '<path d="M9 15h6.75M2.25 15h1.256c.367 0 .55 0 .723-.042.153-.036.3-.097.433-.179.152-.093.281-.223.54-.482l9.423-9.422a1.591 1.591 0 0 0-2.25-2.25L2.953 12.047c-.26.26-.389.39-.482.54a1.5 1.5 0 0 0-.179.434C2.25 13.194 2.25 13.377 2.25 13.744z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>',
+    fechar: '<path d="M17.293 5.293a1 1 0 0 1 1.414 1.414L13.413 12l5.293 5.293a1 1 0 0 1-1.414 1.414L12 13.414l-5.292 5.292a1 1 0 0 1-1.414-1.414L10.585 12 5.293 6.708a1 1 0 0 1 1.414-1.414L12 10.586z" fill="currentColor"/>',
+    // ícones de linha do design system (igreenlab/design-system › Icon/icons.ts), desenho 24 x 24
+    dsRepeat: 'M16.91,2.46l1,0.98c0.22,0.22 0.43,0.42 0.56,0.59c0.17,0.22 0.24,0.71 0.2,1.08c-0.23,0.29 -0.62,0.57 -0.89,0.61c-0.22,0.03 -0.51,0.03 -0.82,0.03h-7.76c-1.84,-0.03 -3.36,0.66 -4.56,1.84c-1.21,1.17 -1.88,2.64 -1.88,4.41c0,1.36 0.39,2.53 1.15,3.56c0.24,0.34 0.16,0.81 -0.17,1.05c-0.34,0.24 -0.81,0.16 -1.05,-0.17c-0.86,-1.23 -1.43,-2.83 -1.43,-4.44c0,-2.09 0.94,-4.13 2.33,-5.49c1.4,-1.36 3.47,-2.23 5.61,-2.26h7.4l-0.73,-0.71c-0.3,-0.29 -0.3,-0.76 -0.01,-1.06c0.29,-0.3 0.76,-0.3 1.06,-0.01zM7.09,21.54l-1,-0.98c-0.22,-0.22 -0.43,-0.42 -0.56,-0.59c-0.17,-0.22 -0.34,-0.75 -0.2,-1.08c0.14,-0.32 0.62,-0.57 0.89,-0.61c0.22,-0.03 0.51,-0.03 0.82,-0.03h7.76c1.84,0.03 3.36,-0.66 4.56,-1.84c1.21,-1.17 1.88,-2.64 1.88,-4.41c0,-1.36 -0.39,-2.53 -1.15,-3.56c-0.24,-0.34 -0.16,-0.81 0.17,-1.05c0.34,-0.24 0.81,-0.16 1.05,0.17c0.86,1.23 1.43,2.83 1.43,4.44c0,2.09 -0.94,4.13 -2.33,5.49c-1.4,1.36 -3.47,2.23 -5.61,2.26l-7.4,0l0.73,0.71c0.3,0.29 0.3,0.76 0.01,1.06c-0.29,0.3 -0.76,0.3 -1.06,0.01z',
+    dsAviso: 'M12,11.5c0.55,0 1,0.45 1,1c0,0.55 -0.45,1 -1,1c-0.55,0 -1,-0.45 -1,-1c0,-0.55 0.45,-1 1,-1zM12,13.5h-0.01c0,0 0,0 0,0c0,0 0,0 0,0zM12,11.5h0.01c0,0 0,0 0,0c0,0 0,0 0,0zM7,12.5c0,-0.55 0.45,-1 1,-1h0.01c0.55,0 1,0.45 1,1c0,0.55 -0.45,1 -1,1h-0.01c-0.55,0 -1,-0.45 -1,-1zM11.55,3.75c0,0 -1.13,0.03 -1.67,0.07c-1.95,0.1 -3.57,0.92 -4.88,2.24c-1.3,1.32 -2.11,2.97 -2.21,4.96c-0.05,0.81 -0.05,1.62 0,2.42c0.06,1.41 0.69,2.65 1.46,3.82c0.5,1.13 0.23,2.6 -0.29,3.59c-0.08,0.16 -0.15,0.29 -0.21,0.39c0.07,0 0.16,0 0.26,0.01c1.09,0.06 1.7,-0.22 2.29,-0.67c0.38,-0.28 0.74,-0.49 1.05,-0.57c0.32,0.01 0.76,0.14 1.28,0.35c0.4,0.17 0.81,0.26 1.25,0.28c1.4,0.09 2.84,0.09 4.24,0c1.95,-0.1 3.57,-0.92 4.88,-2.24c1.3,-1.32 2.11,-2.97 2.21,-4.96c0.02,-0.32 0.03,-0.63 0.04,-0.95c0.01,-0.41 0.35,-0.75 0.76,-0.74c0.41,0.01 0.75,0.35 0.74,0.76c0,0.34 -0.02,0.69 -0.04,1.03c-0.17,2.26 -1.17,4.42 -2.64,5.91c-1.48,1.5 -3.61,2.51 -5.84,2.69c-1.45,0.1 -2.99,0.1 -4.44,0c-0.55,-0.04 -1.2,-0.18 -1.72,-0.39c-0.33,-0.14 -0.48,-0.22 -0.52,-0.25c-0.03,0.04 0.03,0.02 -0.34,0.29c-0.74,0.53 -1.81,0.96 -3.21,0.96c-0.31,-0.01 -0.61,-0.01 -0.85,-0.06c-0.29,-0.06 -0.65,-0.31 -0.86,-0.57c-0.12,-0.33 -0.16,-0.8 -0.05,-1.09c0.09,-0.25 0.24,-0.54 0.42,-0.88c0.46,-0.85 0.8,-1.5 0.37,-2.06c-0.83,-1.25 -1.58,-2.87 -1.71,-4.55c-0.05,-0.85 -0.05,-1.76 0,-2.62c0.17,-2.26 1.17,-4.42 2.64,-5.91c1.48,-1.5 3.61,-2.51 5.84,-2.68c0.56,-0.04 1.67,-0.07 1.67,-0.07c0.01,0 0,0 0,0c0.41,-0.03 0.77,0.29 0.8,0.7c0.03,0.41 -0.29,0.77 -0.7,0.8c0,0 -0.01,0 0,0zM17.47,6.53c-0.29,-0.29 -0.29,-0.77 0,-1.06l1,-1c0.29,-0.29 0.77,-0.29 1.06,0c0.29,0.29 0.29,0.77 0,1.06l-1,1c-0.29,0.29 -0.77,0.29 -1.06,0zM22.75,6c0,1.26 -0.57,2.54 -1.39,3.36c-0.82,0.82 -2.1,1.39 -3.36,1.39c-1.26,0 -2.54,-0.57 -3.36,-1.39c-0.82,-0.82 -1.39,-2.1 -1.39,-3.36c0,-1.26 0.57,-2.54 1.39,-3.36c0.82,-0.82 2.1,-1.39 3.36,-1.39c1.26,0 2.54,0.57 3.36,1.39c0.82,0.82 1.39,2.1 1.39,3.36zM20.3,3.7c-0.63,-0.63 -1.35,-0.95 -2.3,-0.95c-0.95,0 -1.67,0.32 -2.3,0.95c-0.63,0.63 -0.95,1.35 -0.95,2.3c0,0.95 0.32,1.67 0.95,2.3c0.63,0.63 1.35,0.95 2.3,0.95c0.95,0 1.67,-0.32 2.3,-0.95c0.63,-0.63 0.95,-1.35 0.95,-2.3c0,-0.95 -0.32,-1.67 -0.95,-2.3z',
+    dsCelular: 'M4.25,9c0,-3.3 0.11,-5.21 1.24,-6.51c1.29,-1.13 3.21,-1.24 6.51,-1.24c3.3,0 5.21,0.11 6.51,1.24c1.13,1.29 1.24,3.21 1.24,6.51v6c0,3.3 -0.11,5.21 -1.24,6.51c-1.29,1.13 -3.21,1.24 -6.51,1.24c-3.3,0 -5.21,-0.11 -6.51,-1.24c-1.13,-1.29 -1.24,-3.21 -1.24,-6.51zM5.75,15c0,3.3 -0.11,4.68 0.81,5.44c0.76,0.92 2.14,0.81 5.44,0.81c3.3,0 4.68,0.11 5.44,-0.81c0.92,-0.76 0.81,-2.14 0.81,-5.44v-6c0,-3.3 0.11,-4.68 -0.81,-5.44c-0.39,-0.47 -0.94,-0.67 -1.82,-0.75c-0.19,1.08 -0.41,1.83 -0.9,2.38c-0.66,0.46 -1.49,0.57 -2.72,0.57c-1.23,0 -2.07,-0.11 -2.72,-0.57c-0.5,-0.55 -0.72,-1.3 -0.9,-2.38c-0.88,0.08 -1.43,0.28 -1.82,0.75c-0.92,0.76 -0.81,2.14 -0.81,5.44zM12,2.75c-0.82,0 -1.52,-0.01 -2.12,0c0.14,0.89 0.14,1.19 0.39,1.31c0.17,0.27 0.51,0.19 1.73,0.19c1.22,0 1.56,0.08 1.73,-0.19c0.25,-0.12 0.25,-0.42 0.39,-1.31c-0.6,0 -1.3,0 -2.12,0zM10.25,19c0,-0.41 0.34,-0.75 0.75,-0.75h2c0.41,0 0.75,0.34 0.75,0.75c0,0.41 -0.34,0.75 -0.75,0.75h-2c-0.41,0 -0.75,-0.34 -0.75,-0.75z',
+    faisca: '<path d="M12 0c.6 5.6 2.4 7.6 12 12-9.6 4.4-11.4 6.4-12 12-.6-5.6-2.4-7.6-12-12C9.6 7.6 11.4 5.6 12 0z" fill="currentColor"/>',
+  };
+  const dsIc = (d, s = 20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="${d}"/></svg>`;
+  // os tipos de cartão, os mesmos da folha "Qual o tipo do cartão?" do app (fase 1); os vales ainda não chegaram
+  const TIPOS = [
+    { id: 'credito', nome: 'Cartão de crédito', ic: L('<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>') },
+    { id: 'debito', nome: 'Cartão de débito', ic: L('<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/>') },
+    { nome: 'Vale-refeição', ic: L('<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>'), breve: true },
+    { nome: 'Vale-alimentação', ic: L('<circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>'), breve: true },
+    { nome: 'Outros vales', ic: L('<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2M13 17v2M13 11v2"/>'), breve: true },
+  ];
+  const nomeTipo = () => (E.tipo === 'debito' ? 'Débito' : E.tipo === 'credito' ? 'Crédito' : '');
+
+  // ---------- o que muda com o benefício escolhido no passo 4
+  const pix = () => E.beneficio === 'pix';
+  const textos = () => pix()
+    ? { titulo: `Receba <span class="highlight">${TAXA}% no Pix</span> todo mês`, feito: `${TAXA}% de volta no Pix garantidos` }
+    : { titulo: `Garanta <span class="highlight">${TAXA}% de desconto</span> todo mês`, feito: `${TAXA}% de desconto garantido` };
+
+  // ---------- regras do cartão (as mesmas do mob: src/cadastroSimplificado/oferta.ts)
+  const so = s => String(s).replace(/\D/g, '');
+  const ELO = /^(4011(78|79)|43(1274|8935)|45(1416|7393|763(1|2))|50(4175|6699|67[0-7]\d|9\d{3})|627780|63(6297|6368)|650(0(3[1-3]|[4-9]\d)|4[0-9]\d|5[0-2]\d)|6516(5[2-9]|[6-7]\d)|6550([0-1]\d|2[1-9]|[3-4]\d|5[0-8]))/;
+  function bandeira(numero) {
+    const n = so(numero);
+    if (ELO.test(n)) return 'Elo';
+    if (/^(606282|3841)/.test(n)) return 'Hipercard';
+    if (/^3[47]/.test(n)) return 'Amex';
+    if (/^4/.test(n)) return 'Visa';
+    if (/^(5[1-5]|2(2[2-9]|[3-6]\d|7[01]|720))/.test(n)) return 'Mastercard';
+    return null;
+  }
+  const amex = () => bandeira(E.numero) === 'Amex';
+  const totalDigitos = () => (amex() ? 15 : 16);
+  function maskCartao(v) {
+    const n = so(v);
+    if (/^3[47]/.test(n)) { const d = n.slice(0, 15); return [d.slice(0, 4), d.slice(4, 10), d.slice(10)].filter(Boolean).join(' '); }
+    return (n.slice(0, 16).match(/.{1,4}/g) || []).join(' ');
+  }
+  const maskValidade = v => { const n = so(v).slice(0, 4); return n.length > 2 ? `${n.slice(0, 2)}/${n.slice(2)}` : n; };
+  function validadeErro(mmaa) {
+    const m = /^(\d{2})\/(\d{2})$/.exec(mmaa);
+    if (!m) return 'Informe a validade (MM/AA)';
+    const mes = +m[1], ano = 2000 + +m[2], hoje = new Date();
+    if (mes < 1 || mes > 12) return 'Validade inválida';
+    if (new Date(ano, mes, 0, 23, 59, 59) < hoje) return 'Este cartão está vencido';
+    if (ano > hoje.getFullYear() + 20) return 'Validade inválida';
+    return '';
+  }
+  const cvvTam = () => (amex() ? 4 : 3);
+  const final = () => so(E.numero).slice(-4) || '0000';
+  const tudoCerto = () => !!E.tipo && !E.listaAberta && so(E.numero).length === totalDigitos() && E.fase === 2 && E.nome.trim().length >= 3 && !validadeErro(E.validade) && so(E.cvv).length === cvvTam();
+
+  // ---------- a miniatura: frente e verso, com o realce do que ele está preenchendo
+  const MARCA = {
+    Visa: '<span style="font-size: 19px; line-height: 1; font-weight: 800; font-style: italic; letter-spacing: 0.02em">VISA</span>',
+    Mastercard: '<span style="display: flex"><span style="width: 22px; height: 22px; border-radius: 50%; background: #eb001b"></span><span style="width: 22px; height: 22px; margin-left: -9px; border-radius: 50%; background: #f79e1b; opacity: 0.92"></span></span>',
+    Elo: '<span style="font-size: 19px; line-height: 1; font-weight: 700; color: #ffcb05">elo</span>',
+    Amex: '<span style="font-size: 13px; line-height: 1; font-weight: 800; letter-spacing: 0.06em">AMEX</span>',
+    Hipercard: '<span style="font-size: 12px; line-height: 1; font-weight: 800; font-style: italic">Hipercard</span>',
+  };
+  const CHIP = '<svg width="32" height="24" viewBox="0 0 34 26" aria-hidden="true"><defs><linearGradient id="chipG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6de97"/><stop offset="1" stop-color="#c8a04a"/></linearGradient></defs><rect x="0.5" y="0.5" width="33" height="25" rx="5" fill="url(#chipG)" stroke="#00000026"/><path d="M0.5 9h10M0.5 17h10M23.5 9h10M23.5 17h10M10.5 0.5v25M23.5 0.5v25M10.5 13h13" stroke="#5a3c0a59" fill="none"/></svg>';
+  const NFC = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffffbf" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8.5 8.5a5 5 0 0 1 0 7"/><path d="M12 6a8.5 8.5 0 0 1 0 12"/><path d="M15.5 3.5a12 12 0 0 1 0 17"/></svg>';
+  const miniatura = () => `<div class="cartao3d" aria-hidden="true"><div class="giro" id="giro">
+      <div class="face frente">
+        <span class="brilho"></span><img class="marcaAgua" src="assets/logo.svg" alt=""><span class="realce"></span>
+        <div class="linhaC"><span class="tipoC" id="mTipo"></span><span class="marcaC" id="mMarca"></span></div>
+        <div class="linhaC" style="justify-content: flex-start; gap: 10px">${CHIP}${NFC}</div>
+        <span class="numeroC" id="mNumero"></span>
+        <div class="linhaC" style="align-items: flex-end"><span style="min-width: 0" id="mNomeBox"><span class="rotC">TITULAR</span><span class="valC" id="mNome"></span></span><span style="flex-shrink: 0; text-align: right" id="mValidadeBox"><span class="rotC">VALIDADE</span><span class="valC" id="mValidade"></span></span></div>
+      </div>
+      <div class="face verso">
+        <span class="realce"></span>
+        <span class="tarja"></span>
+        <div class="assinatura"><span class="faixaAss"></span><span class="cvvC" id="mCvvBox"><span class="rotC">CVV</span><b id="mCvv"></b></span></div>
+        <div class="versoBase"><span><span class="rotC">VALIDADE</span><span class="valC" id="mValidadeV"></span></span><span class="marcaC" id="mMarcaV"></span></div>
+      </div>
+    </div></div>`;
+  function pintarMiniatura() {
+    const m = id => document.getElementById(id); if (!m('giro')) return;
+    const d = so(E.numero), alvo = totalDigitos();
+    const cheio = (d + '•'.repeat(Math.max(0, alvo - d.length))).slice(0, alvo);
+    m('mNumero').textContent = amex() ? [cheio.slice(0, 4), cheio.slice(4, 10), cheio.slice(10)].join(' ') : cheio.replace(/(.{4})/g, '$1 ').trim();
+    m('mNumero').classList.toggle('semTipo', !E.tipo);
+    m('mTipo').textContent = nomeTipo() || 'Tipo do cartão'; m('mTipo').classList.toggle('fraco', !E.tipo);
+    const b = bandeira(E.numero);
+    m('mMarca').innerHTML = m('mMarcaV').innerHTML = b ? MARCA[b] : '';
+    m('mNome').textContent = E.nome || 'Nome no cartão'; m('mNome').classList.toggle('fraco', !E.nome);
+    m('mValidade').textContent = m('mValidadeV').textContent = E.validade || 'MM/AA';
+    m('mValidade').classList.toggle('fraco', !E.validade); m('mValidadeV').classList.toggle('fraco', !E.validade);
+    m('mCvv').textContent = E.cvv || '•'.repeat(cvvTam());
+    if (E.realce) realce(E.realce);
+  }
+  // contorno no cartão em volta do que ele está preenchendo (posição pelo layout, sem o efeito do giro)
+  function realce(alvo) {
+    E.realce = alvo;
+    const g = document.getElementById('giro'); if (!g) return;
+    g.querySelectorAll('.realce').forEach(r => r.classList.remove('on'));
+    const el = alvo && document.getElementById(alvo); if (!el) return;
+    const face = el.closest('.face'), r = face.querySelector('.realce');
+    let x = 0, y = 0, n = el;
+    while (n && n !== face) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+    const p = 5;
+    Object.assign(r.style, { transform: `translate(${x - p}px, ${y - p}px)`, width: `${el.offsetWidth + 2 * p}px`, height: `${el.offsetHeight + 2 * p}px` });
+    r.classList.add('on');
+  }
+  const ALVO = { fNumero: 'mNumero', fNome: 'mNomeBox', fValidade: 'mValidadeBox', fCvv: 'mCvvBox' };
+
+  // ---------- as vistas do modal (conteúdo que rola + rodapé fixo)
+  const campo = (id, rotulo, attrs) => `<div class="field" id="c-${id}"><label class="label t-label" for="${id}">${rotulo}</label><div class="control" id="ctl-${id}"><input class="t-body-lg-medium" id="${id}" ${attrs}><span class="fimCampo" id="fim-${id}"></span></div><p class="message t-caption" id="msg-${id}" hidden></p></div>`;
+  function vistaOferta() {
+    const t = textos();
+    const faisca = (x, y, s, d) => `<span class="faisca" style="left: ${x}; top: ${y}; width: ${s}px; height: ${s}px; animation-delay: ${d}s">${svg(ic.faisca, s, 24)}</span>`;
+    return `<div class="rolagem" id="rolagem">
+      <div class="faixa">
+        <span class="iluWrap"><img class="ilu" src="assets/ilustracao-recorrencia.png" alt=""></span>
+        ${faisca('11%', '58%', 16, 0.4)}${faisca('25%', '78%', 11, 1.6)}
+        <span class="sheen"></span>
+        <span class="selo"><i></i>OFERTA EXCLUSIVA</span>
+      </div>
+      <div class="corpo flush">
+        <div class="titleRow tituloOferta sobe" style="--d: 0.25s"><h2 class="t-modal-title" id="modalTitulo">${t.titulo}</h2><p class="t-page-subtitle subtitle">Cadastre um cartão e suas faturas são pagas sozinhas, sempre antes de vencer. É opcional.</p></div>
+        <div class="labeled sobe" style="--d: 0.35s"><p class="t-label groupLabel">COMO FUNCIONA A RECORRÊNCIA</p>
+          <ul class="lista">
+            <li><span class="ic">${dsIc(ic.dsRepeat)}</span><span class="t-body-lg-semibold">Paga sozinha, sem você precisar lembrar</span></li>
+            <li><span class="ic">${dsIc(ic.dsAviso)}</span><span class="t-body-lg-semibold">Aviso 2 dias antes de cada cobrança</span></li>
+            <li><span class="ic">${dsIc(ic.dsCelular)}</span><span class="t-body-lg-semibold">Você controla e desativa pelo app</span></li>
+          </ul>
+        </div>
+        <div class="flag flagMuted flagCompacta sobe" style="--d: 0.45s"><span class="iconeBranco">${svg(ic.cadeado, 16)}</span><div class="flagText"><p class="t-body-md-semibold strong">Nada é cobrado agora</p><p class="t-caption mainText">A primeira cobrança só acontece quando a sua primeira fatura chegar.</p></div></div>
+      </div>
+    </div>
+    <div class="botoes">
+      <button type="button" class="btn primary t-button-md" data-acao="quero">Quero garantir os ${TAXA}%</button>
+      <button type="button" class="linkBtn t-body-md-semibold" data-acao="agora-nao">Agora não, vou pagar manualmente</button>
+    </div>`;
+  }
+  function linhaTipo(t, i) {
+    const fancy = `<span class="tipoIc ${t.breve ? 'off' : ''}">${svg(t.ic, 20)}</span>`;
+    const texto = `<span class="tipoTexto"><span class="t-body-md-semibold ${t.breve ? 'mutedText' : 'strong'}">${t.nome}</span></span>`;
+    if (t.breve) return `<div class="tipoWrap" data-wrap=""><div class="tipoInner"><button type="button" class="tipo divisor" disabled>${fancy}${texto}<span class="breve t-label">EM BREVE</span></button></div></div>`;
+    return `<div class="tipoWrap" data-wrap="${t.id}"><div class="tipoInner"><button type="button" class="tipo ${i ? 'divisor' : ''}" role="radio" aria-checked="false" data-escolher="${t.id}">${fancy}${texto}<span class="seta">${svg(ic.seta, 18)}</span><span class="editar">${svg(ic.editar, 18, 18)}</span></button></div></div>`;
+  }
+  function vistaCartao() {
+    // com a lista de tipos aberta, nada abaixo dela aparece
+    const temTipo = !!E.tipo && !E.listaAberta, aberto = temTipo && E.fase >= 2;
+    return `<div class="rolagem" id="rolagem"><div class="corpo">
+        <button type="button" class="fechar" data-acao="cancelar" aria-label="Cancelar o cadastro do cartão">${svg(ic.fechar, 24)}</button>
+        <div class="mHeader sobe" style="--d: 0.02s"><span class="mHeaderIcon">${svg(ic.cartao, 26)}</span><div class="mHeaderText"><h2 class="t-modal-title" id="modalTitulo">Cadastre seu cartão</h2><p class="t-page-subtitle subtitle">Seus dados ficam protegidos e criptografados.</p></div></div>
+        <div class="cartaoEntra" style="--d: 0.08s">${miniatura()}</div>
+        <div class="campos sobe" style="--d: 0.26s">
+          <div class="labeled"><p class="t-label groupLabel" id="tipoRot">TIPO DO CARTÃO</p>
+            <div class="tipos" id="tipos" role="radiogroup" aria-labelledby="tipoRot">${TIPOS.map(linhaTipo).join('')}</div>
+          </div>
+          <div class="reveal ${temTipo ? 'aberto solto' : ''}" id="revelaNumero"><div class="revealInner">
+            ${campo('fNumero', 'NÚMERO DO CARTÃO', `value="${E.numero}" inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000" aria-describedby="msg-fNumero"`)}
+          </div></div>
+          <div class="reveal ${aberto ? 'aberto solto' : ''}" id="revela"><div class="revealInner">
+            ${campo('fNome', 'NOME IMPRESSO NO CARTÃO', `value="${E.nome}" autocomplete="cc-name" autocapitalize="characters" enterkeyhint="next" placeholder="Como está no cartão" aria-describedby="msg-fNome"`)}
+            <div class="row">
+              ${campo('fValidade', 'VALIDADE', `value="${E.validade}" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/AA" aria-describedby="msg-fValidade"`)}
+              ${campo('fCvv', 'CVV', `value="${E.cvv}" inputmode="numeric" autocomplete="cc-csc" placeholder="${amex() ? '0000' : '000'}" aria-describedby="msg-fCvv"`)}
+            </div>
+          </div></div>
+        </div>
+      </div></div>
+      <div class="botoes sobe" id="botoesCartao" style="--d: 0.34s">
+        <button type="button" class="btn primary t-button-md" data-acao="salvar" disabled>Salvar e ativar a recorrência</button>
+        <p class="previa">${svg(ic.cadeado, 14)}Verificamos o cartão com R$ 0,00. Não é uma cobrança.</p>
+      </div>`;
+  }
+  function vistaFeito() {
+    const t = textos(), b = bandeira(E.numero) || 'Cartão';
+    return `<div class="rolagem" id="rolagem"><div class="corpo">
+        <div class="feito"><span class="check">${svg(ic.check, 30)}</span><h2 class="t-modal-title sobe" style="--d: 0.12s" id="modalTitulo">Recorrência ativada</h2><p class="t-page-subtitle subtitle sobe" style="--d: 0.16s">Suas faturas serão pagas sozinhas, com ${t.feito}.</p></div>
+        <div class="stack sobe" style="--gap: 12px; --d: 0.24s">
+          <div class="summaryCard">
+            <div class="flag flagPrimary"><span class="fancy" style="background: var(--bg-primary)">${svg(ic.cartao, 18)}</span><div class="flagText"><p class="t-overline flagOverlinePrimary">CARTÃO DA RECORRÊNCIA</p><p class="flagName">${b} ${E.tipo === 'debito' ? 'débito' : 'crédito'} •••• ${final()}</p></div></div>
+            <div class="t-body-sm-medium summaryLines"><p>Primeira cobrança: <b>quando a fatura chegar</b></p><p>Aviso: <b>2 dias antes de cada cobrança</b></p></div>
+          </div>
+          <div class="flag flagMuted"><span class="iconeBranco">${svg(ic.app, 18)}</span><p class="t-body-sm-medium mainText" style="flex: 1 0 0; min-width: 1px">Troque o cartão ou desative quando quiser em <b class="strong" style="font-weight: 600">Perfil › Pagamentos</b>, no app iGreen Club.</p></div>
+        </div>
+      </div></div>
+      <div class="botoes sobe" style="--d: 0.32s"><button type="button" class="btn primary t-button-md" data-acao="continuar">Continuar o cadastro</button></div>`;
+  }
+
+  // ---------- desenho, sombra do rodapé e rolagem
+  const modal = $('#modal');
+  const rol = () => $('#rolagem');
+  function desenhar() {
+    modal.innerHTML = E.vista === 'oferta' ? vistaOferta() : E.vista === 'cartao' ? vistaCartao() : vistaFeito();
+    E.realce = null;
+    if (E.vista === 'cartao') { pintarTipos(); pintarMiniatura(); ligarCartao(); atualizarBotao(); }
+    sombra();
+    painelTeste();
+  }
+  // troca de vista sem corte seco: o conteúdo atual some rápido, a folha muda de altura deslizando e o novo entra
+  // em sequência (cada vista marca seus itens com .sobe / .cartaoEntra). Só transform e opacity no conteúdo; a altura
+  // anima uma vez, por 0,36 s.
+  const poucoMovimento = matchMedia('(prefers-reduced-motion: reduce)');
+  let trocando = false;
+  function trocarVista(vista, depois) {
+    if (trocando) return;
+    if (poucoMovimento.matches) { E.vista = vista; desenhar(); if (depois) depois(); return; }
+    trocando = true;
+    const h0 = modal.offsetHeight;
+    const saidas = [...modal.children].map(el => el.animate([{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(-8px)' }], { duration: 150, easing: 'ease-in', fill: 'forwards' }));
+    Promise.all(saidas.map(a => a.finished)).then(() => {
+      E.vista = vista; desenhar();
+      const h1 = modal.offsetHeight;
+      if (Math.abs(h1 - h0) > 2) modal.animate([{ height: `${h0}px` }, { height: `${h1}px` }], { duration: 360, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' });
+      trocando = false;
+      if (depois) depois();
+    });
+  }
+  function sombra() { const r = rol(), b = modal.querySelector('.botoes'); if (!r || !b) return; b.classList.toggle('sombra', r.scrollHeight - r.clientHeight - r.scrollTop > 2); }
+  modal.addEventListener('scroll', sombra, { capture: true, passive: true });
+  window.addEventListener('resize', () => { sombra(); if (E.realce) realce(E.realce); });
+  // rola só o necessário para o elemento ficar à vista, com folga acima do rodapé (alvo absoluto: chamadas repetidas não somam)
+  function mostrar(el, folga = 24) {
+    const r = rol(); if (!r || !el) return;
+    const caixa = r.getBoundingClientRect(), e = el.getBoundingClientRect();
+    if (e.bottom > caixa.bottom - folga) r.scrollTo({ top: r.scrollTop + (e.bottom - (caixa.bottom - folga)), behavior: 'smooth' });
+    else if (e.top < caixa.top + 56) r.scrollTo({ top: r.scrollTop - (caixa.top + 56 - e.top), behavior: 'smooth' });
+  }
+  // depois que um bloco termina de abrir: solta o recorte (anel de foco inteiro) e rola até ele
+  function aoAbrir(rv, depois) {
+    let feito = false;
+    const pronto = () => { if (feito) return; feito = true; rv.classList.add('solto'); if (depois) depois(); sombra(); };
+    rv.addEventListener('transitionend', ev => { if (ev.target === rv && ev.propertyName === 'grid-template-rows') pronto(); });
+    setTimeout(pronto, 450);
+  }
+
+  // ---------- tipo do cartão: a lista abre já com as opções; escolheu, recolhe mostrando o escolhido
+  function pintarTipos() {
+    const lista = $('#tipos'); if (!lista) return;
+    const recolhida = !!E.tipo && !E.listaAberta;
+    lista.classList.toggle('recolhida', recolhida);
+    lista.querySelectorAll('.tipoWrap').forEach(w => {
+      const id = w.dataset.wrap, esc = recolhida && id === E.tipo, oculto = recolhida && !esc;
+      w.classList.toggle('oculto', oculto); w.setAttribute('aria-hidden', String(oculto));
+      const b = w.querySelector('.tipo'); if (b.disabled) return;
+      const nome = TIPOS.find(t => t.id === id).nome;
+      b.tabIndex = oculto ? -1 : 0;
+      b.classList.toggle('escolhido', esc);
+      b.setAttribute('aria-checked', String(id === E.tipo));
+      b.setAttribute('aria-label', esc ? `Trocar o tipo do cartão (${nome} selecionado)` : nome);
+    });
+  }
+  function escolherTipo(id) {
+    if (E.tipo && !E.listaAberta) {
+      // tocou no escolhido: reabre a lista e esconde os campos até ele escolher de novo
+      E.listaAberta = true; pintarTipos(); atualizarBotao();
+      ['#revelaNumero', '#revela'].forEach(s => $(s).classList.remove('aberto', 'solto'));
+      if (document.activeElement && document.activeElement.tagName === 'INPUT') document.activeElement.blur();
+      $('#giro').classList.remove('virado'); realce('mTipo');
+      painelTeste();
+      return;
+    }
+    E.tipo = id; E.listaAberta = false;
+    pintarTipos(); pintarMiniatura(); atualizarBotao(); painelTeste();
+    // a lista recolhe e, em seguida, abrem os campos (só o número na primeira vez; tudo o que já estava aberto ao trocar)
+    setTimeout(() => {
+      const rvN = $('#revelaNumero'), rv = $('#revela');
+      // quando terminar de abrir, rola até o campo com foco
+      const aoFim = () => { const f = document.activeElement && document.activeElement.closest && document.activeElement.closest('.field'); if (f) mostrar(f); };
+      rvN.classList.add('aberto'); aoAbrir(rvN, E.fase >= 2 ? null : aoFim);
+      if (E.fase >= 2) { rv.classList.add('aberto'); aoAbrir(rv, aoFim); }
+      const proximo = E.fase < 2 ? $('#fNumero') : [$('#fNome'), $('#fValidade'), $('#fCvv')].find(i => !i.value) || null;
+      if (proximo) proximo.focus({ preventScroll: true }); else realce(null);
+    }, 220);
+  }
+
+  // ---------- o cadastro do cartão: avanço automático
+  function erro(id, msg, info) {
+    const c = document.getElementById('c-' + id), p = document.getElementById('msg-' + id); if (!c) return;
+    c.classList.toggle('erro', !!msg && !info); p.hidden = !msg; p.textContent = msg || ''; p.classList.toggle('info', !!info);
+    if (msg && !info) p.setAttribute('role', 'alert'); else p.removeAttribute('role');
+  }
+  function atualizarBotao() { const b = modal.querySelector('[data-acao="salvar"]'); if (b) b.disabled = !tudoCerto(); }
+  // só troca o fim do campo quando muda (a cada tecla, a mesma bandeira não é redesenhada nem reanimada)
+  function fimNumero(html) { const f = document.getElementById('fim-fNumero'); if (f && f.dataset.html !== html) { f.innerHTML = html; f.dataset.html = html; } }
+  // a bandeira no campo: a marca desenhada numa plaquinha, assim que os primeiros números a identificam
+  const MARCA_CAMPO = {
+    Visa: '<b style="font-size: 10px; font-weight: 800; font-style: italic; letter-spacing: 0.02em; color: #1a1f71">VISA</b>',
+    Mastercard: '<span style="display: flex"><span style="width: 13px; height: 13px; border-radius: 50%; background: #eb001b"></span><span style="width: 13px; height: 13px; margin-left: -5px; border-radius: 50%; background: #f79e1b; opacity: 0.92"></span></span>',
+    Elo: '<b style="font-size: 11px; font-weight: 800; color: #111">elo</b>',
+    Amex: '<b style="font-size: 8px; font-weight: 800; letter-spacing: 0.04em; color: #2e77bc">AMEX</b>',
+    Hipercard: '<b style="font-size: 7px; font-weight: 800; font-style: italic; color: #b3131b">HIPER</b>',
+  };
+  const chipBandeira = () => { const b = bandeira(E.numero); return b ? `<span class="marcaCampo" role="img" aria-label="${b}">${MARCA_CAMPO[b]}</span>` : ''; };
+  const VERIFICA = 1000;
+  function verificarNumero() {
+    E.fase = 1;
+    const num = $('#fNumero'), ctl = $('#ctl-fNumero');
+    num.readOnly = true;
+    ctl.style.setProperty('--dur', `${VERIFICA}ms`); ctl.classList.add('carregando');
+    fimNumero(chipBandeira() + '<span class="fieldSpinner" role="status" aria-label="Verificando o cartão"></span>');
+    erro('fNumero', 'Verificando o cartão…', true);
+    setTimeout(abrirResto, VERIFICA);
+  }
+  function abrirResto() {
+    E.fase = 2;
+    const num = $('#fNumero'); if (!num) return;
+    num.readOnly = false; $('#ctl-fNumero').classList.remove('carregando');
+    fimNumero(chipBandeira() || `<span class="okIcon">${svg(ic.check, 18)}</span>`);
+    erro('fNumero', '');
+    const rv = $('#revela'); rv.classList.add('aberto');
+    $('#fNome').focus({ preventScroll: true });
+    aoAbrir(rv, () => mostrar(rv));
+    atualizarBotao();
+  }
+  function ligarCartao() {
+    const num = $('#fNumero'), nome = $('#fNome'), val = $('#fValidade'), cvv = $('#fCvv'), giro = $('#giro');
+    if (E.fase === 1) E.fase = 0;
+    fimNumero(chipBandeira());
+    num.addEventListener('input', () => {
+      num.value = maskCartao(num.value); E.numero = num.value; erro('fNumero', ''); pintarMiniatura();
+      cvv.placeholder = amex() ? '0000' : '000';
+      if (E.fase !== 1) fimNumero(chipBandeira());
+      if (E.fase === 0 && so(E.numero).length === totalDigitos()) verificarNumero();
+      atualizarBotao();
+    });
+    nome.addEventListener('input', () => { E.nome = nome.value.toUpperCase(); nome.value = E.nome; erro('fNome', ''); pintarMiniatura(); atualizarBotao(); });
+    nome.addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); val.focus(); } });
+    val.addEventListener('input', () => {
+      val.value = maskValidade(val.value); E.validade = val.value; erro('fValidade', ''); pintarMiniatura();
+      if (E.validade.length === 5) { const e = validadeErro(E.validade); if (e) erro('fValidade', e); else cvv.focus(); }
+      atualizarBotao();
+    });
+    cvv.addEventListener('input', () => {
+      cvv.value = so(cvv.value).slice(0, cvvTam()); E.cvv = cvv.value; erro('fCvv', ''); pintarMiniatura(); atualizarBotao();
+      // CVV completo e tudo certo: fecha o teclado e o cartão desvira
+      if (E.cvv.length === cvvTam() && tudoCerto()) setTimeout(() => cvv.blur(), 450);
+    });
+    // foco num campo: realça o lugar dele no cartão (o CVV vira o cartão) e o campo nunca fica escondido
+    [num, nome, val, cvv].forEach(i => {
+      i.addEventListener('focus', () => {
+        giro.classList.toggle('virado', i === cvv);
+        setTimeout(() => realce(ALVO[i.id]), i === cvv ? 280 : 0);
+        setTimeout(() => mostrar(i.closest('.field')), 60);
+      });
+      i.addEventListener('blur', () => setTimeout(() => {
+        const a = document.activeElement;
+        if (![num, nome, val, cvv].includes(a)) { giro.classList.remove('virado'); realce(E.tipo && !E.listaAberta ? null : 'mTipo'); }
+      }, 0));
+    });
+    // sem tipo: o realce fica no tipo do cartão e o foco vai para a primeira opção
+    if (!E.tipo || E.listaAberta) { realce('mTipo'); setTimeout(() => { const b = $('#tipos .tipo:not(:disabled)'); if (b) b.focus({ preventScroll: true }); }, 80); }
+    else if (E.fase === 0) setTimeout(() => num.focus({ preventScroll: true }), 80);
+  }
+  function salvar(botao) {
+    if (!tudoCerto()) return;
+    botao.classList.add('carregando'); botao.insertAdjacentHTML('beforeend', '<span class="spinner" aria-hidden="true"></span>'); botao.setAttribute('aria-busy', 'true');
+    setTimeout(() => { E.recorrencia = { bandeira: bandeira(E.numero), final: final() }; trocarVista('feito', focarPrimeiro); }, 1100);
+  }
+
+  // ---------- abrir e fechar: o modal só fecha por "Agora não" ou depois de cadastrar o cartão
+  const focaveis = () => [...modal.querySelectorAll('button:not([disabled]), input:not([disabled])')].filter(el => el.offsetParent !== null && el.tabIndex !== -1);
+  const focarPrimeiro = () => setTimeout(() => { const b = modal.querySelector('[data-acao="quero"], [data-acao="continuar"]'); if (b) b.focus({ preventScroll: true }); }, 60);
+  function abrir() { E.vista = 'oferta'; $('#fundo').hidden = false; document.body.style.overflow = 'hidden'; desenhar(); focarPrimeiro(); }
+  function fechar() { $('#fundo').hidden = true; document.body.style.overflow = ''; painelTeste(); }
+  function irPasso5() {
+    fechar(); $('#passo4').hidden = true; $('#passo5').hidden = false; window.scrollTo(0, 0);
+    const t = textos(), b = E.recorrencia ? (E.recorrencia.bandeira || 'Cartão') : '';
+    $('#estadoRec').innerHTML = E.recorrencia
+      ? `<span class="toggleIcon" style="color: var(--fg-primary)">${svg(ic.rec, 22)}</span><div class="toggleText"><p class="t-body-lg-semibold strong">Recorrência ativada</p><p class="t-body-xs-medium mutedText">${b} •••• ${E.recorrencia.final} · ${t.feito}</p></div>`
+      : `<span class="toggleIcon" style="color: var(--fg-main)">${svg(ic.cartao, 22)}</span><div class="toggleText"><p class="t-body-lg-semibold strong">Pagamento manual</p><p class="t-body-xs-medium mutedText">Você pode ativar a recorrência depois, no app iGreen Club</p></div>`;
+  }
+  modal.addEventListener('click', ev => {
+    const b = ev.target.closest('button'); if (!b || b.disabled) return;
+    if (b.dataset.escolher) { escolherTipo(b.dataset.escolher); return; }
+    const a = b.dataset.acao;
+    if (a === 'quero') trocarVista('cartao');
+    else if (a === 'agora-nao') { E.recorrencia = null; irPasso5(); }
+    else if (a === 'cancelar') trocarVista('oferta', focarPrimeiro);
+    else if (a === 'salvar') salvar(b);
+    else if (a === 'continuar') irPasso5();
+  });
+  // tocar fora não fecha. Esc no cartão equivale ao X (volta para a oferta); na oferta, não faz nada.
+  document.addEventListener('keydown', ev => {
+    if ($('#fundo').hidden) return;
+    if (ev.key === 'Escape' && E.vista === 'cartao') trocarVista('oferta', focarPrimeiro);
+    if (ev.key === 'Tab') {
+      const f = focaveis(); if (!f.length) return;
+      const i = f.indexOf(document.activeElement);
+      if (ev.shiftKey && i <= 0) { ev.preventDefault(); f[f.length - 1].focus(); }
+      else if (!ev.shiftKey && i === f.length - 1) { ev.preventDefault(); f[0].focus(); }
+    }
+  });
+
+  // ---------- painel de teste: só aparece no cadastro do cartão, depois que ele escolhe o tipo
+  const TESTE = { Visa: '4111 1111 1111 1111', Mastercard: '5555 5555 5555 4444', Elo: '6362 9700 0045 7013', Amex: '3714 496353 98431', Hipercard: '6062 8288 8866 6688' };
+  const painel = $('#painelTeste');
+  function painelTeste() { painel.hidden = !(E.vista === 'cartao' && !$('#fundo').hidden && E.tipo && !E.listaAberta); }
+  const espera = ms => new Promise(r => setTimeout(r, ms));
+  // digita como a pessoa: valor no campo e o evento de input, para rodar a máscara, a bandeira, o carregamento e o avanço
+  function digitar(id, valor) { const i = document.getElementById(id); if (!i) return; i.focus({ preventScroll: true }); i.value = valor; i.dispatchEvent(new Event('input', { bubbles: true })); }
+  let preenchendo = false;
+  async function preencher(marca, tudo) {
+    if (preenchendo || E.vista !== 'cartao' || !E.tipo || E.listaAberta || E.fase === 1) return;
+    preenchendo = true;
+    try {
+      if (E.fase === 2) E.fase = 0; // trocar de número também passa pelo carregamento
+      digitar('fNumero', TESTE[marca]);
+      if (!tudo) return;
+      for (let k = 0; k < 50 && E.fase !== 2; k++) await espera(100); // espera o carregamento do número
+      await espera(500); digitar('fNome', 'MARIANA S COSTA');
+      await espera(400); digitar('fValidade', '03/28');
+      await espera(500); digitar('fCvv', marca === 'Amex' ? '1234' : '123');
+    } finally { preenchendo = false; }
+  }
+  painel.addEventListener('click', ev => {
+    const b = ev.target.closest('button'); if (!b) return;
+    if (b.classList.contains('ptAbre')) { const ab = painel.classList.toggle('aberto'); b.setAttribute('aria-expanded', String(ab)); return; }
+    painel.classList.remove('aberto'); painel.querySelector('.ptAbre').setAttribute('aria-expanded', 'false');
+    if (b.dataset.pt === 'numero') preencher(b.dataset.marca, false);
+    else if (b.dataset.pt === 'tudo') preencher(b.dataset.marca, true);
+    else if (b.dataset.pt === 'limpar' && !preenchendo) { Object.assign(E, { numero: '', nome: '', validade: '', cvv: '', fase: 0 }); desenhar(); }
+  });
+
+  // ---------- passo 4: benefício, como funciona, procurador, prosseguir
+  document.querySelectorAll('[data-beneficio]').forEach(b => b.addEventListener('click', () => { E.beneficio = b.dataset.beneficio; document.querySelectorAll('[data-beneficio]').forEach(x => x.setAttribute('aria-checked', String(x === b))); }));
+  $('#comoBtn').addEventListener('click', () => { const t = $('#comoTxt'), abre = t.hidden; t.hidden = !abre; $('#comoBtn').setAttribute('aria-expanded', String(abre)); });
+  document.querySelectorAll('[data-proc]').forEach(b => b.addEventListener('click', () => { E.proc = b.dataset.proc; document.querySelectorAll('[data-proc]').forEach(x => { const on = x === b; x.setAttribute('aria-pressed', String(on)); x.classList.toggle('toggleOn', on); }); }));
+  $('#prosseguir').addEventListener('click', abrir);
+  $('#voltar4').addEventListener('click', () => {});
+  $('#voltar5').addEventListener('click', () => { $('#passo5').hidden = true; $('#passo4').hidden = false; window.scrollTo(0, 0); });
+})();
+</script>
+</body>
+</html>

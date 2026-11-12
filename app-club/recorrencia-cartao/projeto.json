@@ -1,0 +1,11 @@
+{
+  "nome": "Recorrência no cartão",
+  "descricao": "A fatura paga sozinha no cartão salvo: no app, ativar, trocar, desativar e o cartão recusado, com testes automáticos dos fluxos; no link de cadastro, a oferta e o cadastro do cartão.",
+  "tipo": "tarefa",
+  "atualizado": "2026-11-12",
+  "paginas": [
+    { "nome": "App: recorrência do pagamento", "arquivo": "index.html" },
+    { "nome": "Link de cadastro: oferta da recorrência", "arquivo": "link-cadastro/index.html" }
+  ],
+  "tags": ["recorrência", "cartão", "pagamento automático", "fatura", "cartão recusado", "cadastro de cartão", "link de indicação", "teste automático"]
+}
