@@ -384,7 +384,7 @@ function numeros(est) {
   }
   return { disp: r2(disp), carteira: r2(carteira), eco: r2(eco), kwh, por, caminho: r2(por.set.cam + por.out.cam) };
 }
-const chave = est => JSON.stringify({ c: contasDe(est), e: est.emissao || '', u: est.uc || 'casa', a: est.acordo || null, g: est.grupo || null, n: est.neg || null, q: !!est.unica, d: est.desm || null, de: est.desmEscolha || null, au: est.auto || null, co: est.cob || null, ca: est.cart || null, at: !!est.atu, vf: !!est.verFormas, vt: !!est.verTodos, pm: (est.pg || {}).metodo || '' });
+const chave = est => JSON.stringify({ c: contasDe(est), e: est.emissao || '', u: est.uc || 'casa', a: est.acordo || null, g: est.grupo || null, n: est.neg || null, q: !!est.unica, d: est.desm || null, de: est.desmEscolha || null, au: est.auto || null, co: est.cob || null, ca: est.cart || null, at: !!est.atu, vf: !!est.verFormas, vt: !!est.verTodos, pm: (est.pg || {}).metodo || '', nc: est.ncEtapa || 0 });
 // the payment of a bill: from the record once paid (or the boleto paid), from the payment in course before
 function ctx(est, id) {
   const d = DEF[id], c = contasDe(est)[id], pg = est.pg || {}, n = numeros(est);
@@ -1369,6 +1369,11 @@ const marcaCartao = k => (k === 'master'
   ? '<span aria-hidden="true" style="display: flex"><span style="width: 26px; height: 26px; border-radius: 50%; background: #EB001B"></span><span style="width: 26px; height: 26px; margin-left: -10px; border-radius: 50%; background: #F79E1B; opacity: 0.9"></span></span>'
   : k === 'elo' ? '<span aria-hidden="true" style="font-size: 22px; line-height: 1; font-weight: 700; color: #FFCB05">elo</span>'
   : '<span aria-hidden="true" style="font-size: 22px; line-height: 1; font-weight: 800; font-style: italic; letter-spacing: 0.02em; color: #FFFFFF">VISA</span>');
+// the brand on the plaque at the end of the number field (the signup link's .marcaCampo, in the app's colors)
+const marcaCampo = k => (k === 'master'
+  ? '<span style="display: flex"><span style="width: 13px; height: 13px; border-radius: 50%; background: #EB001B"></span><span style="width: 13px; height: 13px; margin-left: -5px; border-radius: 50%; background: #F79E1B; opacity: 0.92"></span></span>'
+  : k === 'elo' ? '<span style="font-size: 11px; line-height: 1; font-weight: 800; color: #0D0F0F">elo</span>'
+  : '<span style="font-size: 10px; line-height: 1; font-weight: 800; font-style: italic; letter-spacing: 0.02em; color: #1A1F71">VISA</span>');
 function miniCartao(est, e) {
   const k = proximoCartao(cartDe(est)), c = CARTOES[k], deb = est.tipoNovo === 'debito';
   const fundo = 'radial-gradient(130% 170% at 0% 0%, #4FA367 0%, #338449 42%, #1C5230 100%)';
@@ -1376,33 +1381,44 @@ function miniCartao(est, e) {
   const chip = '<svg width="34" height="26" viewBox="0 0 34 26" aria-hidden="true"><defs><linearGradient id="chipNovo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6DE97"></stop><stop offset="1" stop-color="#C8A04A"></stop></linearGradient></defs><rect x="0.5" y="0.5" width="33" height="25" rx="5" fill="url(#chipNovo)" stroke="rgba(0,0,0,0.15)"></rect><path d="M0.5 9h10M0.5 17h10M23.5 9h10M23.5 17h10M10.5 0.5v25M23.5 0.5v25M10.5 13h13" stroke="rgba(90,60,10,0.35)" fill="none"></path></svg>';
   const nfc = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8.5 8.5a5 5 0 0 1 0 7"></path><path d="M12 6a8.5 8.5 0 0 1 0 12"></path><path d="M15.5 3.5a12 12 0 0 1 0 17"></path></svg>';
   const rot = t => `<span style="font-size: 9px; line-height: 12px; font-weight: 600; letter-spacing: 0.1em; opacity: 0.6">${t}</span>`;
+  // with the number still empty, the card shows dots and no brand; both fill in while he types (data-nc-mini-*)
   return `<div aria-hidden="true" style="position: relative; overflow: hidden; margin: 16px 16px 0; height: 196px; box-sizing: border-box; border-radius: 18px; background: ${fundo}; color: #FFFFFF; padding: 16px 20px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 14px 28px -10px rgba(13,15,15,0.45), inset 0 1px 0 rgba(255,255,255,0.12)">
 <span style="position: absolute; right: -70px; top: -90px; width: 240px; height: 240px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 68%)"></span>
 <span style="position: absolute; left: -40px; bottom: -120px; width: 260px; height: 200px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.08)"></span>
-<div style="position: relative; display: flex; align-items: center; justify-content: space-between"><span style="font-size: 11px; line-height: 16px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.85">${deb ? 'Débito' : 'Crédito'}</span>${marcaCartao(k)}</div>
+<div style="position: relative; display: flex; align-items: center; justify-content: space-between"><span style="font-size: 11px; line-height: 16px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.85">${deb ? 'Débito' : 'Crédito'}</span><span data-nc-mini-marca style="display: flex; opacity: ${e === 0 ? 0 : 1}">${marcaCartao(k)}</span></div>
 <div style="position: relative; display: flex; align-items: center; gap: 10px">${chip}${nfc}</div>
-<span style="position: relative; font-size: 19px; line-height: 24px; font-weight: 600; letter-spacing: 0.12em; font-variant-numeric: tabular-nums; white-space: nowrap; text-shadow: 0 1px 1px rgba(0,0,0,0.25)">${c.numero}</span>
-<div style="position: relative; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px"><span style="min-width: 0; display: flex; flex-direction: column; gap: 1px">${rot('TITULAR')}<span style="font-size: 13px; line-height: 16px; font-weight: 600; letter-spacing: 0.06em">${e >= 1 ? 'MARIANA S COSTA' : fraco('NOME NO CARTÃO')}</span></span><span style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 1px">${rot('VALIDADE')}<span style="font-size: 13px; line-height: 16px; font-weight: 600; letter-spacing: 0.06em">${e >= 2 ? c.validade : fraco('MM/AA')}</span></span></div>
+<span data-nc-mini-num style="position: relative; font-size: 19px; line-height: 24px; font-weight: 600; letter-spacing: 0.12em; font-variant-numeric: tabular-nums; white-space: nowrap; text-shadow: 0 1px 1px rgba(0,0,0,0.25)">${e === 0 ? '•••• •••• •••• ••••' : c.numero}</span>
+<div style="position: relative; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px"><span style="min-width: 0; display: flex; flex-direction: column; gap: 1px">${rot('TITULAR')}<span data-nc-mini-nome style="font-size: 13px; line-height: 16px; font-weight: 600; letter-spacing: 0.06em">${e >= 2 ? 'MARIANA S COSTA' : fraco('NOME NO CARTÃO')}</span></span><span style="flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 1px">${rot('VALIDADE')}<span data-nc-mini-val style="font-size: 13px; line-height: 16px; font-weight: 600; letter-spacing: 0.06em">${e >= 2 ? c.validade : fraco('MM/AA')}</span></span></div>
 </div>`;
 }
+// adding a card, as in the signup link (Sergio, 12/11): three steps, the kind (already picked in the sheet), the number and the
+// rest. The number types in, the brand shows up in the field and on the card, and once complete the field loads by itself
+// (green border, a light running across, a line filling underneath, the spinner and "Verificando o cartão…"); then the name,
+// the validity and the CVV open together and fill in. No "Continuar" to tap: it stays off until the end, when "Salvar cartão"
+// takes its place. ncEtapa: 0 the number (empty), 1 loading, 2 the rest
 function novoCartao(est) {
   const ct = cartDe(est), k = proximoCartao(ct), c = CARTOES[k], e = Math.min(2, est.ncEtapa || 0), deb = est.tipoNovo === 'debito';
-  // the label with more weight, the helper lighter; every field the same height
-  const campo = (rot, val, foco, ajudaTxt = '') => `<div style="min-width: 0; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; line-height: 18px; font-weight: 600; color: #0D0F0F">${rot}</span><span style="height: 52px; box-sizing: border-box; border-radius: 12px; background: #FFFFFF; border: ${foco ? '1.5px solid #338449' : '1px solid #E3E6E8'};${foco ? ' box-shadow: 0 0 0 4px rgba(51,132,73,0.12);' : ''} padding: 0 14px; display: flex; align-items: center; gap: 2px; font-size: 16px; line-height: 22px; font-weight: 500; color: #0D0F0F; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden">${val}${foco ? '<span style="width: 2px; height: 20px; margin-left: 2px; border-radius: 1px; background: #338449"></span>' : ''}</span>${ajudaTxt ? `<span style="font-size: 12px; line-height: 16px; font-weight: 500; color: #8B9094">${ajudaTxt}</span>` : ''}</div>`;
-  const passos = [0, 1, 2].map(i => `<span style="flex: 1 1 0; height: 4px; border-radius: 2px; background: ${i <= e ? '#338449' : '#E3E6E8'}"></span>`).join('');
-  const campos = [
-    campo('Número do cartão', c.numero, e === 0, e === 0 ? 'Os 16 números na frente do cartão' : ''),
-    e >= 1 ? campo('Nome impresso no cartão', 'MARIANA S COSTA', e === 1, e === 1 ? 'Como está escrito no cartão' : '') : '',
-    e >= 2 ? `<div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px">${campo('Validade', c.validade, true)}${campo('CVV', '•••', false)}</div>` : '',
-  ].filter(Boolean).join('');
-  const ultimo = e >= 2;
+  const caret = '<span data-nc-caret style="width: 2px; height: 20px; margin: 0 2px; border-radius: 1px; background: #338449; flex-shrink: 0"></span>';
+  // the label with more weight, the helper lighter (green while it loads); every field the same height
+  const campo = (rot, val, { foco = false, borda = foco, ajuda = '', ajudaVerde = false, attrs = '', fim = '', extra = '' } = {}) => `<div style="min-width: 0; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; line-height: 18px; font-weight: 600; color: #0D0F0F">${rot}</span><span${attrs} style="position: relative; overflow: hidden; height: 52px; box-sizing: border-box; border-radius: 12px; background: #FFFFFF; border: ${borda ? '1.5px solid #338449' : '1px solid #E3E6E8'};${foco ? ' box-shadow: 0 0 0 4px rgba(51,132,73,0.12);' : ''} padding: 0 14px; display: flex; align-items: center; gap: 8px; font-size: 16px; line-height: 22px; font-weight: 500; color: #0D0F0F; font-variant-numeric: tabular-nums; white-space: nowrap${attrs ? '; cursor: text' : ''}"><span data-nc-valor style="flex: 1 1 auto; min-width: 0; overflow: hidden; display: flex; align-items: center">${val}</span><span data-nc-fim style="flex-shrink: 0; display: flex; align-items: center; gap: 8px">${fim}</span>${extra}</span>${ajuda ? `<span style="font-size: 12px; line-height: 16px; font-weight: ${ajudaVerde ? 600 : 500}; color: ${ajudaVerde ? '#276638' : '#8B9094'}">${ajuda}</span>` : ''}</div>`;
+  const marca = (ver = true) => `<span data-nc-marca role="img" aria-label="${CARTOES[k].nome}" style="display: flex; align-items: center; justify-content: center; width: 38px; height: 24px; box-sizing: border-box; border-radius: 5px; background: #FFFFFF; border: 1px solid #E3E6E8; opacity: ${ver ? 1 : 0}">${marcaCampo(k)}</span>`;
+  const spin = '<span data-nc-spin role="status" aria-label="Verificando o cartão" style="width: 18px; height: 18px; box-sizing: border-box; flex-shrink: 0; border-radius: 50%; border: 2px solid #338449; border-right-color: transparent"></span>';
+  const carga = '<span data-nc-brilho aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(51,132,73,0.14) 50%, transparent 70%); transform: translateX(-100%); pointer-events: none"></span><span data-nc-barra aria-hidden="true" style="position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; background: #338449; transform-origin: left; transform: scaleX(0)"></span>';
+  const numero = e === 0
+    ? campo('Número do cartão', `${caret}<span data-nc-ph style="color: #C9CDD0">0000 0000 0000 0000</span>`, { foco: true, ajuda: 'Os 16 números na frente do cartão', attrs: ` role="button" aria-label="Número do cartão: toque para digitar" data-nc-numero data-numero="${c.numero}"`, fim: marca(false) })
+    : e === 1 ? campo('Número do cartão', c.numero, { borda: true, ajuda: 'Verificando o cartão…', ajudaVerde: true, fim: marca() + spin, extra: carga })
+    : campo('Número do cartão', c.numero, { fim: marca() });
+  const resto = e >= 2 ? `<div data-nc-resto style="display: flex; flex-direction: column; gap: 14px">${campo('Nome impresso no cartão', '<span data-nc-tx="MARIANA S COSTA">MARIANA S COSTA</span>')}<div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px">${campo('Validade', `<span data-nc-tx="${c.validade}">${c.validade}</span>`)}${campo('CVV', '<span data-nc-tx="•••">•••</span>')}</div></div>` : '';
+  // the bars: the kind is done when he gets here, so the number is step 2 of 3 and the rest is step 3
+  const n = e >= 2 ? 3 : 2;
+  const passos = [0, 1, 2].map(i => `<span style="flex: 1 1 0; height: 4px; border-radius: 2px; background: ${i < n ? '#338449' : '#E3E6E8'}"></span>`).join('');
   return tela(`${AJ.cabecalho(deb ? 'Novo cartão de débito' : 'Novo cartão de crédito', 'Seus dados ficam protegidos')}
-<div data-topo-ext style="position: relative; z-index: 1; margin: 0 calc(16px - var(--g, 24px)); padding: 4px var(--g, 24px) 16px; background: #FFFFFF; border-radius: 0 0 18px 18px; box-shadow: 0 12px 20px -12px rgba(0,0,0,0.10)"><div role="progressbar" aria-label="Passo ${e + 1} de 3" aria-valuemin="1" aria-valuemax="3" aria-valuenow="${e + 1}" style="display: flex; gap: 6px">${passos}</div></div>
+<div data-topo-ext style="position: relative; z-index: 1; margin: 0 calc(16px - var(--g, 24px)); padding: 4px var(--g, 24px) 16px; background: #FFFFFF; border-radius: 0 0 18px 18px; box-shadow: 0 12px 20px -12px rgba(0,0,0,0.10)"><div role="progressbar" aria-label="Passo ${n} de 3" aria-valuemin="1" aria-valuemax="3" aria-valuenow="${n}" style="display: flex; gap: 6px">${passos}</div></div>
 ${miniCartao(est, e)}
-<div style="margin: 16px 16px 0; display: flex; flex-direction: column; gap: 14px">${campos}</div>
-${ultimo ? '<span style="display: block; margin: 10px 16px 0; font-size: 12px; line-height: 16px; font-weight: 500; color: #8B9094">Fazemos uma verificação de R$ 0,00 para confirmar o cartão. Não é uma cobrança.</span>' : ''}
+<div style="margin: 16px 16px 0; display: flex; flex-direction: column; gap: 14px">${numero}${resto}</div>
+${e >= 2 ? '<span data-nc-nota style="display: block; margin: 10px 16px 0; font-size: 12px; line-height: 16px; font-weight: 500; color: #8B9094">Fazemos uma verificação de R$ 0,00 para confirmar o cartão. Não é uma cobrança.</span>' : ''}
 <div style="height: 110px"></div>
-${AJ.rodapeFixo(btnVerde(ultimo ? 'Salvar cartão' : 'Continuar', ultimo ? ' data-nc-salvar' : ' data-nc-prox'))}`);
+${AJ.rodapeFixo(e >= 2 ? btnVerde('Salvar cartão', ' data-nc-salvar') : btnVerde('Continuar', ' data-nc-continuar', false))}`);
 }
 // from Pagamentos, before saving: how to use the new card (the payment flow asks this when paying, so it does not here)
 function folhaNovoOpcoes(est) {
@@ -6183,6 +6199,76 @@ CONT_PRONTO.then(({ CONT, M }) => {
       em(d, 'Copiar', () => toast('ID copiado'), { comeca: true });
     }
   }
+  // ---------- the new card, as in the signup link (12/11): a tap on the number field (or "Simular" under the phone) types the
+  // number in; the brand shows up in the field and on the card; once complete the field loads by itself and the name, the
+  // validity and the CVV open together and fill in; "Salvar cartão" turns on at the end. Only transform and opacity move
+  let ncTimer = 0, ncResto = false;
+  const ncAqui = () => !!atual && atual.id.split('+')[0] === 'NovoCartao';
+  const ncFormatar = d => d.replace(/(.{4})/g, '$1 ').trim();
+  function ncMovimentos(c) {
+    const e = estado.ncEtapa || 0;
+    if (!calmo) c.querySelectorAll('[data-nc-caret]').forEach(el => el.animate([{ opacity: 1 }, { opacity: 1, offset: 0.5 }, { opacity: 0, offset: 0.51 }, { opacity: 0 }], { duration: 1000, iterations: Infinity }));
+    clearTimeout(ncTimer);
+    if (e === 1) {
+      // the loading: a line fills underneath, a light runs across and the spinner turns; then the rest opens
+      if (!calmo) {
+        const barra = c.querySelector('[data-nc-barra]'), brilho = c.querySelector('[data-nc-brilho]'), spin = c.querySelector('[data-nc-spin]');
+        if (barra) barra.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 1000, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' });
+        if (brilho) brilho.animate([{ transform: 'translateX(-100%)' }, { transform: 'translateX(100%)' }], { duration: 1100, iterations: Infinity });
+        if (spin) spin.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(360deg)' }], { duration: 700, iterations: Infinity });
+      }
+      ncTimer = setTimeout(() => { if (ncAqui() && estado.ncEtapa === 1) { estado.ncEtapa = 2; ncResto = true; redesenhar(); } }, 1050);
+    } else if (e === 2 && ncResto) {
+      ncResto = false;
+      ncPreencherResto(c);
+    }
+  }
+  function ncDigitarNumero() {
+    const c = atual && atual.camada;
+    if (!c || (estado.ncEtapa || 0) !== 0 || c.dataset.ncDigitando) return;
+    const campoEl = c.querySelector('[data-nc-numero]'); if (!campoEl) return;
+    c.dataset.ncDigitando = '1';
+    const val = campoEl.querySelector('[data-nc-valor]'), caret = val.querySelector('[data-nc-caret]');
+    const marcas = [campoEl.querySelector('[data-nc-marca]'), c.querySelector('[data-nc-mini-marca]')];
+    const mini = c.querySelector('[data-nc-mini-num]'), dig = campoEl.dataset.numero.replace(/\D/g, '');
+    let i = 0;
+    const passo = () => {
+      if (!ncAqui() || !campoEl.isConnected) return;
+      i++;
+      const d = dig.slice(0, i);
+      val.textContent = ncFormatar(d);
+      if (caret) val.appendChild(caret);
+      if (mini) mini.textContent = ncFormatar(d + '•'.repeat(16 - i));
+      // the brand comes from the first numbers, in the field and on the card
+      if (i === 2) marcas.forEach(el => { if (!el) return; el.style.opacity = '1'; if (!calmo) el.animate([{ opacity: 0, transform: 'scale(0.6)' }, { opacity: 1, transform: 'none' }], { duration: 320, easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' }); });
+      if (i < dig.length) setTimeout(passo, 55);
+      else setTimeout(() => { if (ncAqui() && (estado.ncEtapa || 0) === 0) { estado.ncEtapa = 1; redesenhar(); } }, 280);
+    };
+    passo();
+  }
+  function ncPreencherResto(c) {
+    const resto = c.querySelector('[data-nc-resto]'), nota = c.querySelector('[data-nc-nota]'), btn = c.querySelector('[data-nc-salvar]');
+    // the rest opens together, one field after the other, and the button stays off while it fills in
+    if (!calmo && resto) [...resto.querySelectorAll(':scope > div, :scope > div > div')].forEach((el, i) => el.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 320, delay: i * 70, easing: 'cubic-bezier(0.22, 0.8, 0.2, 1)', fill: 'backwards' }));
+    if (!calmo && nota) nota.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: 260, fill: 'backwards' });
+    const liga = on => { if (!btn) return; btn.style.background = on ? '#338449' : '#EBEEF0'; btn.style.color = on ? '#FFFFFF' : '#6A6E71'; btn.style.pointerEvents = on ? '' : 'none'; if (on) btn.removeAttribute('aria-disabled'); else btn.setAttribute('aria-disabled', 'true'); };
+    liga(false);
+    const alvos = [...c.querySelectorAll('[data-nc-tx]')], minis = [c.querySelector('[data-nc-mini-nome]'), c.querySelector('[data-nc-mini-val]')];
+    alvos.forEach(el => { el.textContent = ''; });
+    minis.forEach(el => { if (el) el.textContent = ''; });
+    let j = 0, i = 0;
+    const passo = () => {
+      if (!ncAqui() || !c.isConnected) return;
+      const el = alvos[j];
+      if (!el) { liga(true); if (!calmo && btn) btn.animate([{ transform: 'scale(0.97)' }, { transform: 'none' }], { duration: 260, easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' }); return; }
+      const t = el.dataset.ncTx;
+      i++;
+      el.textContent = t.slice(0, i);
+      if (minis[j]) minis[j].textContent = t.slice(0, i);
+      if (i >= t.length) { j++; i = 0; setTimeout(passo, 180); } else setTimeout(passo, j === 0 ? 38 : 80);
+    };
+    setTimeout(passo, calmo ? 0 : 420);
+  }
   // ---------- recorrência do pagamento no cartão (12/11): the saved cards (one principal), the recurrence of the Casa's bills,
   // its notice, the declined charge and the swap of card. The record lives in estado.cart, estado.auto and estado.cob
   const AUTO_TELAS = new Set(['AutoDetalhe', 'AutoCobrada', 'TrocarAuto', 'NovoCartao', 'Pagamentos']);
@@ -6258,7 +6344,8 @@ CONT_PRONTO.then(({ CONT, M }) => {
       cada(c, '[data-cartao]', b => folha('Cartao:' + b.dataset.cartao));
       cada(c, '[data-trocar-uc]', () => folha('UcRec'));
     } else if (nome === 'NovoCartao') {
-      cada(c, '[data-nc-prox]', () => { estado.ncEtapa = (estado.ncEtapa || 0) + 1; redesenhar(); });
+      ncMovimentos(c);
+      cada(c, '[data-nc-numero]', () => ncDigitarNumero());
       cada(c, '[data-nc-salvar]', () => (estado.ncOrigem === 'pagamentos' ? folha('NovoOpcoes') : salvarNovo('nada')));
     } else if (nome === 'AutoCobrada') em(c, 'Ir para minhas faturas', irFaturas, { exato: true });
   }
@@ -6483,19 +6570,21 @@ CONT_PRONTO.then(({ CONT, M }) => {
       ['Com a recorrência ativa', 'FaturaDetalhe:out', { auto: { cartao: 'visa' }, recVista: true, preVista: true }],
       ['Ver outras formas de pagamento', 'FaturaDetalhe:out', { auto: null, verFormas: true }],
     ] },
-    { id: 'rec-sem-cartao', eco: 'desc', titulo: 'Adicionar cartão na fatura', desc: 'Primeiro o tipo, numa lista simples. Depois, numa tela só, os campos aparecem conforme ele preenche, com os passos em cima e a miniatura do cartão. Na fatura, salvar volta direto para o pagamento: a recorrência é oferecida na hora de pagar.', passos: [
+    { id: 'rec-sem-cartao', eco: 'desc', titulo: 'Adicionar cartão na fatura', desc: 'Primeiro o tipo, numa lista simples. Depois o número: a bandeira aparece enquanto ele digita e, completo, o campo carrega sozinho e o nome, a validade e o CVV abrem juntos, sem Continuar. Toque no campo do número para digitar. Na fatura, salvar volta direto para o pagamento.', passos: [
       ['Fatura: sem cartão salvo', 'FaturaDetalhe:out', { ...LIMPO, ...SET_PAGO, cart: { lista: [], principal: null }, ...pg('out', '') }],
       ['Qual o tipo do cartão', 'FaturaDetalhe:out+F:TipoCartao'],
-      ['Número', 'NovoCartao', { tipoNovo: 'credito', ncEtapa: 0, ncOrigem: 'fatura' }],
-      ['Nome', 'NovoCartao', { ncEtapa: 1 }],
-      ['Validade e CVV', 'NovoCartao', { ncEtapa: 2 }],
+      ['Número: a bandeira aparece ao digitar', 'NovoCartao', { tipoNovo: 'credito', ncEtapa: 0, ncOrigem: 'fatura' }],
+      ['O número carrega sozinho', 'NovoCartao', { ncEtapa: 1 }],
+      ['Nome, validade e CVV juntos', 'NovoCartao', { ncEtapa: 2 }],
       ['Fatura com o cartão novo', 'FaturaDetalhe:out', { cart: { lista: ['master'], principal: null, tipo: { master: 'credito' } }, ncEtapa: 0, ncOrigem: null, ...pg('out', 'master') }],
       ['Pagar: a folha antes do pagamento', 'FaturaDetalhe:out+F:AntesPagar'],
     ] },
     { id: 'rec-add-perfil', eco: 'desc', titulo: 'Adicionar em Perfil › Pagamentos', desc: 'Fora do pagamento, antes de salvar, uma folha pergunta como usar o cartão: ativar a recorrência (recomendado), usar como principal ou só salvar.', passos: [
       ['Pagamentos', 'Pagamentos', { ...LIMPO, ...SET_PAGO, cart: { lista: ['visa'], principal: 'visa' } }],
       ['Qual o tipo do cartão', 'Pagamentos+F:TipoCartao'],
-      ['Dados do cartão', 'NovoCartao', { tipoNovo: 'credito', ncEtapa: 2, ncOrigem: 'pagamentos' }],
+      ['Número: a bandeira aparece ao digitar', 'NovoCartao', { tipoNovo: 'credito', ncEtapa: 0, ncOrigem: 'pagamentos' }],
+      ['O número carrega sozinho', 'NovoCartao', { ncEtapa: 1 }],
+      ['Nome, validade e CVV juntos', 'NovoCartao', { ncEtapa: 2 }],
       ['Como usar este cartão', 'NovoCartao+F:NovoOpcoes'],
       ['Pagamentos: cartão novo na recorrência', 'Pagamentos', { cart: { lista: ['visa', 'master'], principal: 'visa', tipo: { master: 'credito' } }, auto: { cartao: 'master' }, recVista: true, preVista: true, ncEtapa: 0, ncOrigem: null }],
     ] },
@@ -6657,13 +6746,14 @@ CONT_PRONTO.then(({ CONT, M }) => {
   // ---------- testes automáticos (Sergio, 12/11): a aba "Testes" percorre um fluxo sozinha. Um dedo mostra onde a pessoa
   // toca, a tela segue com as animações do app (empurra, abre a folha, volta) e dá para pausar, voltar, avançar e mudar a
   // velocidade. Cada toque é o texto (ou o rótulo) do botão que leva ao passo seguinte: 'sw:' é o interruptor, uma lista são
-  // toques em sequência na mesma tela (o último leva ao passo seguinte) e null passa sem toque.
+  // toques em sequência na mesma tela (o último leva ao passo seguinte), null passa sem toque e 'real:' toca de verdade e
+  // espera a tela andar sozinha até um passo seguinte (o número do cartão novo: digita, carrega e abre o resto).
   const TESTES = [
     { id: 'rec-pagar', t: 'Ativar a recorrência no primeiro pagamento', toques: ['Pagar agora', 'Visa •••• 1290', 'Pagar R$', ['Ativar recorrência', 'Continuar e pagar'], 'Fechar'] },
     { id: 'rec-so-pagar', t: 'Só pagar e ativar depois, na confirmação', toques: [['Só pagar esta fatura', 'Continuar e pagar'], 'sw:Recorrência do pagamento', 'Ativar recorrência'] },
     { id: 'rec-principal', t: 'Pagar com o cartão principal (favorito)', toques: ['Pagar R$', ['Ativar recorrência', 'Continuar e pagar'], 'Ver outras formas de pagamento'] },
-    { id: 'rec-sem-cartao', t: 'Adicionar um cartão na fatura', toques: ['Adicionar cartão', 'Cartão de crédito', 'Continuar', 'Continuar', 'Salvar cartão', 'Pagar R$'] },
-    { id: 'rec-add-perfil', t: 'Adicionar um cartão em Perfil › Pagamentos', toques: ['Adicionar cartão', 'Cartão de crédito', 'Salvar cartão', 'Ativar recorrência'] },
+    { id: 'rec-sem-cartao', t: 'Adicionar um cartão na fatura', toques: ['Adicionar cartão', 'Cartão de crédito', 'real:Número do cartão', null, 'Salvar cartão', 'Pagar R$'] },
+    { id: 'rec-add-perfil', t: 'Adicionar um cartão em Perfil › Pagamentos', toques: ['Adicionar cartão', 'Cartão de crédito', 'real:Número do cartão', null, 'Salvar cartão', 'Ativar recorrência'] },
     { id: 'rec-varios', t: 'Escolher entre vários cartões', toques: ['Ver outras formas de pagamento', 'Ver todos os cartões', 'Elo •••• 7781', 'Gerenciar cartões'] },
     { id: 'rec-perfil', t: 'Ligar a recorrência em Perfil › Pagamentos', toques: ['sw:Recorrência do pagamento', 'Veja como funciona', 'Ativar recorrência', 'Trocar de unidade', 'Casa'] },
     { id: 'rec-como', t: 'Ver como funciona', toques: ['Como funciona a recorrência'] },
@@ -6773,6 +6863,8 @@ CONT_PRONTO.then(({ CONT, M }) => {
     legendaEl.classList.remove('on'); void legendaEl.offsetWidth; legendaEl.classList.add('on');
     desenharTestes();
   }
+  // enquanto a tela anda sozinha (toque 'real:'), o player acompanha o passo em que ela está
+  function pintarPassoReal(f, q) { if (!teste || q < 0) return; teste.k = q; pintarPlayer(); }
   function iniciarTeste(lista) {
     pararTeste();
     teste = { lista, i: 0, k: 0, pausado: false, token: Symbol('teste'), mostrado: false };
@@ -6808,14 +6900,31 @@ CONT_PRONTO.then(({ CONT, M }) => {
         continue;
       }
       const t = x.toques[k], lista = t == null ? [] : Array.isArray(t) ? t : [t];
+      let chegou = -1;
       for (let j = 0; j < lista.length && ativo() && !teste.saltou; j++) {
-        const el = alvoToque(lista[j]); if (!el) continue;
+        const real = String(lista[j] || '').startsWith('real:'), el = alvoToque(real ? lista[j].slice(5) : lista[j]); if (!el) continue;
         await rolarAte(el); if (!ativo() || teste.saltou) break;
         await tocar(el); if (!ativo() || teste.saltou) break;
         // os toques do meio são escolhas na mesma tela: acontecem de verdade (a opção fica marcada)
         if (j < lista.length - 1) { el.click(); await dormir(650); await esperarPausa(tk); }
+        // 'real:' toca de verdade e espera a tela andar sozinha: fica no passo mais adiante que bate com o estado, e só segue
+        // quando ele para de mudar (o número digita, carrega e o resto abre e se preenche)
+        else if (real) {
+          el.click(); dedo.classList.remove('on');
+          let ultimo = -1, desde = 0;
+          for (let w = 0; w < 120 && ativo() && !teste.saltou; w++) {
+            await new Promise(r => setTimeout(r, 100));
+            const agora = M.chave(estado);
+            let q = -1;
+            for (let p = k + 1; p < f.passos.length; p++) if (f.passos[p][1] === atual.id && chaveDe(f, p) === agora) q = p;
+            if (q !== ultimo) { ultimo = q; desde = performance.now(); pintarPassoReal(f, q); }
+            else if (q > k + 1 && performance.now() - desde > 1900) break;
+          }
+          chegou = ultimo;
+        }
       }
       if (!ativo()) return; if (teste.saltou) continue;
+      if (chegou > k) { teste.k = chegou; teste.mostrado = true; dedo.classList.add('on'); continue; }
       teste.anim = animEntre(f.passos[k][1], f.passos[k + 1][1], lista[lista.length - 1]);
       teste.k = k + 1;
     }
@@ -6924,6 +7033,7 @@ CONT_PRONTO.then(({ CONT, M }) => {
       if (n === 'Boleto' && faseDe(a) === 'antes') extra.push(['Simular pagamento no banco', () => pagarNoBanco(a)]);
       if (n === 'Aguardando' && faseDe(a) === 'agu') extra.push(['Simular compensação (2 dias depois)', () => compensar(a)]);
       if (n === 'Pix' && faseDe(a) === 'antes') extra.push(['Simular Pix recebido', () => pagou(a, 'pix')], ['Simular Pix expirado', () => expirar(a)]);
+      if (n === 'NovoCartao' && !(estado.ncEtapa || 0)) extra.push(['Digitar o número do cartão', () => ncDigitarNumero()]);
       if ((n === 'FaturaPaga' || n === 'FaturaDetalhe') && DEF[a]) extra.push(['Simular falha na consulta', () => { consultaDe = atual.id; render('ConsultaErro:' + a, 'fade'); }]);
       if (n === 'Faturas' && estado.acordo && estado.acordo.fase === 'entrada') extra.push(['Simular entrada compensada', () => { estado.acordo = { ...estado.acordo, fase: 'ativo', pagas: 0 }; render(atual.id, 'fade', atual.rol.scrollTop); toast('Entrada confirmada: o parcelamento começou a valer'); }]);
       else if (n === 'Faturas' && estado.acordo && (estado.acordo.pagas || 0) < estado.acordo.n) extra.push(['Simular parcela paga', () => { const ac = estado.acordo, k = (ac.pagas || 0) + 1; estado.acordo = { ...ac, pagas: k }; render(atual.id, 'fade', atual.rol.scrollTop); toast(k === ac.n ? 'Última parcela paga: acordo quitado' : `Parcela ${k} de ${ac.n} paga`); }]);
