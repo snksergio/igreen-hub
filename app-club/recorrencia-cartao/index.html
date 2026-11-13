@@ -235,6 +235,12 @@ body.real .tela { width: 100%; height: 100%; border-radius: 0; }
 body.real .tela div[style^="width: 390px; height:"] { width: 100% !important; }
 #irFluxos { display: none; position: fixed; z-index: 40; top: calc(env(safe-area-inset-top, 0px) + 10px); left: 50%; transform: translateX(-50%); height: 32px; padding: 0 12px 0 10px; border-radius: 16px; border: 0; background: rgba(13,15,15,0.8); color: #FFFFFF; font: 600 13px/18px 'Manrope', sans-serif; align-items: center; gap: 6px; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
 body.real #irFluxos { display: inline-flex; }
+/* ---------- o benefício do cliente (Calebe, 13/11): com desconto ou Pix da energia, no topo da coluna, para todos os fluxos ---------- */
+.benef { margin: 0 0 14px; }
+.benef-rot { display: block; margin: 0 6px 6px; font-size: 11px; line-height: 14px; letter-spacing: 0.08em; font-weight: 700; text-transform: uppercase; color: var(--pg-texto3); }
+.benef-seg { display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: var(--pg-painel); border: 1px solid var(--pg-borda); }
+.benef-seg button { flex: 1; height: 36px; border: 0; border-radius: 9px; background: transparent; color: var(--pg-texto2); font-size: 13px; line-height: 16px; font-weight: 600; }
+.benef-seg button[aria-checked="true"] { background: var(--verde); color: #fff; }
 /* ---------- testes automáticos: abas, lista de testes, o player e o dedo ---------- */
 .abas-lat { display: flex; gap: 4px; margin: 0 0 14px; padding: 4px; border-radius: 12px; background: var(--pg-painel); border: 1px solid var(--pg-borda); }
 .abas-lat button { flex: 1; height: 34px; border: 0; border-radius: 9px; background: transparent; color: var(--pg-texto3); font-size: 13px; line-height: 16px; font-weight: 600; }
@@ -289,7 +295,7 @@ body.real .camada > .rolagem { overscroll-behavior-y: auto; }
 <body>
 <main class="palco">
 <button id="irFluxos" type="button" aria-label="Ver a lista de fluxos"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"></path></svg><span>Fluxos</span></button>
-<nav class="lateral esq" aria-label="Fluxos do protótipo"><div class="marca"><h1>Recorrência do pagamento no cartão · padrão do app</h1><p>No visual do app em produção (Figma APP V1). O cliente cadastra o cartão uma vez e as faturas são cobradas nele: a recorrência fica no próprio cartão, ativada na fatura, no cadastro do cartão, depois de um pagamento ou em Perfil › Pagamentos. A fatura em aberto entra e não atrasa. Cobrança todo dia 8, 3 dias antes do vencimento, com aviso 2 dias antes. Regras fictícias, do benchmark de 12/11.</p></div><div class="abas-lat" role="tablist" aria-label="Fluxos ou testes"><button type="button" role="tab" aria-selected="true" data-aba="fluxos">Fluxos</button><button type="button" role="tab" aria-selected="false" data-aba="testes">Testes automáticos</button></div><div id="fluxos"></div><div id="testes" hidden></div></nav>
+<nav class="lateral esq" aria-label="Fluxos do protótipo"><div class="marca"><h1>Recorrência do pagamento no cartão · padrão do app</h1><p>No visual do app em produção (Figma APP V1). O cliente cadastra o cartão uma vez e as faturas são cobradas nele: a recorrência fica no próprio cartão, ativada na fatura, no cadastro do cartão, depois de um pagamento ou em Perfil › Pagamentos. A fatura em aberto entra e não atrasa. Cobrança todo dia 8, 3 dias antes do vencimento, com aviso 2 dias antes. Pagando no cartão, o cliente ganha +2% no Pix da energia, além dos 16% dele. Regras fictícias, do benchmark de 12/11.</p></div><div class="benef"><span class="benef-rot" id="benefRot">Benefício do cliente</span><div class="benef-seg" role="radiogroup" aria-labelledby="benefRot"><button type="button" role="radio" aria-checked="true" data-benef="desc">Com desconto</button><button type="button" role="radio" aria-checked="false" data-benef="normal">Pix da energia</button></div></div><div class="abas-lat" role="tablist" aria-label="Fluxos ou testes"><button type="button" role="tab" aria-selected="true" data-aba="fluxos">Fluxos</button><button type="button" role="tab" aria-selected="false" data-aba="testes">Testes automáticos</button></div><div id="fluxos"></div><div id="testes" hidden></div></nav>
 <div class="centro">
 <div class="moldura" id="moldura">
 <div class="celular">
@@ -1128,6 +1134,15 @@ const seloCartao = (k, w = 44) => {
   return `<span aria-hidden="true" style="${base}; background: #1A3D8F; color: #FFFFFF; font-size: ${Math.round(w / 4)}px; line-height: 1; font-weight: 600; letter-spacing: 0.06em">VISA</span>`;
 };
 const chev = (cor = '#8B9094') => svg(P.direita, 18, 2.2).replace('stroke="currentColor"', `stroke="${cor}"`);
+// +2% no Pix da energia por pagar no cartão (Calebe via Sergio, 13/11): um benefício à parte dos 16%, sempre em Pix da energia,
+// também para quem tem o desconto na conta. A fatura cobrada não muda; os 2% voltam como Pix (R$ 5,00 em outubro)
+const EXTRA_CARTAO = 2;
+const pixCartao = (id = 'out') => descEm(id, EXTRA_CARTAO);
+const mais2 = () => `<span style="flex-shrink: 0; display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border-radius: 10px; background: #338449; color: #FFFFFF; font-size: 11px; line-height: 20px; font-weight: 700; white-space: nowrap">+${EXTRA_CARTAO}%</span>`;
+// a pílula de fora a fora: o selo +2%, o que ele é e, com a fatura conhecida, quanto dá
+// (dentro de uma opção, que fica verde quando escolhida, ela é branca com borda e, com o valor, só "no Pix da energia")
+const pilula2 = (v = '', mt = 8, branca = false) => `<span data-mov="surgir" style="margin-top: ${mt}px; min-height: 30px; box-sizing: border-box; border-radius: 15px; background: ${branca ? '#FFFFFF; border: 1px solid #B4CFBE' : '#EBF3ED'}; padding: ${branca ? '4px 11px 4px 4px' : '5px 12px 5px 5px'}; display: flex; align-items: center; gap: 8px; font-size: 12px; line-height: 16px; font-weight: 600; color: #276638; text-align: left; white-space: normal">${mais2()}<span style="flex-grow: 1; min-width: 0; text-wrap: pretty">${branca && v ? 'no Pix da energia' : 'no Pix da energia com o cartão'}</span>${v ?`<span style="flex-shrink: 0; font-weight: 700; font-variant-numeric: tabular-nums">${v}</span>` : ''}</span>`;
+const kvMais2 = i => kvRec('Bônus ativo','<span style="color: #276638">+2% no Pix da energia</span>', i);
 // what the customer gains: paid before the due date, the discount (or the Pix da energia's rate) is never lost
 const ganhoCurto = () => { const tx = taxaEco(); if (!__ECO.adic) return 'Não atrase e evite multa e juros'; return pixEnergia() ? `Não atrase e receba os ${tx}% no Pix` : `Não atrase e garanta ${tx}% de desconto`; };
 const ganhoAtivo = () => { const tx = taxaEco(); if (!__ECO.adic) return 'Sem multa nem juros'; return pixEnergia() ? `Os ${tx}% do Pix garantidos` : `${tx}% de desconto garantido`; };
@@ -1206,7 +1221,7 @@ function cardRecInfo(est) {
   const a = est.auto, tx = taxaEco();
   const sb = !__ECO.adic ? 'Próximas faturas sem multa nem juros' : pixEnergia() ? `Próximas faturas com ${tx}% no Pix` : `Próximas faturas com ${tx}% de desconto`;
   return cartaoVerde(`<div style="padding: 14px 12px; display: flex; align-items: center; gap: 10px">${U.circulo(svg(IC_CARTAO_OK, 18, 2.2), { bg: '#338449', cor: '#FFFFFF', s: 36 })}<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 20px; font-weight: 600; white-space: nowrap">Recorrência ativada</span><span style="font-size: 13px; line-height: 18px; font-weight: 600; color: #276638; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">${sb}</span></span></div>
-<div style="margin: 0 4px 4px; border-radius: 12px; background: #FFFFFF; padding: 0 14px">${kvRec('Cartão', nomeCartao(a.cartao), 0)}${kvRec('Próxima cobrança', proxCob(est), 1)}</div>`);
+<div style="margin: 0 4px 4px; border-radius: 12px; background: #FFFFFF; padding: 0 14px">${kvRec('Cartão', nomeCartao(a.cartao), 0)}${kvRec('Próxima cobrança', proxCob(est), 1)}${kvMais2(1)}</div>`);
 }
 // nas faturas pagas, a cobrada pela recorrência leva um selo verde com a seta da recorrência no canto de cima do ícone (como
 // um selo de notificação, sem mais texto na linha)
@@ -1239,10 +1254,10 @@ const ordemCartoes = est => { const ct = cartDe(est), uso = ct.uso || {}; return
 function cardRec(est) {
   const a = est.auto, cob = cobDe(est), ruim = cob === 'recusada' || cob === 'bloqueado';
   const topo = (ic, icBg, icCor, titulo, sub, subCor, subPeso, on) => `<div data-rec-card style="padding: 14px 12px; display: flex; align-items: center; gap: 10px">${U.circulo(svg(ic, 18, 2.2), { bg: icBg, cor: icCor, s: 36 })}<button data-rec-abrir style="flex-grow: 1; min-width: 0; border: 0; background: transparent; padding: 0; color: #0D0F0F; text-align: left; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 20px; font-weight: 600; white-space: nowrap">${titulo}</span><span style="font-size: 13px; line-height: 18px; font-weight: ${subPeso}; color: ${subCor}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">${sub}</span></button>${sw3(on, ' data-rec-sw aria-label="Recorrência do pagamento"')}</div>`;
-  if (!a) return AJ.cartao(`<div data-rec-como style="cursor: pointer">${topo(IC_AUTO, '#EBF3ED', K.VERDE_TXT, 'Recorrência do pagamento', 'Pagamento automático', '#6A6E71', 500, false).replace('<button data-rec-abrir', '<button data-rec-como')}<div style="border-top: 1px solid #EFF1F2; padding: 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px"><span style="min-width: 0; font-size: 13px; line-height: 18px; font-weight: 500; color: #3D4246; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">${ganhoLinha()}</span>${ajuda(' data-rec-como aria-label="Como funciona a recorrência"')}</div></div>`);
+  if (!a) return AJ.cartao(`<div data-rec-como style="cursor: pointer">${topo(IC_AUTO, '#EBF3ED', K.VERDE_TXT, 'Recorrência do pagamento', 'Pagamento automático', '#6A6E71', 500, false).replace('<button data-rec-abrir', '<button data-rec-como')}<div style="border-top: 1px solid #EFF1F2; padding: 12px"><div style="display: flex; align-items: center; justify-content: space-between; gap: 12px"><span style="min-width: 0; font-size: 13px; line-height: 18px; font-weight: 500; color: #3D4246; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">${ganhoLinha()}</span>${ajuda(' data-rec-como aria-label="Como funciona a recorrência"')}</div>${pilula2('', 4)}</div></div>`);
   // the link under the panel: "Ver a recorrência" when all is fine; with a failed charge, the action that fixes it
   const link = (t, attrs, cor) => `<button${attrs} style="width: 100%; min-height: 44px; box-sizing: border-box; border: 0; border-top: 1px solid #EFF1F2; background: transparent; color: ${cor}; padding: 0; display: flex; align-items: center; justify-content: space-between; font-size: 13px; line-height: 18px; font-weight: 600">${t}${svg(P.direita, 16, 2.2)}</button>`;
-  const painel = `<div style="margin: 0 4px 4px; border-radius: 12px; background: #FFFFFF; padding: 0 14px">${kvRec('Cartão', nomeCartao(a.cartao), 0)}${ruim ? kvRec(cob === 'recusada' ? 'Nova tentativa' : 'Vence em', `${cob === 'recusada' ? '09/10' : COB.venc} · ${brl(DEF.out.valor)}`, 1) : kvRec('Próxima cobrança', proxCob(est), 1)}${ruim ? link('Trocar o cartão', ' data-auto-trocar-agora', '#C25400') : link('Ver a recorrência', ' data-auto-detalhe', K.VERDE_TXT)}</div>`;
+  const painel = `<div style="margin: 0 4px 4px; border-radius: 12px; background: #FFFFFF; padding: 0 14px">${kvRec('Cartão', nomeCartao(a.cartao), 0)}${ruim ? kvRec(cob === 'recusada' ? 'Nova tentativa' : 'Vence em', `${cob === 'recusada' ? '09/10' : COB.venc} · ${brl(DEF.out.valor)}`, 1) : kvRec('Próxima cobrança', proxCob(est), 1) + kvMais2(1)}${ruim ? link('Trocar o cartão', ' data-auto-trocar-agora', '#C25400') : link('Ver a recorrência', ' data-auto-detalhe', K.VERDE_TXT)}</div>`;
   // a failed charge: the same active card, in orange, as an alert: what happened and why on top, the switch orange (still on,
   // it can turn it off), the panel in black as usual, and under "Trocar o cartão" a strip on orange with the consequence
   if (ruim) {
@@ -1261,9 +1276,14 @@ function topoRec(est) {
   return `<div data-mov="surgir" style="margin: 16px 16px 0">${cardRec(est)}</div>`;
 }
 // October's card says what happens to it, in the plan card's pill
+// na recorrência (agendada), o card de outubro separa os dois ganhos (Sergio, 13/11): os 16% pela recorrência (pago em dia) e
+// os 2% no Pix da energia pelo cartão, cada um com o valor. Substitui a linha do benefício e o "Pague até o vencimento"
+const linhaGanho = (ic, nome, sub, v, i) => `<div style="${i ? 'border-top: 1px solid #D3E5D8; padding-top: 10px; margin-top: 10px; ' : ''}display: flex; align-items: center; gap: 10px"><span style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 16px; background: #FFFFFF; color: #338449; display: flex; align-items: center; justify-content: center">${ic}</span><span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column"><span style="display: flex; align-items: center; gap: 6px; font-size: 14px; line-height: 20px; font-weight: 600; color: #0D0F0F">${nome}</span><span style="font-size: 12px; line-height: 16px; font-weight: 600; color: #276638">${sub}</span></span><span style="flex-shrink: 0; font-size: 14px; line-height: 20px; font-weight: 600; color: #338449; font-variant-numeric: tabular-nums; white-space: nowrap">${v}</span></div>`;
+const ganhosRec = () => { const b = beneficio('out'), d = DEF.out; return `<div data-mov="surgir" style="margin-top: 12px; border-radius: 14px; background: #EBF3ED; padding: 10px 12px 10px 10px">${linhaGanho(b.ic(16), pixEnergia() ? `Pix da energia ${d.pct}%` : b.nome, 'Pela recorrência, em dia', b.v, 0)}${linhaGanho(PIX_LOGO(16), `Pix da energia${mais2()}`, 'Pelo cartão', '+' + brl(pixCartao()), 1)}</div>`; };
 function cardAuto(est, h) {
   const cob = cobDe(est);
   if (!cob) return h;
+  if (cob === 'agendada') h = h.split(linhaBeneficio('out')).join(ganhosRec());
   const st = cob === 'agendada' ? statusFatura('ok', 'Pagamento automático ativado', '')
     : cob === 'recusada' ? statusFatura('erro', 'Cobrança recusada', 'De novo em 09/10')
     : statusFatura('erro', 'Cartão bloqueado', `Troque até ${COB.venc}`);
@@ -1325,7 +1345,7 @@ function alertaAuto(est, id) {
 function folhaAntesPagar(est) {
   const ct = cartDe(est), pg = est.pg || {}, k = pg.metodo, id = pg.conta || 'out', princ = ct.principal === k, op = est.antesOp || 'rec';
   const ops = [
-    { k: 'rec', t: 'Ativar recorrência', s: ganhoOpcao(id), rec: true },
+    { k: 'rec', t: 'Ativar recorrência', s: ganhoOpcao(id) + pilula2(id ? '+' + brl(pixCartao(DEF[id] ? id : 'out')) : '', 8, true), rec: true },
     princ ? null : { k: 'fav', t: 'Só usar como principal', s: 'Você continua pagando manualmente.' },
     { k: 'nada', t: 'Só pagar esta fatura', s: 'Nada muda nos próximos pagamentos.' },
   ].filter(Boolean);
@@ -1337,6 +1357,18 @@ const OFERTA_ANCORA = '<div style="position: absolute; left: 0; right: 0; bottom
 function recConfirmado(est, x, h) {
   if (x.forma !== 'cartao' || !h.includes(OFERTA_ANCORA)) return h;
   const card = `<div data-mov="surgir" style="margin: 16px 16px 0">${est.auto ? cardRecInfo(est) : cardRec(est).replace('<div data-rec-card', est.recVista ? '<div data-rec-card' : '<div data-rec-card data-auto-abrir')}</div>`;
+  // pago no cartão com a recorrência ativa (Sergio, 13/11): embaixo do que ele economizou, o bônus que o cartão gerou, no mesmo
+  // desenho: +2% no Pix da energia, com o valor
+  if (est.auto) for (const id of Object.keys(DEF)) {
+    const n = notaEco(id); if (!h.includes(n)) continue;
+    const v = `<span style="font-weight: 600">${dinheiro(pixCartao(id))}</span>`;
+    // as duas notas viram linhas de uma caixa só: o CSS da base pinta o último bloco do card (a margem e o fundo verde), então a
+    // caixa é esse bloco e as linhas perdem o próprio fundo; um divisor separa o economizado do bônus
+    const linha = n.replace('<div role="note" data-mov="surgir" style="border-radius: 12px; background: #EBF3ED; padding: 12px 14px;', '<div role="note" style="padding: 0;');
+    const bonus = `${linha.slice(0, linha.indexOf('<span style="width: 24px;')).replace('style="padding: 0;', 'style="padding: 10px 0 0; border-top: 1px solid #D3E5D8;')}<span style="width: 24px; height: 24px; flex-shrink: 0; border-radius: 12px; background: #338449; color: #FFFFFF; display: flex; align-items: center; justify-content: center">${PIX_LOGO(13)}</span><span style="min-width: 0; text-wrap: pretty">Bônus de +2% do cartão: você vai receber ${v} no Pix da energia</span></div>`;
+    h = h.split(n).join(`<div data-mov="surgir" style="display: flex; flex-direction: column; gap: 10px">${linha}${bonus}</div>`);
+    break;
+  }
   // with the card the screen is taller than a short phone: it scrolls, and its footer stays fixed (taller than 844)
   return h.replace('height: 844px;', 'height: 1000px;').replace(OFERTA_ANCORA, m => card + m);
 }
@@ -1345,7 +1377,7 @@ function recConfirmado(est, x, h) {
 function folhaRec(est, arg) {
   const ct = cartDe(est), pgm = (est.pg || {}).metodo, info = arg === 'info';
   const k = (est.auto && est.auto.cartao) || (ct.lista.includes(est.recSel) ? est.recSel : ct.lista.includes(pgm) ? pgm : ct.principal || ordemCartoes(est)[0]);
-  if (info) return folhaCentro({ titulo: 'Como funciona', sub: ganhoSub(), ilu: iluRec(88), corpo: `<div style="margin: 20px 4px 0">${passosRec()}</div>`, rodape: btnVerde('Entendi', ' data-rec-ok') });
+  if (info) return folhaCentro({ titulo: 'Como funciona', sub: ganhoSub(), ilu: iluRec(88), corpo: `<div style="margin: 16px 4px 0">${pilula2('', 0)}</div><div style="margin: 20px 4px 0">${passosRec()}</div>`, rodape: btnVerde('Entendi', ' data-rec-ok') });
   const add = i => linhaAdd(i, ' data-rec-add', 'Adicionar cartão', '');
   const lista = ct.lista.length
     ? grupoAuto(ordemCartoes(est).map((c, i) => linhaCartaoRadio(c, c === k, i, 'data-rec-cartao', [c === ct.principal ? 'Principal' : '', apelidoDe(est, c), tipoDe(est, c).toLowerCase()].filter(Boolean).join(' · '))).join('') + add(1))
@@ -1353,7 +1385,7 @@ function folhaRec(est, arg) {
   const aberto = !!est.comoAberto;
   const como = `<div style="margin-top: 12px; border-radius: 14px; background: #FFFFFF; border: 1px solid #EFF1F2; box-shadow: 0 1px 2px rgba(0,66,110,0.10); overflow: hidden"><button data-como aria-expanded="${aberto}" style="width: 100%; min-height: 52px; box-sizing: border-box; border: 0; background: transparent; color: #0D0F0F; padding: 0 16px; display: flex; align-items: center; gap: 12px; text-align: left">${svg(IC_AJUDA, 20, 2).replace('stroke="currentColor"', `stroke="${K.VERDE_TXT}"`)}<span style="flex-grow: 1; font-size: 14px; line-height: 20px; font-weight: 600">Veja como funciona</span>${svg(aberto ? IC_CIMA : IC_BAIXO, 18, 2.2).replace('stroke="currentColor"', 'stroke="#8B9094"')}</button>${aberto ? `<div data-mov="surgir" style="margin: 0 12px 12px; border-radius: 12px; background: #F7F8F8; padding: 16px 12px">${passosRec()}</div>` : ''}</div>`;
   const rodape = `${btnVerde(k ? 'Ativar recorrência' : 'Adicionar cartão e ativar', k ? ' data-rec-ativar' : ' data-rec-add')}${btnLink('Agora não', ' data-rec-nao')}`;
-  return folhaCentro({ titulo: 'Ative a recorrência', sub: ganhoSub(), ilu: iluRec(88), corpo: `${est.recCtx ? destaqueValor(est.recCtx, 16) : ''}<span style="display: block; margin: 20px 4px 10px; font-size: 14px; line-height: 20px; font-weight: 600; text-align: left">Cobrar no cartão</span>
+  return folhaCentro({ titulo: 'Ative a recorrência', sub: ganhoSub(), ilu: iluRec(88), corpo: `${est.recCtx ? destaqueValor(est.recCtx, 16) : ''}${pilula2(est.recCtx ? '+' + brl(pixCartao(DEF[est.recCtx] ? est.recCtx : 'out')) : '', est.recCtx ? 8 : 16)}<span style="display: block; margin: 20px 4px 10px; font-size: 14px; line-height: 20px; font-weight: 600; text-align: left">Cobrar no cartão</span>
 ${lista}
 ${como}`, rodape });
 }
@@ -1424,7 +1456,7 @@ ${AJ.rodapeFixo(e >= 2 ? btnVerde('Salvar cartão', ' data-nc-salvar') : btnVerd
 function folhaNovoOpcoes(est) {
   const k = proximoCartao(cartDe(est)), op = est.novOp || 'rec';
   const ops = [
-    { k: 'rec', t: 'Ativar recorrência', s: ganhoOpcao(null), rec: true },
+    { k: 'rec', t: 'Ativar recorrência', s: ganhoOpcao(null) + pilula2('', 8, true), rec: true },
     { k: 'fav', t: 'Usar como principal', s: 'Vem escolhido quando você paga. O pagamento continua manual.' },
     { k: 'nada', t: 'Só salvar o cartão', s: 'Você escolhe na hora de pagar.' },
   ];
@@ -1550,7 +1582,7 @@ function folhaCvv(est, arg) {
 function autoCobrada(est) {
   const k = (est.auto && est.auto.cartao) || cartDe(est).principal, tx = taxaEco();
   return K.telaStatus({ tom: 'ok', icone: P.check, titulo: 'Fatura de outubro paga', sub: `Cobramos ${brl(DEF.out.valor)} no ${nomeCartao(k)}. As próximas também vão neste cartão.`, notaIc: FG_CAL, pad: '4px 16px',
-    nota: __ECO.adic ? `Paga antes do vencimento: ${pixEnergia() ? `os ${tx}% do Pix da energia estão garantidos` : `os ${tx}% de desconto estão garantidos`}.` : 'Paga antes do vencimento, sem multa nem juros.',
+    nota: (__ECO.adic ? `Paga antes do vencimento: ${pixEnergia() ? `os ${tx}% do Pix da energia estão garantidos` : `os ${tx}% de desconto estão garantidos`}` : 'Paga antes do vencimento, sem multa nem juros') + `. E +${brl(pixCartao())} no Pix da energia pelo cartão.`,
     casca: rowInfo(IC_AUTO, 'Recorrência do pagamento', `Ativa no ${nomeCartao(k)}`, '', 0) + rowInfo(FG_CAL, 'Próxima cobrança', `Fatura de novembro · ${COB.prox}`, '', 1),
     rodape: AJ.btnPrimario('Ir para minhas faturas') });
 }
@@ -6550,7 +6582,7 @@ CONT_PRONTO.then(({ CONT, M }) => {
   const GRUPO = { ids: ['set', 'out'], venc: 5, criado: '06/10/2026' };
   const VER_VARIACOES = /[?&]variacoes\b/.test(location.search);
   const FLUXOS = [
-    { grupo: 'Pagar e ativar a recorrência', id: 'rec-pagar', eco: 'desc', titulo: 'Primeiro pagamento no cartão', desc: 'Sem cartão principal, nada vem escolhido. Escolher o cartão só escolhe. Ao pagar com ele, uma folha antes do pagamento empurra a recorrência ("Não esqueça mais a conta de luz"), com as outras escolhas ao lado. Ativada, a confirmação mostra o card verde com o interruptor para desligar.', passos: [
+    { grupo: 'Pagar e ativar a recorrência', id: 'rec-pagar', titulo: 'Primeiro pagamento no cartão', desc: 'Sem cartão principal, nada vem escolhido. Escolher o cartão só escolhe. Ao pagar com ele, uma folha antes do pagamento empurra a recorrência ("Não esqueça mais a conta de luz"), com as outras escolhas ao lado. Ativada, a confirmação mostra o card verde com o interruptor para desligar.', passos: [
       ['Faturas: uma fatura em aberto', 'Faturas:casa', { ...LIMPO, ...SET_PAGO, cart: C1 }],
       ['Fatura: nada vem escolhido', 'FaturaDetalhe:out', pg('out', '')],
       ['Escolhe o Visa', 'FaturaDetalhe:out', pg('out', 'visa')],
@@ -6558,19 +6590,19 @@ CONT_PRONTO.then(({ CONT, M }) => {
       ['Pago, com a recorrência ativa', 'Confirmado:out', { ...PAGO_OUT, auto: { cartao: 'visa' }, recVista: true, preVista: true }],
       ['Faturas: recorrência ativa', 'Faturas:casa'],
     ] },
-    { id: 'rec-so-pagar', eco: 'desc', titulo: 'Só pagar esta fatura', desc: 'Quem escolhe só pagar vê, na confirmação, o card da recorrência com o interruptor e o "?" de como funciona. Ligar abre a folha para escolher o cartão.', passos: [
+    { id: 'rec-so-pagar', titulo: 'Só pagar esta fatura', desc: 'Quem escolhe só pagar vê, na confirmação, o card da recorrência com o interruptor e o "?" de como funciona. Ligar abre a folha para escolher o cartão.', passos: [
       ['Antes de pagar: só pagar', 'FaturaDetalhe:out+F:AntesPagar', { ...LIMPO, ...SET_PAGO, cart: C1, ...pg('out', 'visa'), antesOp: 'nada' }],
       ['Pago: o card da recorrência', 'Confirmado:out', { ...PAGO_OUT, recVista: true, preVista: true, antesOp: null }],
       ['Ligar: escolher o cartão', 'Confirmado:out+F:Recorrencia', { recSel: 'visa', recCtx: 'out' }],
       ['Ativada', 'Confirmado:out', { auto: { cartao: 'visa' } }],
     ] },
-    { id: 'rec-principal', eco: 'desc', titulo: 'Com cartão principal', desc: 'Com um cartão principal, a fatura fica curta: só ele, já escolhido. Ela não oferece ativar a recorrência ali: quem oferece é a folha antes de pagar, com quanto esta fatura sairia mais barata. Ativa, a fatura mostra a linha "Recorrência ativa" e o botão vira "Adiantar pagamento". "Ver outras formas de pagamento" abre o resto no lugar.', passos: [
+    { id: 'rec-principal', titulo: 'Com cartão principal', desc: 'Com um cartão principal, a fatura fica curta: só ele, já escolhido. Ela não oferece ativar a recorrência ali: quem oferece é a folha antes de pagar, com quanto esta fatura sairia mais barata. Ativa, a fatura mostra a linha "Recorrência ativa" e o botão vira "Adiantar pagamento". "Ver outras formas de pagamento" abre o resto no lugar.', passos: [
       ['Fatura: só o cartão principal', 'FaturaDetalhe:out', { ...LIMPO, ...SET_PAGO, cart: { lista: ['visa'], principal: 'visa' }, ...pg('out', 'visa') }],
       ['Pagar: a folha antes do pagamento', 'FaturaDetalhe:out+F:AntesPagar'],
       ['Com a recorrência ativa', 'FaturaDetalhe:out', { auto: { cartao: 'visa' }, recVista: true, preVista: true }],
       ['Ver outras formas de pagamento', 'FaturaDetalhe:out', { auto: null, verFormas: true }],
     ] },
-    { id: 'rec-sem-cartao', eco: 'desc', titulo: 'Adicionar cartão na fatura', desc: 'Primeiro o tipo, numa lista simples. Depois o número: a bandeira aparece enquanto ele digita e, completo, o campo carrega sozinho e o nome, a validade e o CVV abrem juntos, sem Continuar. Toque no campo do número para digitar. Na fatura, salvar volta direto para o pagamento.', passos: [
+    { id: 'rec-sem-cartao', titulo: 'Adicionar cartão na fatura', desc: 'Primeiro o tipo, numa lista simples. Depois o número: a bandeira aparece enquanto ele digita e, completo, o campo carrega sozinho e o nome, a validade e o CVV abrem juntos, sem Continuar. Toque no campo do número para digitar. Na fatura, salvar volta direto para o pagamento.', passos: [
       ['Fatura: sem cartão salvo', 'FaturaDetalhe:out', { ...LIMPO, ...SET_PAGO, cart: { lista: [], principal: null }, ...pg('out', '') }],
       ['Qual o tipo do cartão', 'FaturaDetalhe:out+F:TipoCartao'],
       ['Número: a bandeira aparece ao digitar', 'NovoCartao', { tipoNovo: 'credito', ncEtapa: 0, ncOrigem: 'fatura' }],
@@ -6579,7 +6611,7 @@ CONT_PRONTO.then(({ CONT, M }) => {
       ['Fatura com o cartão novo', 'FaturaDetalhe:out', { cart: { lista: ['master'], principal: null, tipo: { master: 'credito' } }, ncEtapa: 0, ncOrigem: null, ...pg('out', 'master') }],
       ['Pagar: a folha antes do pagamento', 'FaturaDetalhe:out+F:AntesPagar'],
     ] },
-    { id: 'rec-add-perfil', eco: 'desc', titulo: 'Adicionar em Perfil › Pagamentos', desc: 'Fora do pagamento, antes de salvar, uma folha pergunta como usar o cartão: ativar a recorrência (recomendado), usar como principal ou só salvar.', passos: [
+    { id: 'rec-add-perfil', titulo: 'Adicionar em Perfil › Pagamentos', desc: 'Fora do pagamento, antes de salvar, uma folha pergunta como usar o cartão: ativar a recorrência (recomendado), usar como principal ou só salvar.', passos: [
       ['Pagamentos', 'Pagamentos', { ...LIMPO, ...SET_PAGO, cart: { lista: ['visa'], principal: 'visa' } }],
       ['Qual o tipo do cartão', 'Pagamentos+F:TipoCartao'],
       ['Número: a bandeira aparece ao digitar', 'NovoCartao', { tipoNovo: 'credito', ncEtapa: 0, ncOrigem: 'pagamentos' }],
@@ -6588,14 +6620,14 @@ CONT_PRONTO.then(({ CONT, M }) => {
       ['Como usar este cartão', 'NovoCartao+F:NovoOpcoes'],
       ['Pagamentos: cartão novo na recorrência', 'Pagamentos', { cart: { lista: ['visa', 'master'], principal: 'visa', tipo: { master: 'credito' } }, auto: { cartao: 'master' }, recVista: true, preVista: true, ncEtapa: 0, ncOrigem: null }],
     ] },
-    { id: 'rec-varios', eco: 'desc', titulo: 'Vários cartões', desc: 'Nas outras formas de pagamento, até dois cartões, o principal e o mais usado. "Ver todos os cartões" abre o resto ali mesmo. "Gerenciar cartões" leva às opções de cada um.', passos: [
+    { id: 'rec-varios', titulo: 'Vários cartões', desc: 'Nas outras formas de pagamento, até dois cartões, o principal e o mais usado. "Ver todos os cartões" abre o resto ali mesmo. "Gerenciar cartões" leva às opções de cada um.', passos: [
       ['Fatura: só o principal', 'FaturaDetalhe:out', { ...LIMPO, ...SET_PAGO, cart: C3, ...pg('out', 'visa') }],
       ['Outras formas: dois cartões', 'FaturaDetalhe:out', { verFormas: true }],
       ['Todos os cartões, ali mesmo', 'FaturaDetalhe:out', { verTodos: true }],
       ['Escolhe o Elo', 'FaturaDetalhe:out', pg('out', 'elo')],
       ['Gerenciar cartões', 'Pagamentos'],
     ] },
-    { id: 'rec-perfil', eco: 'desc', titulo: 'Em Perfil › Pagamentos', desc: 'A casa fica no topo, no mesmo seletor das faturas, e a recorrência ganha um card só dela: o mesmo das faturas, com a faixa do desconto que ele garante. Ligar abre a folha com o cartão.', passos: [
+    { id: 'rec-perfil', titulo: 'Em Perfil › Pagamentos', desc: 'A casa fica no topo, no mesmo seletor das faturas, e a recorrência ganha um card só dela: o mesmo das faturas, com a faixa do desconto que ele garante. Ligar abre a folha com o cartão.', passos: [
       ['Pagamentos: recorrência desligada', 'Pagamentos', { ...LIMPO, ...SET_PAGO, cart: C3 }],
       ['Ligar: escolher o cartão', 'Pagamentos+F:Recorrencia', { recSel: 'visa' }],
       ['Veja como funciona, aberto', 'Pagamentos+F:Recorrencia', { comoAberto: true }],
@@ -6603,18 +6635,18 @@ CONT_PRONTO.then(({ CONT, M }) => {
       ['Outra unidade', 'Pagamentos+F:UcRec'],
       ['Ver a recorrência', 'AutoDetalhe'],
     ] },
-    { id: 'rec-como', eco: 'desc', titulo: 'Como funciona', desc: 'O "?" do card abre como funciona: a ilustração, o ganho no título e os passos.', passos: [
+    { id: 'rec-como', titulo: 'Como funciona', desc: 'O "?" do card abre como funciona: a ilustração, o ganho no título e os passos.', passos: [
       ['Faturas: o card da recorrência', 'Faturas:casa', { ...LIMPO, ...SET_PAGO, cart: C1 }],
       ['Como funciona', 'Faturas:casa+F:Recorrencia:info'],
     ] },
-    { grupo: 'Com a recorrência ativa', id: 'rec-aviso', eco: 'desc', titulo: 'Fatura em aberto na recorrência', desc: 'A fatura de outubro, em aberto, entra na recorrência e não atrasa. No card dela, em cima do botão, só "Pagamento automático ativado", e o botão vira "Adiantar pagamento". Dois dias antes, a notificação traz o valor. Cobrada, ela vai para as pagas com uma bolinha da recorrência no ícone do cartão.', passos: [
+    { grupo: 'Com a recorrência ativa', id: 'rec-aviso', titulo: 'Fatura em aberto na recorrência', desc: 'A fatura de outubro, em aberto, entra na recorrência e não atrasa. No card dela, em cima do botão, só "Pagamento automático ativado", e o botão vira "Adiantar pagamento". Dois dias antes, a notificação traz o valor. Cobrada, ela vai para as pagas com uma bolinha da recorrência no ícone do cartão.', passos: [
       ['Notificação: cobrança em 08/10', 'Faturas:casa', { ...LIMPO, ...SET_PAGO, ...AUTO_ON }, { t: () => `Outubro: ${brl(DEF.out.valor)} no Visa •••• 1290 em 08/10.`, alvo: 'FaturaDetalhe:out' }],
       ['Energia: a fatura na recorrência', 'Energia'],
       ['Fatura de outubro: paga em 08/10', 'FaturaDetalhe:out', pg('out', 'visa')],
       ['Cobrada em 08/10: nas pagas, com o selo', 'Faturas:casa', { contas: { out: { fase: 'pago', forma: 'cartao', cb: 0, auto: true } } }, { t: () => `Outubro paga: ${brl(DEF.out.valor)} no Visa •••• 1290.`, alvo: 'Faturas:casa' }],
       ['A recorrência', 'AutoDetalhe'],
     ] },
-    { id: 'rec-recusa', eco: 'desc', titulo: 'Cartão recusado: sem limite', desc: 'Recusa temporária, em destaque: tentamos de novo em 09/10 e 10/10, antes do vencimento. "Trocar cartão e pagar" cobra na hora e mantém o desconto.', passos: [
+    { id: 'rec-recusa', titulo: 'Cartão recusado: sem limite', desc: 'Recusa temporária, em destaque: tentamos de novo em 09/10 e 10/10, antes do vencimento. "Trocar cartão e pagar" cobra na hora e mantém o desconto.', passos: [
       ['Notificação e faturas', 'Faturas:casa', { ...LIMPO, ...SET_PAGO, ...AUTO_ON, cob: 'recusada' }, { t: 'O Visa •••• 1290 recusou outubro. Tentamos amanhã.', alvo: 'FaturaDetalhe:out' }],
       ['Energia: o alerta na fatura', 'Energia'],
       ['Fatura: nova tentativa em 09/10', 'FaturaDetalhe:out', pg('out', '')],
@@ -6622,34 +6654,34 @@ CONT_PRONTO.then(({ CONT, M }) => {
       ['Confirmar com o CVV', 'TrocarAuto:agora+F:Cvv:agora'],
       ['Fatura paga no cartão novo', 'AutoCobrada', { auto: { cartao: 'master' }, cob: null, ...PAGO_OUT, ...pg('out', 'master') }],
     ] },
-    { id: 'rec-bloqueado', eco: 'desc', titulo: 'Cartão vencido ou bloqueado', desc: 'Recusa definitiva, sem novas tentativas: o destaque pede outro cartão até o vencimento, e dá para pagar agora por Pix, boleto ou cartão.', passos: [
+    { id: 'rec-bloqueado', titulo: 'Cartão vencido ou bloqueado', desc: 'Recusa definitiva, sem novas tentativas: o destaque pede outro cartão até o vencimento, e dá para pagar agora por Pix, boleto ou cartão.', passos: [
       ['Notificação e faturas', 'Faturas:casa', { ...LIMPO, ...SET_PAGO, ...AUTO_ON, cob: 'bloqueado' }, { t: 'O Visa •••• 1290 não aceita cobranças. Troque até 11/10.', alvo: 'FaturaDetalhe:out' }],
       ['Energia: o alerta na fatura', 'Energia'],
       ['Fatura: troque o cartão até 11/10', 'FaturaDetalhe:out', pg('out', '')],
       ['A recorrência pede outro cartão', 'AutoDetalhe'],
     ] },
-    { grupo: 'Gerenciar', id: 'rec-trocar', eco: 'desc', titulo: 'Trocar o cartão da recorrência', desc: 'Na recorrência, em Ações. Vale a partir da próxima cobrança. O CVV é pedido de novo, porque a troca abre uma nova série de cobranças no cartão.', passos: [
+    { grupo: 'Gerenciar', id: 'rec-trocar', titulo: 'Trocar o cartão da recorrência', desc: 'Na recorrência, em Ações. Vale a partir da próxima cobrança. O CVV é pedido de novo, porque a troca abre uma nova série de cobranças no cartão.', passos: [
       ['A recorrência', 'AutoDetalhe', { ...LIMPO, ...SET_PAGO, ...AUTO_ON }],
       ['Escolher outro cartão', 'TrocarAuto:trocar', { autoSel: 'master' }],
       ['Confirmar com o CVV', 'TrocarAuto:trocar+F:Cvv:trocar'],
       ['Recorrência no Mastercard', 'AutoDetalhe', { auto: { cartao: 'master' } }],
     ] },
-    { id: 'rec-desativar', eco: 'desc', titulo: 'Desativar', desc: 'O interruptor desliga, e uma folha pergunta antes: o pagamento volta a ser manual, e a fatura de outubro não será cobrada no cartão.', passos: [
+    { id: 'rec-desativar', titulo: 'Desativar', desc: 'O interruptor desliga, e uma folha pergunta antes: o pagamento volta a ser manual, e a fatura de outubro não será cobrada no cartão.', passos: [
       ['Faturas: recorrência ativa', 'Faturas:casa', { ...LIMPO, ...SET_PAGO, ...AUTO_ON }],
       ['Desligar: a folha confirma', 'Faturas:casa+F:Desativar'],
       ['Faturas: recorrência desligada', 'Faturas:casa', { auto: null }],
     ] },
-    { id: 'rec-cartoes', eco: 'desc', titulo: 'Opções do cartão', desc: 'Tocar num cartão abre uma lista de opções: apelido, principal, usar na recorrência e remover. O cartão da recorrência só sai depois de trocar o cartão dela.', passos: [
+    { id: 'rec-cartoes', titulo: 'Opções do cartão', desc: 'Tocar num cartão abre uma lista de opções: apelido, principal, usar na recorrência e remover. O cartão da recorrência só sai depois de trocar o cartão dela.', passos: [
       ['Pagamentos: três cartões', 'Pagamentos', { ...LIMPO, ...SET_PAGO, ...AUTO_ON, cart: C3 }],
       ['Mastercard: opções', 'Pagamentos+F:Cartao:master'],
       ['Dar um apelido', 'Pagamentos+F:Apelido:master'],
       ['Apelido e principal', 'Pagamentos', { cart: { ...C3, principal: 'master', apelido: { master: 'Cartão da casa' } } }],
       ['Visa: está na recorrência', 'Pagamentos+F:Cartao:visa'],
     ] },
-    { id: 'rec-atualizado', eco: 'desc', titulo: 'Cartão atualizado sozinho', desc: 'O cartão venceu e o banco mandou a nova validade: ele é atualizado sem o cliente fazer nada, e o app avisa. A recorrência continua igual.', passos: [
+    { id: 'rec-atualizado', titulo: 'Cartão atualizado sozinho', desc: 'O cartão venceu e o banco mandou a nova validade: ele é atualizado sem o cliente fazer nada, e o app avisa. A recorrência continua igual.', passos: [
       ['Notificação: cartão atualizado', 'Pagamentos', { ...LIMPO, ...SET_PAGO, ...AUTO_ON, atu: true }, { t: 'Visa •••• 1290 com nova validade. Nada muda.', alvo: 'Pagamentos' }],
     ] },
-    { grupo: 'Na home (Energia)', id: 'rec-home', eco: 'desc', titulo: 'Home de energia', desc: 'O card de outubro em "Minhas faturas", na Energia, nos quatro estados da recorrência: desligada, ativa (a faixa "Pagamento automático ativado" e "Adiantar pagamento"), cobrança recusada e cartão bloqueado (o alerta laranja cheio, com "Trocar o cartão", e "Efetuar pagamento manual"). Role até "Minhas faturas".', passos: [
+    { grupo: 'Na home (Energia)', id: 'rec-home', titulo: 'Home de energia', desc: 'O card de outubro em "Minhas faturas", na Energia, nos quatro estados da recorrência: desligada, ativa (a faixa "Pagamento automático ativado" e "Adiantar pagamento"), cobrança recusada e cartão bloqueado (o alerta laranja cheio, com "Trocar o cartão", e "Efetuar pagamento manual"). Role até "Minhas faturas".', passos: [
       ['Recorrência desligada', 'Energia', { ...LIMPO, ...SET_PAGO, cart: C1 }],
       ['Recorrência ativa', 'Energia', { ...AUTO_ON }],
       ['Cobrança recusada: sem limite', 'Energia', { cob: 'recusada' }],
@@ -6953,6 +6985,14 @@ CONT_PRONTO.then(({ CONT, M }) => {
   $('#camadas').addEventListener('pointerdown', ev => { if (ev.isTrusted && teste && !teste.pausado) { teste.pausado = true; pintarPlayer(); } }, true);
   addEventListener('keydown', ev => { if (!teste || ev.target.closest('input')) return; if (ev.key === ' ') { ev.preventDefault(); teste.pausado = !teste.pausado; pintarPlayer(); } else if (ev.key === 'ArrowRight') saltar(1); else if (ev.key === 'ArrowLeft') saltar(-1); else if (ev.key === 'Escape') pararTeste(); });
   desenharTestes();
+  // o benefício do cliente no topo da coluna (Calebe, 13/11): o mesmo do controle embaixo do celular, à vista e para todos os
+  // fluxos. No Pix da energia a fatura vem cheia, sem o valor riscado, e o desconto volta como Pix
+  function pintarBenef() { document.querySelectorAll('[data-benef]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.benef === __ECO.modo))); }
+  document.querySelectorAll('[data-benef]').forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.benef === __ECO.modo) return;
+    definirEco({ modo: b.dataset.benef }, b.dataset.benef === 'normal' ? 'Pix da energia: a fatura cheia e o desconto de volta no Pix' : 'Com desconto: o valor com desconto e o cheio riscado');
+  }));
+  pintarBenef();
   // ---------- the payment's version (control under the phone, on the pay screen only)
   const visiveis = () => FLUXOS.filter(f => versao === 'cb' || !f.soComCb);
   const VERSOES = [['mod', 'Atual modificada'], ['proposta', 'Proposta'], ['cb', 'Com cashback']];
@@ -6987,6 +7027,7 @@ CONT_PRONTO.then(({ CONT, M }) => {
     Object.assign(__ECO, x);
     M.aplicarEco();
     estado.eco = __ECO.modo; estado.semAdic = !__ECO.adic;
+    pintarBenef();
     if (aviso) toast(aviso);
     if (refazer && atual) render(atual.id, 'fade', atual.rol.scrollTop);
   }
