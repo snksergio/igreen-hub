@@ -139,8 +139,9 @@
   .lista { width: 100%; background: var(--bg-background); border: 1px solid var(--border); border-radius: var(--radius-base); box-shadow: var(--shadow-base); overflow: hidden; }
   .lista li { display: flex; align-items: center; gap: 14px; padding: 14px 17px; color: var(--fg-strong); }
   .lista li + li { box-shadow: inset 0 1px 0 var(--border-muted); }
-  /* o +2% em destaque (Sergio, 13/11): o primeiro da lista, com o ícone branco no verde cheio */
+  /* a lista da oferta (Sergio, 13/11): os ícones brancos no verde cheio, e o +2% em primeiro, sublinhado */
   .lista .ic.forte { background: var(--bg-primary); box-shadow: none; color: #fff; }
+  .highlight.sublinhado { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
   .lista .ic { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--bg-primary-subtle); box-shadow: inset 0 0 0 1px var(--border-primary-subtle); color: var(--fg-primary); }
 
   /* ---------- botões (Button.module.css) ---------- */
@@ -681,9 +682,9 @@
         <div class="titleRow tituloOferta sobe" style="--d: 0.25s"><h2 class="t-modal-title" id="modalTitulo">${t.titulo}</h2><p class="t-page-subtitle subtitle">Cadastre o cartão de crédito e suas faturas são pagas sozinhas, sempre antes de vencer.</p></div>
         <div class="labeled sobe" style="--d: 0.35s"><p class="t-label groupLabel">COMO FUNCIONA A RECORRÊNCIA</p>
           <ul class="lista">
-            <li><span class="ic forte">${TB.desconto}</span><span class="t-body-lg-semibold">Ganhe <span class="highlight">+${MAIS}% no Pix da energia</span> com o cartão de crédito</span></li>
-            <li><span class="ic">${TB.refresh}</span><span class="t-body-lg-semibold">Paga sozinha, sem você precisar lembrar</span></li>
-            <li><span class="ic">${TB.sino}</span><span class="t-body-lg-semibold">Aviso 2 dias antes de cada cobrança</span></li>
+            <li><span class="ic forte">${TB.desconto}</span><span class="t-body-lg-semibold">Ganhe <span class="highlight sublinhado">+${MAIS}% no Pix da energia</span> com o cartão de crédito</span></li>
+            <li><span class="ic forte">${TB.refresh}</span><span class="t-body-lg-semibold">Paga sozinha, sem você precisar lembrar</span></li>
+            <li><span class="ic forte">${TB.sino}</span><span class="t-body-lg-semibold">Aviso 2 dias antes de cada cobrança</span></li>
           </ul>
         </div>
         <div class="flag flagMuted flagCompacta sobe" style="--d: 0.45s"><span class="iconeBranco">${svg(ic.cadeado, 16)}</span><div class="flagText"><p class="t-body-md-semibold strong">Nada é cobrado agora</p><p class="t-caption mainText">A primeira cobrança só acontece quando a sua primeira fatura chegar.</p></div></div>
