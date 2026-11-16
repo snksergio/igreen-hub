@@ -1,0 +1,21 @@
+{
+  "nome": "CRM de atendimento",
+  "descricao": "Protótipo do CRM interno de atendimento: tickets, atendimentos do atendente e do supervisor, bot de fluxo com construtor, automações por etapa, distribuição das filas e equipes com permissões.",
+  "tipo": "prototipo",
+  "atualizado": "2026-11-16",
+  "paginas": [
+    { "nome": "Dashboard do atendimento", "arquivo": "index.html#at-dashboard" },
+    { "nome": "Meus atendimentos", "arquivo": "index.html#at-meus" },
+    { "nome": "Atendimentos do supervisor", "arquivo": "index.html#at-atendimentos" },
+    { "nome": "Tickets", "arquivo": "index.html#at-tickets" },
+    { "nome": "Filas", "arquivo": "index.html#at-filas" },
+    { "nome": "Clientes", "arquivo": "index.html#at-clientes" },
+    { "nome": "Fluxos do bot", "arquivo": "index.html#at-fluxos" },
+    { "nome": "Construtor do bot", "arquivo": "index.html#fluxo/fx-whatsapp" },
+    { "nome": "Regras de automação", "arquivo": "index.html#at-automacoes" },
+    { "nome": "Visão do fluxo das automações", "arquivo": "index.html#at-automacoes-fluxo" },
+    { "nome": "Distribuição das filas", "arquivo": "index.html#at-distribuicao" },
+    { "nome": "Pessoas e acessos", "arquivo": "index.html#pessoas" }
+  ],
+  "tags": ["ticket", "bot", "automação", "fila", "distribuição", "transbordo", "supervisor", "permissão", "equipe", "kanban"]
+}
