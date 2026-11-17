@@ -2,7 +2,7 @@
   "nome": "CRM de atendimento",
   "descricao": "Protótipo do CRM interno de atendimento: tickets, atendimentos do atendente e do supervisor, bot de fluxo com construtor, automações por etapa, distribuição das filas e equipes com permissões.",
   "tipo": "prototipo",
-  "atualizado": "2026-11-16",
+  "atualizado": "2026-11-17",
   "paginas": [
     { "nome": "Dashboard do atendimento", "arquivo": "index.html#at-dashboard" },
     { "nome": "Meus atendimentos", "arquivo": "index.html#at-meus" },
