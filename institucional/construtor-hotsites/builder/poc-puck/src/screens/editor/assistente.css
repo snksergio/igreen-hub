@@ -72,14 +72,14 @@
   bottom: 14px;
   z-index: 55;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   width: min(420px, calc(100vw - 24px));
   height: min(680px, calc(100vh - 96px));
   border-radius: 24px;
   /* Vidro: o fundo deixa passar a prévia desfocada atrás do painel */
-  background: color-mix(in srgb, var(--b-painel) 78%, transparent);
-  -webkit-backdrop-filter: blur(26px) saturate(1.7);
-  backdrop-filter: blur(26px) saturate(1.7);
+  background: color-mix(in srgb, var(--b-painel) 90%, transparent);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  backdrop-filter: blur(28px) saturate(1.6);
   box-shadow: 0 28px 64px -16px rgba(0, 40, 20, 0.3), 0 8px 22px rgba(17, 19, 24, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
   color: var(--b-texto);
   font-family: var(--b-fonte);
@@ -186,155 +186,107 @@
   outline-offset: 2px;
 }
 
-/* ---------- A esfera líquida ----------
-   Quatro gotas verdes passeiam em volta de um núcleo; o filtro "goo" (SVG) funde as bordas como
-   líquido. Uma quinta gota segue o ponteiro (--mx, --my) e volta com mola, como gelatina.
-   Pensando (.ia-orbe-ativo), tudo acelera. */
-.ia-defs {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-}
+/* ---------- A esfera ----------
+   Como as esferas de voz: forma sempre redonda, cor que flui por dentro. Parada esperando; a grande
+   entra uma vez ao abrir; pensando, respira e a cor gira devagar. --t é o tamanho. */
 .ia-orbe {
-  --vel: 1;
-  --mx: 0;
-  --my: 0;
+  --t: 26px;
+  --sombra-orbe: inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 calc(var(--t) * -0.14) calc(var(--t) * 0.28) rgba(0, 48, 24, 0.38),
+    0 calc(var(--t) * 0.16) calc(var(--t) * 0.46) calc(var(--t) * -0.16) rgba(0, 150, 75, 0.55);
   position: relative;
   flex: none;
-  width: 26px;
-  height: 26px;
-}
-.ia-orbe-ativo {
-  --vel: 0.4;
-}
-.ia-goo {
-  position: absolute;
-  inset: -22%;
-  filter: url(#ia-goo-p);
-}
-.ia-goo i {
-  position: absolute;
-  left: 50%;
-  top: 50%;
+  width: var(--t);
+  height: var(--t);
   border-radius: 50%;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
+  overflow: hidden;
+  isolation: isolate;
+  background: radial-gradient(circle at 50% 88%, #36d684 0%, #00a859 42%, #006b34 100%);
+  box-shadow: var(--sombra-orbe);
 }
-.ia-goo i:nth-child(1) {
-  width: 70%;
-  height: 70%;
-  margin: -35% 0 0 -35%;
-  background: radial-gradient(circle at 35% 30%, #d6fadf, #2fc777 42%, #00813e 100%);
-  animation-name: ia-nucleo;
-  animation-duration: calc(5s * var(--vel));
-}
-.ia-goo i:nth-child(2) {
-  width: 42%;
-  height: 42%;
-  margin: -21% 0 0 -21%;
-  background: #8be873;
-  animation-name: ia-gota-a;
-  animation-duration: calc(4.4s * var(--vel));
-}
-.ia-goo i:nth-child(3) {
-  width: 38%;
-  height: 38%;
-  margin: -19% 0 0 -19%;
-  background: #00b862;
-  animation-name: ia-gota-b;
-  animation-duration: calc(5.8s * var(--vel));
-}
-.ia-goo i:nth-child(4) {
-  width: 30%;
-  height: 30%;
-  margin: -15% 0 0 -15%;
-  background: #4fdc8c;
-  animation-name: ia-gota-c;
-  animation-duration: calc(3.7s * var(--vel));
-}
-.ia-goo i.ia-segue {
-  width: 34%;
-  height: 34%;
-  margin: -17% 0 0 -17%;
-  background: #22c470;
-  transform: translate(calc(var(--mx) * 105%), calc(var(--my) * 105%));
-  transition: transform 0.55s cubic-bezier(0.34, 1.7, 0.5, 1);
-  animation: none;
-}
-@keyframes ia-nucleo {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.07) translate(2%, -2%);
-  }
-}
-@keyframes ia-gota-a {
-  0%,
-  100% {
-    transform: translate(-70%, -55%) scale(1);
-  }
-  33% {
-    transform: translate(75%, -40%) scale(1.12);
-  }
-  66% {
-    transform: translate(20%, 80%) scale(0.88);
-  }
-}
-@keyframes ia-gota-b {
-  0%,
-  100% {
-    transform: translate(80%, 50%) scale(0.95);
-  }
-  40% {
-    transform: translate(-75%, 45%) scale(1.15);
-  }
-  75% {
-    transform: translate(-10%, -85%) scale(0.9);
-  }
-}
-@keyframes ia-gota-c {
-  0%,
-  100% {
-    transform: translate(0, 95%) scale(0.9);
-  }
-  50% {
-    transform: translate(10%, -100%) scale(1.2);
-  }
-}
-/* Brilho de vidro por cima do líquido */
-.ia-luz {
+.ia-orbe-cor {
   position: absolute;
-  inset: 6%;
+  inset: -30%;
+  background: radial-gradient(circle at 30% 34%, rgba(205, 248, 214, 0.85), transparent 36%),
+    radial-gradient(circle at 72% 70%, rgba(139, 232, 115, 0.7), transparent 40%);
+  filter: blur(calc(var(--t) * 0.1));
+  transform: rotate(-24deg);
+}
+.ia-orbe-cor-2 {
+  background: radial-gradient(circle at 66% 24%, rgba(0, 200, 110, 0.65), transparent 38%),
+    radial-gradient(circle at 24% 76%, rgba(232, 252, 236, 0.4), transparent 34%);
+  transform: rotate(36deg);
+}
+.ia-orbe-luz {
+  position: absolute;
+  inset: 0;
   border-radius: 50%;
-  background: radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 30%),
-    radial-gradient(circle at 70% 82%, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0) 30%);
+  background: radial-gradient(circle at 34% 24%, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0) 26%);
   pointer-events: none;
 }
 .ia-orbe-g {
-  width: 72px;
-  height: 72px;
+  --t: 64px;
+  animation: ia-orbe-entra 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
-.ia-orbe-g .ia-goo {
-  filter: url(#ia-goo-g);
-  transform: translate(calc(var(--mx) * 6%), calc(var(--my) * 6%));
-  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+.ia-orbe-g .ia-orbe-cor {
+  animation: ia-orbe-acorda 1.6s cubic-bezier(0.22, 0.7, 0.18, 1) both;
 }
-/* Sombra de luz embaixo, como se a esfera flutuasse */
-.ia-orbe-g::after {
-  content: "";
-  position: absolute;
-  left: 14%;
-  right: 14%;
-  bottom: -20%;
-  height: 16%;
-  border-radius: 50%;
-  background: rgba(0, 150, 75, 0.35);
-  filter: blur(7px);
-  z-index: -1;
+.ia-orbe-g .ia-orbe-cor-2 {
+  animation: ia-orbe-acorda-2 1.6s cubic-bezier(0.22, 0.7, 0.18, 1) both;
 }
+@keyframes ia-orbe-entra {
+  from {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+}
+@keyframes ia-orbe-acorda {
+  from {
+    transform: rotate(-200deg);
+  }
+}
+@keyframes ia-orbe-acorda-2 {
+  from {
+    transform: rotate(216deg);
+  }
+}
+/* Pensando: respira de leve, solta um anel suave e a cor gira por dentro */
+.ia-orbe-ativo {
+  animation: ia-orbe-respira 2.4s ease-in-out infinite;
+}
+.ia-orbe-ativo .ia-orbe-cor {
+  animation: ia-orbe-flui 4s linear infinite;
+}
+.ia-orbe-ativo .ia-orbe-cor-2 {
+  animation: ia-orbe-flui-2 5.6s linear infinite;
+}
+@keyframes ia-orbe-respira {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: var(--sombra-orbe), 0 0 0 0 rgba(0, 168, 89, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: var(--sombra-orbe), 0 0 0 calc(var(--t) * 0.22) rgba(0, 168, 89, 0);
+  }
+}
+@keyframes ia-orbe-flui {
+  from {
+    transform: rotate(-24deg);
+  }
+  to {
+    transform: rotate(336deg);
+  }
+}
+@keyframes ia-orbe-flui-2 {
+  from {
+    transform: rotate(36deg);
+  }
+  to {
+    transform: rotate(-324deg);
+  }
+}
+
 /* ---------- Conversa ---------- */
 .ia-corpo {
   display: flex;
@@ -456,8 +408,7 @@
   gap: 10px;
 }
 .ia-resp > .ia-orbe {
-  width: 22px;
-  height: 22px;
+  --t: 22px;
   margin-top: 1px;
 }
 .ia-resp-corpo {
@@ -864,7 +815,7 @@
 /* ---------- Vidro nos cartões (sugestões, proposta, caixa de pedido) ---------- */
 .ia-sug button {
   border-color: color-mix(in srgb, var(--b-painel) 55%, var(--b-linha-forte));
-  background: color-mix(in srgb, var(--b-painel) 50%, transparent);
+  background: color-mix(in srgb, var(--b-painel) 66%, transparent);
   -webkit-backdrop-filter: blur(16px) saturate(1.5);
   backdrop-filter: blur(16px) saturate(1.5);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), 0 8px 18px -12px rgba(0, 40, 20, 0.28);
@@ -884,7 +835,7 @@
 }
 .ia-prop {
   border-color: color-mix(in srgb, var(--b-linha-forte) 70%, transparent);
-  background: color-mix(in srgb, var(--b-painel) 68%, transparent);
+  background: color-mix(in srgb, var(--b-painel) 80%, transparent);
   -webkit-backdrop-filter: blur(18px) saturate(1.5);
   backdrop-filter: blur(18px) saturate(1.5);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 10px 26px -14px rgba(0, 40, 20, 0.3);
@@ -894,7 +845,7 @@
   background: color-mix(in srgb, var(--b-suave) 55%, transparent);
 }
 .ia-caixa {
-  background: color-mix(in srgb, var(--b-painel) 80%, transparent);
+  background: color-mix(in srgb, var(--b-painel) 88%, transparent);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
   backdrop-filter: blur(18px) saturate(1.4);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 10px 26px -14px rgba(0, 40, 20, 0.25);
@@ -906,7 +857,7 @@
 
 /* Tema escuro do construtor: vidro mais escuro, reflexo mais fraco, sombra mais funda */
 :root[data-tema="escuro"] .ia {
-  background: color-mix(in srgb, var(--b-painel) 74%, transparent);
+  background: color-mix(in srgb, var(--b-painel) 88%, transparent);
   box-shadow: 0 28px 64px -16px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 :root[data-tema="escuro"] .ia-aura {
@@ -924,13 +875,14 @@
   .ia,
   .ia-pensa li,
   .ia-fab-brilho,
-  .ia-goo i,
+  .ia-orbe,
+  .ia-orbe-cor,
   .ia-brilho-txt,
   .ia-passo-ic i {
     animation: none;
   }
-  .ia-goo,
-  .ia-goo i.ia-segue {
-    transition: none;
-  }
+}
+/* Sem o aviso de rodapé, a caixa de pedido ganha o respiro de baixo */
+.ia-caixa {
+  margin-bottom: 12px;
 }
