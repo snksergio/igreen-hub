@@ -1,5 +1,8 @@
-/* Assistente de IA do editor: botão flutuante com brilho e a janela de conversa (só visual na POC). */
+/* Assistente de IA do editor (visual na POC).
+   Uma peça memorável: a esfera verde (parada quando espera, girando quando pensa). O resto é
+   quieto: caixa de pedido grande, resposta sem balão, proposta como cartão com ações. */
 
+/* ---------- Botão flutuante ---------- */
 .ia-fab {
   position: fixed;
   right: calc(var(--puck-user-sidebar-right-width, 344px) + 20px);
@@ -33,7 +36,6 @@
   outline: 3px solid var(--b-acento-vivo);
   outline-offset: 3px;
 }
-/* Pontinhos de brilho e um reflexo que passa de tempos em tempos */
 .ia-fab::before {
   content: "";
   position: absolute;
@@ -61,40 +63,48 @@
     transform: translateX(120%);
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .ia-fab-brilho {
-    animation: none;
-  }
-}
 
+/* ---------- Painel ---------- */
 .ia {
+  --ia-verde: linear-gradient(135deg, #00843f 0%, #00a859 55%, #6fdc66 100%);
   position: fixed;
-  right: calc(var(--puck-user-sidebar-right-width, 344px) + 12px);
-  bottom: 12px;
+  right: calc(var(--puck-user-sidebar-right-width, 344px) + 14px);
+  bottom: 14px;
   z-index: 55;
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr) auto auto;
-  width: min(392px, calc(100vw - 24px));
-  height: min(620px, calc(100vh - 100px));
-  border-radius: 20px;
-  background: var(--b-painel);
-  border: 1px solid var(--b-linha);
-  box-shadow: var(--b-sombra-pop);
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  width: min(420px, calc(100vw - 24px));
+  height: min(680px, calc(100vh - 96px));
+  border: 1px solid transparent;
+  border-radius: 24px;
+  background:
+    linear-gradient(var(--b-painel), var(--b-painel)) padding-box,
+    linear-gradient(165deg, rgba(0, 168, 89, 0.5), rgba(0, 168, 89, 0) 34%, var(--b-linha-forte) 100%) border-box;
+  box-shadow: 0 28px 64px -16px rgba(0, 40, 20, 0.28), 0 8px 22px rgba(17, 19, 24, 0.08);
   color: var(--b-texto);
   font-family: var(--b-fonte);
   overflow: hidden;
-  animation: ia-abre 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  isolation: isolate;
+  transform-origin: 85% 100%;
+  animation: ia-abre 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 @keyframes ia-abre {
   from {
     opacity: 0;
-    transform: translateY(12px) scale(0.98);
+    transform: translateY(14px) scale(0.97);
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .ia {
-    animation: none;
-  }
+/* Brilho verde suave no canto de cima: dá profundidade sem virar decoração */
+.ia-aura {
+  position: absolute;
+  top: -150px;
+  right: -110px;
+  z-index: -1;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 168, 89, 0.22), rgba(127, 227, 107, 0.1) 45%, transparent 70%);
+  pointer-events: none;
 }
 @media (max-width: 1100px) {
   .ia,
@@ -102,31 +112,23 @@
     right: 12px;
   }
 }
+
 .ia-topo {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 14px 12px 12px 16px;
-  background: linear-gradient(180deg, var(--b-acento-suave), transparent);
-}
-.ia-av {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 34px;
-  height: 34px;
-  border-radius: 11px;
-  background: linear-gradient(135deg, #007a3d, #00a859 55%, #7fe36b);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 168, 89, 0.35);
 }
 .ia-tit {
   display: grid;
-  min-width: 0;
   flex: 1;
+  min-width: 0;
+  line-height: 1.25;
 }
 .ia-tit strong {
-  font-size: 14.5px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 .ia-tit span {
   overflow: hidden;
@@ -135,173 +137,532 @@
   font-size: 12px;
   color: var(--b-apoio);
 }
-.ia-selo {
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--b-aviso-suave);
-  color: var(--b-aviso);
-  font-size: 11px;
-  font-weight: 700;
-}
-.ia-x {
+.ia-ic {
   display: grid;
   place-items: center;
+  flex: none;
   width: 32px;
   height: 32px;
   border: 0;
-  border-radius: 9px;
+  border-radius: 10px;
   background: transparent;
   color: var(--b-apoio);
   cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
 }
-.ia-x:hover {
+.ia-ic:hover:not(:disabled) {
   background: var(--b-suave);
   color: var(--b-texto);
 }
-.ia-contexto {
+.ia-ic:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.ia :is(button, label, textarea):focus-visible {
+  outline: 2px solid var(--b-acento-vivo);
+  outline-offset: 2px;
+}
+
+/* A esfera */
+.ia-orbe {
+  position: relative;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #00a859;
+  box-shadow: 0 4px 14px rgba(0, 168, 89, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+.ia-orbe::before {
+  content: "";
+  position: absolute;
+  inset: -35%;
+  background: conic-gradient(from 20deg, #00843f, #00c46a, #9be97d, #e4fbe9, #36d37a, #00843f);
+  filter: blur(3px);
+}
+.ia-orbe::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0) 38%);
+}
+.ia-orbe-ativo::before {
+  animation: ia-gira 2.4s linear infinite;
+}
+.ia-orbe-g {
+  width: 64px;
+  height: 64px;
+  box-shadow: 0 16px 40px rgba(0, 168, 89, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+.ia-orbe-g::before {
+  filter: blur(6px);
+  animation: ia-gira 14s linear infinite;
+}
+@keyframes ia-gira {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Conversa ---------- */
+.ia-corpo {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 0;
+  padding: 4px 18px 16px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--b-linha-forte) transparent;
+}
+
+/* Tela de boas-vindas */
+.ia-boas {
+  display: grid;
+  justify-items: center;
+  margin: auto 0;
+  padding: 8px 0 4px;
+  text-align: center;
+}
+.ia-boas h2 {
+  margin: 18px 0 6px;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+.ia-boas > p {
+  max-width: 310px;
+  margin: 0 0 20px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--b-apoio);
+}
+.ia-sug {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+.ia-sug button {
   display: flex;
   align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--b-linha);
+  border-radius: 14px;
+  background: var(--b-painel);
+  color: var(--b-texto);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.ia-sug button:hover {
+  border-color: var(--b-acento-borda);
+  background: var(--b-acento-suave);
+}
+.ia-sug-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--b-suave);
+  box-shadow: inset 0 0 0 1px var(--b-linha);
+  color: var(--b-acento-forte);
+}
+.ia-sug button:hover .ia-sug-ic {
+  background: var(--b-painel);
+}
+.ia-sug-txt {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+.ia-sug-txt b {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.ia-sug-txt small {
+  font-size: 12px;
+  color: var(--b-apoio);
+}
+
+/* Mensagem de quem pede: balão discreto à direita */
+.ia-eu {
+  align-self: flex-end;
+  display: grid;
   gap: 6px;
-  margin: 0 16px;
-  padding: 7px 10px;
-  border-radius: 9px;
+  justify-items: end;
+  max-width: 84%;
+}
+.ia-eu p {
+  margin: 0;
+  padding: 9px 14px;
+  border-radius: 18px 18px 6px 18px;
+  background: var(--b-trilho);
+  font-size: 14px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.ia-eu-img {
+  width: 160px;
+  max-height: 120px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px var(--b-linha);
+}
+
+/* Resposta do assistente: sem balão, com a esfera ao lado */
+.ia-resp {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.ia-resp > .ia-orbe {
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+}
+.ia-resp-corpo {
+  display: grid;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+.ia-resp-corpo > p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.ia-pensou {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--b-fraco);
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.ia-pensou:hover {
+  color: var(--b-apoio);
+}
+.ia-pensou .ic {
+  transition: transform 0.15s ease;
+}
+.ia-pensou[aria-expanded="true"] .ic {
+  transform: rotate(180deg);
+}
+.ia-passos-feitos {
+  margin: -4px 0 0;
+  padding: 0 0 0 12px;
+  border-left: 2px solid var(--b-linha);
+  list-style: none;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--b-apoio);
+}
+
+/* Pensando */
+.ia-pensa {
+  display: grid;
+  gap: 8px;
+  padding-top: 2px;
+}
+/* "Pensando" respira (cor sólida, só a opacidade muda) enquanto os passos aparecem */
+.ia-brilho-txt {
+  justify-self: start;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--b-apoio);
+  animation: ia-respira 1.4s ease-in-out infinite;
+}
+@keyframes ia-respira {
+  50% {
+    opacity: 0.45;
+  }
+}
+.ia-pensa ol {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--b-apoio);
+}
+.ia-pensa li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: ia-surge 0.25s ease;
+}
+@keyframes ia-surge {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+.ia-passo-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  color: #fff;
+}
+.ia-passo-ic i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--b-acento);
+  animation: ia-pulsa 1s ease-in-out infinite;
+}
+.ia-pensa li[data-feito] .ia-passo-ic {
+  background: var(--b-acento);
+}
+.ia-pensa li[data-feito] {
+  color: var(--b-texto);
+}
+@keyframes ia-pulsa {
+  50% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+}
+
+/* Proposta de mudanças */
+.ia-prop {
+  border: 1px solid var(--b-linha);
+  border-radius: 16px;
+  background: var(--b-painel);
+  box-shadow: 0 1px 2px rgba(17, 19, 24, 0.04), 0 6px 18px -8px rgba(17, 19, 24, 0.12);
+  overflow: hidden;
+}
+.ia-prop-topo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 12px 14px 4px;
+}
+.ia-prop-topo strong {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.ia-prop-topo span {
+  font-size: 12px;
+  color: var(--b-fraco);
+}
+.ia-mudancas {
+  display: grid;
+  margin: 0;
+  padding: 4px 6px 8px;
+  list-style: none;
+}
+.ia-mudancas li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 10px;
+}
+.ia-mudancas li:hover {
+  background: var(--b-suave);
+}
+.ia-mud-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--b-acento-suave);
+  color: var(--b-acento-forte);
+}
+.ia-mud-ic[data-tipo="editar"] {
+  background: var(--b-info-suave);
+  color: var(--b-info);
+}
+.ia-mud-ic[data-tipo="visual"] {
+  background: var(--b-aviso-suave);
+  color: var(--b-aviso);
+}
+.ia-mud-ic[data-tipo="ordem"] {
+  background: var(--b-trilho);
+  color: var(--b-apoio);
+}
+.ia-mud-txt {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding-top: 1px;
+  font-size: 13.5px;
+  line-height: 1.4;
+}
+.ia-mud-txt small {
+  font-size: 12px;
+  color: var(--b-fraco);
+}
+.ia-prop-acoes {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px 12px;
+  border-top: 1px solid var(--b-linha);
+  background: var(--b-suave);
+}
+.ia-aplicar,
+.ia-sec {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.ia-aplicar {
+  flex: 1;
+  border: 0;
+  background: var(--ia-verde);
+  color: #fff;
+  box-shadow: 0 6px 16px -6px rgba(0, 168, 89, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.ia-aplicar:hover {
+  filter: brightness(1.05);
+}
+.ia-sec {
+  border: 1px solid var(--b-linha-forte);
+  background: var(--b-painel);
+  color: var(--b-texto);
+}
+.ia-sec:hover {
+  background: var(--b-suave);
+}
+.ia-aviso {
+  margin: 0;
+  padding: 0 14px 12px;
   background: var(--b-suave);
   font-size: 12.5px;
   color: var(--b-apoio);
 }
-.ia-contexto b {
-  color: var(--b-texto);
-  font-weight: 600;
-}
-.ia-corpo {
+.ia-refinos {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 14px 16px;
-  overflow-y: auto;
-}
-.ia-msg {
-  max-width: 88%;
-  padding: 10px 12px;
-  border-radius: 14px;
-  font-size: 13.5px;
-  line-height: 1.45;
-}
-.ia-msg p {
-  margin: 0;
-}
-.ia-msg[data-de="ia"] {
-  align-self: flex-start;
-  background: var(--b-suave);
-  border-bottom-left-radius: 4px;
-}
-.ia-msg[data-de="eu"] {
-  align-self: flex-end;
-  background: var(--b-acento);
-  color: var(--b-sobre-acento);
-  border-bottom-right-radius: 4px;
-}
-.ia-plano {
-  display: grid;
+  flex-wrap: wrap;
   gap: 6px;
-  margin: 10px 0 0;
-  padding-left: 18px;
 }
-.ia-plano-acoes {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 12px;
-  font-size: 11.5px;
-  color: var(--b-fraco);
-}
-.ia-bt-pri {
+.ia-refinos button {
   height: 30px;
   padding: 0 12px;
-  border: 0;
-  border-radius: 8px;
-  background: var(--b-acento);
-  color: var(--b-sobre-acento);
-  font: inherit;
-  font-weight: 600;
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.ia-sugestoes {
-  display: grid;
-  gap: 6px;
-}
-.ia-sugestoes button {
-  padding: 9px 12px;
   border: 1px solid var(--b-linha-forte);
-  border-radius: 11px;
+  border-radius: 999px;
   background: var(--b-painel);
   color: var(--b-texto);
   font: inherit;
-  font-size: 13px;
-  text-align: left;
+  font-size: 12.5px;
   cursor: pointer;
 }
-.ia-sugestoes button:hover {
+.ia-refinos button:hover {
   border-color: var(--b-acento-borda);
   background: var(--b-acento-suave);
 }
-.ia-digitando {
-  display: flex;
-  gap: 4px;
-  padding: 12px 14px;
-}
-.ia-digitando i {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--b-fraco);
-  animation: ia-pulo 1s ease-in-out infinite;
-}
-.ia-digitando i:nth-child(2) {
-  animation-delay: 0.15s;
-}
-.ia-digitando i:nth-child(3) {
-  animation-delay: 0.3s;
-}
-@keyframes ia-pulo {
-  0%,
-  60%,
-  100% {
-    transform: none;
-    opacity: 0.5;
-  }
-  30% {
-    transform: translateY(-4px);
-    opacity: 1;
-  }
-}
-.ia-escrever {
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
+
+/* ---------- Caixa de pedido ---------- */
+.ia-caixa {
+  display: grid;
   margin: 0 12px;
-  padding: 8px 8px 8px 12px;
   border: 1px solid var(--b-linha-forte);
-  border-radius: 14px;
+  border-radius: 20px;
   background: var(--b-painel);
+  box-shadow: 0 1px 2px rgba(17, 19, 24, 0.04), 0 8px 24px -12px rgba(17, 19, 24, 0.16);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
-.ia-escrever:focus-within {
-  border-color: var(--b-acento-forte);
-  box-shadow: 0 0 0 3px var(--b-acento-suave);
+.ia-caixa:focus-within {
+  border-color: var(--b-acento-borda);
+  box-shadow: 0 0 0 4px var(--b-acento-suave), 0 8px 24px -12px rgba(0, 120, 60, 0.3);
 }
-.ia-escrever textarea {
-  flex: 1;
-  min-width: 0;
-  max-height: 120px;
+.ia-caixa textarea {
+  min-height: 46px;
+  padding: 14px 16px 4px;
   border: 0;
   background: none;
   color: var(--b-texto);
   font: inherit;
-  font-size: 13.5px;
+  font-size: 14.5px;
   line-height: 1.45;
   resize: none;
   outline: none;
+}
+.ia-caixa textarea::placeholder {
+  color: var(--b-fraco);
+}
+.ia-caixa textarea:focus-visible {
+  outline: none;
+}
+.ia-barra {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px 8px 8px;
+}
+.ia-clipe {
+  position: relative;
+}
+.ia-clipe input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.ia-clipe:has(input:focus-visible) {
+  outline: 2px solid var(--b-acento-vivo);
+  outline-offset: 2px;
+}
+.ia-contexto {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 170px;
+  height: 30px;
+  padding: 0 11px;
+  border: 1px solid var(--b-linha);
+  border-radius: 999px;
+  background: var(--b-suave);
+  color: var(--b-apoio);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+.ia-contexto[aria-pressed="true"] {
+  border-color: var(--b-acento-borda);
+  background: var(--b-acento-suave);
+  color: var(--b-acento-forte);
+}
+.ia-dica {
+  margin-left: auto;
+  font-size: 11.5px;
+  color: var(--b-fraco);
+  white-space: nowrap;
 }
 .ia-enviar {
   display: grid;
@@ -310,19 +671,82 @@
   width: 34px;
   height: 34px;
   border: 0;
-  border-radius: 10px;
-  background: var(--b-acento);
-  color: var(--b-sobre-acento);
+  border-radius: 50%;
+  background: var(--ia-verde);
+  color: #fff;
+  box-shadow: 0 6px 14px -6px rgba(0, 168, 89, 0.7);
   cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.ia-enviar:hover:not(:disabled) {
+  transform: translateY(-1px);
 }
 .ia-enviar:disabled {
   background: var(--b-trilho);
   color: var(--b-fraco);
+  box-shadow: none;
   cursor: default;
+}
+.ia-anexo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 12px 0;
+  padding: 6px 6px 6px 6px;
+  border: 1px solid var(--b-linha);
+  border-radius: 12px;
+  background: var(--b-suave);
+  font-size: 12.5px;
+}
+.ia-anexo img {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+.ia-anexo span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ia-anexo button {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--b-apoio);
+  cursor: pointer;
+}
+.ia-anexo button:hover {
+  background: var(--b-trilho);
 }
 .ia-nota {
   margin: 8px 16px 12px;
   font-size: 11.5px;
-  line-height: 1.4;
+  text-align: center;
   color: var(--b-fraco);
+}
+
+/* Tema escuro do construtor: menos brilho e sombra mais funda */
+:root[data-tema="escuro"] .ia {
+  box-shadow: 0 28px 64px -16px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+:root[data-tema="escuro"] .ia-aura {
+  opacity: 0.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ia,
+  .ia-pensa li,
+  .ia-fab-brilho,
+  .ia-orbe::before,
+  .ia-brilho-txt,
+  .ia-passo-ic i {
+    animation: none;
+  }
 }
