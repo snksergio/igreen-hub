@@ -1,6 +1,7 @@
 import type { CustomField } from "@puckeditor/core";
 import { useRef, useState, type ChangeEvent } from "react";
 import { addImagem, AMOSTRAS, listImagens, safeImg, type Imagem } from "../../lib/imagens";
+import { RotuloComAjuda } from "../../ui/Ajuda";
 
 const LIMITE_MB = 15;
 
@@ -90,7 +91,7 @@ function Seletor({ label, value, onChange }: { label: string; value: string; onC
 
   return (
     <div className="fi-campo">
-      <span className="fi-rotulo">{label}</span>
+      <RotuloComAjuda rotulo={label} />
       <div className="fi">
         <div className="fi-prev">{atual ? <img src={atual} alt="" /> : <span>Sem imagem</span>}</div>
         <div className="fi-acoes">

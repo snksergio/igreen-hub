@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Agenda, linkIngresso, Qr } from "../form/Confirmacao";
+import { Agenda, CartaoIngresso } from "../form/Confirmacao";
 import { Pagamento } from "../form/Fluxo";
 import "../form/form.css";
 import "./publicas.css";
@@ -58,12 +58,10 @@ export function Ingresso({ codigo }: { codigo: string }) {
           <h1 className="fm-titulo">{page?.title ?? sub.pageSlug}</h1>
           <p className="fa-quando">{[dataPorExtenso(ev.inicio), lugarCurto(ev)].filter(Boolean).join(" · ")}</p>
         </header>
-        <div className="ig-qr">
-          <Qr texto={linkIngresso(sub.codigo)} tamanho={220} rotulo={`QR code do ingresso ${sub.codigo}`} />
+        <div className="ig-cracha">
+          <CartaoIngresso sub={sub} page={page} espera={status === "espera"} />
         </div>
         <div className="ig-dados">
-          <strong className="fm-codigo">{sub.codigo}</strong>
-          <span className="ig-nome">{sub.nome}</span>
           {status === "presente" && <span className="ig-selo" data-tom="ok">Entrada já registrada</span>}
           {status === "espera" && <span className="ig-selo" data-tom="aviso">Lista de espera: ainda sem vaga</span>}
           {pendente && <span className="ig-selo" data-tom="aviso">Pagamento {sub.pagamento?.status}{sub.pagamento ? ` · ${reais(sub.pagamento.valor)}` : ""}</span>}

@@ -11,7 +11,10 @@ import { PageContext } from "../puck/context";
 import { config } from "../puck/config";
 import { DICIONARIO, TELAS } from "../puck/dicionario";
 import { ItemGaveta } from "../puck/ItemGaveta";
+import { Assistente } from "./editor/Assistente";
 import { CamposComCabecalho, RadioSegmentado } from "./editor/Campos";
+import { CliqueNaPrevia } from "./editor/CliqueNaPrevia";
+import { RotuloDoCampo } from "./editor/Rotulo";
 import { EditorContext, setAba, useEditor, type ApiPuck, type EditorCtx } from "./editor/contexto";
 import { focarCampo, mostrarNaPrevia, rotuloDoCampo, ZONA } from "./editor/navegar";
 import { Atalhos } from "./editor/Atalhos";
@@ -68,11 +71,15 @@ const OVERRIDES: Partial<Overrides> = {
       <MenuNaPrevia />
       <MenuPeca />
       <Topo />
+      <CliqueNaPrevia />
+      <Assistente />
     </>
   ),
   drawerItem: ({ name }) => <ItemGaveta name={name} />,
   fields: ({ children }) => <CamposComCabecalho>{children}</CamposComCabecalho>,
   fieldTypes: { radio: RadioSegmentado as never },
+  // O que está entre parênteses no rótulo vira um ícone de ajuda com a explicação.
+  fieldLabel: RotuloDoCampo as never,
 };
 
 /**

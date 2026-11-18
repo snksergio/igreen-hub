@@ -1,0 +1,82 @@
+/* Ícone de ajuda ao lado do rótulo e o balão com a explicação. O balão ocupa a largura do campo
+   (fica preso ao rótulo, não ao ícone), então nunca passa da borda do painel. */
+.aj-linha,
+.ed [class*="_Input-label_"] {
+  position: relative;
+}
+.aj-linha {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.aj {
+  display: inline-flex;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.aj-linha .aj {
+  margin-left: 0;
+}
+.aj-ic {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--b-trilho, #f0f0f3);
+  color: var(--b-apoio, #6d717a);
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: help;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.aj-ic:hover,
+.aj-ic:focus-visible {
+  background: var(--b-acento-suave, #e8f6ef);
+  color: var(--b-acento-forte, #007a3d);
+  outline: none;
+}
+.aj-pop {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 20;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--b-texto, #17181c);
+  color: var(--b-painel, #fff);
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: 0;
+  text-transform: none;
+  box-shadow: var(--b-sombra-pop, 0 16px 40px rgba(17, 19, 24, 0.16));
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s 0.15s;
+  pointer-events: none;
+}
+.aj:hover .aj-pop,
+.aj:focus-within .aj-pop {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .aj-pop {
+    transition: none;
+  }
+}
+
+/* O ícone de ajuda fica logo depois do título do campo, não lá na ponta. */
+.ed [class*="_Input-label_"] {
+  justify-content: flex-start;
+  gap: 6px;
+}
+.ed [class*="_Input-labelEndIcon_"] {
+  margin-left: 0;
+}

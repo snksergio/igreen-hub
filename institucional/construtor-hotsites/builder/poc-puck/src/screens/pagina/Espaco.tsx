@@ -1,6 +1,6 @@
 import { lazy, Suspense, useMemo, useState } from "react";
 import { listarEventos, resumir } from "../../lib/eventos";
-import { cobra } from "../../lib/formularios";
+import { camposNaPagina, cobra } from "../../lib/formularios";
 import { listarLinks } from "../../lib/links";
 import { dataCurta, dataPorExtenso, infoEvento, lugarCurto, statusVisivel } from "../../lib/meta";
 import { formularioDe, vagasDaPagina } from "../../lib/pagina";
@@ -117,6 +117,59 @@ export function Espaco({ id, aba }: { id: string; aba: AbaPagina }) {
   );
 }
 
+/** O formulário que a página usa, logo depois dos números: é a primeira coisa a conferir. */
+function FormularioDaPagina({ d }: { d: Dados }) {
+  const { page, form } = d;
+  const temPeca = (page.data.content ?? []).some((c) => c.type === "Inscricao" || c.type === "LiveInscricao");
+  if (!form)
+    return (
+      <section className="ep-form" data-tom="aviso">
+        <span className="ep-form-ic" aria-hidden="true">
+          <Icone nome="alerta" tamanho={22} />
+        </span>
+        <div className="ep-form-txt">
+          <span className="ep-form-rot">Formulário de inscrição</span>
+          <strong>{temPeca ? "Sem formulário da biblioteca" : "Sem peça de inscrição"}</strong>
+          <span>
+            {temPeca
+              ? "A peça usa os campos fixos (nome, WhatsApp, e-mail e cidade). Escolha um formulário para ter etapas, regras e ingresso."
+              : "Coloque a peça de inscrição no construtor para receber inscrições por esta página."}
+          </span>
+        </div>
+        {temPeca ? (
+          <a className="bt bt-pri bt-p" href={`#/pagina/${page.id}/config`}>
+            Escolher formulário
+          </a>
+        ) : (
+          <a className="bt bt-p" href={`#/editar/${page.id}`}>
+            Abrir construtor
+          </a>
+        )}
+      </section>
+    );
+  const naPagina = camposNaPagina(form).length;
+  const noModal = form.campos.filter((c) => !["etapa", "oculto", "info"].includes(c.tipo)).length - naPagina;
+  return (
+    <section className="ep-form">
+      <span className="ep-form-ic" aria-hidden="true">
+        <Icone nome="formulario" tamanho={22} />
+      </span>
+      <div className="ep-form-txt">
+        <span className="ep-form-rot">Formulário de inscrição</span>
+        <strong>{form.nome}</strong>
+        <span>
+          {naPagina} {naPagina === 1 ? "campo" : "campos"} na página · {noModal} no modal · {cobra(form) ? "ingresso pago" : "gratuito"}
+          {form.regras.listaEspera ? " · com lista de espera" : ""}
+        </span>
+      </div>
+      <a className="bt bt-p" href={`#/formulario/${form.id}?pagina=${page.id}`}>
+        <Icone nome="lapis" tamanho={15} />
+        Editar formulário
+      </a>
+    </section>
+  );
+}
+
 /** Visão geral (2.2): status, link, QR, data, vagas e atalhos. */
 function VisaoGeral({ d }: { d: Dados }) {
   const { page, status, evento, subs } = d;
@@ -145,6 +198,8 @@ function VisaoGeral({ d }: { d: Dados }) {
             <Numero rotulo="Confirmados" valor={confirmados.toLocaleString("pt-BR")} apoio={`${r.presentes} presentes no check-in`} />
           )}
         </div>
+
+        <FormularioDaPagina d={d} />
 
         <Bloco
           titulo="Últimas inscrições"
@@ -176,37 +231,6 @@ function VisaoGeral({ d }: { d: Dados }) {
           )}
         </Bloco>
 
-        <Bloco
-          titulo="Formulário de inscrição"
-          acao={
-            d.form ? (
-              <a className="bt bt-p" href={`#/formulario/${d.form.id}?pagina=${page.id}`}>
-                <Icone nome="lapis" tamanho={15} />
-                Editar formulário
-              </a>
-            ) : (
-              <a className="bt bt-p" href={aba("config")}>
-                Escolher formulário
-              </a>
-            )
-          }
-        >
-          {d.form ? (
-            <p className="ep-form-resumo">
-              <Icone nome="formulario" tamanho={18} />
-              <span>
-                <strong>{d.form.nome}</strong>
-                <span>
-                  {d.form.campos.filter((c) => c.naPagina && c.tipo !== "oculto").length} campos na página ·{" "}
-                  {d.form.campos.filter((c) => !c.naPagina && !["etapa", "oculto", "info"].includes(c.tipo)).length} no modal
-                  {pago ? " · com ingresso pago" : " · gratuito"}
-                </span>
-              </span>
-            </p>
-          ) : (
-            <p className="app-muted">A página usa o formulário fixo da peça de inscrição (nome, WhatsApp, e-mail e cidade). Escolha um formulário da biblioteca para ter etapas, regras e ingresso.</p>
-          )}
-        </Bloco>
       </div>
 
       <aside className="ep-col ep-lado">

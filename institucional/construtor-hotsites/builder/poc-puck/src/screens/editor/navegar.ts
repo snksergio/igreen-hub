@@ -1,4 +1,5 @@
 import { config } from "../../puck/config";
+import { separarRotulo } from "../../ui/Ajuda";
 
 /** Zona principal da página no Puck. */
 export const ZONA = "root:default-zone";
@@ -17,16 +18,31 @@ let destacado: HTMLElement | null = null;
 let timerDestaque: number | undefined;
 let busca = 0;
 
+/**
+ * O título que o campo mostra no painel (só o texto do rótulo, sem o ícone de ajuda nem o balão).
+ * O que estava entre parênteses no rótulo virou ajuda, então a busca é pelo título.
+ */
+export function tituloNoPainel(campo: Element): string {
+  const rot = campo.querySelector('[class*="_Input-label_"], .fi-rotulo, .cp-rotulo');
+  if (!rot) return (campo.textContent ?? "").trim();
+  let t = "";
+  rot.childNodes.forEach((n) => {
+    if (n.nodeType === Node.TEXT_NODE) t += n.textContent ?? "";
+  });
+  return t.trim();
+}
+
 /** Acha o campo no painel da direita, rola até ele, destaca e põe o cursor nele. */
 export function focarCampo(rotulo?: string) {
   if (!rotulo) return;
+  const titulo = separarRotulo(rotulo).titulo;
   const minha = ++busca;
   let tentativas = 0;
   const tentar = () => {
     if (minha !== busca) return; // outro clique chegou depois: este desiste
-    const campo = [...document.querySelectorAll<HTMLElement>('[class*="PuckFields-field"]')].find(
-      (el) => el.offsetParent !== null && (el.textContent ?? "").trim().startsWith(rotulo)
-    );
+    const visiveis = [...document.querySelectorAll<HTMLElement>('[class*="PuckFields-field"]')].filter((el) => el.offsetParent !== null);
+    const campo =
+      visiveis.find((el) => tituloNoPainel(el) === titulo) ?? visiveis.find((el) => (el.textContent ?? "").trim().startsWith(titulo));
     if (!campo) {
       if (tentativas++ < 30) setTimeout(tentar, 50);
       return;
@@ -137,6 +153,39 @@ function acharNoBloco(bloco: Element, valor: unknown): Element[] {
     return i >= 0 && j >= i ? filhos.slice(i, j + 1) : [pai];
   }
   return [];
+}
+
+/* ---------- Clique na prévia leva ao campo ----------
+   Clicar num texto, botão ou imagem da prévia escolhe o campo que mostra aquele valor: o contorno
+   rosa aparece nele e o painel da direita rola até o campo. Vale o menor elemento que contém o clique. */
+
+/** Qual campo da peça mostra o que foi clicado (`clicados`: os elementos sob o ponteiro). */
+export function campoPeloClique(bloco: Element, clicados: Element[], props: Record<string, unknown>, chaves: string[]): string | undefined {
+  let melhor: { chave: string; area: number } | undefined;
+  for (const chave of chaves) {
+    for (const alvo of acharNoBloco(bloco, props[chave])) {
+      if (!clicados.some((c) => alvo === c || alvo.contains(c))) continue;
+      const r = alvo.getBoundingClientRect();
+      const area = r.width * r.height;
+      if (!melhor || area < melhor.area) melhor = { chave, area };
+    }
+  }
+  return melhor?.chave;
+}
+
+export const EVENTO_CAMPO = "igreen:campo-clicado";
+let campoPedido: string | null = null;
+
+/** Pede à Estrutura que marque o campo ("idDaPeca:chave"). Fica guardado se ela ainda não abriu. */
+export function pedirCampo(idChave: string) {
+  campoPedido = idChave;
+  window.dispatchEvent(new CustomEvent<string>(EVENTO_CAMPO, { detail: idChave }));
+}
+
+export function pegarCampoPedido(): string | null {
+  const p = campoPedido;
+  campoPedido = null;
+  return p;
 }
 
 let marca: { caixa: HTMLElement; quadro: number; win: Window } | null = null;

@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Campo as CampoView } from "../../form/Campo";
-import { Fluxo } from "../../form/Fluxo";
+import { FormNoEstilo } from "../FormAvulso";
 import "../../form/form.css";
 import {
+  ACEITA,
   camposNaPagina,
   ficaNaPagina,
   getFormulario,
@@ -55,6 +56,7 @@ const PALETA: { grupo: string; tipos: [TipoCampo, NomeIcone][] }[] = [
       ["info", "alerta"],
       ["lgpd", "cadeado"],
       ["ingresso", "ingresso"],
+      ["anexo", "enviar"],
       ["oculto", "olho"],
       ["etapa", "camadas"],
     ],
@@ -406,8 +408,8 @@ function NoModal({ f, paginaId }: { f: Formulario; paginaId?: string }) {
         </button>
       </div>
       <div className="fc-cartao fm-pagina">
-        <Fluxo
-          key={`${completo}-${JSON.stringify(f.campos).length}-${f.atualizadoEm}`}
+        <FormNoEstilo
+          key={`${completo}-${f.estilo}-${JSON.stringify(f.campos).length}-${f.atualizadoEm}`}
           form={f}
           completo={completo}
           iniciais={completo ? {} : { nome: "Ana Souza", whats: "(31) 9 9999-0000", email: "ana@exemplo.com", cidade: "Belo Horizonte/MG" }}
@@ -521,6 +523,23 @@ function AjustesCampo({ c, f, muda }: { c: Campo; f: Formulario; muda: (p: Parti
           />
         </Linha>
       )}
+      {c.tipo === "anexo" && (
+        <div className="fc-duas">
+          <Linha rotulo="Arquivos aceitos">
+            <select className="sel" value={c.aceita ?? "pdf-imagem"} onChange={(e) => muda({ aceita: e.target.value as Campo["aceita"] })}>
+              {Object.entries(ACEITA).map(([v, a]) => (
+                <option key={v} value={v}>
+                  {a.rotulo}
+                </option>
+              ))}
+            </select>
+          </Linha>
+          <Linha rotulo="Tamanho máximo (MB)">
+            <input type="number" min={1} max={50} value={c.maxMb ?? 5} onChange={(e) => muda({ maxMb: Math.min(50, Math.max(1, Number(e.target.value) || 1)) })} />
+          </Linha>
+        </div>
+      )}
+      {c.tipo === "anexo" && <p className="fc-nota">Na POC fica guardado só o nome e o tamanho do arquivo. No projeto real, o arquivo vai para o servidor.</p>}
       {c.tipo === "oculto" && (
         <Linha rotulo="Preenchido com">
           <select className="sel" value={c.fonte ?? "ref"} onChange={(e) => muda({ fonte: e.target.value as Campo["fonte"] })}>
@@ -597,13 +616,19 @@ function AjustesIngresso({ cfg, muda }: { cfg: ConfigIngresso; muda: (c: ConfigI
         </header>
         {cfg.lotes.length === 0 && <p className="fc-nota">Sem lotes, vale o preço único. Com lotes, o preço muda sozinho na data.</p>}
         {cfg.lotes.map((l, i) => (
-          <div key={l.id} className="fc-linha-item">
-            <input value={l.nome} onChange={(e) => lote(i, { nome: e.target.value })} aria-label="Nome do lote" maxLength={30} />
-            <input type="number" min={0} step="0.01" value={l.preco} onChange={(e) => lote(i, { preco: Math.max(0, Number(e.target.value)) })} aria-label="Preço do lote" />
-            <input type="datetime-local" value={l.ate} onChange={(e) => lote(i, { ate: e.target.value })} aria-label="Vale até (Brasília)" />
-            <button className="bt bt-ic bt-p" onClick={() => muda({ ...cfg, lotes: cfg.lotes.filter((_, j) => j !== i) })} aria-label="Tirar lote">
+          <div key={l.id} className="fc-item-ing fc-lote">
+            <Linha rotulo="Nome">
+              <input value={l.nome} onChange={(e) => lote(i, { nome: e.target.value })} maxLength={30} />
+            </Linha>
+            <Linha rotulo="Preço (R$)">
+              <input type="number" min={0} step="0.01" value={l.preco} onChange={(e) => lote(i, { preco: Math.max(0, Number(e.target.value)) })} />
+            </Linha>
+            <button className="bt bt-ic bt-p fc-tirar" onClick={() => muda({ ...cfg, lotes: cfg.lotes.filter((_, j) => j !== i) })} aria-label={`Tirar ${l.nome}`}>
               <Icone nome="fechar" tamanho={14} />
             </button>
+            <Linha rotulo="Vale até (Brasília)">
+              <input type="datetime-local" value={l.ate} onChange={(e) => lote(i, { ate: e.target.value })} />
+            </Linha>
           </div>
         ))}
       </section>
@@ -617,23 +642,31 @@ function AjustesIngresso({ cfg, muda }: { cfg: ConfigIngresso; muda: (c: ConfigI
           </button>
         </header>
         {cfg.cupons.map((c, i) => (
-          <div key={i} className="fc-cupom">
-            <div className="fc-linha-item">
-              <input value={c.codigo} onChange={(e) => cupom(i, { codigo: e.target.value.toUpperCase().replace(/\s/g, "") })} aria-label="Código" maxLength={20} />
-              <select className="sel" value={c.tipo} onChange={(e) => cupom(i, { tipo: e.target.value as Cupom["tipo"] })} aria-label="Tipo de desconto">
-                <option value="percentual">%</option>
-                <option value="valor">R$</option>
-              </select>
-              <input type="number" min={0} value={c.valor} onChange={(e) => cupom(i, { valor: Math.max(0, Number(e.target.value)) })} aria-label="Desconto" />
-              <button className="bt bt-ic bt-p" onClick={() => muda({ ...cfg, cupons: cfg.cupons.filter((_, j) => j !== i) })} aria-label="Tirar cupom">
-                <Icone nome="fechar" tamanho={14} />
-              </button>
-            </div>
-            <div className="fc-linha-item fc-linha-2">
-              <input type="number" min={0} value={c.limite ?? ""} onChange={(e) => cupom(i, { limite: Number(e.target.value) || undefined })} placeholder="Limite de usos" aria-label="Limite de usos" />
-              <input type="datetime-local" value={c.validade ?? ""} onChange={(e) => cupom(i, { validade: e.target.value || undefined })} aria-label="Válido até" />
-              <input value={c.licenciado ?? ""} onChange={(e) => cupom(i, { licenciado: e.target.value.toUpperCase() || undefined })} placeholder="Licenciado" aria-label="Código do licenciado" maxLength={20} />
-            </div>
+          <div key={i} className="fc-item-ing fc-cupom">
+            <Linha rotulo="Código">
+              <input value={c.codigo} onChange={(e) => cupom(i, { codigo: e.target.value.toUpperCase().replace(/\s/g, "") })} maxLength={20} />
+            </Linha>
+            <Linha rotulo="Desconto">
+              <span className="fc-desconto">
+                <input type="number" min={0} value={c.valor} onChange={(e) => cupom(i, { valor: Math.max(0, Number(e.target.value)) })} aria-label="Valor do desconto" />
+                <select className="sel" value={c.tipo} onChange={(e) => cupom(i, { tipo: e.target.value as Cupom["tipo"] })} aria-label="Tipo de desconto">
+                  <option value="percentual">%</option>
+                  <option value="valor">R$</option>
+                </select>
+              </span>
+            </Linha>
+            <button className="bt bt-ic bt-p fc-tirar" onClick={() => muda({ ...cfg, cupons: cfg.cupons.filter((_, j) => j !== i) })} aria-label={`Tirar o cupom ${c.codigo}`}>
+              <Icone nome="fechar" tamanho={14} />
+            </button>
+            <Linha rotulo="Limite de usos">
+              <input type="number" min={0} value={c.limite ?? ""} onChange={(e) => cupom(i, { limite: Number(e.target.value) || undefined })} placeholder="Sem limite" />
+            </Linha>
+            <Linha rotulo="Licenciado">
+              <input value={c.licenciado ?? ""} onChange={(e) => cupom(i, { licenciado: e.target.value.toUpperCase() || undefined })} placeholder="Código" maxLength={20} />
+            </Linha>
+            <Linha rotulo="Válido até (Brasília)">
+              <input type="datetime-local" value={c.validade ?? ""} onChange={(e) => cupom(i, { validade: e.target.value || undefined })} />
+            </Linha>
           </div>
         ))}
         {cfg.cupons.length === 0 && <p className="fc-nota">Ex.: um cupom por licenciado, com limite de usos e validade.</p>}
@@ -655,6 +688,17 @@ function AjustesForm({ f, muda, pagina }: { f: Formulario; muda: (p: Partial<For
   const endereco = `${appBaseUrl()}#/f/${f.id}${pagina ? `?pagina=${pagina}` : ""}`;
   return (
     <div className="fc-form">
+      <Linha rotulo="Como o modal pergunta">
+        <div className="seg" role="group" aria-label="Como o modal pergunta">
+          <button aria-pressed={f.estilo !== "formulario"} onClick={() => muda({ estilo: "conversa" })}>
+            Conversa
+          </button>
+          <button aria-pressed={f.estilo === "formulario"} onClick={() => muda({ estilo: "formulario" })}>
+            Formulário
+          </button>
+        </div>
+      </Linha>
+      <p className="fc-nota">Conversa: uma pergunta por vez, como um chat, já com o que a pessoa digitou na página. Formulário: os campos em etapas.</p>
       <div className="fc-duas">
         <Linha rotulo="Botão para continuar">
           <input value={f.botaoPagina} onChange={(e) => muda({ botaoPagina: e.target.value })} maxLength={40} />

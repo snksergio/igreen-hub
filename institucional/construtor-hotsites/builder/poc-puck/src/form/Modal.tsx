@@ -6,6 +6,7 @@ import { formularioDaPaginaId } from "../lib/inscrever";
 import { paginaSalva as getPage } from "../lib/paginaSalva";
 import { usePageCtx } from "../puck/context";
 import { EVENTO_FORMULARIO, type PedidoFormulario } from "./abrir";
+import { Conversa } from "./Conversa";
 import { Fluxo } from "./Fluxo";
 
 const MSG_FECHADA = {
@@ -103,19 +104,21 @@ function Modal({ pedido, doc, fechar }: { pedido: PedidoFormulario; doc: Documen
               <p className="fm-texto">{MSG_FECHADA[fechada === "encerrada" ? "encerrada" : "esgotada"][1]}</p>
             </div>
           ) : (
-            <Fluxo
-              form={form}
-              completo={pedido.completo}
-              iniciais={pedido.iniciais}
-              ctx={{
+            (() => {
+              const contexto = {
                 page,
                 pageId: ctx.pageId,
                 pageSlug: ctx.pageSlug,
                 ref: ctx.persona.ref,
                 origem: ctx.origem ?? "direto",
                 previa: ctx.mode !== "publico" || fechada === "rascunho" || fechada === "agendada",
-              }}
-            />
+              };
+              return form.estilo === "formulario" ? (
+                <Fluxo form={form} completo={pedido.completo} iniciais={pedido.iniciais} ctx={contexto} />
+              ) : (
+                <Conversa form={form} completo={pedido.completo} iniciais={pedido.iniciais} ctx={contexto} />
+              );
+            })()
           )}
         </div>
       </div>

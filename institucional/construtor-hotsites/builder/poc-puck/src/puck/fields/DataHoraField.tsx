@@ -1,4 +1,5 @@
 import type { CustomField } from "@puckeditor/core";
+import { RotuloComAjuda } from "../../ui/Ajuda";
 
 /** Data e hora no fuso de quem edita, guardada como "2026-12-04T20:00". */
 export function dataHoraField(label: string): CustomField<string> {
@@ -7,7 +8,7 @@ export function dataHoraField(label: string): CustomField<string> {
     label,
     render: ({ value, onChange }) => (
       <div className="fi-campo">
-        <span className="fi-rotulo">{label}</span>
+        <RotuloComAjuda rotulo={label} />
         <input
           className="fi-data"
           type="datetime-local"

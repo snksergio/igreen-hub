@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from "react";
+import { Conversa } from "../form/Conversa";
 import { Fluxo } from "../form/Fluxo";
 import "../form/form.css";
 import "./publicas.css";
@@ -8,6 +9,9 @@ import { dataPorExtenso, infoEvento, lugarCurto } from "../lib/meta";
 import { estadoInscricoes } from "../lib/pagina";
 import { getPageBySlug, type PageRecord } from "../lib/pages";
 import { parsePersona } from "../lib/persona";
+
+/** Conversa (padrão) ou campos em etapas, como o formulário pede. */
+export const FormNoEstilo = (p: Parameters<typeof Fluxo>[0]) => (p.form.estilo === "formulario" ? <Fluxo {...p} /> : <Conversa {...p} />);
 
 /** A página usa o kit iGreen Live? Então o formulário avulso também fica escuro. */
 export const temaDa = (p: PageRecord | undefined) => (p?.data.content?.some((c) => c.type.startsWith("Live")) ? "live" : "claro");
@@ -51,7 +55,7 @@ export function FormAvulso({ id, query }: { id: string; query: URLSearchParams }
         ) : fechada === "encerrada" || fechada === "esgotada" ? (
           <p className="fm-alerta">{fechada === "esgotada" ? "As vagas acabaram." : "As inscrições estão encerradas."}</p>
         ) : (
-          <Fluxo
+          <FormNoEstilo
             form={form}
             completo
             ctx={{

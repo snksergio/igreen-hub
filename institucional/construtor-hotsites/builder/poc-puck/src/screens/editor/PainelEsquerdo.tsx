@@ -7,7 +7,8 @@ import { CAMPOS_IMAGEM, comprimir } from "../../puck/fields/ImagemField";
 import { Icone, type NomeIcone } from "../../ui/Icone";
 import { setAba, useAba, type Aba } from "./contexto";
 import { abrirMenuPeca } from "./MenuPeca";
-import { destacarNaPrevia, focarCampo, limparDestaqueNaPrevia, mostrarNaPrevia, ZONA } from "./navegar";
+import { separarRotulo } from "../../ui/Ajuda";
+import { destacarNaPrevia, EVENTO_CAMPO, focarCampo, limparDestaqueNaPrevia, mostrarNaPrevia, pegarCampoPedido, tituloNoPainel, ZONA } from "./navegar";
 
 /** Campos do botão que não aparecem como texto: o destaque cai no próprio botão. */
 const CAMPOS_DO_BOTAO = new Set(["destino", "link", "mensagemWhats"]);
@@ -17,7 +18,7 @@ const usePuck = createUsePuck();
 type Campo = { chave: string; rotulo: string; curto: string; icone: NomeIcone | "T" | "#" };
 
 /** Campos de uma peça, na ordem do painel da direita, para listar na Estrutura. */
-function camposDe(tipo: string): Campo[] {
+export function camposDe(tipo: string): Campo[] {
   const fields = ((config.components as Record<string, { fields?: Record<string, { type: string; label?: string }> }>)[tipo]?.fields ??
     {}) as Record<string, { type: string; label?: string }>;
   return Object.entries(fields)
@@ -98,14 +99,26 @@ function Estrutura() {
   }, [campoAtivo, content]);
   useEffect(() => () => limparDestaqueNaPrevia(), []);
 
+  // Clique num texto ou botão da prévia escolhe o campo dele (CliqueNaPrevia pede; aqui marca).
+  useEffect(() => {
+    const pedido = pegarCampoPedido();
+    if (pedido) setCampoAtivo(pedido);
+    const ouvir = (e: Event) => {
+      pegarCampoPedido();
+      setCampoAtivo((e as CustomEvent<string>).detail);
+    };
+    window.addEventListener(EVENTO_CAMPO, ouvir);
+    return () => window.removeEventListener(EVENTO_CAMPO, ouvir);
+  }, []);
+
   // Campo com o cursor no painel da direita fica marcado aqui também.
   useEffect(() => {
     const aoFocar = (e: FocusEvent) => {
       const alvo = e.target as HTMLElement;
       const campo = alvo.closest?.('[class*="_Sidebar--right_"] [class*="PuckFields-field"]');
       if (!campo || selIndex < 0) return;
-      const texto = (campo.textContent ?? "").trim();
-      const achado = camposDe(content[selIndex]?.type ?? "").find((c) => texto.startsWith(c.rotulo));
+      const titulo = tituloNoPainel(campo);
+      const achado = camposDe(content[selIndex]?.type ?? "").find((c) => separarRotulo(c.rotulo).titulo === titulo);
       if (achado) setCampoAtivo(`${selId}:${achado.chave}`);
     };
     document.addEventListener("focusin", aoFocar);

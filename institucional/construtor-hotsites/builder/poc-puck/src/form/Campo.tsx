@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { mascaraCpf, mascaraWhats, UFS, visivel, type Campo as TCampo } from "../lib/formularios";
+import { ACEITA, checarArquivo, mascaraCpf, mascaraWhats, tamanhoLegivel, UFS, visivel, type Campo as TCampo } from "../lib/formularios";
 import { checarCupom, precoAgora, reais } from "../lib/ingresso";
 import { totalDoIngresso, usosDoCupom } from "../lib/inscrever";
 import { dataCurta } from "../lib/meta";
@@ -151,7 +151,7 @@ export function Campo({ campo: c, r, erros, muda, pele, form, pageId }: Props) {
       return (
         <label className={k.campo} {...meia}>
           {rotulo}
-          <select className="fm-input" value={texto} onChange={(e) => muda(c.id, e.target.value || undefined)} {...aria}>
+          <select className="fm-input" value={texto} data-vazio={!texto || undefined} onChange={(e) => muda(c.id, e.target.value || undefined)} {...aria}>
             <option value="">Escolha</option>
             {(c.opcoes ?? []).map((o) => (
               <option key={o}>{o}</option>
@@ -169,7 +169,7 @@ export function Campo({ campo: c, r, erros, muda, pele, form, pageId }: Props) {
           <label htmlFor={`${c.id}-cidade`}>{rotulo}</label>
           <div className="fm-cidade">
             <input id={`${c.id}-cidade`} className="fm-input" value={cidade} onChange={(e) => junta(e.target.value, uf)} autoComplete="address-level2" maxLength={80} placeholder={c.exemplo ?? "Sua cidade"} {...aria} />
-            <select className="fm-input" value={uf} onChange={(e) => junta(cidade, e.target.value)} aria-label="UF" {...aria}>
+            <select className="fm-input" value={uf} data-vazio={!uf || undefined} onChange={(e) => junta(cidade, e.target.value)} aria-label="UF" {...aria}>
               <option value="">UF</option>
               {UFS.map((u) => (
                 <option key={u}>{u}</option>
@@ -183,6 +183,15 @@ export function Campo({ campo: c, r, erros, muda, pele, form, pageId }: Props) {
 
     case "ingresso":
       return <Ingresso c={c} r={r} erros={erros} muda={muda} form={form} pageId={pageId} />;
+
+    case "anexo":
+      return (
+        <div className={k.campo} {...meia}>
+          {rotulo}
+          <Anexo c={c} valor={texto} muda={(v) => muda(c.id, v)} />
+          {rodape}
+        </div>
+      );
 
     default: {
       const tipoInput = { email: "email", whats: "tel", cpf: "text", data: "date", numero: "number" }[c.tipo as string] ?? "text";
@@ -215,6 +224,63 @@ export function Campo({ campo: c, r, erros, muda, pele, form, pageId }: Props) {
       );
     }
   }
+}
+
+/**
+ * Anexo: escolhe o arquivo e confere tipo e tamanho. Na POC fica guardado só o nome e o tamanho;
+ * o arquivo em si iria para o servidor no projeto real.
+ */
+export function Anexo({ c, valor, muda }: { c: TCampo; valor: string; muda: (v: string | undefined) => void }) {
+  const [erro, setErro] = useState("");
+  const regra = ACEITA[c.aceita ?? "pdf-imagem"];
+  return (
+    <div className="fm-anexo" data-cheio={valor ? "" : undefined}>
+      {valor ? (
+        <>
+          <span className="fm-anexo-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5" />
+            </svg>
+          </span>
+          <span className="fm-anexo-nome">{valor}</span>
+          <button type="button" className="fm-link" onClick={() => muda(undefined)}>
+            Tirar
+          </button>
+        </>
+      ) : (
+        <label className="fm-anexo-escolher">
+          <input
+            type="file"
+            accept={regra.accept || undefined}
+            onChange={(e) => {
+              const arq = e.target.files?.[0];
+              e.target.value = "";
+              if (!arq) return;
+              const problema = checarArquivo(c, arq);
+              setErro(problema ?? "");
+              if (!problema) muda(`${arq.name} · ${tamanhoLegivel(arq.size)}`);
+            }}
+          />
+          <span className="fm-anexo-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 16V4M7 9l5-5 5 5M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
+            </svg>
+          </span>
+          <span>
+            <b>Escolher arquivo</b>
+            <small>
+              {regra.rotulo}, até {c.maxMb ?? 5} MB
+            </small>
+          </span>
+        </label>
+      )}
+      {erro && (
+        <span className="fm-erro" role="alert">
+          {erro}
+        </span>
+      )}
+    </div>
+  );
 }
 
 /** Ingresso (Etapa 4.1): lote do momento, inteira ou meia, cupom e total. */

@@ -2,6 +2,7 @@ import { createUsePuck, type RadioField } from "@puckeditor/core";
 import type { ReactNode } from "react";
 import { CATALOGO, type PecaId } from "../../puck/catalogo";
 import { Icone } from "../../ui/Icone";
+import { RotuloComAjuda } from "../../ui/Ajuda";
 
 const usePuck = createUsePuck();
 
@@ -75,10 +76,13 @@ export function RadioSegmentado({
 }) {
   const opcoes = field.options ?? [];
   const rotulo = field.label ?? name;
+  // Explicação opcional: fica embaixo do título, não dentro da opção (opção longa estourava o painel).
+  const ajuda = (field as RadioField & { ajuda?: string }).ajuda;
   return (
     <div className="cp-radio">
-      <span className="cp-rotulo">{rotulo}</span>
-      <div className="seg seg-quebra" role="radiogroup" aria-label={rotulo}>
+      <RotuloComAjuda rotulo={rotulo} className="cp-rotulo" />
+      {ajuda && <span className="cp-ajuda">{ajuda}</span>}
+      <div className="seg seg-quebra cp-seg" role="radiogroup" aria-label={rotulo}>
         {opcoes.map((o) => (
           <button
             key={String(o.value)}

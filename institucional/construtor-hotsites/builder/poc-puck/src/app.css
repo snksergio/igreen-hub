@@ -1475,58 +1475,104 @@ button.ar-no:hover {
   border-color: var(--b-acento-forte);
   box-shadow: 0 0 0 3px var(--b-acento-suave);
 }
-/* Listas (cards, perguntas, pessoas…): cada item como um cartão */
-.ed [class*="_ArrayField_"] {
-  border: 0;
-  background: none;
-}
-.ed [class*="_ArrayField-inner_"] {
-  display: grid;
-  gap: 8px;
-}
-.ed [class*="_ArrayFieldItem_"] {
-  border: 1px solid var(--b-linha);
+/* Listas (menu, cartões, rostos, perguntas…): uma caixa só, com uma linha entre os itens e o
+   botão de adicionar como a última linha. Antes eram cartões soltos sobre a lista ligada do Puck,
+   e os cantos ficavam diferentes de um item para o outro. O ".Puck" a mais vence o CSS do Puck,
+   que no build carrega depois deste. */
+.ed .Puck [class*="_ArrayField_"] {
+  border: 1px solid var(--b-linha-forte);
   border-radius: var(--b-r-m);
   background: var(--b-painel);
+  box-shadow: 0 1px 1px rgba(17, 19, 24, 0.03);
   overflow: hidden;
 }
-.ed [class*="_ArrayFieldItem-summary_"] {
-  min-height: 42px;
-  padding: 0 12px;
+.ed .Puck [class*="_ArrayField-inner_"] {
+  display: block;
+  margin-top: 0;
+}
+.ed .Puck [class*="_ArrayField-inner_"] > [class*="_ArrayFieldItem_"] {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--b-painel);
+}
+.ed .Puck [class*="_ArrayField-inner_"] > [class*="_ArrayFieldItem_"] + [class*="_ArrayFieldItem_"] {
+  border-top: 1px solid var(--b-linha);
+}
+.ed .Puck [class*="_ArrayField_"] [class*="_ArrayFieldItem-summary_"] {
+  min-height: 44px;
+  padding: 0 10px 0 14px;
+  border-radius: 0;
   font-size: 13.5px;
   font-weight: 500;
   background: var(--b-painel);
 }
-.ed [class*="_ArrayFieldItem-summary_"]:hover {
+.ed .Puck [class*="_ArrayField_"] [class*="_ArrayFieldItem-summary_"]:hover {
   background: var(--b-suave);
 }
-.ed [class*="_ArrayFieldItem--isExpanded_"] > [class*="_ArrayFieldItem-summary_"] {
+/* Item aberto: faixa verde à esquerda no lugar do contorno do Puck (que a caixa cortava). */
+.ed .Puck [class*="_ArrayField-inner_"] > [class*="_ArrayFieldItem--isExpanded_"] {
+  outline: none !important;
+  box-shadow: inset 3px 0 0 var(--b-acento);
+}
+.ed .Puck [class*="_ArrayFieldItem--isExpanded_"] > [class*="_ArrayFieldItem-summary_"] {
   background: var(--b-suave);
   border-bottom: 1px solid var(--b-linha);
 }
-.ed [class*="_ArrayFieldItem-body_"] {
-  padding: 14px 12px;
+.ed .Puck [class*="_ArrayFieldItem-body_"] {
+  padding: 14px 14px 16px;
 }
 .ed [class*="_ArrayFieldItem-fieldset_"] {
   display: grid;
   gap: 14px;
 }
-.ed [class*="_ArrayField-addButton_"] {
-  min-height: 40px;
-  border: 1.5px dashed var(--b-linha-forte);
-  border-radius: var(--b-r-m);
+.ed .Puck [class*="_ArrayField_"] > [class*="_ArrayField-addButton_"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 42px;
+  border: 0;
+  border-radius: 0;
   background: var(--b-painel);
-  color: var(--b-apoio);
+  color: var(--b-acento-forte);
   font-weight: 600;
 }
-.ed [class*="_ArrayField-addButton_"]:hover {
-  border-color: var(--b-acento-vivo);
-  color: var(--b-acento-forte);
+.ed .Puck [class*="_ArrayField--hasItems_"] > [class*="_ArrayField-addButton_"] {
+  border-top: 1px solid var(--b-linha);
+}
+.ed .Puck [class*="_ArrayField_"] > [class*="_ArrayField-addButton_"]:hover {
   background: var(--b-acento-suave);
+  color: var(--b-acento-forte);
 }
 .cp-radio {
   display: grid;
   gap: 8px;
+  min-width: 0;
+}
+.cp-ajuda {
+  margin-top: -4px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--b-apoio);
+}
+/* Opções lado a lado, dividindo a largura; texto maior quebra a linha em vez de estourar o painel. */
+:where(.ed, .app) .cp-seg > button {
+  flex: 1 1 0;
+  min-width: 0;
+  white-space: normal;
+  line-height: 1.25;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  text-align: center;
+}
+/* O painel da direita nunca rola para o lado. */
+.ed [class*="_Sidebar--right_"] {
+  overflow-x: hidden;
+}
+.ed .cp,
+.ed .cp-campos {
+  min-width: 0;
 }
 
 /* Campo apontado pelo aviso: destaque por alguns segundos. */
@@ -2136,9 +2182,7 @@ button.ar-no:hover {
 .cp-cabeca {
   padding: 18px 20px;
 }
-.ed [class*="_ArrayFieldItem_"] {
-  box-shadow: 0 1px 1px rgba(17, 19, 24, 0.03);
-}
+/* (A sombra das listas fica na caixa inteira, ver "Listas" acima.) */
 
 /* SEO e IA abre à direita, ao lado do painel de propriedades (que continua visível). */
 .seo {

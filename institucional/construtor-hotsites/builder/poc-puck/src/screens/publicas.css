@@ -346,3 +346,15 @@
   padding: 40px 0;
   text-align: center;
 }
+
+/* Ingresso: o mesmo crachá da confirmação, sobre um fundo cinza (a cor dos recortes do picote) */
+.ig-cracha {
+  display: grid;
+  place-items: center;
+  padding: 26px 16px;
+  border-radius: 20px;
+  background: var(--fm-suave);
+}
+.ig-cracha .tk {
+  transform: none;
+}

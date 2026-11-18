@@ -1,0 +1,619 @@
+/* Inscrição em conversa e a tela final com o ingresso (crachá) e o parabéns. Usa as variáveis do
+   form.css (--fm-*), então vale no tema claro e no escuro do kit iGreen Live. */
+
+/* ---------- Modal em modo conversa: altura fixa, conversa rola, resposta presa embaixo ---------- */
+.fm-modal:has(.cv) {
+  height: min(700px, calc(100dvh - 32px));
+}
+.fm-modal-corpo:has(> .cv) {
+  display: grid;
+  padding: 0;
+  overflow: hidden;
+}
+.fa-caixa .cv,
+.fc-cartao .cv {
+  height: min(640px, 78vh);
+  margin: -8px -4px -4px;
+}
+@media (max-width: 560px) {
+  .fm-modal:has(.cv) {
+    height: 94dvh;
+  }
+}
+
+.cv {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: 0;
+}
+.cv-log {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 20px 14px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.cv-par {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cv-linha {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  animation: cv-entra 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.cv-linha[data-de="eu"] {
+  justify-content: flex-end;
+}
+@keyframes cv-entra {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cv-linha {
+    animation: none;
+  }
+}
+.cv-av {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #007a3d, #00a859 60%, #7fe36b);
+  box-shadow: 0 3px 10px rgba(0, 168, 89, 0.3);
+}
+.fm-fundo[data-tema="live"] .cv-av,
+.fm-pagina[data-tema="live"] .cv-av {
+  background: linear-gradient(135deg, #3c7d12, #a8ff35);
+}
+.cv-av svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cv-bolha {
+  max-width: 82%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  font-size: 14.5px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.cv-bolha-larga {
+  max-width: 100%;
+}
+.cv-bolha p {
+  margin: 0;
+}
+.cv-bolha p + p,
+.cv-bolha ul + p {
+  margin-top: 6px;
+}
+.cv-linha[data-de="bot"] .cv-bolha {
+  background: var(--fm-suave);
+  color: var(--fm-texto);
+  border-bottom-left-radius: 6px;
+}
+.cv-linha[data-de="eu"] .cv-bolha {
+  background: var(--fm-acento);
+  color: var(--fm-sobre);
+  border-bottom-right-radius: 6px;
+}
+.cv-bolha b {
+  font-weight: 600;
+}
+.cv-ajuda {
+  font-size: 12.5px;
+  color: var(--fm-apoio);
+}
+.cv-alerta {
+  color: var(--fm-aviso);
+  font-weight: 500;
+}
+.cv-resumo {
+  display: grid;
+  gap: 4px;
+  margin: 8px 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--fm-fundo);
+  list-style: none;
+  font-size: 14px;
+}
+.cv-resumo li {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.cv-resumo li span {
+  color: var(--fm-acento-forte);
+  font-weight: 700;
+}
+.cv-etapa {
+  align-self: center;
+  margin: 6px 0 2px;
+  padding: 4px 12px;
+  border: 1px solid var(--fm-linha);
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fm-fraco);
+}
+.cv-digitando {
+  display: flex;
+  gap: 4px;
+  padding: 14px 16px;
+}
+.cv-digitando i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--fm-fraco);
+  animation: cv-pulo 1s ease-in-out infinite;
+}
+.cv-digitando i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.cv-digitando i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes cv-pulo {
+  0%,
+  60%,
+  100% {
+    transform: none;
+    opacity: 0.45;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+.cv-pag {
+  margin-left: 36px;
+  padding: 18px;
+  border: 1px solid var(--fm-linha);
+  border-radius: 18px;
+  background: var(--fm-fundo);
+}
+
+/* ---------- Onde a pessoa responde ---------- */
+.cv-compor {
+  display: grid;
+  gap: 8px;
+  padding: 12px 16px 14px;
+  border-top: 1px solid var(--fm-linha);
+  background: var(--fm-fundo);
+}
+.cv-escrever {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.cv-in {
+  flex: 1 1 160px;
+  min-width: 0;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--fm-campo-borda);
+  border-radius: 14px;
+  background: var(--fm-campo);
+  color: var(--fm-texto);
+  font: inherit;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+textarea.cv-in {
+  height: auto;
+  padding: 12px 16px;
+  resize: none;
+}
+.cv-in::placeholder {
+  color: var(--fm-fraco);
+}
+.cv-in:focus {
+  border-color: var(--fm-acento);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--fm-acento) 18%, transparent);
+}
+.cv-in[aria-invalid="true"] {
+  border-color: var(--fm-erro);
+}
+.cv-uf {
+  flex: 0 0 92px;
+  padding: 0 30px 0 14px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='%238b8f97' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+.cv-uf[data-vazio] {
+  color: var(--fm-fraco);
+}
+.cv-uf option {
+  color: #17181c;
+}
+.cv-enviar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--fm-acento);
+  color: var(--fm-sobre);
+  cursor: pointer;
+}
+.cv-enviar svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cv-enviar:focus-visible,
+.cv-chip:focus-visible,
+.cv-pular:focus-visible,
+.cv-voltar:focus-visible {
+  outline: 2px solid var(--fm-acento);
+  outline-offset: 2px;
+}
+.cv-opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.cv-chip {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--fm-campo-borda);
+  border-radius: 999px;
+  background: var(--fm-campo);
+  color: var(--fm-texto);
+  font: inherit;
+  font-size: 14.5px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.cv-chip:hover {
+  border-color: var(--fm-acento);
+}
+.cv-chip[aria-pressed="true"] {
+  border-color: var(--fm-acento);
+  background: color-mix(in srgb, var(--fm-acento) 14%, var(--fm-campo));
+  font-weight: 600;
+}
+.cv-opcoes .fm-bt {
+  min-height: 44px;
+}
+.cv-pular,
+.cv-voltar {
+  padding: 4px 6px;
+  border: 0;
+  background: none;
+  color: var(--fm-apoio);
+  font: inherit;
+  font-size: 13.5px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.cv-voltar {
+  justify-self: start;
+  padding-left: 0;
+}
+.cv-erro {
+  flex-basis: 100%;
+}
+.cv-bloco {
+  display: grid;
+  gap: 10px;
+}
+.cv-bloco > .fm-bt {
+  justify-self: end;
+  min-width: 160px;
+}
+.cv-espera {
+  margin: 0;
+  min-height: 24px;
+  color: var(--fm-fraco);
+  text-align: center;
+}
+
+/* ---------- Tela final: ingresso (crachá) à esquerda, parabéns à direita ---------- */
+.fm-modal:has(.fm-sucesso) {
+  width: min(860px, 100%);
+}
+.fm-sucesso {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 32px;
+  padding: 28px;
+  border-radius: 20px;
+  background: var(--fm-suave);
+}
+@media (max-width: 720px) {
+  .fm-sucesso {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: 22px;
+    padding: 20px;
+  }
+}
+.fm-sucesso-txt {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  min-width: 0;
+}
+.fm-sucesso-tit {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--fm-texto);
+}
+.fm-sucesso-sub {
+  margin: -4px 0 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--fm-acento-forte);
+}
+.fm-sucesso-txt .fm-texto {
+  margin: 0;
+}
+.fm-passos-ok {
+  display: grid;
+  gap: 8px;
+  margin: 2px 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  color: var(--fm-apoio);
+}
+.fm-passos-ok li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.fm-passos-ok li::before {
+  content: "";
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--fm-linha);
+}
+.fm-passos-ok li[data-ok] {
+  color: var(--fm-texto);
+}
+.fm-passos-ok li[data-ok]::before {
+  background: var(--fm-acento)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E")
+    center / 13px no-repeat;
+}
+.fm-fundo[data-tema="live"] .fm-passos-ok li[data-ok]::before,
+.fm-pagina[data-tema="live"] .fm-passos-ok li[data-ok]::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2306180d' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E");
+}
+.fm-sucesso-txt .fm-agenda {
+  width: 100%;
+}
+.fm-msg {
+  width: 100%;
+}
+.fm-msg summary {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--fm-acento-forte);
+  cursor: pointer;
+}
+.fm-msg[open] summary {
+  margin-bottom: 10px;
+}
+
+/* O crachá */
+.tk {
+  position: relative;
+  width: 296px;
+  max-width: 100%;
+  border-radius: 22px;
+  background: var(--fm-fundo);
+  color: var(--fm-texto);
+  box-shadow: 0 18px 40px rgba(10, 30, 18, 0.16), 0 0 0 1px var(--fm-linha);
+  transform: rotate(-1.5deg);
+  animation: tk-chega 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes tk-chega {
+  from {
+    opacity: 0;
+    transform: rotate(-6deg) translateY(16px) scale(0.96);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tk {
+    animation: none;
+  }
+}
+.tk-topo {
+  position: relative;
+  display: grid;
+  gap: 3px;
+  padding: 18px 20px 22px;
+  border-radius: 22px 22px 0 0;
+  background: radial-gradient(130% 120% at 100% 0%, rgba(127, 227, 107, 0.55), transparent 55%), linear-gradient(150deg, #003d1f, #00803f 70%);
+  color: #fff;
+  overflow: hidden;
+}
+.tk-topo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1.4px);
+  background-size: 12px 12px;
+  mask-image: linear-gradient(200deg, #000, transparent 60%);
+  pointer-events: none;
+}
+.fm-fundo[data-tema="live"] .tk-topo,
+.fm-pagina[data-tema="live"] .tk-topo {
+  background: radial-gradient(130% 120% at 100% 0%, rgba(168, 255, 53, 0.5), transparent 55%), linear-gradient(150deg, #04130a, #0d3a1b 75%);
+}
+.tk-marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.tk-marca svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tk-tipo {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  padding: 3px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.tk-evento {
+  margin-top: 18px;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+.tk-quando,
+.tk-onde {
+  font-size: 13px;
+  opacity: 0.88;
+}
+/* Picote: linha tracejada com dois recortes nas laterais, na cor do fundo atrás do crachá */
+.tk-picote {
+  position: relative;
+  height: 0;
+  margin: 0 18px;
+  border-top: 2px dashed var(--fm-linha);
+}
+.tk-picote::before,
+.tk-picote::after {
+  content: "";
+  position: absolute;
+  top: -12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--fm-suave);
+}
+.tk-picote::before {
+  left: -30px;
+}
+.tk-picote::after {
+  right: -30px;
+}
+.tk-corpo {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px 18px 20px;
+}
+.tk-pessoa {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+.tk-pessoa strong {
+  margin-bottom: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 16px;
+}
+.tk-pessoa strong:last-child {
+  margin-bottom: 0;
+}
+.tk-rot {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fm-fraco);
+}
+.tk-codigo {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 18px;
+  letter-spacing: 0.14em;
+}
+.tk-qr .fm-qr {
+  display: block;
+}
+.tk[data-estado="espera"] .tk-qr,
+.tk[data-estado="pendente"] .tk-qr {
+  opacity: 0.25;
+  filter: grayscale(1);
+}
+.tk-carimbo {
+  position: absolute;
+  right: 14px;
+  bottom: 70px;
+  padding: 5px 10px;
+  border: 2px solid var(--fm-aviso);
+  border-radius: 8px;
+  background: var(--fm-fundo);
+  color: var(--fm-aviso);
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-8deg);
+}
+
+/* Mensagens seguidas do assistente: o avatar aparece só na última, como nos apps de conversa. */
+.cv-log .cv-linha[data-de="bot"]:has(+ .cv-linha[data-de="bot"]) .cv-av {
+  visibility: hidden;
+}
+.cv-log {
+  scrollbar-width: thin;
+  scrollbar-color: var(--fm-linha) transparent;
+}
+
+/* Ingresso dentro da conversa: o cartão já é a caixa, sem moldura dupla */
+.cv-ing .fm-ing {
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.cv-fim-ing {
+  justify-content: flex-end;
+}

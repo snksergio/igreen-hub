@@ -1,6 +1,7 @@
 import type { CustomField } from "@puckeditor/core";
 import { useState } from "react";
 import { CLASSES, guiaParaIA, MOVIMENTO, TOKENS } from "../guia";
+import { RotuloComAjuda } from "../../ui/Ajuda";
 
 /** Caixa de código: fonte monoespaçada, sem corretor e com Tab inserindo espaços. */
 export function codigoField(label: string, dica: string, linhas = 10): CustomField<string> {
@@ -9,7 +10,7 @@ export function codigoField(label: string, dica: string, linhas = 10): CustomFie
     label,
     render: ({ value, onChange }) => (
       <div className="fi-campo">
-        <span className="fi-rotulo">{label}</span>
+        <RotuloComAjuda rotulo={label} />
         <textarea
           className="fi-codigo"
           rows={linhas}

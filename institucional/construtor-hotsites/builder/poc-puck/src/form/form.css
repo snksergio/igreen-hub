@@ -876,3 +876,116 @@
   margin: 0;
   text-align: center;
 }
+
+/* ---------- Lista ainda sem escolha: cor de exemplo, como o placeholder ---------- */
+.fm-campo select.fm-input[data-vazio],
+.fm-cidade select.fm-input[data-vazio] {
+  color: var(--fm-fraco);
+}
+.fm-campo select.fm-input option,
+.fm-cidade select.fm-input option {
+  color: #17181c;
+}
+.fm-cidade select.fm-input {
+  padding-right: 30px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='%238b8f97' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+/* Kit Live: seta desenhada perto do texto (a do sistema ficava colada na borda) e "UF" na cor de exemplo */
+.lv .campo select {
+  padding-right: 38px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='%23a3a89b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+.lv .fm-cidade select {
+  padding: 0 32px 0 14px;
+  background-position: right 12px center;
+}
+.lv .campo select[data-vazio] {
+  color: rgba(243, 246, 236, 0.3);
+}
+.lv .campo select option {
+  color: #111;
+}
+
+/* ---------- Anexo ---------- */
+.fm-anexo {
+  display: grid;
+  gap: 6px;
+}
+.fm-anexo-escolher,
+.fm-anexo[data-cheio] {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 10px 14px;
+  border: 1.5px dashed var(--fm-campo-borda);
+  border-radius: 12px;
+  background: var(--fm-campo);
+  color: var(--fm-texto);
+  font-size: 14px;
+}
+.fm-anexo[data-cheio] {
+  border-style: solid;
+}
+.fm-anexo-escolher {
+  position: relative;
+  cursor: pointer;
+}
+.fm-anexo-escolher:hover {
+  border-color: var(--fm-acento);
+}
+.fm-anexo-escolher:has(input:focus-visible) {
+  outline: 2px solid var(--fm-acento);
+  outline-offset: 2px;
+}
+.fm-anexo-escolher input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.fm-anexo-escolher > span:last-child {
+  display: grid;
+  gap: 1px;
+}
+.fm-anexo-escolher small {
+  font-size: 12.5px;
+  color: var(--fm-apoio);
+}
+.fm-anexo-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--fm-suave);
+}
+.fm-anexo-ic svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--fm-acento-forte);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.fm-anexo-nome {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lv .fm-anexo-escolher,
+.lv .fm-anexo[data-cheio] {
+  border-color: rgba(243, 246, 236, 0.16);
+  background: rgba(1, 7, 2, 0.6);
+  color: var(--texto);
+}

@@ -1119,3 +1119,70 @@
 .gr-tab-par span {
   min-width: 44px;
 }
+
+/* Formulário da página em destaque, logo depois dos números */
+.ep-form {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid var(--b-linha);
+  border-radius: var(--b-r-g);
+  background: var(--b-painel);
+  box-shadow: var(--b-sombra);
+}
+.ep-form[data-tom="aviso"] {
+  border-color: #f0dc9a;
+  background: linear-gradient(0deg, var(--b-aviso-suave), var(--b-aviso-suave)), var(--b-painel);
+}
+.ep-form-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--b-suave);
+  box-shadow: inset 0 0 0 1px var(--b-linha-forte);
+  color: var(--b-acento-forte);
+}
+.ep-form[data-tom="aviso"] .ep-form-ic {
+  background: var(--b-painel);
+  box-shadow: inset 0 0 0 1px #f0dc9a;
+  color: var(--b-aviso);
+}
+.ep-form-txt {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+.ep-form-rot {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--b-fraco);
+}
+.ep-form-txt strong {
+  font-size: 15.5px;
+  font-weight: 600;
+}
+.ep-form-txt span:last-child {
+  font-size: 13px;
+  color: var(--b-apoio);
+}
+.ep-form .bt {
+  flex: none;
+}
+:root[data-tema="escuro"] .ep-form[data-tom="aviso"] {
+  border-color: rgba(255, 214, 102, 0.3);
+}
+:root[data-tema="escuro"] .ep-form[data-tom="aviso"] .ep-form-ic {
+  box-shadow: inset 0 0 0 1px rgba(255, 214, 102, 0.3);
+}
+@media (max-width: 640px) {
+  .ep-form {
+    flex-wrap: wrap;
+  }
+}

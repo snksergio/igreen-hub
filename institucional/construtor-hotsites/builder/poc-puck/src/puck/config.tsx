@@ -1,4 +1,4 @@
-import type { Config } from "@puckeditor/core";
+import type { Config, RadioField } from "@puckeditor/core";
 import { Abertura, type AberturaProps } from "./blocks/Abertura";
 import { Agenda, type AgendaProps } from "./blocks/Agenda";
 import { Cards, type CardsProps } from "./blocks/Cards";
@@ -119,30 +119,34 @@ export const config: Config<Blocks, RootProps> = {
       titulo: { type: "text", label: "Título no Google e na aba (até 60 caracteres)" },
       descricao: { type: "textarea", label: "Descrição no Google e no WhatsApp (até 160 caracteres)" },
       imagemCompartilhamento: imagemField("Imagem ao compartilhar o link (vazio = imagem da Abertura)"),
+      // A explicação vai embaixo do título (ajuda), e as opções ficam curtas, lado a lado.
       indexar: {
         type: "radio",
         label: "Aparecer no Google",
+        ajuda: "Não: evento fechado, só quem tem o link encontra.",
         options: [
           { label: "Sim", value: true },
-          { label: "Não (evento fechado)", value: false },
+          { label: "Não", value: false },
         ],
-      },
+      } as RadioField,
       animacoes: {
         type: "radio",
-        label: "Animações ao rolar (aparecem na página publicada)",
+        label: "Animações ao rolar",
+        ajuda: "Aparecem na página publicada.",
         options: [
           { label: "Ligadas", value: "on" },
           { label: "Desligadas", value: "off" },
         ],
-      },
+      } as RadioField,
       moldura: {
         type: "radio",
-        label: "Cabeçalho e rodapé padrão da iGreen",
+        label: "Cabeçalho e rodapé da iGreen",
+        ajuda: "Esconda quando a página usa a Abertura e o Rodapé do kit Live.",
         options: [
           { label: "Mostrar", value: "padrao" },
-          { label: "Esconder (a página usa a Abertura e o Rodapé do kit Live)", value: "sem" },
+          { label: "Esconder", value: "sem" },
         ],
-      },
+      } as RadioField,
     },
     defaultProps: { titulo: "", descricao: "", imagemCompartilhamento: "", indexar: true, animacoes: "on", moldura: "padrao" },
     render: ({ children, animacoes, moldura }) => <Pagina animacoes={animacoes} moldura={moldura}>{children}</Pagina>,

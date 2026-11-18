@@ -2,6 +2,7 @@ import type { CustomField } from "@puckeditor/core";
 import { camposNaPagina, cobra, listarFormularios } from "../../lib/formularios";
 import { usePageCtx } from "../context";
 import "./formulario.css";
+import { RotuloComAjuda } from "../../ui/Ajuda";
 
 /** Escolher o formulário da biblioteca (3.1) e abrir o construtor dele (3.2). */
 function Escolher({ label, value, onChange }: { label: string; value: string | undefined; onChange: (v: string | undefined) => void }) {
@@ -10,7 +11,7 @@ function Escolher({ label, value, onChange }: { label: string; value: string | u
   const f = forms.find((x) => x.id === value);
   return (
     <div className="ff">
-      <span className="fi-rotulo">{label}</span>
+      <RotuloComAjuda rotulo={label} />
       <select className="ff-sel" value={value ?? ""} onChange={(e) => onChange(e.target.value || undefined)} aria-label="Formulário">
         <option value="">Formulário fixo da peça (nome, WhatsApp, e-mail)</option>
         {forms.map((x) => (

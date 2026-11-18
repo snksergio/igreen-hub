@@ -26,6 +26,13 @@ O resultado publicado (o app compilado, as páginas estáticas e a landing) fica
   - **Pagamento simulado:** preço único, lotes por data, cupom e meia-entrada; tela que imita o meio de pagamento, com aprovar e recusar; status pendente, pago, cancelado e estornado. Evento gratuito pula o pagamento.
   - **Comunicação simulada:** texto da confirmação e do lembrete (com quando sairia), adicionar à agenda, ingresso com QR code (`#/ingresso/<código>`) e check-in no celular (`#/checkin/<id ou endereço>`).
   - **Dados de exemplo:** inscrições, visitas e links fictícios (e-mails em `exemplo.com`) para as páginas de exemplo, semeados uma vez por navegador. "Restaurar exemplos" refaz tudo.
+- **Ajustes pedidos depois das Etapas 1 a 5 (2026-11-18):**
+  - **Inscrição em conversa:** o modal pergunta uma coisa por vez, como um chat, começando pelo resumo do que a pessoa já digitou na página. O formulário pode voltar ao jeito de campos em etapas ("Como o modal pergunta", nas regras).
+  - **Tela final:** o ingresso como crachá à esquerda (evento, picote, participante e QR) e o parabéns à direita. A página do ingresso usa o mesmo crachá.
+  - **Anexo** como tipo de campo, com tipos aceitos e tamanho máximo. Na POC fica guardado só o nome e o tamanho do arquivo.
+  - **Editor:** clicar num texto, botão ou imagem da prévia seleciona o campo dele (contorno rosa e campo aberto no painel). O que estava entre parênteses nos rótulos virou ícone de ajuda, com a explicação ao passar o mouse. Opções lado a lado, com a explicação embaixo do título. Listas (menu, rostos, cartões) numa caixa só. Painel sem rolagem para o lado.
+  - **Assistente de IA no editor**, só a parte visual: botão "Criar com IA" e uma conversa que mostra o que ele faria. No projeto real, usa a API do Claude e segue o design system.
+  - **Espaço da página:** o formulário da página aparece logo depois dos números, com aviso quando falta.
 
 **Pela metade ou só ideia**
 

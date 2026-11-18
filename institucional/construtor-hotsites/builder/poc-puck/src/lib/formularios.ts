@@ -26,6 +26,7 @@ export type TipoCampo =
   | "lgpd"
   | "ingresso"
   | "oculto"
+  | "anexo"
   | "etapa";
 
 export type Campo = {
@@ -54,6 +55,9 @@ export type Campo = {
   ingresso?: ConfigIngresso;
   /** Meia largura: dois campos lado a lado no computador. */
   meia?: boolean;
+  /** Anexo: que arquivos aceita e o tamanho máximo. */
+  aceita?: "pdf-imagem" | "pdf" | "imagem" | "qualquer";
+  maxMb?: number;
 };
 
 export type Regras = {
@@ -77,6 +81,8 @@ export type Formulario = {
   botaoPagina: string;
   /** Botão do fim do formulário. */
   botaoFinal: string;
+  /** Como o modal pergunta: uma pergunta por vez, como conversa (padrão), ou campos em etapas. */
+  estilo?: "conversa" | "formulario";
   criadoEm: number;
   atualizadoEm: number;
 };
@@ -97,8 +103,28 @@ export const ROTULO_TIPO: Record<TipoCampo, string> = {
   lgpd: "Aceite de LGPD",
   ingresso: "Ingresso e pagamento",
   oculto: "Campo oculto",
+  anexo: "Anexo (arquivo)",
   etapa: "Nova etapa",
 };
+
+/** O que o seletor de arquivo aceita para cada opção do anexo. */
+export const ACEITA: Record<NonNullable<Campo["aceita"]>, { rotulo: string; accept: string; tipos: RegExp }> = {
+  "pdf-imagem": { rotulo: "PDF ou imagem", accept: "application/pdf,image/*", tipos: /^(application\/pdf|image\/)/ },
+  pdf: { rotulo: "Só PDF", accept: "application/pdf", tipos: /^application\/pdf$/ },
+  imagem: { rotulo: "Só imagem", accept: "image/*", tipos: /^image\// },
+  qualquer: { rotulo: "Qualquer arquivo", accept: "", tipos: /./ },
+};
+
+/** Confere o arquivo escolhido: tipo e tamanho. */
+export function checarArquivo(c: Campo, arq: { type: string; size: number }): string | undefined {
+  const regra = ACEITA[c.aceita ?? "pdf-imagem"];
+  if (!regra.tipos.test(arq.type || "x")) return `Envie ${regra.rotulo.toLowerCase().replace("só ", "")}.`;
+  const max = (c.maxMb ?? 5) * 1024 * 1024;
+  if (arq.size > max) return `O arquivo passa de ${c.maxMb ?? 5} MB.`;
+  return undefined;
+}
+
+export const tamanhoLegivel = (b: number) => (b < 1024 * 1024 ? `${Math.max(1, Math.round(b / 1024))} KB` : `${(b / 1024 / 1024).toFixed(1).replace(".", ",")} MB`);
 
 export const UFS = "AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SP SE TO".split(" ");
 
@@ -124,6 +150,7 @@ export function novoCampo(tipo: TipoCampo, extra: Partial<Campo> = {}): Campo {
     lgpd: { rotulo: TEXTO_LGPD, obrigatorio: true },
     ingresso: { rotulo: "Ingresso", obrigatorio: true, ingresso: { ...INGRESSO_PADRAO } },
     oculto: { rotulo: "Código do licenciado", fonte: "ref" },
+    anexo: { rotulo: "Envie um arquivo", aceita: "pdf-imagem", maxMb: 5, ajuda: "PDF ou imagem, até 5 MB." },
     etapa: { rotulo: "Nova etapa" },
   };
   return { ...base, ...porTipo[tipo], ...extra };
