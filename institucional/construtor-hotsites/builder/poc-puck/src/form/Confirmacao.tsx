@@ -75,7 +75,7 @@ export function Confirmacao({ sub, page, form, espera, previa }: Props) {
   const texto = espera
     ? "As vagas acabaram. Se alguém desistir, avisamos pelo WhatsApp na ordem da lista."
     : pendente
-      ? "Sua vaga só fica garantida depois do pagamento. Você pode tentar de novo pelo link que chega no WhatsApp."
+      ? "Sua vaga só fica garantida depois do pagamento. O link do ingresso, que também chega no WhatsApp, abre o pagamento de novo."
       : form?.regras.mensagemSucesso || "A confirmação chega no seu WhatsApp.";
 
   return (
@@ -115,6 +115,12 @@ export function Confirmacao({ sub, page, form, espera, previa }: Props) {
             )}
           </div>
         </div>
+      )}
+
+      {pendente && !previa && sub.codigo && (
+        <p className="fm-texto fm-centro">
+          Para pagar depois, use o link do ingresso: <a className="fm-link" href={`#/ingresso/${sub.codigo}`}>{`ingresso ${sub.codigo}`}</a>
+        </p>
       )}
 
       {page && !espera && <Agenda page={page} codigo={sub.codigo} />}

@@ -170,7 +170,7 @@ function perguntasQueFaltam(etapas: ReturnType<typeof etapasDoModal>, r: Respost
 }
 
 /** Tela de pagamento simulada (4.2): imita o meio de pagamento, com aprovar e recusar. */
-function Pagamento({ sub, previa, resolver, desistir }: { sub: Submission; previa: boolean; resolver: (s: Submission, aprovado: boolean) => void; desistir: () => void }) {
+export function Pagamento({ sub, previa, resolver, desistir }: { sub: Submission; previa: boolean; resolver: (s: Submission, aprovado: boolean) => void; desistir: () => void }) {
   const [metodo, setMetodo] = useState<"pix" | "cartao">("pix");
   const [recusado, setRecusado] = useState(false);
   const p = sub.pagamento!;

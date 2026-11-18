@@ -871,3 +871,8 @@
 .pub-aviso a {
   color: #c6ff7a;
 }
+
+.fm-centro {
+  margin: 0;
+  text-align: center;
+}

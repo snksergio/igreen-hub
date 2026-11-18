@@ -19,7 +19,8 @@ const KEY = "poc-hotsite:links";
 
 function load(): LinkLicenciado[] {
   const v = readJSON<LinkLicenciado[]>(KEY);
-  return Array.isArray(v) ? v : [];
+  // Dado corrompido (null ou texto dentro da lista) não derruba as telas.
+  return Array.isArray(v) ? v.filter((l) => l && typeof l === "object" && typeof l.ref === "string" && typeof l.pageId === "string") : [];
 }
 
 export function listarLinks(pageId: string): LinkLicenciado[] {

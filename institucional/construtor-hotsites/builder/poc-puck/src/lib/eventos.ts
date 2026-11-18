@@ -11,7 +11,7 @@ const KEY = "poc-hotsite:eventos";
 
 function load(): Evento[] {
   const v = readJSON<Evento[]>(KEY);
-  return Array.isArray(v) ? v : [];
+  return Array.isArray(v) ? v.filter((e) => e && typeof e === "object" && typeof e.pageId === "string") : [];
 }
 
 export function registrarEvento(e: Omit<Evento, "em"> & { em?: number }): void {
@@ -53,7 +53,10 @@ export const ROTULO_ORIGEM: Record<string, string> = {
   campanha: "Campanha paga",
   direto: "Acesso direto",
 };
-export const rotuloOrigem = (o: string | undefined) => ROTULO_ORIGEM[o ?? "direto"] ?? o ?? "Acesso direto";
+export function rotuloOrigem(o: string | undefined): string {
+  const k = o || "direto";
+  return Object.hasOwn(ROTULO_ORIGEM, k) ? ROTULO_ORIGEM[k] : k;
+}
 
 /** De onde a pessoa veio: ?origem= ou utm_source manda; link com código é licenciado; senão, o site anterior. */
 export function origemDoAcesso(query: URLSearchParams, referrer = "", ref?: string): string {
@@ -65,7 +68,9 @@ export function origemDoAcesso(query: URLSearchParams, referrer = "", ref?: stri
     if (/google|gads|adwords/.test(pedida)) return "google";
     if (/mail/.test(pedida)) return "email";
     if (/lic/.test(pedida)) return "licenciado";
-    return pedida.slice(0, 30);
+    // Outra origem vira um nome curto e simples (nada de texto solto ou nome reservado do JavaScript).
+    const limpa = pedida.replace(/[^a-z0-9-]/g, "").slice(0, 30);
+    return limpa && !(limpa in Object.prototype) ? limpa : "campanha";
   }
   if (ref) return "licenciado";
   if (/instagram\./.test(referrer)) return "instagram";

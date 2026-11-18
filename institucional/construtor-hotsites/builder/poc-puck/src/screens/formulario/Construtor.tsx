@@ -4,6 +4,7 @@ import { Fluxo } from "../../form/Fluxo";
 import "../../form/form.css";
 import {
   camposNaPagina,
+  ficaNaPagina,
   getFormulario,
   novoCampo,
   paginasQueUsam,
@@ -84,7 +85,8 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
         ? { href: `#/pagina/${paginaId}`, rotulo: "Voltar à página" }
         : { href: "#/formularios", rotulo: "Formulários" };
 
-  // Salva sozinho, como o construtor de página.
+  // Salva sozinho, como o construtor de página. Ao sair da tela antes do intervalo, salva na hora.
+  const pendente = useRef<Formulario | null>(null);
   useEffect(() => {
     if (!f) return;
     if (primeira.current) {
@@ -92,12 +94,20 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
       return;
     }
     setSalvo(false);
+    pendente.current = f;
     const t = setTimeout(() => {
       salvarFormulario(f);
+      pendente.current = null;
       setSalvo(true);
     }, 350);
     return () => clearTimeout(t);
   }, [f]);
+  useEffect(
+    () => () => {
+      if (pendente.current) salvarFormulario(pendente.current);
+    },
+    []
+  );
 
   useEffect(() => {
     document.title = `Formulário · ${f?.nome ?? ""}`;
@@ -461,7 +471,16 @@ function AjustesCampo({ c, f, muda }: { c: Campo; f: Formulario; muda: (p: Parti
         <Liga rotulo="Obrigatório" marcado={Boolean(c.obrigatorio)} muda={(v) => muda({ obrigatorio: v })} desligado={c.base === "nome" || c.base === "whats"} />
       )}
       {!SEM_PAGINA.includes(c.tipo) && (
-        <Liga rotulo="Mostrar na página" ajuda="Fica na versão curta, na própria peça de inscrição." marcado={Boolean(c.naPagina)} muda={(v) => muda({ naPagina: v })} />
+        <Liga
+          rotulo="Mostrar na página"
+          ajuda={
+            c.naPagina && !ficaNaPagina(f, c)
+              ? "Depende de uma resposta dada no modal, então aparece no modal."
+              : "Fica na versão curta, na própria peça de inscrição."
+          }
+          marcado={Boolean(c.naPagina)}
+          muda={(v) => muda({ naPagina: v })}
+        />
       )}
       {[...DE_TEXTO, "lista", "cidade"].includes(c.tipo) && c.tipo !== "paragrafo" && (
         <Liga rotulo="Meia largura" ajuda="Dois campos lado a lado no computador." marcado={Boolean(c.meia)} muda={(v) => muda({ meia: v })} />

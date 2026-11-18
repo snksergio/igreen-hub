@@ -63,7 +63,8 @@ const KEY = "poc-hotsite:subs";
 
 function load(): Submission[] {
   const v = readJSON<Submission[]>(KEY);
-  return Array.isArray(v) ? v : [];
+  // Dado corrompido (null ou texto dentro da lista) não derruba as telas.
+  return Array.isArray(v) ? v.filter((s) => s && typeof s === "object" && typeof s.id === "string" && typeof s.pageId === "string") : [];
 }
 
 function save(subs: Submission[]): boolean {

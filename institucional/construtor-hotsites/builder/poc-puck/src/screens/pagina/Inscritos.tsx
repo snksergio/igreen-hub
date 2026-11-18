@@ -3,6 +3,7 @@ import { download } from "../../lib/download";
 import { rotuloOrigem } from "../../lib/eventos";
 import { colunasDoFormulario, visivel, type Campo } from "../../lib/formularios";
 import { reais } from "../../lib/ingresso";
+import { pagamentoAoSairDaEspera } from "../../lib/inscrever";
 import {
   formatarWhats,
   removeSubmissions,
@@ -70,7 +71,7 @@ export function Inscritos({ d }: { d: Espaco }) {
     download(`inscricoes-${d.page.slug}${sufixo}.csv`, toCSV(subs, colunasDoFormulario(d.form)), "text/csv;charset=utf-8");
 
   function emLote(status: StatusInscricao) {
-    updateSubmissions([...sel], { status }, `Marcado como ${ROTULO_INSCRICAO[status].toLowerCase()}`);
+    if (!mudarStatus(d, d.subs.filter((s) => sel.has(s.id)), status)) return;
     setSel(new Set());
     d.recarregar();
   }
@@ -255,6 +256,26 @@ export function Inscritos({ d }: { d: Espaco }) {
   );
 }
 
+/**
+ * Muda o status de uma ou mais inscrições. Quem sai da lista de espera ocupa vaga (avisa se as vagas
+ * acabaram) e, em evento pago, passa a dever o ingresso. Devolve false se a pessoa desistiu.
+ */
+function mudarStatus(d: Espaco, alvo: Submission[], status: StatusInscricao): boolean {
+  const saindo = status === "espera" ? [] : alvo.filter((s) => statusDe(s) === "espera");
+  if (saindo.length && d.vagas && d.inscritos + saindo.length > d.vagas) {
+    const msg = `As ${d.vagas} vagas já estão ocupadas. Tirar ${saindo.length === 1 ? "esta pessoa" : `${saindo.length} pessoas`} da lista de espera mesmo assim?`;
+    if (!confirm(msg)) return false;
+  }
+  const nota = `Marcado como ${ROTULO_INSCRICAO[status].toLowerCase()}`;
+  const comum = alvo.filter((s) => !saindo.includes(s));
+  if (comum.length) updateSubmissions(comum.map((s) => s.id), { status }, nota);
+  for (const s of saindo) {
+    const pagamento = pagamentoAoSairDaEspera(s, d.form);
+    updateSubmissions([s.id], { status, pagamento }, pagamento?.status === "pendente" ? `${nota}: saiu da lista de espera, pagamento pendente` : `${nota}: saiu da lista de espera`);
+  }
+  return true;
+}
+
 const RESPOSTA_ESPECIAL: Record<string, (v: string) => string> = {
   lgpd: (v) => (v === "sim" ? "Aceito" : v),
   ingresso: (v) => (v === "meia" ? "Meia-entrada" : "Inteira"),
@@ -296,7 +317,7 @@ function Detalhe({ s, d, nomeLic, fechar }: { s: Submission; d: Espaco; nomeLic:
             <h3>Status</h3>
             <div className="seg seg-quebra" role="group" aria-label="Status da inscrição">
               {(["inscrito", "confirmado", "presente", "faltou"] as StatusInscricao[]).concat(status === "espera" ? ["espera"] : []).map((st) => (
-                <button key={st} aria-pressed={status === st} onClick={() => status !== st && mudar({ status: st }, `Marcado como ${ROTULO_INSCRICAO[st].toLowerCase()}`)}>
+                <button key={st} aria-pressed={status === st} onClick={() => status !== st && mudarStatus(d, [s], st) && d.recarregar()}>
                   {ROTULO_INSCRICAO[st]}
                 </button>
               ))}

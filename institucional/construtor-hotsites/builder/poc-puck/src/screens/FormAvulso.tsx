@@ -4,12 +4,10 @@ import "../form/form.css";
 import "./publicas.css";
 import { origemDoAcesso, registrarUmaVez } from "../lib/eventos";
 import { getFormulario } from "../lib/formularios";
-import { dataPorExtenso, infoEvento, lugarCurto, motivoFechada, statusVisivel } from "../lib/meta";
-import { metaDe } from "../lib/painel";
-import { vagasDaPagina } from "../lib/pagina";
+import { dataPorExtenso, infoEvento, lugarCurto } from "../lib/meta";
+import { estadoInscricoes } from "../lib/pagina";
 import { getPageBySlug, type PageRecord } from "../lib/pages";
 import { parsePersona } from "../lib/persona";
-import { listSubmissions, ocupaVaga } from "../lib/submissions";
 
 /** A página usa o kit iGreen Live? Então o formulário avulso também fica escuro. */
 export const temaDa = (p: PageRecord | undefined) => (p?.data.content?.some((c) => c.type.startsWith("Live")) ? "live" : "claro");
@@ -21,10 +19,10 @@ export function FormAvulso({ id, query }: { id: string; query: URLSearchParams }
   const persona = useMemo(() => parsePersona(query), [query]);
   const origem = origemDoAcesso(query, document.referrer, persona.ref);
   const ev = page ? infoEvento(page.data) : {};
-  const status = page ? statusVisivel(metaDe(page)) : "publicada";
-  const fechada = page
-    ? motivoFechada(status, listSubmissions({ pageId: page.id }).filter(ocupaVaga).length, vagasDaPagina(page), form?.regras.listaEspera)
-    : undefined;
+  const estado = page ? estadoInscricoes(page) : undefined;
+  const status = estado?.status ?? "publicada";
+  // Formulário aberto por um endereço que não é o da página dele: vale o estado da página ligada.
+  const fechada = estado?.inscricoes.fechada === "esgotada" && form?.regras.listaEspera ? undefined : estado?.inscricoes.fechada;
 
   useEffect(() => {
     document.title = page ? `Inscrição · ${page.title}` : form?.nome ?? "Formulário";

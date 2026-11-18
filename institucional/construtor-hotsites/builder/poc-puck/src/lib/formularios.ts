@@ -4,7 +4,8 @@ import type { PageRecord } from "./pages";
 import { uid } from "./slug";
 import { readJSON, writeJSON } from "./store";
 import { deBrasilia } from "./tempo";
-import { ocupaVaga, type Respostas, type Submission } from "./submissions";
+import { normalizarWhats } from "./persona";
+import { ocupaVaga, statusDe, type Respostas, type Submission } from "./submissions";
 
 /* Formulários (Etapa 3): guardados à parte e reaproveitados por várias páginas. A peça de
    inscrição só aponta para um (formularioId) e as respostas ficam separadas por página (0.1). */
@@ -288,12 +289,43 @@ export function dividirEtapas(campos: Campo[]): Etapa[] {
   return etapas.filter((e) => e.campos.some((c) => c.tipo !== "oculto"));
 }
 
+/**
+ * O campo fica mesmo na página? Só se estiver marcado e, tendo condição, o campo de que depende
+ * também estiver na página. Senão ele iria para um lugar onde a resposta que o libera não existe.
+ */
+export function ficaNaPagina(f: Formulario, c: Campo, visto = new Set<string>()): boolean {
+  if (!c.naPagina || c.tipo === "etapa" || c.tipo === "oculto" || c.tipo === "ingresso") return false;
+  if (!c.condicao?.campo) return true;
+  if (visto.has(c.id)) return false;
+  visto.add(c.id);
+  const pai = f.campos.find((x) => x.id === c.condicao!.campo);
+  return Boolean(pai && ficaNaPagina(f, pai, visto));
+}
+
 /** Os campos que vão para a página (versão curta). */
-export const camposNaPagina = (f: Formulario) => f.campos.filter((c) => c.naPagina && c.tipo !== "etapa" && c.tipo !== "oculto");
+export const camposNaPagina = (f: Formulario) => f.campos.filter((c) => ficaNaPagina(f, c));
 
 /** O que sobra para o modal, já em etapas. `completo`: o modal direto mostra tudo. */
 export function etapasDoModal(f: Formulario, completo: boolean): Etapa[] {
-  return dividirEtapas(completo ? f.campos : f.campos.filter((c) => !c.naPagina));
+  return dividirEtapas(completo ? f.campos : f.campos.filter((c) => !ficaNaPagina(f, c)));
+}
+
+/** Tira as respostas de campos que a lógica escondeu (não vão para a lista nem para o CSV). */
+export function semCamposEscondidos(f: Formulario, r: Respostas): Respostas {
+  const saida: Respostas = { ...r };
+  // Repete porque uma condição pode depender de outra que acabou de sumir.
+  for (let volta = 0; volta <= f.campos.length; volta++) {
+    let mudou = false;
+    for (const c of f.campos) {
+      if (c.id in saida && !visivel(c, saida)) {
+        delete saida[c.id];
+        for (const k of Object.keys(saida)) if (k.startsWith(`${c.id}-`)) delete saida[k];
+        mudou = true;
+      }
+    }
+    if (!mudou) break;
+  }
+  return saida;
 }
 
 const resposta = (r: Respostas, id: string) => r[id];
@@ -410,20 +442,33 @@ export function checarRegras(f: Formulario, ctx: Contexto, r: Respostas): Vaga {
   const base = baseDasRespostas(f, r);
   const rep = f.regras.bloquearRepetida;
   if (rep !== "nao") {
-    const whats = soDigitos(base.whats);
+    const whats = mesmoWhats(base.whats);
     const email = base.email.toLowerCase();
+    // Pagamento cancelado ou estornado libera a pessoa para se inscrever de novo.
     const repetida = ctx.inscricoesDaPagina.some(
       (s) =>
-        ((rep === "whats" || rep === "whats-ou-email") && whats && soDigitos(s.whats).endsWith(whats.slice(-10))) ||
-        ((rep === "email" || rep === "whats-ou-email") && email && s.email.toLowerCase() === email)
+        s.pagamento?.status !== "cancelado" &&
+        s.pagamento?.status !== "estornado" &&
+        (((rep === "whats" || rep === "whats-ou-email") && Boolean(whats) && mesmoWhats(s.whats) === whats) ||
+          ((rep === "email" || rep === "whats-ou-email") && Boolean(email) && s.email.toLowerCase() === email))
     );
-    if (repetida) return { ok: false, motivo: "Já existe uma inscrição com este WhatsApp ou e-mail." };
+    if (repetida)
+      return { ok: false, motivo: "Já existe uma inscrição com este WhatsApp ou e-mail. Para pagar uma inscrição pendente, use o link do ingresso." };
   }
   const vagas = ctx.vagasDaPagina || f.regras.vagas;
-  if (vagas && ctx.inscricoesDaPagina.filter(ocupaVaga).length >= vagas) {
-    return f.regras.listaEspera ? { ok: true, espera: true } : { ok: false, motivo: "As vagas acabaram." };
+  if (vagas) {
+    const cheio = ctx.inscricoesDaPagina.filter(ocupaVaga).length >= vagas;
+    // Com gente esperando, quem chega entra no fim da fila, mesmo que uma vaga tenha aberto.
+    const fila = f.regras.listaEspera && ctx.inscricoesDaPagina.some((s) => statusDe(s) === "espera");
+    if (cheio || fila) return f.regras.listaEspera ? { ok: true, espera: true } : { ok: false, motivo: "As vagas acabaram." };
   }
   return { ok: true, espera: false };
+}
+
+/** WhatsApp inteiro, com 55 e DDD, para comparar (só o final confunde DDDs diferentes). */
+function mesmoWhats(v: string): string {
+  const d = soDigitos(v);
+  return normalizarWhats(d) ?? d;
 }
 
 /** Nome, WhatsApp, e-mail e cidade pelos campos marcados como base (a lista e o check-in usam). */

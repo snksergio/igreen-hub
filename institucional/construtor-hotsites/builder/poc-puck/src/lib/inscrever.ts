@@ -1,4 +1,4 @@
-import { baseDasRespostas, campoIngresso, checarRegras, type Formulario } from "./formularios";
+import { baseDasRespostas, campoIngresso, checarRegras, cobra, semCamposEscondidos, type Formulario } from "./formularios";
 import { calcularTotal, checarCupom, type Total } from "./ingresso";
 import { formularioDaPagina, getFormulario } from "./formularios";
 import { metaDe } from "./painel";
@@ -16,10 +16,12 @@ export type Resultado =
   | { ok: true; sub: Submission; espera: boolean; total: Total | null; aPagar: boolean }
   | { ok: false; motivo: string };
 
-/** Quantas inscrições da página já usaram o cupom (para o limite de usos). */
+/** Quantas inscrições da página já usaram o cupom (o limite de usos vale por página). Cancelado e estornado devolvem o uso. */
 export function usosDoCupom(pageId: string, codigo: string): number {
   const c = codigo.trim().toUpperCase();
-  return listSubmissions({ pageId }).filter((s) => s.pagamento?.cupom?.toUpperCase() === c && s.pagamento.status !== "cancelado").length;
+  return listSubmissions({ pageId }).filter(
+    (s) => s.pagamento?.cupom?.toUpperCase() === c && s.pagamento.status !== "cancelado" && s.pagamento.status !== "estornado"
+  ).length;
 }
 
 /** O formulário de uma página (o da peça de inscrição). */
@@ -39,7 +41,7 @@ export function totalDoIngresso(f: Formulario, r: Respostas, pageId: string, ago
 export function inscrever(f: Formulario, respostas: Respostas, o: Origem, agora = new Date()): Resultado {
   const page = getPage(o.pageId);
   const meta = page ? metaDe(page) : undefined;
-  const r: Respostas = { ...respostas };
+  const r: Respostas = semCamposEscondidos(f, respostas);
   for (const c of f.campos) {
     if (c.tipo !== "oculto") continue;
     if (c.fonte === "ref" && o.ref) r[c.id] = o.ref;
@@ -81,6 +83,25 @@ export function inscrever(f: Formulario, respostas: Respostas, o: Origem, agora 
   };
   const sub: Submission = o.previa ? { ...dados, id: "previa", createdAt: agora.getTime(), codigo: "PREVIA" } : addSubmission(dados);
   return { ok: true, sub, espera: vaga.espera, total, aPagar: Boolean(pagamento && pagamento.status === "pendente") };
+}
+
+/**
+ * Quem sai da lista de espera num evento pago passa a dever o ingresso: ganha pagamento pendente
+ * com o preço de agora (a meia e o cupom que tinha escolhido continuam valendo).
+ */
+export function pagamentoAoSairDaEspera(s: Submission, f: Formulario | undefined, agora = new Date()): Pagamento | undefined {
+  if (s.pagamento || !f || !cobra(f, agora)) return s.pagamento;
+  const total = totalDoIngresso(f, s.respostas ?? {}, s.pageId, agora);
+  const c = campoIngresso(f);
+  if (!total || !c) return undefined;
+  return {
+    status: total.total > 0 ? "pendente" : "pago",
+    valor: total.total,
+    lote: total.lote,
+    meia: total.descontoMeia > 0 || undefined,
+    cupom: total.descontoCupom > 0 ? String(s.respostas?.[`${c.id}-cupom`] ?? "").toUpperCase() || undefined : undefined,
+    atualizadoEm: agora.getTime(),
+  };
 }
 
 /** Resultado do pagamento simulado. Recusado deixa pendente (a pessoa pode tentar de novo). */

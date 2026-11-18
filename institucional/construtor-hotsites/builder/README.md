@@ -47,6 +47,9 @@ O resultado publicado (o app compilado, as páginas estáticas e a landing) fica
 - **O licenciado vê só números (0.2):** visitas, inscrições, conversão e presentes do link dele, nunca nome ou contato.
 - **Publicação sem aprovação (0.4):** quem tem acesso ao construtor publica, agenda e encerra direto.
 - **Pagamento (0.3):** a meia-entrada é metade do preço do lote e o cupom vale depois da meia. Recusa deixa a inscrição pendente. Na POC não há campo de cartão: a tela só imita o meio de pagamento.
+- **Lista de espera é fila:** com alguém esperando, quem chega entra depois, mesmo que uma vaga tenha aberto. Quem sai da espera num evento pago passa a dever o ingresso (pagamento pendente).
+- **Pagar depois:** a inscrição fica pendente e o link do ingresso abre o pagamento de novo. Inscrição com pagamento cancelado ou estornado não bloqueia uma nova.
+- **Lógica condicional:** resposta de campo que a lógica escondeu não é gravada. Campo marcado para a página que depende de uma resposta dada no modal vai para o modal.
 - **Visitas contam uma vez por aba** e só com a página no ar. Página rascunho ou agendada mostra um aviso no topo e o formulário funciona como prévia, sem gravar.
 - **Escolhas de quem usa a POC:** a landing segue o visual do site iGreen Live (Instrument Sans, fundo #010702, limão #A8FF35, textura de pontos). Os pedidos e ajustes da conversa que gerou o kit não estão escritos em outro lugar além deste README e dos comentários no código.
 
