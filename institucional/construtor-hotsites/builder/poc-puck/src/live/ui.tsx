@@ -1,4 +1,5 @@
-import { Fragment, useEffect, useRef, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, type MouseEvent, type ReactNode } from "react";
+import { abrirFormulario } from "../form/abrir";
 import { whatsHref } from "../lib/persona";
 import { usePageCtx } from "../puck/context";
 import { safeUrl, type CtaProps } from "../puck/ui";
@@ -128,6 +129,14 @@ export function useHref() {
   const { persona } = usePageCtx();
   return (p: Pick<CtaProps, "destino" | "link" | "mensagemWhats">) => {
     if (p.destino === "inscricao") return { href: "#inscricao" };
+    if (p.destino === "formulario")
+      return {
+        href: "#inscricao",
+        onClick: (e: MouseEvent<HTMLAnchorElement>) => {
+          e.preventDefault();
+          abrirFormulario(e.currentTarget.ownerDocument, { completo: true });
+        },
+      };
     if (p.destino === "whatsapp")
       return { href: whatsHref(persona, p.mensagemWhats || "Olá! Quero saber mais."), target: "_blank", rel: "noopener noreferrer" };
     const url = safeUrl(p.link);

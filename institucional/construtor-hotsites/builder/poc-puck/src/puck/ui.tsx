@@ -10,13 +10,14 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
+import { abrirFormulario } from "../form/abrir";
 import { safeImg } from "../lib/imagens";
 import { whatsHref } from "../lib/persona";
 import { formatarNumero, partesNumero } from "../lib/tempo";
 import { usePageCtx } from "./context";
 
 export type Fundo = "claro" | "escuro";
-export type Destino = "inscricao" | "whatsapp" | "link";
+export type Destino = "inscricao" | "formulario" | "whatsapp" | "link";
 
 /** A única variação visual permitida em qualquer peça. */
 export const fundoField = {
@@ -35,6 +36,7 @@ export const ctaFields = {
     label: "O botão leva para",
     options: [
       { label: "Formulário de inscrição da página", value: "inscricao" },
+      { label: "Formulário completo, em janela (modal)", value: "formulario" },
       { label: "WhatsApp (do licenciado, se vier no link)", value: "whatsapp" },
       { label: "Outro link", value: "link" },
     ],
@@ -173,6 +175,18 @@ export function Conta({ texto }: { texto: string }) {
 export function Cta({ botaoTexto, destino, link, mensagemWhats }: CtaProps) {
   const { persona } = usePageCtx();
   if (!botaoTexto) return null;
+  if (destino === "formulario") {
+    // Abre o formulário inteiro em modal; sem JavaScript (HTML estático), leva à seção de inscrição.
+    const abrir = (e: MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      abrirFormulario(e.currentTarget.ownerDocument, { completo: true });
+    };
+    return (
+      <a className="hs-btn" href="#inscricao" onClick={abrir}>
+        {botaoTexto}
+      </a>
+    );
+  }
   if (destino === "inscricao") {
     // Link de verdade (#inscricao): funciona sem JavaScript e o Google entende.
     // No painel da POC a rota usa "#", então o clique rola a página em vez de trocar o endereço.

@@ -10,6 +10,13 @@ const Editor = lazy(() => import("./screens/Editor").then((m) => ({ default: m.E
 const Convite = lazy(() => import("./screens/Convite").then((m) => ({ default: m.Convite })));
 const Inscricoes = lazy(() => import("./screens/Inscricoes").then((m) => ({ default: m.Inscricoes })));
 const NaoEncontrada = lazy(() => import("./screens/Shell").then((m) => ({ default: m.NaoEncontrada })));
+const Espaco = lazy(() => import("./screens/pagina/Espaco").then((m) => ({ default: m.Espaco })));
+const Formularios = lazy(() => import("./screens/formulario/Formularios").then((m) => ({ default: m.Formularios })));
+const Construtor = lazy(() => import("./screens/formulario/Construtor").then((m) => ({ default: m.Construtor })));
+const FormAvulso = lazy(() => import("./screens/FormAvulso").then((m) => ({ default: m.FormAvulso })));
+const Checkin = lazy(() => import("./screens/Checkin").then((m) => ({ default: m.Checkin })));
+const Ingresso = lazy(() => import("./screens/Ingresso").then((m) => ({ default: m.Ingresso })));
+const Numeros = lazy(() => import("./screens/Numeros").then((m) => ({ default: m.Numeros })));
 
 function Tela() {
   const r = useRoute();
@@ -26,6 +33,20 @@ function Tela() {
       return <Convite key={r.slug} slug={r.slug} />;
     case "inscricoes":
       return <Inscricoes />;
+    case "pagina":
+      return <Espaco key={r.id} id={r.id} aba={r.aba} />;
+    case "formularios":
+      return <Formularios />;
+    case "formulario":
+      return <Construtor key={r.id} id={r.id} query={r.query} />;
+    case "form":
+      return <FormAvulso key={r.id} id={r.id} query={r.query} />;
+    case "checkin":
+      return <Checkin key={r.id} id={r.id} />;
+    case "ingresso":
+      return <Ingresso key={r.codigo} codigo={r.codigo} />;
+    case "numeros":
+      return <Numeros key={`${r.slug}-${r.ref}`} slug={r.slug} ref_={r.ref} />;
     default:
       return <NaoEncontrada oQue="Tela" />;
   }

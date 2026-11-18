@@ -1,7 +1,10 @@
 import type { ComponentConfig } from "@puckeditor/core";
 import { useState, type CSSProperties, type FormEvent } from "react";
+import { FormCurto } from "../../../form/FormCurto";
+import { getFormulario } from "../../../lib/formularios";
 import { BotaoLima, Icone, rico, Seta, useHref, useLive } from "../../../live/ui";
 import { addSubmission } from "../../../lib/submissions";
+import { formularioField } from "../../fields/FormularioField";
 import { usePageCtx, useTokens } from "../../context";
 import { validarInscricao } from "../Inscricao";
 import { ctaFields, travaPermissions, type CtaProps } from "../../ui";
@@ -24,6 +27,8 @@ export type LiveInscricaoProps = CtaProps & {
   mensagemSucesso: string;
   nota: string;
   letreiro: string;
+  /** Formulário da biblioteca (Etapa 3). Vazio: os campos fixos de antes. */
+  formularioId?: string;
   travado?: boolean;
 };
 
@@ -33,7 +38,10 @@ const i = (n: number) => ({ style: { "--i": n } as CSSProperties });
 function View(p: LiveInscricaoProps) {
   const t = useTokens();
   const href = useHref();
-  const { mode, pageId, pageSlug, persona } = usePageCtx();
+  const { mode, pageId, pageSlug, persona, origem, inscricoes, estatico } = usePageCtx();
+  const form = estatico ? undefined : getFormulario(p.formularioId);
+  const fechada = inscricoes?.fechada;
+  const bloqueada = fechada === "encerrada" || (fechada === "esgotada" && !form?.regras.listaEspera);
   const ref = useLive<HTMLElement>("revelar");
   const [v, setV] = useState({ nome: "", whats: "", email: "", cidade: "", consent: false });
   const [erros, setErros] = useState<ReturnType<typeof validarInscricao>>({});
@@ -44,7 +52,7 @@ function View(p: LiveInscricaoProps) {
     const e = validarInscricao(v);
     setErros(e);
     if (Object.keys(e).length) return;
-    if (mode !== "publico") {
+    if (mode !== "publico" || fechada === "rascunho" || fechada === "agendada") {
       setStatus("previa");
       return;
     }
@@ -52,6 +60,8 @@ function View(p: LiveInscricaoProps) {
       pageId,
       pageSlug,
       ref: persona.ref,
+      origem,
+      consentimentoEm: Date.now(),
       nome: v.nome.trim(),
       whats: v.whats.replace(/\D/g, ""),
       email: v.email.trim(),
@@ -65,7 +75,38 @@ function View(p: LiveInscricaoProps) {
     ["pin", p.info2],
     ["ok", p.info3],
   ];
-  const vagas = Math.max(0, Math.min(100, Number(p.vagas) || 0));
+  // Com vagas definidas na página, a barra mostra o preenchimento de verdade.
+  const real = inscricoes?.vagas ? Math.round((inscricoes.inscritos / inscricoes.vagas) * 100) : null;
+  const vagas = Math.max(0, Math.min(100, real ?? (Number(p.vagas) || 0)));
+  const cabeca = (
+    <>
+      <div className="form-topo">
+        <span className="etiqueta">
+          <i />
+          Inscrição
+        </span>
+        {p.gratisTexto && <span className="gratis">{p.gratisTexto}</span>}
+      </div>
+      <h3>{t(p.formTitulo)}</h3>
+      {p.formTexto && <p>{p.formTexto}</p>}
+      {persona.ref && (
+        <p>
+          Convite de <strong>{persona.nome ?? persona.ref}</strong> (código {persona.ref})
+        </p>
+      )}
+      {vagas > 0 && (
+        <div className="vagas">
+          <div className="vagas-topo">
+            <span>Vagas preenchidas</span>
+            <b>{vagas}%</b>
+          </div>
+          <span className="vagas-barra">
+            <i style={{ "--p": `${vagas}%` } as CSSProperties} />
+          </span>
+        </div>
+      )}
+    </>
+  );
 
   return (
     <div className="lv">
@@ -105,7 +146,38 @@ function View(p: LiveInscricaoProps) {
               )}
             </div>
 
-            {status === "ok" ? (
+            {bloqueada ? (
+              <div className="form revela" {...i(2)} role="status">
+                <div className="form-topo">
+                  <span className="etiqueta">
+                    <i />
+                    Inscrição
+                  </span>
+                </div>
+                <h3>{fechada === "esgotada" ? "Vagas esgotadas" : "Inscrições encerradas"}</h3>
+                <p>{fechada === "esgotada" ? "Todas as vagas foram preenchidas. Obrigado pelo interesse!" : "Este evento não está recebendo inscrições agora."}</p>
+              </div>
+            ) : form ? (
+              <FormCurto
+                form={form}
+                pele="live"
+                className="form revela"
+                {...i(2)}
+                topo={cabeca}
+                botao={
+                  <button className="btn enviar" type="submit">
+                    <span>{p.enviarTexto || form.botaoPagina || "Continuar"}</span> <Seta />
+                  </button>
+                }
+                rodape={
+                  fechada === "rascunho" || fechada === "agendada" ? (
+                    <p className="nota">Página ainda não publicada: a inscrição não é gravada.</p>
+                  ) : (
+                    p.nota && <p className="nota">{p.nota}</p>
+                  )
+                }
+              />
+            ) : status === "ok" ? (
               <div className="form revela" {...i(2)} role="status">
                 <div className="form-topo">
                   <span className="etiqueta">
@@ -117,31 +189,7 @@ function View(p: LiveInscricaoProps) {
               </div>
             ) : (
               <form className="form revela" {...i(2)} onSubmit={enviar} noValidate method="post" data-form-inscricao>
-                <div className="form-topo">
-                  <span className="etiqueta">
-                    <i />
-                    Inscrição
-                  </span>
-                  {p.gratisTexto && <span className="gratis">{p.gratisTexto}</span>}
-                </div>
-                <h3>{t(p.formTitulo)}</h3>
-                {p.formTexto && <p>{p.formTexto}</p>}
-                {persona.ref && (
-                  <p>
-                    Convite de <strong>{persona.nome ?? persona.ref}</strong> (código {persona.ref})
-                  </p>
-                )}
-                {vagas > 0 && (
-                  <div className="vagas">
-                    <div className="vagas-topo">
-                      <span>Vagas preenchidas</span>
-                      <b>{vagas}%</b>
-                    </div>
-                    <span className="vagas-barra">
-                      <i style={{ "--p": `${vagas}%` } as CSSProperties} />
-                    </span>
-                  </div>
-                )}
+                {cabeca}
                 <div className="form-linha">
                   <label className="campo">
                     Nome
@@ -211,6 +259,7 @@ function View(p: LiveInscricaoProps) {
 export const LiveInscricao: ComponentConfig<LiveInscricaoProps> = {
   label: "Inscrição Live",
   fields: {
+    formularioId: formularioField("Formulário"),
     titulo1: { type: "text", label: "Título, primeira linha" },
     titulo2: { type: "text", label: "Título, segunda linha (cinza)" },
     texto: { type: "textarea", label: "Texto de apoio" },
@@ -222,7 +271,7 @@ export const LiveInscricao: ComponentConfig<LiveInscricaoProps> = {
     formTitulo: { type: "text", label: "Formulário: título" },
     formTexto: { type: "textarea", label: "Formulário: texto" },
     gratisTexto: { type: "text", label: "Formulário: aviso verde no topo" },
-    vagas: { type: "number", label: "Vagas preenchidas em % (0 = esconde a barra)" },
+    vagas: { type: "number", label: "Vagas preenchidas em % (0 = esconde; com vagas nas configurações da página, vale o número real)" },
     pedirCidade: {
       type: "radio",
       label: "Pedir cidade?",
@@ -259,6 +308,12 @@ export const LiveInscricao: ComponentConfig<LiveInscricaoProps> = {
     mensagemSucesso: "Pronto! A confirmação chega no seu WhatsApp.",
     nota: "Seus dados só servem para avisos deste evento.",
     letreiro: "Garanta seu lugar",
+  },
+  // Com formulário da biblioteca, "pedir cidade" e o texto do aceite vêm do formulário: saem do painel.
+  resolveFields: (data, { fields }) => {
+    if (!data.props.formularioId) return fields;
+    const { pedirCidade: _a, textoConsentimento: _b, ...resto } = fields;
+    return resto as typeof fields;
   },
   resolvePermissions: travaPermissions,
   render: (p) => <View {...p} />,

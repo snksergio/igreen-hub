@@ -1,12 +1,13 @@
 import { useEffect, type ReactNode } from "react";
 import "../app.css";
+import "./telas.css";
 import { Icone } from "../ui/Icone";
 import { BotaoTema } from "../ui/tema";
 
 export const TITULO_POC = "POC · Construtor de hotsites iGreen";
 
 /** Moldura das telas internas da POC (painel, convite, inscrições). */
-export function Shell({ ativo, children }: { ativo: "paginas" | "inscricoes" | "convite"; children: ReactNode }) {
+export function Shell({ ativo, children }: { ativo: "paginas" | "formularios" | "inscricoes" | "convite"; children: ReactNode }) {
   useEffect(() => {
     document.title = TITULO_POC;
   }, []);
@@ -25,9 +26,9 @@ export function Shell({ ativo, children }: { ativo: "paginas" | "inscricoes" | "
             <Icone nome="pagina" tamanho={16} />
             Páginas
           </a>
-          <a href="#/inscricoes" aria-current={ativo === "inscricoes" ? "page" : undefined}>
-            <Icone nome="pessoas" tamanho={16} />
-            Inscrições
+          <a href="#/formularios" aria-current={ativo === "formularios" ? "page" : undefined}>
+            <Icone nome="formulario" tamanho={16} />
+            Formulários
           </a>
         </nav>
         <div className="app-top-dir">

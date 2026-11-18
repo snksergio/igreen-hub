@@ -1,0 +1,477 @@
+/* Telas do painel, do espaço da página, dos formulários e do check-in.
+   Usa os mesmos tokens do app.css (--b-*), então o tema escuro vem junto. */
+
+/* ---------- Chips de status ---------- */
+.app .ch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--b-suave);
+  color: var(--b-apoio);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex: none;
+}
+.app .ch i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.app .ch:is([data-tom="publicada"], [data-tom="i-presente"], [data-tom="p-pago"]) {
+  background: var(--b-acento-suave);
+  color: var(--b-acento-forte);
+}
+.app .ch:is([data-tom="agendada"], [data-tom="i-confirmado"]) {
+  background: var(--b-info-suave);
+  color: var(--b-info);
+}
+.app .ch:is([data-tom="encerrada"], [data-tom="i-espera"], [data-tom="p-pendente"]) {
+  background: var(--b-aviso-suave);
+  color: var(--b-aviso);
+}
+.app .ch:is([data-tom="i-faltou"], [data-tom="p-estornado"]) {
+  background: var(--b-erro-suave);
+  color: var(--b-erro);
+}
+.app .ch:is([data-tom="arquivada"], [data-tom="p-cancelado"]) {
+  background: var(--b-trilho);
+  color: var(--b-fraco);
+}
+
+/* ---------- Avatar (uma inicial) ---------- */
+.app .av {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--b-acento-suave);
+  color: var(--b-acento-forte);
+  font-size: 11px;
+  font-weight: 700;
+  flex: none;
+}
+.app .av-g {
+  width: 36px;
+  height: 36px;
+  font-size: 15px;
+}
+
+/* ---------- Inscritos sobre vagas ---------- */
+.app .vg {
+  display: grid;
+  gap: 6px;
+}
+.app .vg-txt {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--b-apoio);
+  white-space: nowrap;
+}
+.app .vg-txt .ic {
+  color: var(--b-fraco);
+  margin-right: 2px;
+}
+.app .vg-txt b {
+  color: var(--b-texto);
+  font-weight: 600;
+}
+.app .vg-pct {
+  margin-left: auto;
+  padding-left: 8px;
+  font-size: 12px;
+  color: var(--b-fraco);
+  font-variant-numeric: tabular-nums;
+}
+.app .vg-barra {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--b-trilho);
+  overflow: hidden;
+}
+.app .vg-barra i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--b-acento);
+}
+.app .vg-barra i[data-cheio] {
+  background: var(--b-acento-forte);
+}
+.app .vg-c {
+  min-width: 150px;
+}
+
+/* ---------- Painel: abas de status e filtros ---------- */
+.pn-barra {
+  display: grid;
+  gap: 14px;
+}
+.pn-abas {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--b-linha-forte);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.pn-abas button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 12px 11px;
+  margin-bottom: -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--b-apoio);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.pn-abas button:hover {
+  color: var(--b-texto);
+}
+.pn-abas button[aria-pressed="true"] {
+  color: var(--b-texto);
+  border-bottom-color: var(--b-acento);
+}
+.pn-abas button:focus-visible {
+  outline: 2px solid var(--b-acento-vivo);
+  outline-offset: -2px;
+  border-radius: 8px 8px 0 0;
+}
+.pn-conta {
+  min-width: 20px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--b-trilho);
+  color: var(--b-apoio);
+  font-size: 11.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.pn-abas button[aria-pressed="true"] .pn-conta {
+  background: var(--b-acento-suave);
+  color: var(--b-acento-forte);
+}
+.pn-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.pn-busca {
+  flex: 1 1 220px;
+  max-width: 320px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--b-linha-forte);
+  border-radius: var(--b-r-p);
+  background: var(--b-painel);
+  color: var(--b-fraco);
+}
+.pn-busca:focus-within {
+  outline: 2px solid var(--b-acento-vivo);
+  outline-offset: 1px;
+}
+.pn-busca input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  background: none;
+  color: var(--b-texto);
+  font-size: 14px;
+  outline: none;
+}
+.app .pn-sel,
+.app .sel {
+  height: 40px;
+  padding: 0 32px 0 12px;
+  border: 1px solid var(--b-linha-forte);
+  border-radius: var(--b-r-p);
+  background: var(--b-painel)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='%239da1a9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")
+    no-repeat right 10px center;
+  color: var(--b-texto);
+  font-size: 13.5px;
+  appearance: none;
+  cursor: pointer;
+  max-width: 100%;
+}
+.app .pn-sel:focus-visible,
+.app .sel:focus-visible {
+  outline: 2px solid var(--b-acento-vivo);
+  outline-offset: 1px;
+}
+.pn-sep {
+  flex: 1 0 0;
+}
+.pn-filtros .seg {
+  padding: 3px;
+}
+.pn-vazio {
+  padding: 48px 24px;
+}
+
+/* ---------- Card da página (Etapa 1.1): todos da mesma altura ---------- */
+.pg-lista {
+  align-items: stretch;
+}
+.pg {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  border-radius: var(--b-r-g);
+  background: var(--b-painel);
+  border: 1px solid var(--b-linha);
+  box-shadow: var(--b-sombra);
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+.pg:hover {
+  border-color: var(--b-linha-forte);
+  box-shadow: 0 1px 2px rgba(17, 19, 24, 0.04), 0 14px 32px rgba(17, 19, 24, 0.1);
+  transform: translateY(-2px);
+}
+.pg:focus-visible {
+  outline: 2px solid var(--b-acento-vivo);
+  outline-offset: 2px;
+}
+.pg-thumb {
+  padding: 12px 12px 0;
+  background: var(--b-suave);
+}
+.pg-thumb .mini {
+  border-radius: 10px 10px 0 0;
+  border-bottom: 0;
+  box-shadow: 0 -1px 0 var(--b-linha), 0 8px 18px rgba(17, 19, 24, 0.08);
+}
+.pg-corpo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 14px 16px 0;
+  border-top: 1px solid var(--b-linha);
+}
+.pg-topo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  margin-bottom: 8px;
+}
+.pg-modelo {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--b-fraco);
+}
+.app .pg-mais {
+  width: 28px;
+  height: 28px;
+  margin-right: -6px;
+  border-color: transparent;
+  background: transparent;
+  color: var(--b-apoio);
+}
+.app .pg-mais:hover,
+.app .pg-mais[aria-expanded="true"] {
+  background: var(--b-suave);
+  border-color: var(--b-linha-forte);
+}
+.pg-titulo {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  /* sempre a altura de duas linhas: título curto e longo deixam o card igual */
+  min-height: calc(2 * 1.3em);
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  overflow-wrap: anywhere;
+}
+.pg-data {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--b-texto);
+}
+.pg-data .ic {
+  color: var(--b-acento-forte);
+}
+.pg-data-vazia {
+  color: var(--b-fraco);
+  font-weight: 400;
+}
+.pg-data-vazia .ic {
+  color: var(--b-fraco);
+}
+.pg-slug {
+  margin-top: 2px;
+  padding-left: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--b-fraco);
+}
+.pg-corpo .vg {
+  margin-top: auto;
+  padding-top: 14px;
+}
+.pg-pe {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 12px 16px 14px;
+  border-top: 1px solid var(--b-linha);
+}
+.pg-atalhos {
+  display: flex;
+  gap: 6px;
+}
+.app .pg-atalhos .bt-p {
+  height: 32px;
+  gap: 6px;
+}
+.app .pg-atalhos .bt-ic {
+  width: 32px;
+  padding: 0;
+}
+.pg-resp {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: 12.5px;
+  color: var(--b-apoio);
+  white-space: nowrap;
+}
+.pg-resp-mais {
+  font-size: 11.5px;
+  color: var(--b-fraco);
+}
+
+/* ---------- Painel em lista (Etapa 1.4) ---------- */
+.app .pn-tabela-card {
+  padding: 0;
+  overflow-x: auto;
+}
+.pn-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+.pn-tabela th {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--b-linha);
+  color: var(--b-apoio);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+.pn-tabela td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--b-linha);
+  vertical-align: middle;
+}
+.pn-tabela tbody tr {
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.pn-tabela tbody tr:hover {
+  background: var(--b-suave);
+}
+.pn-tabela tbody tr:focus-visible {
+  outline: 2px solid var(--b-acento-vivo);
+  outline-offset: -2px;
+}
+.pn-tabela tbody tr:last-child td {
+  border-bottom: 0;
+}
+.pn-pagina {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 260px;
+}
+.pn-mini {
+  width: 76px;
+  flex: none;
+}
+.pn-mini .mini {
+  border-radius: 6px;
+}
+.pn-pagina-txt {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.pn-pagina-txt strong {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+}
+.pn-pagina-txt span {
+  font-size: 12px;
+  color: var(--b-fraco);
+}
+.pn-nowrap {
+  white-space: nowrap;
+}
+.pn-fraco {
+  color: var(--b-fraco);
+}
+.pn-acoes {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+.pn-acoes .pg-atalhos .bt-p:first-child {
+  width: 32px;
+  padding: 0;
+}
+@media (max-width: 960px) {
+  .pn-tabela :is(th, td):nth-child(5),
+  .pn-tabela :is(th, td):nth-child(6) {
+    display: none;
+  }
+}
+@media (max-width: 640px) {
+  .pn-busca {
+    max-width: none;
+    flex-basis: 100%;
+  }
+  .pn-sep {
+    display: none;
+  }
+}

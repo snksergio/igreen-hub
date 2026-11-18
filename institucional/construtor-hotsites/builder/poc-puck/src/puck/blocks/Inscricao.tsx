@@ -1,6 +1,9 @@
 import type { ComponentConfig } from "@puckeditor/core";
 import { useState, type FormEvent } from "react";
+import { FormCurto } from "../../form/FormCurto";
+import { getFormulario } from "../../lib/formularios";
 import { addSubmission } from "../../lib/submissions";
+import { formularioField } from "../fields/FormularioField";
 import { usePageCtx, useTokens } from "../context";
 import { fundoField, r, Section, travaPermissions, type Fundo } from "../ui";
 
@@ -14,6 +17,8 @@ export type InscricaoProps = {
   botaoTexto: string;
   mensagemSucesso: string;
   fundo: Fundo;
+  /** Formulário da biblioteca (Etapa 3). Vazio: os campos fixos de antes. */
+  formularioId?: string;
   travado?: boolean;
 };
 
@@ -32,7 +37,11 @@ export function validarInscricao(v: { nome: string; whats: string; email: string
 
 function View(p: InscricaoProps) {
   const t = useTokens();
-  const { mode, pageId, pageSlug, persona } = usePageCtx();
+  const { mode, pageId, pageSlug, persona, origem, inscricoes, estatico } = usePageCtx();
+  const form = estatico ? undefined : getFormulario(p.formularioId);
+  const fechada = inscricoes?.fechada;
+  const bloqueada = fechada === "encerrada" || (fechada === "esgotada" && !form?.regras.listaEspera);
+  const naoPublicada = fechada === "rascunho" || fechada === "agendada";
   const [v, setV] = useState({ nome: "", whats: "", email: "", cidade: "", interesse: "", consent: false });
   const [erros, setErros] = useState<Erros>({});
   const [status, setStatus] = useState<"idle" | "ok" | "previa">("idle");
@@ -46,7 +55,7 @@ function View(p: InscricaoProps) {
     const e = validarInscricao(v);
     setErros(e);
     if (Object.keys(e).length) return;
-    if (mode !== "publico") {
+    if (mode !== "publico" || naoPublicada) {
       setStatus("previa");
       return;
     }
@@ -54,6 +63,8 @@ function View(p: InscricaoProps) {
       pageId,
       pageSlug,
       ref: persona.ref,
+      origem,
+      consentimentoEm: Date.now(),
       nome: v.nome.trim(),
       whats: v.whats.replace(/\D/g, ""),
       email: v.email.trim(),
@@ -61,6 +72,46 @@ function View(p: InscricaoProps) {
       interesse: v.interesse || undefined,
     });
     setStatus("ok");
+  }
+
+  if (bloqueada) {
+    return (
+      <Section id="inscricao" fundo={p.fundo} travado={p.travado}>
+        <div className="hs-form hs-form--ok" role="status">
+          <h2 className="hs-h2">{fechada === "esgotada" ? "Vagas esgotadas" : "Inscrições encerradas"}</h2>
+          <p>{fechada === "esgotada" ? "Todas as vagas foram preenchidas. Obrigado pelo interesse!" : "Este evento não está recebendo inscrições agora."}</p>
+        </div>
+      </Section>
+    );
+  }
+
+  if (form) {
+    return (
+      <Section id="inscricao" fundo={p.fundo} travado={p.travado}>
+        <FormCurto
+          form={form}
+          pele="hs"
+          className="hs-form"
+          topo={
+            <>
+              <h2 className="hs-h2">{t(p.titulo)}</h2>
+              {p.texto && <p>{t(p.texto)}</p>}
+              {persona.ref && (
+                <p className="hs-note">
+                  Convite de <strong>{persona.nome ?? persona.ref}</strong> (código {persona.ref})
+                </p>
+              )}
+            </>
+          }
+          botao={
+            <button className="hs-btn" type="submit">
+              {p.botaoTexto || form.botaoPagina || "Continuar"}
+            </button>
+          }
+          rodape={naoPublicada && <p className="hs-note">Página ainda não publicada: a inscrição não é gravada.</p>}
+        />
+      </Section>
+    );
   }
 
   if (status === "ok") {
@@ -134,6 +185,7 @@ function View(p: InscricaoProps) {
 export const Inscricao: ComponentConfig<InscricaoProps> = {
   label: "Inscrição (formulário)",
   fields: {
+    formularioId: formularioField("Formulário"),
     titulo: { type: "text", label: "Título (aceita {nome} e {cidade})" },
     texto: { type: "textarea", label: "Texto de apoio" },
     pedirCidade: {
@@ -162,6 +214,12 @@ export const Inscricao: ComponentConfig<InscricaoProps> = {
     botaoTexto: "Quero participar",
     mensagemSucesso: "Inscrição recebida. Te esperamos lá!",
     fundo: "claro",
+  },
+  // Com formulário da biblioteca, os campos fixos antigos (cidade, interesse, consentimento) não valem: saem do painel.
+  resolveFields: (data, { fields }) => {
+    if (!data.props.formularioId) return fields;
+    const { pedirCidade: _a, rotuloInteresse: _b, opcoesInteresse: _c, textoConsentimento: _d, ...resto } = fields;
+    return resto as typeof fields;
   },
   resolvePermissions: travaPermissions,
   render: (p) => <View {...p} />,

@@ -1,6 +1,7 @@
 import type { Data } from "@puckeditor/core";
 import { EXAMPLES, TEMPLATES } from "../templates";
 import { slugify, uid } from "./slug";
+import type { MetaPagina } from "./meta";
 import { readJSON, writeJSON } from "./store";
 
 export type PageRecord = {
@@ -10,6 +11,8 @@ export type PageRecord = {
   templateId: string;
   data: Data;
   updatedAt: number;
+  /** Status, datas e configurações. Página antiga, sem meta, conta como publicada. */
+  meta?: MetaPagina;
 };
 
 const KEY = "poc-hotsite:pages";
@@ -119,7 +122,7 @@ export function savePage(page: PageRecord): PageRecord & { persistido: boolean }
   return { ...next, persistido: store(pages) };
 }
 
-function insert(title: string, templateId: string, data: Data, slugBase = title): PageRecord {
+function insert(title: string, templateId: string, data: Data, slugBase = title, meta: MetaPagina = { status: "rascunho" }): PageRecord {
   const pages = load();
   const page: PageRecord = {
     id: uid(),
@@ -128,6 +131,7 @@ function insert(title: string, templateId: string, data: Data, slugBase = title)
     templateId,
     data: freshIds(data),
     updatedAt: Date.now(),
+    meta,
   };
   store([...pages, page]);
   return page;
@@ -143,7 +147,54 @@ export function createPage(templateId: string, title: string): PageRecord {
 export function duplicatePage(id: string): PageRecord {
   const src = getPage(id);
   if (!src) throw new Error("Página não encontrada");
-  return insert(src.title, src.templateId, src.data);
+  // A cópia nasce rascunho, com as mesmas configurações; as datas de publicar e encerrar não vêm junto.
+  const { publicarEm: _p, encerrarEm: _e, ...resto } = src.meta ?? { status: "publicada" };
+  return insert(src.title, src.templateId, src.data, src.title, { ...resto, status: "rascunho" });
+}
+
+/** Junta as mudanças na meta da página (status, datas, vagas, responsáveis…). */
+export function setMeta(id: string, patch: Partial<MetaPagina>): PageRecord {
+  const pages = load();
+  const page = pages.find((p) => p.id === id);
+  if (!page) throw new Error("Página não encontrada");
+  page.meta = { status: "publicada", ...(page.meta ?? {}), ...patch };
+  page.updatedAt = Date.now();
+  store(pages);
+  return page;
+}
+
+/** Nome da página no painel e campos do root (título no Google, descrição, imagem, indexar). */
+export function atualizarPagina(id: string, mudar: { title?: string; root?: Record<string, unknown> }): PageRecord {
+  const pages = load();
+  const page = pages.find((p) => p.id === id);
+  if (!page) throw new Error("Página não encontrada");
+  if (mudar.title !== undefined) page.title = mudar.title.trim() || page.title;
+  if (mudar.root) {
+    const root = (page.data.root ?? {}) as { props?: Record<string, unknown> };
+    page.data = { ...page.data, root: { ...root, props: { ...(root.props ?? {}), ...mudar.root } } as Data["root"] };
+  }
+  page.updatedAt = Date.now();
+  store(pages);
+  return page;
+}
+
+type Peca = { type: string; props: Record<string, unknown> };
+
+/** Troca props de peças da página (ex.: o formulário que a peça de inscrição usa). */
+export function atualizarPecas(id: string, mudar: (peca: Peca) => Record<string, unknown> | undefined): void {
+  const pages = load();
+  const page = pages.find((p) => p.id === id);
+  if (!page) return;
+  let mudou = false;
+  const content = (page.data.content ?? []).map((c) => {
+    const novo = mudar(c as unknown as Peca);
+    if (!novo) return c;
+    mudou = true;
+    return { ...c, props: { ...c.props, ...novo } };
+  });
+  if (!mudou) return;
+  page.data = { ...page.data, content };
+  store(pages);
 }
 
 export function deletePage(id: string): void {

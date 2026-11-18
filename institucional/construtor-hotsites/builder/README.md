@@ -19,11 +19,18 @@ O resultado publicado (o app compilado, as páginas estáticas e a landing) fica
 - SEO a partir das peças: título, descrição, Open Graph e dados estruturados (Event, FAQPage, Organization).
 - HTML estático de cada página (o que o MVP publicaria), com sitemap, robots.txt e llms.txt.
 - Ao escolher um campo na Estrutura ou no painel da direita, a prévia contorna em rosa o elemento que mostra aquele valor.
+- **Etapas 1 a 5 do roteiro de construção (2026-11-18):**
+  - **Painel:** cards da mesma altura (título em até duas linhas, data do evento numa linha própria, endereço, botões no pé), status, inscritos sobre vagas, busca, filtros que combinam (status, modelo, data do evento, responsável), ordem e grade ou lista. O clique no card abre o espaço da página.
+  - **Espaço da página** (`#/pagina/<id ou endereço>`): visão geral com link, QR code e atalhos; inscrições só da página, com filtros, status, detalhe, CSV e ações em lote; resultados com visitas, conversão, funil, origem e ranking de licenciados; links de licenciado com a tela de números que o licenciado vê; configurações (nome, endereço, compartilhamento, publicar, agendar, encerrar, aberto ou fechado, responsáveis, GA4 e Meta, mensagens). O status vale na página pública.
+  - **Formulários** (`#/formularios`): biblioteca reaproveitável, construtor com tipos de campo, ajustes, etapas, lógica e regras, três modelos, versão curta na página e o resto em modal, modal direto por qualquer botão e endereço próprio (`#/f/<id>?pagina=<endereço>`). As inscrições mostram uma coluna por campo, também no CSV.
+  - **Pagamento simulado:** preço único, lotes por data, cupom e meia-entrada; tela que imita o meio de pagamento, com aprovar e recusar; status pendente, pago, cancelado e estornado. Evento gratuito pula o pagamento.
+  - **Comunicação simulada:** texto da confirmação e do lembrete (com quando sairia), adicionar à agenda, ingresso com QR code (`#/ingresso/<código>`) e check-in no celular (`#/checkin/<id ou endereço>`).
+  - **Dados de exemplo:** inscrições, visitas e links fictícios (e-mails em `exemplo.com`) para as páginas de exemplo, semeados uma vez por navegador. "Restaurar exemplos" refaz tudo.
 
 **Pela metade ou só ideia**
 
-- A aba Inscrições é uma lista crua. A ideia combinada é cada card de página levar a uma tela própria, com as inscrições, números e, depois, dados de visita daquela página.
-- Tudo fica no navegador (localStorage): sem login, sem servidor, sem publicação de verdade.
+- Tudo fica no navegador (localStorage): sem login, sem servidor, sem publicação de verdade. Nada é enviado: mensagens e pagamento são simulação.
+- A antiga aba geral Inscrições (`#/inscricoes`) saiu do menu (as inscrições agora ficam no espaço de cada página), mas o endereço ainda abre.
 
 ## Decisões tomadas
 
@@ -35,11 +42,19 @@ O resultado publicado (o app compilado, as páginas estáticas e a landing) fica
 - **Mapa do Brasil só com Minas acesa** e **mapa do local como desenho fixo**: só os textos mudam.
 - **Exemplo novo entra uma vez** para quem já tinha páginas salvas; apagado, não volta.
 - **Destaque de campo em rosa**, para não confundir com o verde da seção selecionada no Puck.
+- **Formulário separado da página (0.1).** A peça de inscrição só aponta para um formulário da biblioteca; as respostas ficam separadas por página. Nome, WhatsApp e o aceite de LGPD não saem do formulário, porque a lista, o check-in e o consentimento dependem deles.
+- **Vagas e encerramento:** os da página valem antes dos do formulário, porque o mesmo formulário pode servir a eventos de tamanhos diferentes.
+- **O licenciado vê só números (0.2):** visitas, inscrições, conversão e presentes do link dele, nunca nome ou contato.
+- **Publicação sem aprovação (0.4):** quem tem acesso ao construtor publica, agenda e encerra direto.
+- **Pagamento (0.3):** a meia-entrada é metade do preço do lote e o cupom vale depois da meia. Recusa deixa a inscrição pendente. Na POC não há campo de cartão: a tela só imita o meio de pagamento.
+- **Visitas contam uma vez por aba** e só com a página no ar. Página rascunho ou agendada mostra um aviso no topo e o formulário funciona como prévia, sem gravar.
 - **Escolhas de quem usa a POC:** a landing segue o visual do site iGreen Live (Instrument Sans, fundo #010702, limão #A8FF35, textura de pontos). Os pedidos e ajustes da conversa que gerou o kit não estão escritos em outro lugar além deste README e dos comentários no código.
 
 ## Pendências e perguntas em aberto
 
-- Tela de inscrições por projeto, com números e ações (status, check-in, ranking de licenciados). Não começou.
+- Etapas 6 (ajustes do kit Live e qualidade) e 7 (o que o projeto real precisa) do roteiro de construção.
+- O HTML estático continua com o formulário fixo antigo (nome, WhatsApp, e-mail, cidade): o formulário da biblioteca, o modal e o pagamento rodam só no app.
+- O check-in é por busca (nome, código ou final do WhatsApp); ler o QR code pela câmera fica para o projeto real.
 - No celular, o botão de menu do topo da Abertura Live não abre nada (igual à landing).
 - O mapa do Brasil só sabe destacar Minas Gerais.
 - O Vídeo Live aceita `.mp4`, não link do YouTube.
@@ -69,6 +84,10 @@ Para publicar uma mudança, siga a seção 5 do [ORQUESTRADOR.md](../../../ORQUE
 | [`poc-puck/src/live/`](poc-puck/src/live/) | O que o kit compartilha: CSS (`live.css`), comportamentos e utilitários |
 | [`poc-puck/src/templates.ts`](poc-puck/src/templates.ts) | Modelos e exemplos |
 | [`poc-puck/src/screens/editor/`](poc-puck/src/screens/editor/) | O editor por cima do Puck (topo, Estrutura, destaque de campo na prévia) |
+| [`poc-puck/src/screens/pagina/`](poc-puck/src/screens/pagina/) | Espaço da página: visão geral, inscrições, resultados, links e configurações |
+| [`poc-puck/src/screens/formulario/`](poc-puck/src/screens/formulario/) | Biblioteca e construtor de formulário |
+| [`poc-puck/src/form/`](poc-puck/src/form/) | O formulário que roda na página: versão curta, modal, pagamento simulado e confirmação |
+| [`poc-puck/src/lib/`](poc-puck/src/lib/) | Regras sem tela: páginas, status, formulários, ingresso, inscrições, visitas, links e os dados de exemplo (`exemplo.ts`) |
 | [`poc-puck/mockups/landing-evento.html`](poc-puck/mockups/landing-evento.html) | A landing iGreen Live de um arquivo só, de onde saiu o kit. A cópia de segurança está ao lado |
 | [`README-original.md`](README-original.md) | O README da pasta original, como estava |
 

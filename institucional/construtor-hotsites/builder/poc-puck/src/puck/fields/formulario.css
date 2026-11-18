@@ -1,0 +1,45 @@
+/* Campo "Formulário" das peças de inscrição, no painel da direita do editor. */
+.ff {
+  display: grid;
+  gap: 8px;
+}
+.ff-sel {
+  width: 100%;
+  height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--b-linha-forte, #e1e2e6);
+  border-radius: var(--b-r-p, 10px);
+  background: var(--b-painel, #fff);
+  color: var(--b-texto, #17181c);
+  font: inherit;
+  font-size: 13.5px;
+}
+.ff-sel:focus-visible {
+  outline: 2px solid var(--b-acento-vivo, #00a859);
+  outline-offset: 1px;
+}
+.ff-resumo {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--b-apoio, #6d717a);
+}
+.ff-resumo a {
+  color: var(--b-acento-forte, #007a3d);
+  font-weight: 600;
+}
+.ff-bt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  border-radius: var(--b-r-p, 10px);
+  background: var(--b-acento, #00a859);
+  color: var(--b-sobre-acento, #fff);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.ff-bt:hover {
+  background: var(--b-acento-hover, #009a51);
+}

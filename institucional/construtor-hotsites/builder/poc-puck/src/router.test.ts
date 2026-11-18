@@ -22,6 +22,19 @@ describe("parseHash", () => {
   });
 });
 
+describe("rotas do espaço da página, formulários e check-in", () => {
+  it("reconhece aba, formulário, check-in, ingresso e números do licenciado", () => {
+    expect(parseHash("#/pagina/abc")).toEqual({ name: "pagina", id: "abc", aba: "visao" });
+    expect(parseHash("#/pagina/abc/links")).toEqual({ name: "pagina", id: "abc", aba: "links" });
+    expect(parseHash("#/pagina/abc/xyz")).toEqual({ name: "pagina", id: "abc", aba: "visao" });
+    expect(parseHash("#/formularios")).toEqual({ name: "formularios" });
+    expect(parseHash("#/f/f-1?pagina=live").name).toBe("form");
+    expect(parseHash("#/checkin/abc")).toEqual({ name: "checkin", id: "abc" });
+    expect(parseHash("#/ingresso/AB23CD")).toEqual({ name: "ingresso", codigo: "AB23CD" });
+    expect(parseHash("#/numeros/live/LIC1")).toEqual({ name: "numeros", slug: "live", ref: "LIC1" });
+  });
+});
+
 describe("rota de nova página", () => {
   it("reconhece #/nova", () => {
     expect(parseHash("#/nova")).toEqual({ name: "nova" });

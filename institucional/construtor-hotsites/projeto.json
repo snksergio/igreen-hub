@@ -1,15 +1,64 @@
 {
   "nome": "Construtor de hotsites de evento",
-  "descricao": "POC do construtor de hotsites de evento da iGreen: o marketing monta a página com peças prontas, o licenciado gera o próprio link e as inscrições ficam numa lista. Inclui o kit premium iGreen Live.",
+  "descricao": "POC do construtor de hotsites de evento da iGreen: páginas com peças prontas, um espaço por evento (inscrições, resultados, licenciados), formulários com ingresso, pagamento simulado e check-in.",
   "tipo": "poc",
   "atualizado": "2026-11-18",
   "paginas": [
-    { "nome": "Construtor: painel de páginas", "arquivo": "index.html" },
-    { "nome": "Demo iGreen Live BH", "arquivo": "index.html#/p/igreen-live-bh" },
-    { "nome": "Nova página com modelo", "arquivo": "index.html#/nova" },
-    { "nome": "Inscrições recebidas", "arquivo": "index.html#/inscricoes" },
-    { "nome": "Template da landing iGreen Live", "arquivo": "mockups/landing-evento.html" },
-    { "nome": "Página publicada em HTML estático", "arquivo": "estatico/igreen-live-bh/index.html" }
+    {
+      "nome": "Construtor: painel de páginas",
+      "arquivo": "index.html"
+    },
+    {
+      "nome": "Espaço da página: iGreen Live BH",
+      "arquivo": "index.html#/pagina/igreen-live-bh"
+    },
+    {
+      "nome": "Resultados e ranking de licenciados",
+      "arquivo": "index.html#/pagina/igreen-live-bh/resultados"
+    },
+    {
+      "nome": "Demo iGreen Live BH (inscrição em modal)",
+      "arquivo": "index.html#/p/igreen-live-bh"
+    },
+    {
+      "nome": "Evento pago com ingresso",
+      "arquivo": "index.html#/p/evento-thiago-bh"
+    },
+    {
+      "nome": "Construtor de formulário",
+      "arquivo": "index.html#/formulario/f-igreen-live-bh"
+    },
+    {
+      "nome": "Check-in no celular",
+      "arquivo": "index.html#/checkin/evento-thiago-bh"
+    },
+    {
+      "nome": "Nova página com modelo",
+      "arquivo": "index.html#/nova"
+    },
+    {
+      "nome": "Template da landing iGreen Live",
+      "arquivo": "mockups/landing-evento.html"
+    },
+    {
+      "nome": "Página publicada em HTML estático",
+      "arquivo": "estatico/igreen-live-bh/index.html"
+    }
   ],
-  "tags": ["page builder", "hotsite", "evento", "editor visual", "landing", "inscrição", "licenciado", "seo", "igreen live", "template"]
+  "tags": [
+    "page builder",
+    "hotsite",
+    "evento",
+    "editor visual",
+    "landing",
+    "inscrição",
+    "formulário",
+    "ingresso",
+    "check-in",
+    "licenciado",
+    "analytics",
+    "seo",
+    "igreen live",
+    "template"
+  ]
 }

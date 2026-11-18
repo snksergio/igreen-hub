@@ -115,6 +115,82 @@ const DESENHOS = {
       <path d="M3 9.5h18M8 2.5v4M16 2.5v4" />
     </>
   ),
+  busca: (
+    <>
+      <circle cx="11" cy="11" r="6.5" />
+      <path d="M20 20l-4.2-4.2" />
+    </>
+  ),
+  grade: (
+    <>
+      <rect x="3.5" y="3.5" width="7" height="7" rx="1.5" />
+      <rect x="13.5" y="3.5" width="7" height="7" rx="1.5" />
+      <rect x="3.5" y="13.5" width="7" height="7" rx="1.5" />
+      <rect x="13.5" y="13.5" width="7" height="7" rx="1.5" />
+    </>
+  ),
+  arquivar: (
+    <>
+      <rect x="3" y="4" width="18" height="5" rx="1.5" />
+      <path d="M5 9v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9M10 13h4" />
+    </>
+  ),
+  lapis: <path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4" />,
+  qr: (
+    <>
+      <rect x="3.5" y="3.5" width="6" height="6" rx="1" />
+      <rect x="14.5" y="3.5" width="6" height="6" rx="1" />
+      <rect x="3.5" y="14.5" width="6" height="6" rx="1" />
+      <path d="M14.5 14.5h2.5v2.5M20.5 14.5v.01M14.5 20.5h.01M17.5 20.5h3v-3" />
+    </>
+  ),
+  ingresso: <path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2.5a2.5 2.5 0 0 0 0 5V17a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2.5a2.5 2.5 0 0 0 0-5zM14 5v2M14 11v2M14 17v2" />,
+  ajustes: (
+    <>
+      <path d="M4 7h9M17 7h3M4 17h3M11 17h9" />
+      <circle cx="15" cy="7" r="2" />
+      <circle cx="9" cy="17" r="2" />
+    </>
+  ),
+  relogio: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 7.5V12l3 2" />
+    </>
+  ),
+  pin: (
+    <>
+      <path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z" />
+      <circle cx="12" cy="9.5" r="2.5" />
+    </>
+  ),
+  formulario: (
+    <>
+      <rect x="4" y="3.5" width="16" height="17" rx="2" />
+      <path d="M8 8h8M8 12h8M8 16h5" />
+    </>
+  ),
+  seta: <path d="M5 12h14M13 6l6 6-6 6" />,
+  cima: <path d="M6 15l6-6 6 6" />,
+  mensagem: <path d="M4 5.5h16v10H9.5L4 19.5z" />,
+  alerta: (
+    <>
+      <path d="M12 4l9 16H3z" />
+      <path d="M12 10v4M12 17h.01" />
+    </>
+  ),
+  cartao: (
+    <>
+      <rect x="2.5" y="5.5" width="19" height="13" rx="2" />
+      <path d="M2.5 10h19M6 15h4" />
+    </>
+  ),
+  usuario: (
+    <>
+      <circle cx="12" cy="8.5" r="3.5" />
+      <path d="M5 20c.8-3.5 3.6-5.5 7-5.5s6.2 2 7 5.5" />
+    </>
+  ),
 } satisfies Record<string, ReactNode>;
 
 export type NomeIcone = keyof typeof DESENHOS;

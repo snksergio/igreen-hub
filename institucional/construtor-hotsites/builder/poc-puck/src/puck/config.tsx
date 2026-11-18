@@ -8,6 +8,7 @@ import { ContatoConsultor, type ContatoConsultorProps } from "./blocks/ContatoCo
 import { Depoimentos, type DepoimentosProps } from "./blocks/Depoimentos";
 import { FaixaAnimada, type FaixaAnimadaProps } from "./blocks/FaixaAnimada";
 import { Galeria, type GaleriaProps } from "./blocks/Galeria";
+import { HostFormulario } from "../form/Modal";
 import { Inscricao, type InscricaoProps } from "./blocks/Inscricao";
 import { ItensNumerados, type ItensNumeradosProps } from "./blocks/ItensNumerados";
 import { LinhaDoTempo, type LinhaDoTempoProps } from "./blocks/LinhaDoTempo";
@@ -88,6 +89,7 @@ function Pagina({ children, animacoes, moldura }: { children?: React.ReactNode; 
     return (
       <div className="hs hs--sem-moldura" data-anim={animacoes === "off" ? "off" : "on"}>
         <main>{children}</main>
+        <HostFormulario />
       </div>
     );
   return (
@@ -105,6 +107,7 @@ function Pagina({ children, animacoes, moldura }: { children?: React.ReactNode; 
           · Política de privacidade · Encarregado de dados (DPO): a definir
         </span>
       </footer>
+      <HostFormulario />
     </div>
   );
 }
