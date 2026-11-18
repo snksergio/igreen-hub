@@ -4,8 +4,8 @@
   "tipo": "poc",
   "atualizado": "2026-11-18",
   "paginas": [
+    { "nome": "Construtor: painel de páginas", "arquivo": "index.html" },
     { "nome": "Demo iGreen Live BH", "arquivo": "index.html#/p/igreen-live-bh" },
-    { "nome": "Painel de páginas", "arquivo": "index.html" },
     { "nome": "Nova página com modelo", "arquivo": "index.html#/nova" },
     { "nome": "Inscrições recebidas", "arquivo": "index.html#/inscricoes" },
     { "nome": "Template da landing iGreen Live", "arquivo": "mockups/landing-evento.html" },
