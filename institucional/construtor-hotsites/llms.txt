@@ -1,0 +1,9 @@
+# Eventos iGreen Energy
+
+> Páginas oficiais de eventos e campanhas da iGreen Energy. Dados de data, local e organizador estão marcados em schema.org (Event) em cada página.
+
+## Páginas
+- [iGreen Live BH · 12 de dezembro no Expominas](https://igreen-hub.pages.dev/institucional/construtor-hotsites/estatico/igreen-live-bh/): Uma noite com quem já transformou conta de luz em renda: palestras, conexões e o próximo passo na iGreen. Entrada gratuita, vagas limitadas.
+- [Encontro iGreen em Belo Horizonte](https://igreen-hub.pages.dev/institucional/construtor-hotsites/estatico/evento-thiago-bh/): Encontro gratuito em Belo Horizonte para conhecer os produtos da iGreen: energia, telecom, seguros e mobilidade. Vagas limitadas.
+- [Live de lançamento iGreen MOB](https://igreen-hub.pages.dev/institucional/construtor-hotsites/estatico/live-mobi/): Live de lançamento da iGreen MOB no YouTube: a oportunidade da mobilidade elétrica, os modelos de eletroposto e como participar.
+- [Migre a bandeira do seu eletroposto](https://igreen-hub.pages.dev/institucional/construtor-hotsites/estatico/migre-a-bandeira/): Leve seu eletroposto para a rede iGreen MOB e ganhe com recargas, energia, seguros e telefonia dos clientes que se conectam.

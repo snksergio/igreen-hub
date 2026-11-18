@@ -1,0 +1,986 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%23020604%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%277%27 fill=%27%23a8ff35%27/%3E%3C/svg%3E">
+<title>Migre a bandeira do seu eletroposto</title>
+<meta name="description" content="Leve seu eletroposto para a rede iGreen MOB e ganhe com recargas, energia, seguros e telefonia dos clientes que se conectam.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://igreen-hub.pages.dev/institucional/construtor-hotsites/estatico/migre-a-bandeira/">
+<meta name="theme-color" content="#020604">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="iGreen Energy">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Migre a bandeira do seu eletroposto">
+<meta property="og:description" content="Leve seu eletroposto para a rede iGreen MOB e ganhe com recargas, energia, seguros e telefonia dos clientes que se conectam.">
+<meta property="og:url" content="https://igreen-hub.pages.dev/institucional/construtor-hotsites/estatico/migre-a-bandeira/">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://snksergio.github.io/igreen-hub/mob/live-lancamento/img/pre-cadastro/solto-mobi.webp">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"iGreen Energy","url":"https://www.igreenenergy.com.br"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Migre a bandeira do seu eletroposto","description":"Leve seu eletroposto para a rede iGreen MOB e ganhe com recargas, energia, seguros e telefonia dos clientes que se conectam.","url":"https://igreen-hub.pages.dev/institucional/construtor-hotsites/estatico/migre-a-bandeira/","inLanguage":"pt-BR"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Preciso trocar meu carregador?","acceptedAnswer":{"@type":"Answer","text":"Resposta a confirmar com o time iGreen MOB."}},{"@type":"Question","name":"Quando o dinheiro das recargas entra no caixa?","acceptedAnswer":{"@type":"Answer","text":"Resposta a confirmar com o time iGreen MOB."}},{"@type":"Question","name":"Quem faz a manutenção?","acceptedAnswer":{"@type":"Answer","text":"Resposta a confirmar com o time iGreen MOB."}},{"@type":"Question","name":"Os valores do simulador são garantidos?","acceptedAnswer":{"@type":"Answer","text":"Não. São ilustrativos e dependem da operação do seu ponto."}}]}</script>
+<style>/* POC: estilo mínimo de propósito. Cores tiradas dos hotsites de referência. */
+:root {
+  --verde: #a8ff35;
+  --verde-escuro: #3d7a00;
+  --escuro: #020604;
+  --escuro-2: #0d1a10;
+  --claro: #f5f9f0;
+  --branco: #ffffff;
+  --texto: #142016;
+  --muted: #5b6b5e;
+  --linha: #dbe5d6;
+  --erro: #b42318;
+  --raio: 14px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--texto);
+  background: var(--claro);
+}
+
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ================= Hotsite (o que o visitante vê) ================= */
+.hs {
+  min-height: 100vh;
+  background: var(--claro);
+}
+.hs-top,
+.hs-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--escuro);
+  color: var(--claro);
+}
+.hs-foot {
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: #b8c6b5;
+}
+.hs-foot a {
+  color: inherit;
+}
+.hs-logo {
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--verde);
+  letter-spacing: -0.02em;
+}
+.hs-sec {
+  position: relative;
+  padding: 56px 20px;
+}
+.hs-sec[data-fundo="escuro"] {
+  background: var(--escuro-2);
+  color: var(--claro);
+}
+.hs-sec[data-fundo="claro"] {
+  background: var(--claro);
+}
+.hs-wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+.hs-lock {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fff3c4;
+  color: #6b4e00;
+  border: 1px solid #f0d36b;
+}
+.hs-h1 {
+  font-size: clamp(32px, 6vw, 56px);
+  line-height: 1.05;
+  margin: 0 0 16px;
+  letter-spacing: -0.02em;
+}
+.hs-h2 {
+  font-size: clamp(24px, 4vw, 36px);
+  line-height: 1.15;
+  margin: 0 0 24px;
+}
+.hs-h3 {
+  font-size: 18px;
+  margin: 0 0 6px;
+}
+.hs-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--verde-escuro);
+  margin: 0 0 12px;
+}
+[data-fundo="escuro"] .hs-eyebrow {
+  color: var(--verde);
+}
+.hs-lead {
+  font-size: 18px;
+  line-height: 1.5;
+  margin: 0 0 24px;
+  max-width: 60ch;
+}
+.hs-muted {
+  color: var(--muted);
+}
+[data-fundo="escuro"] .hs-muted {
+  color: #a9b8a6;
+}
+.hs-small {
+  font-size: 13px;
+}
+.hs-pre {
+  white-space: pre-line;
+}
+.hs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 24px;
+  border-radius: 999px;
+  border: 0;
+  background: var(--verde);
+  color: var(--escuro);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.hs-link {
+  color: inherit;
+  font-weight: 600;
+}
+.hs-ph {
+  display: grid;
+  place-items: center;
+  min-height: 160px;
+  border: 2px dashed var(--linha);
+  border-radius: var(--raio);
+  color: var(--muted);
+  font-size: 14px;
+}
+/* Só no editor: erro do JavaScript da Seção livre, acima da prévia dela. */
+.hs-livre-erro {
+  display: grid;
+  gap: 2px;
+  padding: 10px 16px;
+  background: #fdecea;
+  color: var(--erro);
+  font-size: 13px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.hs-hero__grid {
+  display: grid;
+  gap: 32px;
+  align-items: center;
+}
+.hs-hero__img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+  border-radius: var(--raio);
+}
+@media (min-width: 800px) {
+  .hs-hero__grid {
+    grid-template-columns: 1.2fr 1fr;
+  }
+  .hs-hero {
+    padding-top: 88px;
+    padding-bottom: 88px;
+  }
+}
+
+.hs-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+}
+.hs-step {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  border-radius: var(--raio);
+  background: var(--branco);
+  border: 1px solid var(--linha);
+}
+[data-fundo="escuro"] .hs-step,
+[data-fundo="escuro"] .hs-card,
+[data-fundo="escuro"] .hs-form,
+[data-fundo="escuro"] .hs-faq details {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.hs-step__n {
+  font-weight: 800;
+  font-size: 22px;
+  color: var(--verde-escuro);
+}
+[data-fundo="escuro"] .hs-step__n {
+  color: var(--verde);
+}
+.hs-step p,
+.hs-card p {
+  margin: 0;
+}
+
+.hs-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+.hs-card {
+  padding: 16px;
+  border-radius: var(--raio);
+  background: var(--branco);
+  border: 1px solid var(--linha);
+}
+.hs-card__img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  min-height: 0;
+}
+
+.hs-nums {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  margin: 0;
+}
+.hs-num dd {
+  margin: 0;
+}
+.hs-num__v {
+  font-size: clamp(36px, 6vw, 56px);
+  font-weight: 800;
+  color: var(--verde-escuro);
+}
+[data-fundo="escuro"] .hs-num__v {
+  color: var(--verde);
+}
+
+.hs-video {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--raio);
+  overflow: hidden;
+  background: #000;
+}
+.hs-video iframe,
+.hs-video video {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.hs-video .hs-ph {
+  height: 100%;
+  background: var(--claro);
+}
+
+.hs-people {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+.hs-person {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 6px;
+}
+.hs-avatar {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #dfe9d8;
+}
+.hs-avatar--ini {
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 32px;
+  color: var(--verde-escuro);
+}
+
+.hs-agenda {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+.hs-agenda li {
+  display: grid;
+  gap: 4px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--linha);
+}
+[data-fundo="escuro"] .hs-agenda li {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.hs-agenda__when {
+  font-weight: 700;
+  color: var(--verde-escuro);
+}
+[data-fundo="escuro"] .hs-agenda__when {
+  color: var(--verde);
+}
+@media (min-width: 640px) {
+  .hs-agenda li {
+    grid-template-columns: 160px 1fr;
+  }
+}
+
+.hs-local {
+  display: grid;
+  gap: 24px;
+}
+.hs-local p {
+  margin: 0 0 6px;
+}
+.hs-local__big {
+  font-size: 22px;
+  font-weight: 700;
+}
+@media (min-width: 640px) {
+  .hs-local {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.hs-faq {
+  display: grid;
+  gap: 10px;
+}
+.hs-faq details {
+  padding: 16px 20px;
+  border-radius: var(--raio);
+  background: var(--branco);
+  border: 1px solid var(--linha);
+}
+.hs-faq summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+.hs-faq p {
+  margin: 12px 0 0;
+}
+
+.hs-form {
+  display: grid;
+  gap: 14px;
+  max-width: 560px;
+  padding: 24px;
+  border-radius: var(--raio);
+  background: var(--branco);
+  border: 1px solid var(--linha);
+}
+.hs-form label {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 15px;
+}
+.hs-form input:not([type="checkbox"]),
+.hs-form select {
+  min-height: 48px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid var(--linha);
+  font: inherit;
+  font-weight: 400;
+  background: var(--branco);
+  color: var(--texto);
+}
+.hs-check {
+  display: flex !important;
+  grid-template-columns: none;
+  gap: 10px !important;
+  align-items: flex-start;
+  font-weight: 400 !important;
+}
+.hs-check input {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  flex: none;
+}
+.hs-err {
+  color: var(--erro);
+  font-size: 14px;
+  font-weight: 500;
+}
+[data-fundo="escuro"] .hs-err {
+  color: #ffb4a8;
+}
+.hs-note {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #eef9dc;
+  color: var(--texto);
+  font-size: 14px;
+}
+.hs-form--ok {
+  text-align: center;
+}
+
+.hs-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+}
+.hs-contact .hs-h2 {
+  margin-bottom: 6px;
+}
+.hs-contact p {
+  margin: 0 0 14px;
+}
+
+.hs-end {
+  text-align: center;
+}
+.hs-end .hs-lead {
+  margin-inline: auto;
+}
+
+.hs-sim {
+  display: grid;
+  gap: 20px;
+  max-width: 640px;
+}
+.hs-sim label {
+  display: grid;
+  gap: 10px;
+  font-size: 18px;
+}
+.hs-sim input[type="range"] {
+  width: 100%;
+  accent-color: var(--verde);
+}
+.hs-sim__out {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.hs-sim__out div {
+  display: grid;
+  gap: 4px;
+  padding: 16px;
+  border-radius: var(--raio);
+  background: rgba(168, 255, 53, 0.12);
+}
+.hs-sim__out strong {
+  font-size: clamp(24px, 4vw, 32px);
+}
+
+/* ---------- Animação de entrada ao rolar ----------
+   Só age quando a seção ganha data-estado (página publicada + animações ligadas). */
+.hs-sec[data-estado] [data-r] {
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+.hs-sec[data-estado="out"] [data-r] {
+  opacity: 0;
+}
+.hs-sec[data-estado="out"] [data-r="up"] {
+  transform: translateY(28px);
+}
+.hs-sec[data-estado="out"] [data-r="left"] {
+  transform: translateX(-28px);
+}
+.hs-sec[data-estado="out"] [data-r="zoom"] {
+  transform: scale(0.92);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hs-sec [data-r] {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ---------- Peças novas ---------- */
+.hs-quotes {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.hs-quote {
+  margin: 0;
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  border-radius: var(--raio);
+  background: var(--branco);
+  border: 1px solid var(--linha);
+}
+.hs-quote blockquote {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.45;
+}
+.hs-quote figcaption {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.hs-quote figcaption > span {
+  display: grid;
+}
+.hs-quote .hs-avatar {
+  width: 44px;
+  height: 44px;
+  font-size: 16px;
+}
+[data-fundo="escuro"] .hs-quote,
+[data-fundo="escuro"] .hs-plan {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.hs-gallery {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+.hs-gallery figure {
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+.hs-gallery img,
+.hs-gallery .hs-ph {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  min-height: 0;
+}
+.hs-gallery figcaption {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.hs-parceiros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+.hs-parceiro {
+  display: grid;
+  place-items: center;
+  min-width: 140px;
+  height: 72px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: var(--branco);
+  border: 1px solid var(--linha);
+  flex: none;
+}
+[data-fundo="escuro"] .hs-parceiro {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.hs-parceiro__img {
+  max-height: 44px;
+  max-width: 140px;
+  object-fit: contain;
+}
+.hs-parceiro__txt {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* Faixa que corre: a lista vai duplicada e anda metade da largura, sem emenda. */
+.hs-marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.hs-marquee__track {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  animation: hs-corre var(--dur, 35s) linear infinite;
+}
+.hs-marquee:hover .hs-marquee__track {
+  animation-play-state: paused;
+}
+@keyframes hs-corre {
+  to {
+    transform: translateX(calc(-50% - 8px));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hs-marquee__track {
+    animation: none;
+    flex-wrap: wrap;
+    width: auto;
+  }
+}
+.hs-band-sec {
+  padding-top: 28px;
+  padding-bottom: 28px;
+}
+.hs-band .hs-marquee__track {
+  gap: 0;
+}
+.hs-band__item {
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.hs-band__item::after {
+  content: "•";
+  margin: 0 28px;
+  color: var(--verde);
+}
+
+.hs-count {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 120px));
+  gap: 12px;
+}
+.hs-count__b {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 16px 8px;
+  border-radius: var(--raio);
+  background: rgba(168, 255, 53, 0.1);
+  border: 1px solid rgba(168, 255, 53, 0.3);
+}
+.hs-count__b strong {
+  font-size: clamp(32px, 6vw, 52px);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.hs-count__b span {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.75;
+}
+.hs-count__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  margin-top: 24px;
+}
+
+.hs-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 28px;
+  display: grid;
+  gap: 24px;
+  border-left: 2px solid var(--linha);
+}
+[data-fundo="escuro"] .hs-timeline {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+.hs-timeline li {
+  position: relative;
+  display: grid;
+  gap: 4px;
+}
+.hs-timeline li::before {
+  content: "";
+  position: absolute;
+  left: -36px;
+  top: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--verde);
+  border: 3px solid var(--claro);
+}
+[data-fundo="escuro"] .hs-timeline li::before {
+  border-color: var(--escuro-2);
+}
+.hs-timeline__q {
+  font-weight: 800;
+  color: var(--verde-escuro);
+}
+[data-fundo="escuro"] .hs-timeline__q {
+  color: var(--verde);
+}
+.hs-timeline p {
+  margin: 0;
+}
+
+.hs-plans {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  align-items: start;
+}
+.hs-plan {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  padding: 24px;
+  border-radius: var(--raio);
+  background: var(--branco);
+  border: 1px solid var(--linha);
+}
+.hs-plan[data-destaque="true"] {
+  border: 2px solid var(--verde-escuro);
+}
+.hs-plan__tag {
+  justify-self: start;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--verde);
+  color: var(--escuro);
+}
+.hs-plan p {
+  margin: 0;
+}
+.hs-plan__preco {
+  font-size: 28px;
+  font-weight: 800;
+}
+.hs-plan__preco span {
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.7;
+}
+.hs-plan ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+}
+.hs-plan .hs-btn {
+  margin-top: 6px;
+}
+
+
+.pub-back {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(2, 6, 4, 0.75);
+  color: #fff;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+
+/* Primeira dobra: anima só com movimento, sem começar transparente (protege o LCP). */
+.hs-sec[data-primeira][data-estado="out"] [data-r] {
+  opacity: 1;
+}
+
+/* Imagem da abertura com proporção reservada: a página não "pula" quando ela carrega (CLS). */
+.hs-hero__img {
+  aspect-ratio: 4 / 3;
+  height: auto;
+}
+
+/* Vídeo do YouTube: capa leve até o clique. */
+.hs-video__capa {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: #000;
+  cursor: pointer;
+}
+.hs-video__capa img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+}
+.hs-video__play {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 72px;
+  height: 72px;
+  margin: -36px 0 0 -36px;
+  border-radius: 50%;
+  background: var(--verde);
+}
+.hs-video__play::after {
+  content: "";
+  position: absolute;
+  left: 29px;
+  top: 22px;
+  border-style: solid;
+  border-width: 14px 0 14px 22px;
+  border-color: transparent transparent transparent var(--escuro);
+}
+.hs-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.hs-404 {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  padding: 96px 20px;
+  text-align: center;
+}
+.carregando {
+  padding: 24px;
+  color: var(--muted);
+}
+
+/* Seção livre: o conteúdo é de quem escreveu; aqui só o respiro entre os elementos. */
+.hs-livre__conteudo > * + * {
+  margin-top: 16px;
+}
+</style>
+</head>
+<body>
+<link rel="preload" as="image" href="https://snksergio.github.io/igreen-hub/mob/live-lancamento/img/pre-cadastro/solto-mobi.webp" fetchPriority="high"/><div class="hs" data-anim="on"><header class="hs-top"><span class="hs-logo">iGreen</span></header><main><section class="hs-sec hs-hero" data-fundo="escuro"><div class="hs-wrap"><div class="hs-hero__grid"><div><p class="hs-eyebrow" data-r="up" style="--i:0">iGreen MOB · Eletropostos</p><h1 class="hs-h1" data-r="up" style="--i:1">Transforme seu ponto em receita recorrente.</h1><p class="hs-lead" data-r="up" style="--i:2">Leve seu eletroposto para a rede iGreen e ganhe com cada recarga e com cada cliente que se conecta.</p><div data-r="up" style="--i:3"><a class="hs-btn" href="https://wa.me/?text=Ol%C3%A1%2C%20%7Bnome%7D!%20Quero%20saber%20como%20migrar%20a%20bandeira%20do%20meu%20ponto." target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a></div></div><img class="hs-hero__img" src="https://snksergio.github.io/igreen-hub/mob/live-lancamento/img/pre-cadastro/solto-mobi.webp" alt="Eletroposto iGreen Mobi" fetchPriority="high" data-r="zoom" style="--i:2"/></div></div></section><section class="hs-sec " data-fundo="claro"><div class="hs-wrap"><h2 class="hs-h2" data-r="up" style="--i:0">Uma recarga. Cinco caminhos.</h2><div class="hs-grid"><article class="hs-card" data-r="up" style="--i:1"><div class="hs-card__img hs-ph">Imagem</div><h3 class="hs-h3">Energia</h3><p>R$ 50 para recarregar.</p></article><article class="hs-card" data-r="up" style="--i:2"><div class="hs-card__img hs-ph">Imagem</div><h3 class="hs-h3">Seguros</h3><p>Seguro que vira recarga.</p></article><article class="hs-card" data-r="up" style="--i:3"><div class="hs-card__img hs-ph">Imagem</div><h3 class="hs-h3">Telefonia</h3><p>Cada linha, uma receita.</p></article><article class="hs-card" data-r="up" style="--i:4"><div class="hs-card__img hs-ph">Imagem</div><h3 class="hs-h3">Rede iGreen</h3><p>O cliente viaja. A conexão fica.</p></article><article class="hs-card" data-r="up" style="--i:5"><div class="hs-card__img hs-ph">Imagem</div><h3 class="hs-h3">Eletropostos MOB</h3><p>Seu ponto na rede iGreen.</p></article></div></div></section><section class="hs-sec hs-band-sec" data-fundo="escuro"><div class="hs-wrap"><div class="hs-marquee hs-band" style="--dur:35s"><div class="hs-marquee__track"><span class="hs-band__item" aria-hidden="false">Energia</span><span class="hs-band__item" aria-hidden="false">Seguros</span><span class="hs-band__item" aria-hidden="false">Telefonia</span><span class="hs-band__item" aria-hidden="false">Rede iGreen</span><span class="hs-band__item" aria-hidden="false">Eletropostos MOB</span><span class="hs-band__item" aria-hidden="true">Energia</span><span class="hs-band__item" aria-hidden="true">Seguros</span><span class="hs-band__item" aria-hidden="true">Telefonia</span><span class="hs-band__item" aria-hidden="true">Rede iGreen</span><span class="hs-band__item" aria-hidden="true">Eletropostos MOB</span></div></div></div></section><section class="hs-sec " data-fundo="escuro"><div class="hs-wrap"><h2 class="hs-h2" data-r="up" style="--i:0">Uma bandeira completa. Em quatro números.</h2><dl class="hs-nums"><div class="hs-num" data-r="up" style="--i:1"><dt class="hs-num__v"><span data-conta="4%">4%</span></dt><dd>sobre a conta de energia do cliente</dd></div><div class="hs-num" data-r="up" style="--i:2"><dt class="hs-num__v"><span data-conta="5%">5%</span></dt><dd>sobre a mensalidade do seguro</dd></div><div class="hs-num" data-r="up" style="--i:3"><dt class="hs-num__v"><span data-conta="R$ 7">R$ 7</span></dt><dd>por linha de telefonia ativa</dd></div><div class="hs-num" data-r="up" style="--i:4"><dt class="hs-num__v"><span data-conta="2%">2%</span></dt><dd>sobre a carteira na rede</dd></div></dl></div></section><section class="hs-sec " data-fundo="escuro"><div class="hs-wrap"><h2 class="hs-h2" data-r="up" style="--i:0">Um posto. Novas receitas. Uma carteira que cresce.</h2><div class="hs-sim" data-r="up" style="--i:1" data-sim-valor="52"><label><span><strong data-sim="qtd">75</strong> clientes conectados pelo seu ponto</span><input type="range" min="0" max="300" data-sim="range" value="75"/></label><div class="hs-sim__out" aria-live="polite"><div><span class="hs-muted">Por mês</span><strong data-sim="mes">R$ 3.900</strong></div><div><span class="hs-muted">Em 12 meses</span><strong data-sim="ano">R$ 46.800</strong></div></div><p class="hs-muted hs-small">Valores ilustrativos, não são garantia de ganho.</p></div></div></section><section class="hs-sec " data-fundo="claro"><div class="hs-wrap"><h2 class="hs-h2" data-r="up" style="--i:0">Toda a experiência de recarga. Na palma da mão.</h2><ol class="hs-steps"><li class="hs-step" data-r="up" style="--i:1"><span class="hs-step__n">01</span><div><h3 class="hs-h3">Tudo começa no app</h3><p>O motorista abre o iGreen MOB e acha mapa, carteira e recargas num só lugar.</p></div></li><li class="hs-step" data-r="up" style="--i:2"><span class="hs-step__n">02</span><div><h3 class="hs-h3">Encontre seu eletroposto</h3><p>O mapa mostra onde fica, o preço por kWh e se o ponto está livre.</p></div></li><li class="hs-step" data-r="up" style="--i:3"><span class="hs-step__n">03</span><div><h3 class="hs-h3">Escolha onde recarregar</h3><p>Conectores, valores e horário do ponto, e o botão Carregar aqui.</p></div></li><li class="hs-step" data-r="up" style="--i:4"><span class="hs-step__n">04</span><div><h3 class="hs-h3">Saldo ou pós-pago</h3><p>Paga com o saldo da carteira ou no cartão.</p></div></li><li class="hs-step" data-r="up" style="--i:5"><span class="hs-step__n">05</span><div><h3 class="hs-h3">Comece sua recarga</h3><p>Encaixa o cabo e espera a confirmação do eletroposto.</p></div></li><li class="hs-step" data-r="up" style="--i:6"><span class="hs-step__n">06</span><div><h3 class="hs-h3">Recarga em andamento</h3><p>Bateria, energia, tempo e custo em tempo real.</p></div></li></ol></div></section><section class="hs-sec " data-fundo="escuro"><div class="hs-wrap"><h2 class="hs-h2" data-r="up" style="--i:0">Uma marca presente no seu ponto.</h2><div class="hs-video" data-r="zoom" style="--i:1"><div class="hs-ph">Cole o link do vídeo</div></div></div></section><section class="hs-sec " data-fundo="claro"><div class="hs-wrap"><h2 class="hs-h2" data-r="up" style="--i:0">A recarga é só o começo. Os benefícios acompanham o cliente.</h2><div class="hs-marquee" data-r="fade" style="--i:1"><div class="hs-marquee__track"><span class="hs-parceiro" aria-hidden="false"><span class="hs-parceiro__txt">Drogasil</span></span><span class="hs-parceiro" aria-hidden="false"><span class="hs-parceiro__txt">Cinemark</span></span><span class="hs-parceiro" aria-hidden="false"><span class="hs-parceiro__txt">Domino&#x27;s</span></span><span class="hs-parceiro" aria-hidden="false"><span class="hs-parceiro__txt">Coco Bambu</span></span><span class="hs-parceiro" aria-hidden="true"><span class="hs-parceiro__txt">Drogasil</span></span><span class="hs-parceiro" aria-hidden="true"><span class="hs-parceiro__txt">Cinemark</span></span><span class="hs-parceiro" aria-hidden="true"><span class="hs-parceiro__txt">Domino&#x27;s</span></span><span class="hs-parceiro" aria-hidden="true"><span class="hs-parceiro__txt">Coco Bambu</span></span></div></div></div></section><section class="hs-sec " data-fundo="claro"><div class="hs-wrap"><h2 class="hs-h2" data-r="up" style="--i:0">Antes de migrar a bandeira.</h2><div class="hs-faq"><details data-r="up" style="--i:1"><summary>Preciso trocar meu carregador?</summary><p class="hs-pre">Resposta a confirmar com o time iGreen MOB.</p></details><details data-r="up" style="--i:2"><summary>Quando o dinheiro das recargas entra no caixa?</summary><p class="hs-pre">Resposta a confirmar com o time iGreen MOB.</p></details><details data-r="up" style="--i:3"><summary>Quem faz a manutenção?</summary><p class="hs-pre">Resposta a confirmar com o time iGreen MOB.</p></details><details data-r="up" style="--i:4"><summary>Os valores do simulador são garantidos?</summary><p class="hs-pre">Não. São ilustrativos e dependem da operação do seu ponto.</p></details></div></div></section><section class="hs-sec " data-fundo="claro"><div class="hs-wrap"><div class="hs-contact" data-r="left" style="--i:0"><span class="hs-avatar hs-avatar--ini">I</span><div><h2 class="hs-h2">Fale com iGreen</h2><p>Fale com a equipe iGreen pelo WhatsApp.</p><a class="hs-btn" href="https://wa.me/?text=Ol%C3%A1%2C%20iGreen!%20Vi%20a%20p%C3%A1gina%20e%20quero%20saber%20mais." target="_blank" rel="noopener noreferrer">Chamar no WhatsApp</a></div></div></div></section><section class="hs-sec hs-end" data-fundo="escuro"><div class="hs-wrap"><h2 class="hs-h2" data-r="up" style="--i:0">Seu ponto já conecta carros. Conecte novas receitas.</h2><div data-r="zoom" style="--i:2"><a class="hs-btn" href="https://wa.me/?text=Ol%C3%A1%2C%20%7Bnome%7D!%20Quero%20migrar%20a%20bandeira%20do%20meu%20ponto." target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a></div></div></section></main><footer class="hs-foot"><span class="hs-logo">iGreen</span><span><a href="https://www.igreenenergy.com.br" target="_blank" rel="noopener noreferrer">igreenenergy.com.br</a> · Política de privacidade · Encarregado de dados (DPO): a definir</span></footer></div>
+<script>/* Script do HTML estático (sem React, ~3 KB). Só melhora a página: sem ele, tudo continua legível. */
+(function () {
+  var doc = document;
+  var reduzido = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var hs = doc.querySelector(".hs");
+  var animar = hs && hs.getAttribute("data-anim") !== "off" && !reduzido && "IntersectionObserver" in window;
+
+  function numero(s) {
+    var m = String(s).match(/^(\D*?)(\d{1,3}(?:\.\d{3})+|\d+)(?:,(\d+))?([\s\S]*)$/);
+    if (!m) return null;
+    var dec = m[3] || "";
+    return { pre: m[1], v: Number(m[2].replace(/\./g, "") + (dec ? "." + dec : "")), suf: m[4], dec: dec.length };
+  }
+  function contar(el) {
+    var p = numero(el.getAttribute("data-conta"));
+    if (!p) return;
+    var t0 = performance.now();
+    (function passo(t) {
+      var k = Math.min(1, (t - t0) / 1200);
+      var v = p.v * (1 - Math.pow(1 - k, 3));
+      el.textContent = p.pre + v.toLocaleString("pt-BR", { minimumFractionDigits: p.dec, maximumFractionDigits: p.dec }) + p.suf;
+      if (k < 1) requestAnimationFrame(passo);
+    })(t0);
+  }
+
+  // Entrada ao rolar: só no que ainda está fora da tela (o que já aparece fica parado, sem "pulo").
+  if (animar) {
+    var io = new IntersectionObserver(
+      function (entradas) {
+        entradas.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          e.target.setAttribute("data-estado", "in");
+          e.target.querySelectorAll("[data-conta]").forEach(contar);
+          io.unobserve(e.target);
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+    );
+    doc.querySelectorAll(".hs-sec").forEach(function (s) {
+      if (s.getBoundingClientRect().top < innerHeight) return;
+      s.setAttribute("data-estado", "out");
+      io.observe(s);
+    });
+  }
+
+  // Contagem regressiva.
+  doc.querySelectorAll("[data-alvo]").forEach(function (c) {
+    var alvo = new Date(c.getAttribute("data-alvo")).getTime();
+    function pad(n) { return String(n).padStart(2, "0"); }
+    function tique() {
+      var s = Math.floor((alvo - Date.now()) / 1000);
+      if (!(s > 0)) {
+        var p = doc.createElement("p");
+        p.className = "hs-lead";
+        p.textContent = c.getAttribute("data-acabou") || "";
+        c.replaceWith(p);
+        return;
+      }
+      var v = { d: Math.floor(s / 86400), h: Math.floor((s % 86400) / 3600), m: Math.floor((s % 3600) / 60), s: s % 60 };
+      c.querySelectorAll("[data-u]").forEach(function (el) { el.textContent = pad(v[el.getAttribute("data-u")]); });
+      setTimeout(tique, 1000);
+    }
+    tique();
+  });
+
+  // Simulador.
+  var brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+  doc.querySelectorAll("[data-sim-valor]").forEach(function (sim) {
+    var valor = Number(sim.getAttribute("data-sim-valor")) || 0;
+    var range = sim.querySelector('[data-sim="range"]');
+    function atualiza() {
+      var q = Number(range.value);
+      sim.querySelector('[data-sim="qtd"]').textContent = q;
+      sim.querySelector('[data-sim="mes"]').textContent = brl.format(q * valor);
+      sim.querySelector('[data-sim="ano"]').textContent = brl.format(q * valor * 12);
+    }
+    range.addEventListener("input", atualiza);
+  });
+
+  // Vídeo do YouTube: troca a capa pelo player no clique.
+  doc.querySelectorAll("[data-yt] .hs-video__capa").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var f = doc.createElement("iframe");
+      f.src = "https://www.youtube-nocookie.com/embed/" + b.parentElement.getAttribute("data-yt") + "?autoplay=1";
+      f.title = b.getAttribute("aria-label") || "Vídeo";
+      f.allow = "autoplay; encrypted-media; picture-in-picture";
+      f.allowFullscreen = true;
+      b.replaceWith(f);
+    });
+  });
+
+  // Formulário: no MVP vai para a base de inscrições. Aqui só confirma, sem mandar dado a lugar nenhum.
+  doc.querySelectorAll("[data-form-inscricao]").forEach(function (f) {
+    f.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!f.reportValidity()) return;
+      var aviso = doc.createElement("p");
+      aviso.className = "hs-note";
+      aviso.setAttribute("role", "status");
+      aviso.textContent = "Prévia estática: no MVP esta inscrição vai para a base de inscritos.";
+      f.appendChild(aviso);
+    });
+  });
+})();
+</script>
+</body>
+</html>

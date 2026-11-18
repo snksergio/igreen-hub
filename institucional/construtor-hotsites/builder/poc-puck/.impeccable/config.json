@@ -1,0 +1,95 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/lib/seo.ts"
+        ],
+        "createdAt": "2026-11-17T16:24:46.338Z",
+        "reason": "Claude: L178 é uma regex que detecta <img sem alt na conferência de SEO, não uma imagem renderizada"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/puck/guia.ts"
+        ],
+        "createdAt": "2026-11-17T16:26:17.754Z",
+        "reason": "Claude: L165 é texto do guia para IA explicando a regra de alt em <img>, não uma imagem renderizada"
+      },
+      {
+        "rule": "overused-font",
+        "value": "arial",
+        "files": [
+          "src/app.css"
+        ],
+        "createdAt": "2026-11-17T16:41:29.426Z",
+        "reason": "Claude: só a prévia do resultado do Google (.seo-serp) usa Arial para imitar a página de busca; não é a fonte da interface"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/puck/fields/ArquivosField.tsx"
+        ],
+        "createdAt": "2026-11-17T16:52:52.001Z",
+        "reason": "Claude: L142 é o texto do botão copiar <img> (rótulo), não uma imagem; a miniatura usa src real do arquivo enviado"
+      },
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "files": [
+          "src/lib/importarHtml.test.ts"
+        ],
+        "createdAt": "2026-11-17T16:59:51.769Z",
+        "reason": "Claude: Inter aparece só como dado de teste (URL do Google Fonts num HTML de IA simulado); não é fonte da interface"
+      },
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "files": [
+          "src/puck/blocks/SecaoLivre.test.tsx"
+        ],
+        "createdAt": "2026-11-17T16:59:51.872Z",
+        "reason": "Claude: Inter aparece só como dado de teste (URL do Google Fonts num HTML de IA simulado); não é fonte da interface"
+      },
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "files": [
+          "src/puck/previaLivre.test.ts"
+        ],
+        "createdAt": "2026-11-17T17:08:18.430Z",
+        "reason": "Claude: Inter aparece só como dado de teste (URL do Google Fonts de biblioteca externa simulada); não é fonte da interface"
+      },
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "mockups/landing-evento.html"
+        ],
+        "createdAt": "2026-11-17T20:05:25.819Z",
+        "reason": "Claude: brilho só nos pontos de ao vivo/logo, pedido pela referência 11 do Sergio (botão e luz verde); sombras de botão já são neutras"
+      },
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "src/live/live.css"
+        ],
+        "createdAt": "2026-11-17T23:48:36.357Z",
+        "reason": "Claude: é a palavra decorativa LIVE BH atrás da pessoa no hero, aprovada pelo usuário na landing; não é título nem métrica"
+      },
+      {
+        "rule": "overused-font",
+        "value": "instrument sans",
+        "createdAt": "2026-11-18T00:01:23.367Z",
+        "reason": "Claude: Instrument Sans é a fonte do site iGreen Live (eventos-v2), pedida pelo usuário para o kit Live"
+      }
+    ]
+  }
+}

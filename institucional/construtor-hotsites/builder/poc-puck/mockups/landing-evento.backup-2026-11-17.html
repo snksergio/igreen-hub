@@ -1,0 +1,1468 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iGreen Live · Belo Horizonte</title>
+<meta name="description" content="Template premium de landing de evento iGreen: hero com pessoa em destaque, palestrantes, programação, números, local e inscrição.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<!--
+  Template de landing de evento, versão 2. Base visual do site iGreen Live (igreen-eventos-v2):
+  fundo #010702, cards #06110A com luz limão subindo, Instrument Sans em peso 500, botões em
+  pílula sem sombra e a textura de pontos (degradê radial de 0,8 px a cada 4,5 px).
+  Cada <section data-bloco="…"> é um bloco futuro do builder; textos e imagens viram campos.
+  Fotos e a aurora são do site iGreen Live (mesma paleta de estúdio verde).
+-->
+<style>
+:root {
+  --bg: #010702;
+  --card: #06110a;
+  --card-2: #0a1a10;
+  --texto: #f3f6ec;
+  --apoio: rgba(243, 246, 236, 0.62);
+  --apagado: rgba(243, 246, 236, 0.4);
+  --linha: rgba(243, 246, 236, 0.1);
+  --borda: rgba(243, 246, 236, 0.16);
+  --vidro: rgba(243, 246, 236, 0.04);
+  --lima: #a8ff35;
+  --lima-suave: #d8ffa6;
+  --tinta: #06180d;
+  --verde: #00a859;
+  --raio-g: 28px;
+  --raio-m: 20px;
+  --raio-p: 14px;
+  --fonte: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --pontos: radial-gradient(rgba(216, 255, 166, 0.5) 0.8px, transparent 1.25px);
+  --faixa: 76px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--texto);
+  font-family: var(--fonte); font-size: 16px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3, h4, p, figure { margin: 0; }
+.wrap { width: min(1240px, 100% - 48px); margin-inline: auto; }
+.lima { color: var(--lima); }
+.apagado { color: var(--apagado); }
+.icone { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Títulos como no iGreen Live: peso 500, entrelinha curta, espaçamento negativo, largura normal */
+.h-grande { font-size: clamp(36px, 4.4vw, 62px); font-weight: 500; line-height: 1.06; letter-spacing: -0.03em; }
+.lead { font-size: 17px; color: var(--apoio); max-width: 460px; }
+
+/* Textura de pontos do iGreen Live: uma grade fraca que está sempre lá e uma cópia em overlay
+   que só acende onde há luz por baixo. As duas pedem um fundo opaco no mesmo grupo. */
+.pontos-base, .pontos { position: absolute; inset: 0; pointer-events: none; background-image: var(--pontos); background-size: 4.5px 4.5px; }
+.pontos-base { opacity: 0.03; }
+.pontos { mix-blend-mode: overlay; opacity: 0.72; }
+
+/* ---------- Peças comuns ---------- */
+.etiqueta {
+  display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;
+  height: 32px; padding: 0 14px 0 11px; border-radius: 999px;
+  border: 1px solid var(--borda); background: rgba(1, 7, 2, 0.3); backdrop-filter: blur(10px);
+  font-size: 13px; font-weight: 500; color: rgba(243, 246, 236, 0.78); white-space: nowrap;
+}
+.etiqueta i { width: 6px; height: 6px; border-radius: 50%; background: var(--lima); }
+.btn {
+  display: inline-flex; align-items: center; gap: 16px; height: 50px; padding: 0 6px 0 24px;
+  border: 0; border-radius: 999px; background: var(--lima); color: var(--tinta);
+  font: 500 16px/1 var(--fonte); white-space: nowrap; cursor: pointer;
+  transition: background 0.3s var(--ease);
+}
+.btn:hover { background: var(--lima-suave); }
+.btn .seta { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--tinta); color: var(--lima); transition: transform 0.4s var(--ease); }
+.btn:hover .seta { transform: rotate(45deg); }
+.btn .seta .icone { width: 16px; height: 16px; stroke-width: 2; }
+.btn-fantasma {
+  display: inline-flex; align-items: center; gap: 10px; height: 50px; padding: 0 24px;
+  border-radius: 999px; border: 1px solid rgba(243, 246, 236, 0.18); background: var(--vidro);
+  font: 500 16px/1 var(--fonte); color: var(--texto); white-space: nowrap;
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.btn-fantasma:hover { background: rgba(243, 246, 236, 0.08); border-color: rgba(243, 246, 236, 0.3); }
+.btn-creme { display: inline-flex; align-items: center; height: 44px; padding: 0 22px; border-radius: 999px; background: var(--texto); color: var(--tinta); font: 500 15px/1 var(--fonte); white-space: nowrap; }
+.avatares { display: flex; }
+.avatares span { width: 38px; height: 38px; margin-left: -10px; border-radius: 50%; overflow: hidden; border: 2px solid var(--bg); background: var(--card-2); }
+.avatares span:first-child { margin-left: 0; }
+.avatares img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; transform: scale(1.5); transform-origin: 50% 22%; }
+.avatares .mais { display: grid; place-items: center; background: var(--lima); color: var(--tinta); font-size: 12px; font-weight: 600; }
+
+/* Card escuro com luz limão subindo e pontos no pé (o card do iGreen Live) */
+.card {
+  position: relative; overflow: hidden; isolation: isolate; border-radius: var(--raio-m);
+  background:
+    radial-gradient(70% 40% at 50% 100%, rgba(196, 250, 120, 0.13) 0%, rgba(160, 231, 75, 0.045) 52%, transparent 82%),
+    var(--card);
+  border: 1px solid var(--linha);
+}
+.card::after { content: ""; position: absolute; inset: 0; z-index: -1; background-image: var(--pontos); background-size: 4.5px 4.5px; mix-blend-mode: overlay; opacity: 0.4; -webkit-mask-image: linear-gradient(to top, #000, transparent 60%); mask-image: linear-gradient(to top, #000, transparent 60%); }
+/* Vidro (sobre foto, degradê ou aurora) */
+.vidro {
+  background: linear-gradient(180deg, rgba(243, 246, 236, 0.09), rgba(243, 246, 236, 0.03)), rgba(4, 22, 11, 0.38);
+  border: 1px solid rgba(243, 246, 236, 0.14);
+  backdrop-filter: blur(22px) saturate(140%); -webkit-backdrop-filter: blur(22px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 24px 50px rgba(0, 0, 0, 0.22);
+}
+/* Foto: recorte (PNG sem fundo) na frente de um painel com luz limão subindo do pé e pontos.
+   O painel é opaco, então os pontos (overlay) somem no escuro e só acendem sobre o verde. */
+.foto {
+  position: relative; overflow: hidden; isolation: isolate; border-radius: var(--raio-m);
+  background:
+    radial-gradient(55% 40% at 50% 100%, rgba(196, 250, 120, 0.42) 0%, rgba(160, 231, 75, 0.2) 50%, transparent 80%),
+    linear-gradient(to top, rgba(160, 231, 75, 0.3) 0%, rgba(139, 196, 62, 0.14) 40%, rgba(129, 178, 58, 0.04) 70%, transparent 100%),
+    var(--card);
+}
+.foto::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(rgba(216, 255, 166, 0.38) 0.7px, transparent 1.2px); background-size: 5px 5px; mix-blend-mode: overlay; opacity: 0.4; -webkit-mask-image: linear-gradient(to top, #000 18%, transparent 80%); mask-image: linear-gradient(to top, #000 18%, transparent 80%); }
+.foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; transition: transform 0.9s var(--ease); }
+.foto::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgba(1, 7, 2, 0.78) 0%, rgba(1, 7, 2, 0.26) 30%, transparent 52%); }
+
+/* Entrada ao rolar */
+.revela { opacity: 0; transform: translateY(26px); transition: opacity 1s var(--ease), transform 1s var(--ease); transition-delay: calc(var(--i, 0) * 80ms); }
+.revela.visivel { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .revela { opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
+
+/* ================= HERO (bloco: Abertura) ================= */
+/* A abertura e a faixa animada ocupam juntas a primeira tela inteira */
+.hero { padding: 12px 12px 0; }
+.hero-cartao {
+  position: relative; isolation: isolate; overflow: hidden; border-radius: var(--raio-g);
+  height: max(600px, calc(100svh - 12px - var(--faixa))); display: flex; flex-direction: column;
+  --conta-h: 334px; /* altura do cartão da contagem: a palavra do palco termina acima dele */
+  background:
+    radial-gradient(46% 60% at 60% 42%, rgba(168, 255, 53, 0.24), transparent 70%),
+    radial-gradient(60% 55% at 95% 5%, rgba(0, 168, 89, 0.5), transparent 70%),
+    radial-gradient(60% 50% at 5% 100%, rgba(0, 168, 89, 0.28), transparent 70%),
+    linear-gradient(160deg, #0b4421 0%, #052712 42%, #010a04 100%);
+}
+.hero-cartao > .pontos-base, .hero-cartao > .pontos { z-index: 0; }
+.hero-cartao::after { content: ""; position: absolute; inset: auto 0 0 0; height: 34%; background: linear-gradient(180deg, transparent, rgba(1, 7, 2, 0.82)); z-index: 3; pointer-events: none; }
+.nav { position: relative; z-index: 6; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 26px; }
+.logo { display: inline-flex; align-items: center; gap: 9px; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+.logo i { width: 13px; height: 13px; border-radius: 50%; background: var(--lima); }
+.nav-links { display: flex; gap: 2px; padding: 5px; border-radius: 999px; border: 1px solid var(--linha); background: rgba(1, 7, 2, 0.35); backdrop-filter: blur(14px); }
+.nav-links a { padding: 9px 16px; border-radius: 999px; font-size: 14.5px; font-weight: 500; color: var(--apoio); transition: color 0.3s, background 0.3s; }
+.nav-links a:hover { color: var(--texto); }
+.nav-links a[aria-current] { background: rgba(243, 246, 236, 0.1); color: var(--texto); }
+.nav-menu { display: none; }
+
+/* Palco: a pessoa no centro e o nome do evento empilhado do lado direito, atrás do ombro,
+   inteiro e legível (LIVE em cima, BH embaixo). Tamanho pelo palco (cqh e cqw, o menor dos
+   dois), então a relação com a pessoa se mantém em qualquer tela. */
+.hero-palco { position: absolute; inset: 0; z-index: 2; pointer-events: none; container-type: size; }
+.hero-palavra {
+  position: absolute; right: 3cqw; top: 12cqh; display: grid; justify-items: end;
+  font-weight: 600; font-size: min(calc((88cqh - 54px - var(--conta-h)) / 1.6), 17cqw); line-height: 0.8; letter-spacing: -0.06em; white-space: nowrap;
+}
+.hero-palavra span {
+  padding-right: 0.06em;
+  background: linear-gradient(180deg, rgba(216, 255, 166, 0.28) 0%, rgba(216, 255, 166, 0.06) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.hero-pessoa {
+  position: absolute; bottom: 0; left: 57%; transform: translateX(-50%); height: 92%; width: auto; max-width: none;
+  -webkit-mask-image: radial-gradient(62% 70% at 50% 42%, #000 58%, transparent 100%), linear-gradient(180deg, #000 72%, transparent 98%);
+  -webkit-mask-composite: source-in;
+  mask-image: radial-gradient(62% 70% at 50% 42%, #000 58%, transparent 100%), linear-gradient(180deg, #000 72%, transparent 98%);
+  mask-composite: intersect;
+}
+/* O título fica centrado na altura, entre a logo e os cartões de baixo */
+.hero-conteudo { position: relative; z-index: 4; flex: 1; display: flex; align-items: center; padding: 8px 40px 28px; }
+.hero-esq { display: flex; flex-direction: column; gap: 22px; max-width: 600px; }
+.hero h1 { font-size: clamp(44px, 4.9vw, 74px); font-weight: 500; line-height: 1.02; letter-spacing: -0.038em; }
+.hero h1 em { font-style: normal; color: var(--lima); white-space: nowrap; }
+.hero-acoes { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
+.hero-base { position: relative; z-index: 5; display: flex; gap: 12px; padding: 0 40px 40px; }
+.num-cartao { width: 210px; min-height: 132px; padding: 18px; border-radius: var(--raio-p); display: flex; flex-direction: column; justify-content: space-between; gap: 14px; }
+.num-cartao b { display: block; font-size: 38px; font-weight: 500; line-height: 1; letter-spacing: -0.04em; }
+.num-cartao b sup { font-size: 0.5em; color: var(--lima); vertical-align: 0.7em; margin-left: 2px; }
+.num-cartao b + span { display: block; margin-top: 6px; font-size: 14px; color: var(--texto); }
+[data-conta] { font-variant-numeric: tabular-nums; }
+.num-cartao small { font-size: 12.5px; line-height: 1.4; color: var(--apoio); }
+
+/* Contagem em vidro, no canto de baixo à direita; os confirmados ficam logo acima do botão */
+.conta { position: absolute; z-index: 5; right: 40px; bottom: 40px; width: 332px; padding: 18px; border-radius: var(--raio-m); color: var(--texto); }
+.conta .topo { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--apoio); }
+.conta .ao-vivo { display: inline-flex; align-items: center; gap: 7px; font-weight: 500; color: var(--lima-suave); }
+.conta .ao-vivo i { width: 6px; height: 6px; border-radius: 50%; background: var(--lima); animation: pulso 1.8s ease-in-out infinite; }
+@keyframes pulso { 50% { opacity: 0.25; } }
+@media (prefers-reduced-motion: reduce) { .conta .ao-vivo i { animation: none; } }
+.relogio { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 14px 0 16px; }
+.relogio div { padding: 11px 0 9px; border-radius: 12px; background: rgba(243, 246, 236, 0.06); border: 1px solid rgba(243, 246, 236, 0.08); text-align: center; }
+.relogio b { display: block; font-size: 24px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.relogio small { font-size: 11px; color: var(--apagado); }
+.conta .onde { padding-top: 14px; border-top: 1px solid rgba(243, 246, 236, 0.1); }
+.conta .onde b { display: block; font-size: 15px; font-weight: 500; }
+.conta .onde span { font-size: 13px; color: var(--apoio); }
+.conta-prova { display: flex; align-items: center; gap: 12px; margin-top: 16px; font-size: 13px; line-height: 1.3; color: var(--apoio); }
+.conta-prova b { display: block; font-size: 14px; font-weight: 500; color: var(--texto); }
+.conta-prova .avatares span { width: 32px; height: 32px; margin-left: -9px; border-color: #0b2314; }
+.conta-prova .avatares span:first-child { margin-left: 0; }
+.conta .btn { width: 100%; justify-content: space-between; margin-top: 14px; height: 46px; font-size: 15px; }
+.conta .btn .seta { width: 34px; height: 34px; }
+
+/* ================= Faixa (bloco: Faixa animada) ================= */
+/* Cada solução vem seguida do seu ícone, com o mesmo espaço dos dois lados (o ícone fica no
+   meio entre dois nomes). Dois grupos iguais, cada um mais largo que a tela, andam juntos
+   exatamente a largura de um grupo: quando o primeiro sai, o segundo já está no lugar dele,
+   então o loop nunca abre buraco. */
+.faixa { --faixa-gap: 36px; height: var(--faixa); display: flex; align-items: center; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.faixa-trilho { display: flex; width: max-content; }
+.faixa-grupo { display: flex; flex: none; align-items: center; gap: var(--faixa-gap); padding-right: var(--faixa-gap); animation: faixa-anda 48s linear infinite; }
+.faixa-grupo span { font-size: 20px; font-weight: 500; letter-spacing: -0.02em; color: var(--apagado); white-space: nowrap; }
+.faixa-grupo svg { width: 22px; height: 22px; flex: none; color: var(--lima); fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+@keyframes faixa-anda { to { transform: translate3d(-100%, 0, 0); } }
+@media (prefers-reduced-motion: reduce) { .faixa-grupo { animation: none; } }
+
+/* ================= Seções ================= */
+/* respiro igual entre todas as seções */
+.secao { position: relative; padding: clamp(96px, 8.5vw, 124px) 0; overflow-x: clip; }
+/* cabeça padrão: selo em cima do título */
+.cabeca { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; margin-bottom: 40px; }
+
+/* SOBRE */
+.sobre-titulo { max-width: 980px; margin-bottom: 56px; }
+.sobre-grade { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.sobre-foto { min-height: 580px; }
+.sobre-foto .legenda { position: absolute; z-index: 2; left: 20px; bottom: 20px; }
+.sobre-dir { display: grid; grid-template-rows: auto 1fr; gap: 16px; }
+.sobre-texto { display: grid; gap: 26px; padding: 6px 0 10px 16px; }
+.sobre-texto > p { font-size: clamp(19px, 1.7vw, 24px); line-height: 1.35; letter-spacing: -0.012em; }
+.sobre-pessoas { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.sobre-pessoas p { max-width: 300px; font-size: 14px; color: var(--apagado); }
+.sobre-cartoes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.dado { padding: 22px; display: flex; flex-direction: column; gap: 4px; min-height: 320px; }
+.dado b { font-size: 44px; font-weight: 500; line-height: 1; letter-spacing: -0.04em; }
+.dado b em { font-style: normal; color: var(--lima); }
+.dado > span { margin-top: 6px; font-size: 15px; }
+.dado small { font-size: 13px; color: var(--apagado); }
+.marcas { display: flex; flex-wrap: wrap; gap: 6px; margin: 20px 0; }
+.marcas span { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--linha); font-size: 12.5px; color: var(--apoio); }
+.dado .btn { margin-top: auto; align-self: flex-start; height: 46px; font-size: 15px; }
+.dado .btn .seta { width: 34px; height: 34px; }
+/* Mapa do Brasil em pontos, desenhado pelo script a partir de um contorno simplificado: os
+   pontos acendem em limão perto das capitais e BH pulsa. */
+/* Só pontos: Minas acesa em limão, o resto do Brasil neutro. Clicar no card aproxima o mapa
+   até BH (zoom animado pelo script) e troca a legenda para o local do evento. */
+.mapa-br { min-height: 320px; cursor: pointer; }
+.mapa-br .br-svg { position: absolute; z-index: 1; top: 18px; right: 14px; width: 84%; height: auto; overflow: visible; }
+.mapa-br .br-n { fill: rgba(243, 246, 236, 0.17); transition: opacity 0.8s ease; }
+.mapa-br .br-mg { fill: var(--lima); opacity: 0.92; }
+.mapa-br .br-bh { fill: #fff; }
+.mapa-br .br-onda { fill: none; stroke: var(--lima); stroke-width: 0.16; transform-box: fill-box; transform-origin: center; animation: onda 2.6s var(--ease) infinite; }
+.mapa-br .br-rotulo { font: 600 1.9px var(--fonte); fill: var(--lima-suave); transition: opacity 0.4s ease; }
+.mapa-br.perto .br-n { opacity: 0.4; }
+.mapa-br.perto .br-rotulo { opacity: 0; }
+/* botão de aproximar no canto */
+.mapa-br .mapa-zoom { position: absolute; z-index: 3; right: 16px; bottom: 16px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--borda); background: rgba(1, 7, 2, 0.5); color: var(--lima); transition: background 0.3s, color 0.3s, transform 0.5s var(--ease); }
+.mapa-br .mapa-zoom .icone { width: 16px; height: 16px; }
+.mapa-br .mapa-zoom .menos { display: none; }
+.mapa-br:hover .mapa-zoom { background: var(--lima); color: var(--tinta); }
+.mapa-br.perto .mapa-zoom .mais { display: none; }
+.mapa-br.perto .mapa-zoom .menos { display: block; }
+.mapa-br:focus-visible { outline: 2px solid var(--lima); outline-offset: 3px; }
+@keyframes onda { from { transform: scale(1); opacity: 0.9; } to { transform: scale(6); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .mapa-br .br-onda { animation: none; opacity: 0; } }
+/* legenda com dois estados que se cruzam: Brasil (27 estados) e de perto (o local) */
+.mapa-br .sobre { position: absolute; z-index: 2; left: 22px; right: 60px; bottom: 20px; display: grid; }
+.mapa-br .sobre > div { grid-area: 1 / 1; align-self: end; transition: opacity 0.5s ease, transform 0.7s var(--ease); }
+.mapa-br .sobre b { display: block; font-size: 44px; font-weight: 500; line-height: 1; letter-spacing: -0.04em; }
+.mapa-br .sobre small { font-size: 14px; color: var(--apoio); }
+.mapa-br .sobre .de-perto { opacity: 0; transform: translateY(10px); }
+.mapa-br .sobre .de-perto b { font-size: 26px; letter-spacing: -0.025em; }
+.mapa-br.perto .sobre .de-longe { opacity: 0; transform: translateY(-10px); }
+.mapa-br.perto .sobre .de-perto { opacity: 1; transform: none; }
+
+/* BENEFÍCIOS */
+.leva-cabeca { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; margin-bottom: 40px; }
+.leva-cabeca .h-grande { max-width: 760px; }
+.leva-grade { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 368px; gap: 14px; }
+.beneficio { padding: 22px; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.6s var(--ease), border-color 0.4s; }
+.beneficio:hover { transform: translateY(-6px); }
+.beneficio.card:hover { border-color: rgba(168, 255, 53, 0.28); }
+.beneficio h3 { max-width: 84%; font-size: 30px; font-weight: 500; line-height: 1.08; letter-spacing: -0.028em; }
+.beneficio p { font-size: 14px; line-height: 1.45; color: var(--apoio); }
+.beneficio .canto { position: absolute; z-index: 2; top: 20px; right: 20px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--borda); color: var(--lima); transition: background 0.4s, color 0.4s, transform 0.5s var(--ease); }
+.beneficio:hover .canto { background: var(--lima); color: var(--tinta); transform: rotate(45deg); }
+.beneficio .canto .icone { width: 16px; height: 16px; }
+/* Destaque em verde profundo (sem card claro) */
+.beneficio.destaque {
+  border-color: rgba(168, 255, 53, 0.2);
+  background:
+    radial-gradient(80% 60% at 100% 0%, rgba(168, 255, 53, 0.22), transparent 70%),
+    linear-gradient(160deg, #0f5129 0%, #072a14 70%);
+}
+.beneficio.destaque::after { opacity: 0.6; -webkit-mask-image: none; mask-image: none; }
+.beneficio.destaque p { color: rgba(243, 246, 236, 0.72); }
+.beneficio.foto-b .txt { position: relative; z-index: 2; margin-top: auto; display: grid; gap: 8px; }
+.leva-texto { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 22px; padding: 0 8px; }
+.leva-texto p { font-size: 15px; color: var(--apoio); }
+.leva-texto .frase { align-self: center; max-width: 190px; text-align: center; font-size: 15px; color: var(--apagado); }
+
+/* PALESTRANTES: o mesmo componente da seção "As vozes" do iGreen Live, com o CSS dele.
+   Cabeça centrada, campo de partículas (quadrados que sobem e fogem do cursor) atrás e um
+   carrossel infinito que corre sozinho, para no hover e aceita arrasto com inércia. */
+.palestrantes { position: relative; padding: 120px 0 160px; }
+.particulas {
+  position: absolute; left: 0; right: 0; top: -80px; width: 100%; height: 900px; z-index: 0; pointer-events: none;
+  background: radial-gradient(62% 74% at 50% 46%, rgba(168, 255, 53, 0.032), transparent 74%);
+  -webkit-mask-image: radial-gradient(88% 92% at 50% 46%, #000 0%, rgba(0, 0, 0, 0.5) 56%, transparent 94%);
+  mask-image: radial-gradient(88% 92% at 50% 46%, #000 0%, rgba(0, 0, 0, 0.5) 56%, transparent 94%);
+}
+.pal-cabeca { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; margin: 0 auto 88px; padding: 0 24px; }
+.pal-cabeca .etiqueta { align-self: center; }
+.pal-cabeca .etiqueta b { font-weight: 600; color: var(--texto); }
+.pal-cabeca .h-grande { margin-top: 20px; }
+.pal-cabeca .h-grande span { color: var(--apagado); }
+.pal-cabeca p { margin-top: 24px; font-size: 18px; line-height: 1.55; color: rgba(243, 246, 236, 0.55); }
+.pal-cabeca .btn { margin-top: 34px; }
+.carrossel { position: relative; z-index: 1; overflow: hidden; padding: 12px 0 10px; cursor: grab; -webkit-user-select: none; user-select: none; touch-action: pan-y; }
+.carrossel.arrastando { cursor: grabbing; }
+.trilho { display: flex; gap: 24px; width: max-content; will-change: transform; }
+/* card: recorte flutuando na frente de um painel verde, mais forte no pé */
+.pessoa { position: relative; flex: none; width: 392px; height: 520px; overflow: hidden; border-radius: 8px; }
+.pessoa .painel {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 75%; z-index: 1; border-radius: 8px;
+  background:
+    radial-gradient(50% 38% at 50% 98%, rgba(196, 250, 120, 0.55) 0%, rgba(160, 231, 75, 0.38) 50%, transparent 78%),
+    linear-gradient(to top, rgba(160, 231, 75, 0.4) 0%, rgba(139, 196, 62, 0.22) 42%, rgba(129, 178, 58, 0.08) 72%, transparent 100%);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.pessoa .painel::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background-image: radial-gradient(rgba(216, 255, 166, 0.38) 0.7px, transparent 1.2px); background-size: 5px 5px; mix-blend-mode: overlay; opacity: 0.32; -webkit-mask-image: linear-gradient(to top, #000 18%, transparent 80%); mask-image: linear-gradient(to top, #000 18%, transparent 80%); }
+/* filete de luz na borda: forte no pé, sumindo pelas laterais */
+.pessoa::before {
+  content: ""; position: absolute; inset: 0; z-index: 5; border-radius: inherit; padding: 1px; pointer-events: none; mix-blend-mode: overlay;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.28) 22%, rgba(255, 255, 255, 0.1) 38%, transparent 50%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude;
+}
+.pessoa img { position: absolute; z-index: 2; bottom: 0; left: 50%; height: 100%; width: auto; max-width: none; transform: translateX(-50%); transform-origin: bottom center; transition: transform 0.35s cubic-bezier(0.3, 0.7, 0.3, 1); pointer-events: none; -webkit-user-drag: none; }
+.pessoa .desfoque { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: 32%; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.5) 48%, transparent 100%); mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.5) 48%, transparent 100%); }
+.pessoa .esmaece { position: absolute; z-index: 4; left: 0; right: 0; bottom: 0; height: 38%; background: linear-gradient(to top, rgba(1, 7, 2, 0.78) 0%, rgba(1, 7, 2, 0.26) 55%, transparent 100%); }
+.pessoa .nome { position: absolute; z-index: 5; left: 24px; right: 24px; bottom: 20px; }
+.pessoa .nome b { display: block; font-size: 24px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.25; color: #fafdf7; }
+.pessoa .nome span { display: block; margin-top: 8px; font-size: 12px; color: rgba(255, 255, 255, 0.62); }
+/* hover: a pessoa chega perto e o painel verde afunda e apaga */
+.pessoa:hover img { transform: translateX(-50%) scale(1.05); }
+.pessoa:hover .painel { opacity: 0.55; transform: translateY(9%); }
+
+/* PROGRAMAÇÃO */
+.prog { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 60px; }
+.prog-esq { position: sticky; top: 40px; align-self: start; display: grid; justify-items: start; gap: 22px; }
+.prog-lista { list-style: none; margin: 0; padding: 0; }
+.prog-item { position: relative; display: grid; grid-template-columns: 96px 1fr 180px; gap: 24px; align-items: center; padding: 24px 0; border-top: 1px solid var(--linha); }
+.prog-item:last-child { border-bottom: 1px solid var(--linha); }
+.prog-item::before { content: ""; position: absolute; left: 0; top: -1px; width: 0; height: 1px; background: var(--lima); transition: width 0.8s var(--ease); }
+.prog-item:hover::before, .prog-item.ativo::before { width: 100%; }
+.prog-item time { font-size: 24px; font-weight: 500; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--apagado); }
+.prog-item.ativo time { color: var(--lima); }
+.prog-item h3 { margin-bottom: 4px; font-size: 20px; font-weight: 500; letter-spacing: -0.015em; }
+.prog-item p { font-size: 15px; color: var(--apoio); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.tags span { padding: 4px 10px; border-radius: 999px; border: 1px solid var(--linha); font-size: 12px; color: var(--apoio); }
+/* foto real do momento (3:2), apagada até o item ficar ativo ou com o mouse em cima */
+.prog-foto { position: relative; aspect-ratio: 3 / 2; border-radius: 12px; overflow: hidden; background: var(--card); }
+.prog-foto img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.8) brightness(0.82); transition: transform 0.8s var(--ease), filter 0.5s ease; }
+.prog-foto::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(243, 246, 236, 0.1); pointer-events: none; }
+.prog-item:hover .prog-foto img, .prog-item.ativo .prog-foto img { transform: scale(1.05); filter: none; }
+
+/* NÚMEROS: largura normal, número em creme com o sinal em limão */
+.num-linha { position: relative; display: grid; grid-template-columns: 80px 1fr 340px; align-items: center; gap: 20px; padding: 26px 0; border-top: 1px solid var(--linha); }
+/* ao entrar na tela, um filete limão corre pela linha enquanto o número conta */
+.num-linha::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--lima); transform: scaleX(0); transform-origin: left center; opacity: 0; }
+.num-linha.visivel::before { animation: risca 2s var(--ease) calc(var(--i, 0) * 120ms) both; }
+@keyframes risca { 0% { transform: scaleX(0); opacity: 1; } 60% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .num-linha.visivel::before { animation: none; } }
+.num-linha:last-child { border-bottom: 1px solid var(--linha); }
+.num-linha small { align-self: start; padding-top: 12px; font-size: 13px; color: var(--apagado); font-variant-numeric: tabular-nums; }
+.num-linha b { font-size: clamp(52px, 6vw, 88px); font-weight: 500; line-height: 1; letter-spacing: -0.045em; }
+.num-linha b em { font-style: normal; color: var(--lima); }
+.num-linha p { font-size: 15px; color: var(--apoio); }
+.num-linha p strong { font-weight: 500; color: var(--texto); }
+
+/* LOCAL */
+.local { display: grid; grid-template-columns: 1.25fr 1fr; gap: 16px; }
+/* Mapa ilustrado do entorno: ruas em dois ângulos, avenidas com nome, córrego, parque, o
+   pavilhão aceso e a rota a pé desde o metrô. O local fica no centro exato do desenho, então o
+   pino (HTML) e o SVG coincidem em qualquer proporção do cartão. */
+.mapa { position: relative; isolation: isolate; min-height: 500px; border-radius: var(--raio-m); overflow: hidden; background: var(--card); border: 1px solid var(--linha); }
+.mapa-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.mapa-svg .rua-nome { font: 500 10.5px var(--fonte); letter-spacing: 0.16em; fill: rgba(243, 246, 236, 0.4); }
+.mapa-svg .lugar { font: 500 12px var(--fonte); fill: rgba(243, 246, 236, 0.66); }
+.mapa-svg .lugar-lima { font: 500 10.5px var(--fonte); letter-spacing: 0.14em; fill: var(--lima-suave); }
+.mapa-svg .rota { animation: rota 1.1s linear infinite; }
+@keyframes rota { to { stroke-dashoffset: -18; } }
+.mapa > .pontos-base, .mapa > .pontos { z-index: 1; }
+.mapa::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(75% 75% at 50% 50%, transparent 50%, rgba(6, 17, 10, 0.9) 100%); }
+.pino { position: absolute; z-index: 2; left: 50%; top: 50%; transform: translate(-50%, calc(-100% + 8px)); display: grid; justify-items: center; gap: 10px; }
+.pino .rotulo { display: grid; gap: 1px; padding: 10px 14px; border-radius: 14px; text-align: center; }
+.pino .rotulo b { font-size: 14px; font-weight: 500; }
+.pino .rotulo span { font-size: 12px; color: var(--apoio); }
+.pino .ponto { position: relative; width: 16px; height: 16px; border-radius: 50%; background: var(--lima); box-shadow: 0 0 0 6px rgba(168, 255, 53, 0.18), 0 0 24px rgba(168, 255, 53, 0.6); }
+.pino .ponto::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--lima); animation: pulsa 2.4s var(--ease) infinite; }
+@keyframes pulsa { from { transform: scale(1); opacity: 0.9; } to { transform: scale(4); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .pino .ponto::after, .mapa-svg .rota { animation: none; } }
+.mapa .zoom { position: absolute; z-index: 2; right: 16px; bottom: 16px; display: grid; border-radius: 12px; overflow: hidden; }
+.mapa .zoom span { display: grid; place-items: center; width: 38px; height: 38px; color: var(--apoio); }
+.mapa .zoom span + span { border-top: 1px solid rgba(243, 246, 236, 0.1); }
+.info { padding: 26px; display: flex; flex-direction: column; }
+.info-data { display: flex; align-items: center; gap: 18px; padding-bottom: 22px; border-bottom: 1px solid var(--linha); }
+.info-data .dia { display: grid; place-content: center; justify-items: center; gap: 6px; width: 84px; height: 92px; border-radius: 16px; background: var(--lima); color: var(--tinta); line-height: 1; }
+.info-data .dia b { font-size: 40px; font-weight: 500; letter-spacing: -0.04em; }
+.info-data .dia small { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+.info-data p b { display: block; font-size: 22px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; }
+.info-data p span { font-size: 14px; color: var(--apoio); }
+.info-data p strong { font-weight: 500; color: var(--lima-suave); }
+.info-linhas { list-style: none; margin: 4px 0 0; padding: 0; }
+.info-linhas li { display: flex; gap: 14px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid var(--linha); }
+.info-linhas .circ { display: grid; place-items: center; flex: none; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--borda); color: var(--lima); }
+.info-linhas .circ .icone { width: 17px; height: 17px; }
+.info-linhas div { display: grid; gap: 2px; line-height: 1.35; }
+.info-linhas small { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--apagado); }
+.info-linhas b { font-size: 16px; font-weight: 500; }
+.info-linhas span { font-size: 14px; color: var(--apoio); }
+.info-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0 22px; }
+.info-chips span { display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 999px; background: rgba(243, 246, 236, 0.05); font-size: 12.5px; color: var(--apoio); }
+.info-chips .icone { width: 14px; height: 14px; color: var(--lima); }
+.info .acoes { margin-top: auto; display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* VÍDEO E DEPOIMENTOS */
+/* O vídeo ocupa a linha inteira: uma prévia muda roda em loop (fotos e vídeos do iGreen Live)
+   e o clique troca pelo vídeo completo, com som e controles. */
+.video { position: relative; overflow: hidden; isolation: isolate; aspect-ratio: 2 / 1; min-height: 420px; border-radius: var(--raio-m); background: var(--card); cursor: pointer; box-shadow: 0 0 0 1px rgba(243, 246, 236, 0.07), 0 28px 60px -22px rgba(0, 0, 0, 0.75), 0 10px 24px -12px rgba(0, 0, 0, 0.5); }
+.video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
+.video:hover video { transform: scale(1.02); }
+.video::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to top, rgba(1, 7, 2, 0.88) 0%, rgba(1, 7, 2, 0.3) 36%, rgba(1, 7, 2, 0.12) 62%, rgba(1, 7, 2, 0.4) 100%); transition: opacity 0.5s ease; }
+.video .centro { position: absolute; z-index: 2; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+/* aro grande e transparente, botão pequeno */
+.video .aro { display: grid; place-items: center; width: 136px; height: 136px; border-radius: 50%; border: 1px solid rgba(243, 246, 236, 0.22); background: rgba(243, 246, 236, 0.06); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: transform 0.6s var(--ease), border-color 0.4s; }
+.video .aro span { display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; background: var(--lima); color: var(--tinta); }
+.video:hover .aro { transform: scale(1.06); border-color: rgba(243, 246, 236, 0.4); }
+.video .legenda-v { position: absolute; z-index: 2; left: 32px; right: 32px; bottom: 28px; display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; }
+.video .legenda-v b { display: block; font-size: 28px; font-weight: 500; letter-spacing: -0.025em; line-height: 1.15; }
+.video .legenda-v small { font-size: 14px; color: var(--apoio); }
+.video .duracao { position: absolute; z-index: 2; top: 20px; right: 20px; }
+.video.tocando { cursor: default; }
+.video.tocando video { transform: none; }
+/* Brilho ambiente (como o "modo ambiente" do YouTube): um canvas pequeno atrás do vídeo recebe
+   o quadro atual, misturado aos anteriores para a cor mudar suave, e o desfoque espalha a luz
+   para fora da borda, como o reflexo de uma TV na parede. */
+.video-palco { position: relative; isolation: isolate; }
+/* o canvas tem o tamanho exato do vídeo e recebe o quadro inteiro; o desfoque espalha essa luz
+   por igual para fora das quatro bordas, então o brilho tem a forma do card (um retângulo de
+   luz), como no YouTube, e não uma bola */
+.video-luz {
+  position: absolute; z-index: -1; inset: 0; width: 100%; height: 100%; border-radius: var(--raio-m); pointer-events: none;
+  transform: scale(1.02); filter: blur(64px) saturate(1.45); opacity: 0; transition: opacity 2s ease;
+}
+.video-palco.aceso .video-luz { opacity: 0.85; }
+.video.tocando::after, .video.tocando .centro, .video.tocando .legenda-v, .video.tocando .duracao { opacity: 0; pointer-events: none; }
+.depo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 56px; }
+.depo-cartao { padding: 26px; display: flex; flex-direction: column; gap: 22px; }
+.depo-cartao .aspas { font-size: 44px; line-height: 0.6; color: var(--lima); font-weight: 500; }
+.depo-cartao blockquote { margin: 0; font-size: 19px; line-height: 1.4; letter-spacing: -0.01em; }
+.quem { display: flex; align-items: center; gap: 12px; margin-top: auto; }
+.quem .ini { display: grid; place-items: center; flex: none; width: 42px; height: 42px; border-radius: 50%; background: rgba(168, 255, 53, 0.12); color: var(--lima); font-size: 14px; font-weight: 600; }
+.quem .txt { display: grid; gap: 2px; line-height: 1.25; }
+.quem .txt b { font-size: 15px; font-weight: 500; }
+.quem .txt small { font-size: 13px; color: var(--apagado); }
+
+/* PERGUNTAS */
+.faq { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 60px; }
+.faq-esq { display: grid; justify-items: start; align-content: start; gap: 22px; }
+.faq-esq .lead { max-width: 420px; }
+.ajuda { margin-top: 56px; display: grid; gap: 6px; justify-items: start; }
+.ajuda b { font-size: 22px; font-weight: 500; letter-spacing: -0.02em; }
+.ajuda p { margin-bottom: 18px; font-size: 14.5px; color: var(--apagado); }
+.btn-whats > svg { width: 19px; height: 19px; fill: currentColor; }
+.faq-lista { display: grid; gap: 14px; align-content: start; }
+.faq details { border-radius: 16px; background: rgba(243, 246, 236, 0.015); box-shadow: inset 0 0 0 1px rgba(243, 246, 236, 0.1); transition: background 0.4s var(--ease), box-shadow 0.4s var(--ease); }
+.faq details:hover { box-shadow: inset 0 0 0 1px rgba(243, 246, 236, 0.18); }
+.faq details[open] { background: rgba(243, 246, 236, 0.03); }
+.faq summary { list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 26px 28px; font-size: 19px; font-weight: 500; letter-spacing: -0.015em; cursor: pointer; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq .mais { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--borda); color: var(--texto); transition: transform 0.5s var(--ease), background 0.3s, color 0.3s, border-color 0.3s; }
+.faq details[open] .mais { transform: rotate(45deg); background: var(--lima); border-color: var(--lima); color: var(--tinta); }
+.faq details p { padding: 0 84px 26px 28px; color: var(--apoio); }
+
+/* INSCRIÇÃO (o cartão do rodapé F do iGreen Live): cartão escuro de raio 32 com a proposta à
+   esquerda, o formulário em destaque à direita e o letreiro gigante correndo na base. */
+.cta { position: relative; z-index: 2; padding: clamp(48px, 5vw, 72px) 24px 0; }
+.cta-cartao {
+  position: relative; z-index: 1; width: min(1320px, 100%); margin: 0 auto; border-radius: 32px; overflow: hidden;
+  background:
+    radial-gradient(70% 55% at 50% 118%, rgba(168, 255, 53, 0.13) 0%, rgba(168, 255, 53, 0) 70%),
+    radial-gradient(60% 50% at 0% 0%, rgba(216, 255, 166, 0.05) 0%, rgba(216, 255, 166, 0) 70%),
+    var(--card);
+  box-shadow: inset 0 0 0 1px rgba(243, 246, 236, 0.08), 0 40px 80px -30px rgba(0, 0, 0, 0.7);
+}
+/* filete de luz na borda, mais forte embaixo */
+.cta-cartao::after {
+  content: ""; position: absolute; inset: 0; z-index: 3; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: linear-gradient(to top, rgba(216, 255, 166, 0.55) 0%, rgba(216, 255, 166, 0.14) 18%, rgba(255, 255, 255, 0.05) 46%, rgba(255, 255, 255, 0.07) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude;
+}
+.cta-grade { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; padding: 40px 40px 0; }
+.cta-pitch { grid-column: 1 / span 5; padding-top: 8px; }
+.cta-titulo { font-size: clamp(36px, 3.4vw, 54px); font-weight: 500; line-height: 1.04; letter-spacing: -0.032em; }
+.cta-titulo span { display: block; color: var(--apagado); }
+.cta-sub { margin-top: 22px; max-width: 40ch; font-size: 17px; color: rgba(243, 246, 236, 0.6); }
+.cta-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+.cta-acoes .btn-whats { padding: 0 24px 0 20px; }
+.cta-acoes .btn-whats > svg { color: var(--lima-suave); }
+.cta-info { list-style: none; display: grid; gap: 14px; margin: 40px 0 0; padding: 0; font-size: 15.5px; color: rgba(243, 246, 236, 0.74); }
+.cta-info li { display: flex; align-items: center; gap: 12px; }
+.cta-info .icone { color: rgba(216, 255, 166, 0.7); }
+/* o formulário é o centro do cartão: vidro mais claro, luz limão no topo, filete de luz na
+   borda de cima e a barra de vagas */
+.form {
+  position: relative; grid-column: 7 / span 6; align-self: start; padding: 34px; border-radius: 24px;
+  background:
+    radial-gradient(90% 55% at 50% 0%, rgba(168, 255, 53, 0.1), transparent 72%),
+    linear-gradient(180deg, rgba(243, 246, 236, 0.07), rgba(243, 246, 236, 0.025));
+  box-shadow: inset 0 0 0 1px rgba(243, 246, 236, 0.12), 0 30px 60px -24px rgba(0, 0, 0, 0.7);
+}
+.form::before { content: ""; position: absolute; top: 0; left: 14%; right: 14%; height: 1px; background: linear-gradient(90deg, transparent, rgba(216, 255, 166, 0.75), transparent); }
+.form-topo { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 22px; }
+.form-topo .gratis { font-size: 13px; color: var(--lima-suave); }
+.form h3 { font-size: 30px; font-weight: 500; line-height: 1.1; letter-spacing: -0.025em; }
+.form > p { margin-top: 8px; font-size: 15px; color: rgba(243, 246, 236, 0.58); }
+.vagas { margin-top: 22px; }
+.vagas-topo { display: flex; justify-content: space-between; font-size: 13px; color: rgba(243, 246, 236, 0.55); }
+.vagas-topo b { font-weight: 500; color: var(--texto); }
+.vagas-barra { display: block; height: 6px; margin-top: 9px; border-radius: 6px; background: rgba(243, 246, 236, 0.08); overflow: hidden; }
+.vagas-barra i { display: block; width: var(--p); height: 100%; border-radius: inherit; background: linear-gradient(90deg, rgba(168, 255, 53, 0.55), var(--lima)); transform: scaleX(0); transform-origin: left center; transition: transform 1.8s var(--ease) 0.3s; }
+.form.visivel .vagas-barra i { transform: none; }
+.form-linha { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 26px; }
+.campo { display: grid; gap: 8px; font-size: 13.5px; color: rgba(243, 246, 236, 0.6); }
+.form > .campo { margin-top: 14px; }
+.campo input { width: 100%; height: 52px; padding: 0 16px; border-radius: 12px; border: 1px solid rgba(243, 246, 236, 0.12); background: rgba(1, 7, 2, 0.6); color: var(--texto); font: 400 15.5px var(--fonte); outline: none; transition: border-color 0.3s, box-shadow 0.3s, background 0.3s; }
+.campo input::placeholder { color: rgba(243, 246, 236, 0.3); }
+.campo input:hover { border-color: rgba(243, 246, 236, 0.18); }
+.campo input:focus { border-color: rgba(168, 255, 53, 0.55); box-shadow: 0 0 0 4px rgba(168, 255, 53, 0.09); background: #041007; }
+/* aceite com caixa própria: a linha inteira é clicável, a caixa vira limão e o visto se desenha */
+.aceite {
+  position: relative; display: flex; gap: 12px; align-items: center; margin-top: 16px; padding: 13px 16px; border-radius: 14px;
+  background: rgba(243, 246, 236, 0.03); box-shadow: inset 0 0 0 1px rgba(243, 246, 236, 0.09);
+  font-size: 13.5px; line-height: 1.45; color: rgba(243, 246, 236, 0.58); cursor: pointer;
+  transition: background 0.35s ease, box-shadow 0.35s ease, color 0.35s ease;
+}
+.aceite:hover { box-shadow: inset 0 0 0 1px rgba(243, 246, 236, 0.18); }
+.aceite-input { position: absolute; left: 16px; top: 50%; width: 22px; height: 22px; margin: -11px 0 0; opacity: 0; }
+.aceite-caixa { position: relative; flex: none; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 7px; background: rgba(1, 7, 2, 0.6); box-shadow: inset 0 0 0 1.5px rgba(243, 246, 236, 0.3); transition: background 0.3s var(--ease), box-shadow 0.3s ease, transform 0.3s var(--ease); }
+.aceite-caixa svg { width: 14px; height: 14px; fill: none; stroke: var(--tinta); stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 22; stroke-dashoffset: 22; transition: stroke-dashoffset 0.4s var(--ease) 0.06s; }
+.aceite:active .aceite-caixa { transform: scale(0.9); }
+.aceite-input:checked + .aceite-caixa { background: var(--lima); box-shadow: inset 0 0 0 1.5px var(--lima), 0 0 16px rgba(168, 255, 53, 0.4); }
+.aceite-input:checked + .aceite-caixa svg { stroke-dashoffset: 0; }
+.aceite-input:focus-visible + .aceite-caixa { outline: 2px solid var(--lima); outline-offset: 3px; }
+.aceite:has(.aceite-input:checked) { background: rgba(168, 255, 53, 0.06); box-shadow: inset 0 0 0 1px rgba(168, 255, 53, 0.32); color: rgba(243, 246, 236, 0.82); }
+.aceite-txt b { font-weight: 500; color: var(--texto); }
+.form .enviar { width: 100%; justify-content: space-between; height: 54px; margin-top: 22px; font-size: 16px; }
+.form .enviar .seta { width: 42px; height: 42px; }
+.form .nota { margin-top: 14px; font-size: 13px; line-height: 1.45; text-align: center; color: rgba(243, 246, 236, 0.42); }
+/* letreiro: corre sozinho; no hover para, fica limão e as setas viram */
+.letreiro { position: relative; z-index: 1; display: block; margin-top: clamp(48px, 6vh, 80px); padding-bottom: clamp(16px, 2.2vh, 28px); overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%); }
+.letreiro-trilho { display: flex; width: max-content; animation: corre 32s linear infinite; }
+.letreiro:hover .letreiro-trilho { animation-play-state: paused; }
+.letreiro-grupo { display: flex; align-items: center; gap: 0.3em; padding-right: 0.3em; font-size: clamp(56px, 5.6vw, 92px); font-weight: 500; line-height: 1.1; letter-spacing: -0.04em; white-space: nowrap; }
+.letreiro-grupo span { transition: color 0.5s ease; }
+.letreiro-grupo svg { width: 0.58em; height: 0.58em; flex: none; margin-top: 0.06em; fill: none; stroke: var(--lima); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.7s var(--ease); }
+.letreiro:hover .letreiro-grupo span { color: var(--lima); }
+.letreiro:hover .letreiro-grupo svg { transform: rotate(45deg); }
+@media (prefers-reduced-motion: reduce) { .letreiro-trilho { animation: none; } .vagas-barra i { transform: none; transition: none; } }
+
+/* RODAPÉ (o rodapé D "Aurora viva" do iGreen Live, mais calmo): a névoa verde fica baixa e
+   larga e respira devagar, sem formar ovais atrás do texto; por cima, a textura de pontos e a
+   granulação fina, e um véu preto no alto para emendar com a página. Texto na mesma escala do
+   resto da página; os botões ficam junto do assunto (data e local, contato). */
+.rodape {
+  --rd-w: min(1240px, 100vw - 48px);
+  position: relative; z-index: 1; isolation: isolate; overflow: hidden;
+  padding: clamp(150px, 17vh, 200px) 0 28px; background: var(--bg);
+}
+.ceu { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: linear-gradient(to bottom, #010702 0%, #010803 46%, #031109 100%); }
+.luz { position: absolute; display: block; will-change: transform; animation-play-state: paused; animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); animation-iteration-count: infinite; animation-direction: alternate; }
+.rodape.vivo .luz { animation-play-state: running; }
+.luz-faixa { left: -10%; width: 120%; max-width: none; bottom: -44%; height: 78%; object-fit: cover; object-position: 50% 60%; opacity: 0.5; transform-origin: 50% 100%; animation-name: luz-faixa; animation-duration: 40s; -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.6) 34%, #000 56%); mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.6) 34%, #000 56%); }
+@keyframes luz-faixa { 0% { transform: translate3d(-1.5%, 1%, 0) scale(1.01); } 100% { transform: translate3d(1.5%, -1%, 0) scale(1.04); } }
+.luz-corpo { left: -20%; width: 140%; bottom: -36%; height: 62%; transform-origin: 50% 100%; animation-name: luz-corpo; animation-duration: 32s; background: radial-gradient(closest-side, rgba(8, 84, 30, 0.8), rgba(6, 50, 20, 0.45) 50%, rgba(4, 26, 10, 0) 100%); }
+@keyframes luz-corpo { 0% { transform: translate3d(-1%, 1%, 0) scale(0.99, 0.98); } 100% { transform: translate3d(1%, -1%, 0) scale(1.02, 1.03); } }
+.luz-cortina-a { left: 4%; width: 58%; bottom: -32%; height: 62%; transform-origin: 50% 100%; animation-name: luz-cortina-a; animation-duration: 28s; background: radial-gradient(closest-side, rgba(168, 255, 53, 0.34), rgba(110, 220, 50, 0.13) 45%, rgba(70, 180, 50, 0) 100%); }
+@keyframes luz-cortina-a { 0% { transform: translate3d(-2%, 1%, 0) scale(0.98); } 100% { transform: translate3d(2%, -1%, 0) scale(1.03); } }
+.luz-cortina-b { left: 50%; width: 54%; bottom: -34%; height: 58%; transform-origin: 50% 100%; animation-name: luz-cortina-b; animation-duration: 34s; animation-delay: -12s; background: radial-gradient(closest-side, rgba(130, 255, 80, 0.22), rgba(80, 200, 60, 0.08) 45%, rgba(80, 200, 60, 0) 100%); }
+@keyframes luz-cortina-b { 0% { transform: translate3d(2%, 1%, 0) scale(0.98); } 100% { transform: translate3d(-2%, -1%, 0) scale(1.03); } }
+.luz-chao { left: -10%; width: 120%; bottom: -14%; height: 26%; transform-origin: 50% 100%; animation-name: luz-chao; animation-duration: 18s; background: radial-gradient(50% 50% at 50% 100%, rgba(216, 255, 166, 0.24), rgba(168, 255, 53, 0.08) 45%, rgba(168, 255, 53, 0) 75%); }
+@keyframes luz-chao { 0% { transform: scale(0.99, 0.96); opacity: 0.8; } 100% { transform: scale(1.02, 1.04); opacity: 1; } }
+.grao { position: absolute; inset: 0; opacity: 0.05; background-size: 220px 220px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.veu { position: absolute; left: 0; right: 0; top: 0; height: 46%; background: linear-gradient(to bottom, #010702 0%, rgba(1, 7, 2, 0.9) 40%, rgba(1, 7, 2, 0) 100%); }
+@media (prefers-reduced-motion: reduce) { .luz { animation: none; } }
+
+.rodape-in { position: relative; z-index: 1; display: flex; flex-direction: column; width: var(--rd-w); margin: 0 auto; }
+.rodape-cabeca { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; }
+.rodape-frase { font-size: clamp(42px, 5.2vw, 80px); font-weight: 500; line-height: 1; letter-spacing: -0.038em; }
+.rodape-frase span { display: block; padding-bottom: 0.04em; }
+.rodape-frase span + span { color: var(--apagado); }
+.rodape-prox { display: inline-flex; align-items: center; gap: 9px; padding-bottom: 12px; font-size: 14.5px; color: rgba(243, 246, 236, 0.6); white-space: nowrap; }
+.rodape-prox b { font-weight: 500; color: var(--texto); }
+.ponto-luz { width: 6px; height: 6px; flex: none; border-radius: 50%; background: var(--lima); box-shadow: 0 0 8px rgba(168, 255, 53, 0.65); }
+.rodape-linha { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; margin: 52px 0 72px; padding-top: 40px; border-top: 1px solid rgba(243, 246, 236, 0.1); }
+.rodape-menu { grid-column: 1 / 4; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.rodape-quando { grid-column: 5 / 9; display: flex; flex-direction: column; align-items: flex-start; }
+.rodape-contato { grid-column: 10 / 13; display: flex; flex-direction: column; align-items: flex-start; }
+/* menu: o texto rola para cima e um ponto entra na frente */
+.menu-a { position: relative; display: block; font-size: 22px; font-weight: 500; line-height: 1.25; letter-spacing: -0.02em; transition: opacity 0.5s ease; }
+.menu-a::before { content: ""; position: absolute; left: 0; top: 50%; width: 7px; height: 7px; margin-top: -3.5px; border-radius: 50%; background: var(--lima); box-shadow: 0 0 10px rgba(168, 255, 53, 0.7); transform: scale(0); transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1); }
+.menu-rola { display: block; height: 1.25em; overflow: hidden; transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1); }
+.menu-rola span { display: block; transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1); }
+.menu-rola span + span { color: var(--lima-suave); }
+.menu-a:hover .menu-rola { transform: translateX(16px); }
+.menu-a:hover .menu-rola span { transform: translateY(-100%); }
+.menu-a:hover::before { transform: scale(1); }
+.rodape-menu:has(.menu-a:hover) .menu-a:not(:hover) { opacity: 0.32; }
+.rodape-h { margin-bottom: 18px; font-size: 14px; font-weight: 400; color: var(--apagado); }
+.rodape-lista { list-style: none; align-self: stretch; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.rodape-lista li { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 9px 0 10px; border-bottom: 1px solid rgba(243, 246, 236, 0.08); font-size: 15px; line-height: 1.3; color: rgba(243, 246, 236, 0.72); }
+.rodape-lista li:first-child { padding-top: 0; }
+.rodape-lista li span + span { color: rgba(243, 246, 236, 0.42); text-align: right; }
+.rodape-lista li.destaque span:first-child { display: inline-flex; align-items: center; gap: 8px; color: var(--texto); }
+.rodape-lista li.destaque span:first-child::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--lima); box-shadow: 0 0 8px rgba(168, 255, 53, 0.6); }
+.rodape-lista li.destaque span + span { color: var(--lima-suave); }
+.rodape-quando .btn { margin-top: 26px; height: 48px; font-size: 15px; }
+.rodape-quando .btn .seta { width: 36px; height: 36px; }
+/* links de texto: o filete entra pela esquerda e sai pela direita */
+.link { position: relative; display: inline-block; color: rgba(243, 246, 236, 0.72); transition: color 0.35s ease; }
+.link::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right center; transition: transform 0.55s cubic-bezier(0.19, 1, 0.22, 1); }
+.link:hover { color: var(--texto); }
+.link:hover::after { transform: scaleX(1); transform-origin: left center; }
+.rodape-mail { font-size: 17px; letter-spacing: -0.01em; color: var(--texto); }
+.rodape-whats { margin-top: 10px; font-size: 15px; }
+.rodape-end { margin-top: 10px; font-size: 14.5px; color: rgba(243, 246, 236, 0.42); }
+.rodape-contato .btn-fantasma { margin-top: 24px; height: 48px; font-size: 15px; }
+.rodape-social { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 24px 0 0; padding: 0; font-size: 14.5px; }
+.rodape-barra { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; padding-top: 20px; border-top: 1px solid rgba(243, 246, 236, 0.12); font-size: 14px; color: rgba(243, 246, 236, 0.64); }
+.rodape-legal { display: flex; gap: 28px; }
+.rodape-legal .link { color: rgba(243, 246, 236, 0.64); }
+.topo-link { justify-self: end; display: inline-flex; align-items: center; gap: 8px; color: rgba(243, 246, 236, 0.74); transition: color 0.3s; }
+.topo-link .icone { width: 16px; height: 16px; transition: transform 0.6s var(--ease); }
+.topo-link:hover { color: var(--lima-suave); }
+.topo-link:hover .icone { transform: translateY(-3px); }
+
+/* ================= Notebook de tela baixa ================= */
+@media (min-width: 1101px) and (max-height: 780px) {
+  .hero-cartao { --conta-h: 276px; }
+  .hero-esq { gap: 16px; }
+  .hero h1 { font-size: clamp(44px, min(4.9vw, 8.4vh), 74px); }
+  .conta .onde { display: none; }
+  .num-cartao { min-height: 112px; }
+  .num-cartao small { display: none; }
+}
+
+/* ================= Tablet e celular ================= */
+@media (max-width: 1100px) {
+  .nav-links, .nav .btn-creme { display: none; }
+  .nav-menu { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--borda); background: var(--vidro); color: var(--texto); }
+  .hero { padding-bottom: 0; }
+  .hero-cartao { height: auto; }
+  .hero-conteudo { order: 1; padding: 14px 22px 0; }
+  .hero-palco { order: 2; position: relative; height: 560px; margin-top: 8px; }
+  .hero-pessoa { left: 50%; height: 85%; }
+  /* no celular o nome vai numa linha só, acima da cabeça, sem nada cobrindo */
+  .hero-palavra { right: auto; left: 50%; top: 0; transform: translateX(-50%); display: flex; gap: 0.2em; font-size: min(24cqw, 17cqh); }
+  .hero-base { order: 3; padding: 0 22px; margin-top: -150px; }
+  .num-cartao { flex: 1; width: auto; }
+  .conta { order: 4; position: static; width: auto; margin: 12px 22px 22px; }
+  .sobre-grade, .local, .prog, .faq { grid-template-columns: 1fr; }
+  .depo { grid-template-columns: 1fr 1fr; }
+  .cta-pitch, .form { grid-column: 1 / -1; }
+  .form { margin-top: 48px; }
+  .prog-esq { position: static; }
+  .leva-grade { grid-template-columns: 1fr 1fr; }
+  .leva-texto .frase { display: none; }
+  .pessoa { width: 352px; height: 468px; }
+  .pal-cabeca { margin-bottom: 64px; }
+  .num-linha { grid-template-columns: 40px 1fr; }
+  .num-linha p { grid-column: 2; }
+  .rodape-cabeca { flex-direction: column; align-items: flex-start; gap: 22px; }
+  .rodape-prox { padding-bottom: 0; white-space: normal; }
+}
+@media (max-width: 899px) {
+  .rodape { padding-top: 130px; }
+  .rodape-linha { grid-template-columns: 1fr 1fr; row-gap: 48px; column-gap: 32px; }
+  .rodape-menu { grid-column: 1 / -1; }
+  .rodape-quando { grid-column: 1 / 2; }
+  .rodape-contato { grid-column: 2 / 3; }
+  .rodape-barra { grid-template-columns: 1fr; justify-items: start; }
+  .rodape-legal { flex-wrap: wrap; gap: 10px 22px; }
+  .topo-link { justify-self: start; }
+}
+@media (max-width: 640px) {
+  body { font-size: 15.5px; }
+  .wrap { width: calc(100% - 32px); }
+  .secao { padding: 76px 0; }
+  .hero { padding: 8px 8px 0; }
+  .hero-cartao { border-radius: 22px; }
+  .hero h1 { font-size: 40px; }
+  .hero-palco { height: 450px; }
+  .hero-base { margin-top: -110px; }
+  .num-cartao { min-height: 108px; padding: 14px; }
+  .num-cartao b { font-size: 30px; }
+  .num-cartao small { display: none; }
+  .sobre-cartoes, .leva-grade { grid-template-columns: 1fr; }
+  .leva-grade { grid-auto-rows: auto; }
+  .beneficio { min-height: 220px; }
+  .beneficio.foto-b { min-height: 320px; }
+  .sobre-texto { padding-left: 0; }
+  .sobre-foto { min-height: 440px; }
+
+
+  .prog-item { grid-template-columns: 64px 1fr; gap: 16px; }
+  .prog-item time { font-size: 20px; }
+  .prog-foto { display: none; }
+  .info { padding: 20px; }
+  .info-data .dia { width: 72px; height: 80px; }
+  .info-data .dia b { font-size: 34px; }
+  .info-data p b { font-size: 19px; }
+  .video { aspect-ratio: auto; min-height: 420px; }
+  .video .aro { width: 96px; height: 96px; }
+  .video .aro span { width: 48px; height: 48px; }
+  .video .legenda-v { left: 20px; right: 20px; bottom: 20px; }
+  .video .legenda-v b { font-size: 21px; }
+  .depo { grid-template-columns: 1fr; }
+  .faq summary { padding: 22px 20px; font-size: 17px; }
+  .faq details p { padding: 0 20px 22px; }
+  .ajuda { margin-top: 32px; }
+  .pessoa { width: 308px; height: 408px; }
+  .palestrantes { padding: 84px 0 110px; }
+  .pal-cabeca p br { display: none; }
+  .cta { padding: 24px 12px 0; }
+  .cta-grade { padding: 22px 22px 0; }
+  .form { padding: 24px 20px; }
+  .form h3 { font-size: 26px; }
+  .form-linha { grid-template-columns: 1fr; }
+  .letreiro-grupo { font-size: 48px; }
+  .rodape-linha { grid-template-columns: 1fr; }
+  .rodape-quando, .rodape-contato { grid-column: 1 / -1; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="seta" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></symbol>
+    <symbol id="play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="cal" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></symbol>
+    <symbol id="pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+    <symbol id="relogio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="carro" viewBox="0 0 24 24"><path d="M3.5 16.5v-3.2c0-.6.4-1.1 1-1.3l2-.6 1.7-3.4c.3-.6.9-1 1.6-1h4.4c.7 0 1.3.4 1.6 1l1.7 3.4 2 .6c.6.2 1 .7 1 1.3v3.2M3.5 16.5h1.8M8.7 16.5h6.6M18.7 16.5h1.8M7.6 11.6h8.8"/><circle cx="7" cy="16.8" r="1.7"/><circle cx="17" cy="16.8" r="1.7"/></symbol>
+    <symbol id="acesso" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.8"/><path d="M5 8.5l7 1 7-1M12 9.5v5M9 21l3-6.5 3 6.5"/></symbol>
+    <symbol id="ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="menu" viewBox="0 0 24 24"><path d="M4 8h16M4 16h16"/></symbol>
+    <symbol id="mais" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="menos" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="cima" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+    <symbol id="whats" viewBox="0 0 24 24"><path d="M12 2.2A9.8 9.8 0 0 0 3.6 17l-1.4 5 5.1-1.3A9.8 9.8 0 1 0 12 2.2zm0 17.8a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8 1c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11.2 11.2 0 0 0 4.3 3.8c1.6.7 2.2.7 3 .6a2.6 2.6 0 0 0 1.7-1.2 2.1 2.1 0 0 0 .1-1.2c-.1-.1-.3-.2-.5-.3z"/></symbol>
+    <symbol id="raio" viewBox="0 0 24 24"><path d="M13 2.5L5 13.5h6.5L10.5 21.5 19 10.5h-6.5L13 2.5z"/></symbol>
+    <symbol id="sinal" viewBox="0 0 24 24"><path d="M2.5 9a14 14 0 0 1 19 0M6 12.6a9 9 0 0 1 12 0M9.4 16.1a4.2 4.2 0 0 1 5.2 0"/><circle cx="12" cy="19.4" r="1.1" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="sol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+    <symbol id="escudo" viewBox="0 0 24 24"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.3-7.5 9.5-4.3-1.2-7.5-4.9-7.5-9.5V6L12 3z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="estrela" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9L12 3.5z"/></symbol>
+    <symbol id="tomada" viewBox="0 0 24 24"><path d="M9 2.5v5M15 2.5v5M6.5 7.5h11v3a5.5 5.5 0 0 1-11 0v-3zM12 16v5.5"/></symbol>
+  </defs>
+</svg>
+
+<!-- ================= HERO ================= -->
+<header class="hero" data-bloco="Abertura">
+  <div class="hero-cartao">
+    <span class="pontos-base" aria-hidden="true"></span><span class="pontos" aria-hidden="true"></span>
+    <nav class="nav" aria-label="Seções do evento">
+      <a class="logo" href="#"><i></i>iGreen</a>
+      <div class="nav-links">
+        <a href="#" aria-current="page">Início</a>
+        <a href="#programacao">Programação</a>
+        <a href="#palestrantes">Palestrantes</a>
+        <a href="#local">Local</a>
+        <a href="#perguntas">Perguntas</a>
+      </div>
+      <a class="btn-creme" href="#inscricao">Garantir vaga</a>
+      <button class="nav-menu" aria-label="Abrir menu"><svg class="icone"><use href="#menu"/></svg></button>
+    </nav>
+
+    <div class="hero-palco" aria-hidden="true">
+      <span class="hero-palavra"><span>LIVE</span><span>BH</span></span>
+      <img class="hero-pessoa" src="https://snksergio.github.io/igreen-eventos-v2/speakers/thiago-cut.png" alt="" fetchpriority="high">
+    </div>
+
+    <div class="hero-conteudo">
+      <div class="hero-esq">
+        <span class="etiqueta revela"><i></i>Evento presencial · Belo Horizonte</span>
+        <h1 class="revela" style="--i:1">Energia limpa,<br><em>renda de verdade.</em></h1>
+        <p class="lead revela" style="--i:2">Uma noite com quem já transformou conta de luz em renda. Conteúdo prático, conexões e o próximo passo da sua jornada na iGreen.</p>
+        <div class="hero-acoes revela" style="--i:3">
+          <a class="btn" href="#inscricao">Quero participar <span class="seta"><svg class="icone"><use href="#seta"/></svg></span></a>
+          <a class="btn-fantasma" href="#programacao">Ver programação</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-base">
+      <div class="num-cartao vidro revela" style="--i:3"><div><b><span data-conta="3000">3.000</span><sup>+</sup></b><span>participantes</span></div><small>somando as edições de 2025 e 2026 pelo Brasil</small></div>
+      <div class="num-cartao vidro revela" style="--i:4"><div><b><span data-conta="15">15</span><sup>%</sup></b><span>de economia média</span></div><small>na conta de luz de quem já é cliente</small></div>
+    </div>
+
+    <aside class="conta vidro revela" style="--i:4" aria-label="Contagem regressiva e inscrição">
+      <div class="topo"><span>Sábado, 12 de dezembro</span><span class="ao-vivo"><i></i>Vagas abertas</span></div>
+      <div class="relogio" data-alvo="2026-12-12T19:00:00-03:00">
+        <div><b data-u="d">25</b><small>dias</small></div>
+        <div><b data-u="h">04</b><small>horas</small></div>
+        <div><b data-u="m">12</b><small>min</small></div>
+        <div><b data-u="s">33</b><small>seg</small></div>
+      </div>
+      <div class="onde"><b>Expominas · Auditório 2</b><span>Belo Horizonte, MG · 19h às 22h</span></div>
+      <div class="conta-prova">
+        <span class="avatares">
+          <span><img src="https://snksergio.github.io/igreen-eventos-v2/speakers/amanda-cut.png" alt=""></span>
+          <span><img src="https://snksergio.github.io/igreen-eventos-v2/speakers/rafael-cut.png" alt=""></span>
+          <span><img src="https://snksergio.github.io/igreen-eventos-v2/speakers/ana-cut.png" alt=""></span>
+        </span>
+        <span><b>+1.200 confirmados</b>nas últimas 48 horas</span>
+      </div>
+      <a class="btn" href="#inscricao">Garantir minha vaga <span class="seta"><svg class="icone"><use href="#seta"/></svg></span></a>
+    </aside>
+  </div>
+</header>
+
+<main>
+  <!-- ================= FAIXA ================= -->
+  <section class="faixa" data-bloco="Faixa animada" aria-label="Soluções iGreen">
+    <div class="faixa-trilho">
+      <div class="faixa-grupo"><span>Conexão Green</span><svg aria-hidden="true"><use href="#raio"/></svg><span>iGreen Telecom</span><svg aria-hidden="true"><use href="#sinal"/></svg><span>Conexão Mobi</span><svg aria-hidden="true"><use href="#carro"/></svg><span>Solis</span><svg aria-hidden="true"><use href="#sol"/></svg><span>iGreen Seguros</span><svg aria-hidden="true"><use href="#escudo"/></svg><span>iGreen Club</span><svg aria-hidden="true"><use href="#estrela"/></svg><span>Energia por assinatura</span><svg aria-hidden="true"><use href="#tomada"/></svg><span aria-hidden="true">Conexão Green</span><svg aria-hidden="true"><use href="#raio"/></svg><span aria-hidden="true">iGreen Telecom</span><svg aria-hidden="true"><use href="#sinal"/></svg><span aria-hidden="true">Conexão Mobi</span><svg aria-hidden="true"><use href="#carro"/></svg><span aria-hidden="true">Solis</span><svg aria-hidden="true"><use href="#sol"/></svg><span aria-hidden="true">iGreen Seguros</span><svg aria-hidden="true"><use href="#escudo"/></svg><span aria-hidden="true">iGreen Club</span><svg aria-hidden="true"><use href="#estrela"/></svg><span aria-hidden="true">Energia por assinatura</span><svg aria-hidden="true"><use href="#tomada"/></svg></div>
+      <div class="faixa-grupo" aria-hidden="true"><span>Conexão Green</span><svg aria-hidden="true"><use href="#raio"/></svg><span>iGreen Telecom</span><svg aria-hidden="true"><use href="#sinal"/></svg><span>Conexão Mobi</span><svg aria-hidden="true"><use href="#carro"/></svg><span>Solis</span><svg aria-hidden="true"><use href="#sol"/></svg><span>iGreen Seguros</span><svg aria-hidden="true"><use href="#escudo"/></svg><span>iGreen Club</span><svg aria-hidden="true"><use href="#estrela"/></svg><span>Energia por assinatura</span><svg aria-hidden="true"><use href="#tomada"/></svg><span aria-hidden="true">Conexão Green</span><svg aria-hidden="true"><use href="#raio"/></svg><span aria-hidden="true">iGreen Telecom</span><svg aria-hidden="true"><use href="#sinal"/></svg><span aria-hidden="true">Conexão Mobi</span><svg aria-hidden="true"><use href="#carro"/></svg><span aria-hidden="true">Solis</span><svg aria-hidden="true"><use href="#sol"/></svg><span aria-hidden="true">iGreen Seguros</span><svg aria-hidden="true"><use href="#escudo"/></svg><span aria-hidden="true">iGreen Club</span><svg aria-hidden="true"><use href="#estrela"/></svg><span aria-hidden="true">Energia por assinatura</span><svg aria-hidden="true"><use href="#tomada"/></svg></div>
+    </div>
+  </section>
+
+  <!-- ================= SOBRE ================= -->
+  <section class="secao" data-bloco="Sobre com números" aria-labelledby="t-sobre">
+    <div class="wrap">
+      <div class="cabeca"><span class="etiqueta"><i></i>Sobre o evento</span></div>
+      <h2 id="t-sobre" class="h-grande sobre-titulo revela">Mais que palestras: <span class="lima">uma noite para conectar</span> quem já vive a <span class="apagado">energia limpa no dia a dia.</span></h2>
+      <div class="sobre-grade">
+        <figure class="sobre-foto foto revela">
+          <img src="https://snksergio.github.io/igreen-eventos-v2/speakers/rafael-cut.png" alt="Rafael Costa, diretor de estratégia da iGreen" loading="lazy">
+          <figcaption class="legenda"><span class="etiqueta"><i></i>Rafael Costa · Estratégia</span></figcaption>
+        </figure>
+        <div class="sobre-dir">
+          <div class="sobre-texto revela" style="--i:1">
+            <p>Juntamos licenciados, clientes e o time da iGreen para mostrar, com números e histórias reais, como a energia por assinatura vira economia para quem consome e renda para quem indica.</p>
+            <div class="sobre-pessoas">
+              <p>Um encontro feito para quem quer resultado: menos teoria, mais exemplos de quem já está no caminho.</p>
+              <span class="avatares">
+                <span><img src="https://snksergio.github.io/igreen-eventos-v2/speakers/carla-cut.png" alt=""></span>
+                <span><img src="https://snksergio.github.io/igreen-eventos-v2/speakers/bruno-cut.png" alt=""></span>
+                <span><img src="https://snksergio.github.io/igreen-eventos-v2/speakers/juliana-cut.png" alt=""></span>
+                <span class="mais">+12</span>
+              </span>
+            </div>
+          </div>
+          <div class="sobre-cartoes">
+            <div class="dado card revela" style="--i:2">
+              <b><span data-conta="350">350</span><em>+</em></b>
+              <span>licenciados confirmados</span>
+              <small>Gente que já indica e acompanha clientes</small>
+              <div class="marcas"><span>Green</span><span>Telecom</span><span>Mobi</span><span>Solis</span><span>Seguros</span><span>Club</span></div>
+              <a class="btn" href="#inscricao">Garantir vaga <span class="seta"><svg class="icone"><use href="#seta"/></svg></span></a>
+            </div>
+            <figure class="mapa-br card revela" style="--i:3" role="button" tabindex="0" aria-pressed="false" aria-label="Mapa do Brasil com Minas Gerais em destaque. Aproximar em Belo Horizonte">
+              <svg class="br-svg" viewBox="-74.5 -5.8 40.2 40" aria-hidden="true"></svg>
+              <span class="mapa-zoom" aria-hidden="true"><svg class="icone mais"><use href="#mais"/></svg><svg class="icone menos"><use href="#menos"/></svg></span>
+              <figcaption class="sobre">
+                <div class="de-longe"><b data-conta="27">27</b><small>estados com a iGreen</small></div>
+                <div class="de-perto"><b>Belo Horizonte</b><small>Expominas · 12 de dezembro</small></div>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= O QUE VOCÊ LEVA ================= -->
+  <section class="secao" data-bloco="Benefícios" aria-labelledby="t-leva">
+    <div class="wrap">
+      <div class="leva-cabeca">
+        <span class="etiqueta"><i></i>Por que ir</span>
+        <h2 id="t-leva" class="h-grande revela"><span class="lima">O que você leva</span> para casa depois desta noite</h2>
+      </div>
+      <div class="leva-grade">
+        <article class="beneficio card revela"><span class="canto"><svg class="icone"><use href="#seta"/></svg></span><h3>Conteúdo prático</h3><p>Como apresentar a economia, responder objeções e fechar a primeira indicação.</p></article>
+        <article class="beneficio foto-b foto revela" style="--i:1"><img src="https://snksergio.github.io/igreen-eventos-v2/speakers/carla-cut.png" alt="" loading="lazy"><span class="canto"><svg class="icone"><use href="#seta"/></svg></span><div class="txt"><h3>Networking de verdade</h3><p>Licenciados da sua região e do Brasil.</p></div></article>
+        <div class="leva-texto"><p class="frase">Você não precisa saber tudo. Só precisa estar na sala certa.</p></div>
+        <article class="beneficio card destaque revela" style="--i:2"><span class="canto"><svg class="icone"><use href="#seta"/></svg></span><h3>Ao vivo com o Thiago</h3><p>Perguntas abertas com o fundador, sem roteiro.</p></article>
+        <div class="leva-texto revela" style="--i:1"><p>Cada edição é pensada para um momento da jornada: começar, crescer e liderar uma rede. Esta é para quem quer dar o próximo passo.</p><a class="btn-fantasma" href="#programacao">Ver programação</a></div>
+        <article class="beneficio card revela" style="--i:2"><span class="canto"><svg class="icone"><use href="#seta"/></svg></span><h3>Benefícios exclusivos</h3><p>Condições que só aparecem para quem está no evento.</p></article>
+        <article class="beneficio card revela" style="--i:3"><span class="canto"><svg class="icone"><use href="#seta"/></svg></span><h3>Certificado de presença</h3><p>Conta para as trilhas de formação da iGreen Academy.</p></article>
+        <article class="beneficio card revela" style="--i:4"><span class="canto"><svg class="icone"><use href="#seta"/></svg></span><h3>Brindes e sorteios</h3><p>Durante toda a noite, para quem estiver na plateia.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PALESTRANTES ================= -->
+  <section class="palestrantes" id="palestrantes" data-bloco="Pessoas" aria-labelledby="t-pal">
+    <canvas class="particulas" aria-hidden="true"></canvas>
+    <div class="pal-cabeca">
+      <span class="etiqueta revela"><i></i><b>8</b> palestrantes confirmados</span>
+      <h2 id="t-pal" class="h-grande revela" style="--i:1">As vozes<br><span>por trás do palco</span></h2>
+      <p class="revela" style="--i:2">Sócios e líderes que vivem a iGreen todos os dias — <br>e transformam oportunidade em resultado real.</p>
+      <a class="btn revela" style="--i:3" href="#inscricao">Participe do evento <span class="seta"><svg class="icone"><use href="#seta"/></svg></span></a>
+    </div>
+    <div class="carrossel revela" style="--i:2" aria-label="Palestrantes (arraste para ver mais)">
+      <div class="trilho">
+        <article class="pessoa"><span class="painel"></span><img src="https://snksergio.github.io/igreen-eventos-v2/speakers/thiago-cut.png" alt="Thiago, CEO e fundador da iGreen" loading="lazy"><span class="desfoque"></span><span class="esmaece"></span><div class="nome"><b>Thiago</b><span>CEO e fundador</span></div></article>
+        <article class="pessoa"><span class="painel"></span><img src="https://snksergio.github.io/igreen-eventos-v2/speakers/rafael-cut.png" alt="Rafael Costa, diretor de estratégia" loading="lazy"><span class="desfoque"></span><span class="esmaece"></span><div class="nome"><b>Rafael Costa</b><span>Diretor de estratégia</span></div></article>
+        <article class="pessoa"><span class="painel"></span><img src="https://snksergio.github.io/igreen-eventos-v2/speakers/amanda-cut.png" alt="Amanda, head de marketing" loading="lazy"><span class="desfoque"></span><span class="esmaece"></span><div class="nome"><b>Amanda</b><span>Head de marketing</span></div></article>
+        <article class="pessoa"><span class="painel"></span><img src="https://snksergio.github.io/igreen-eventos-v2/speakers/ana-cut.png" alt="Ana Beltrão, head de expansão" loading="lazy"><span class="desfoque"></span><span class="esmaece"></span><div class="nome"><b>Ana Beltrão</b><span>Head de expansão</span></div></article>
+        <article class="pessoa"><span class="painel"></span><img src="https://snksergio.github.io/igreen-eventos-v2/speakers/carla-cut.png" alt="Carla Mendes, líder de licenciados" loading="lazy"><span class="desfoque"></span><span class="esmaece"></span><div class="nome"><b>Carla Mendes</b><span>Líder de licenciados</span></div></article>
+        <article class="pessoa"><span class="painel"></span><img src="https://snksergio.github.io/igreen-eventos-v2/speakers/bruno-cut.png" alt="Bruno Sales, diretor comercial" loading="lazy"><span class="desfoque"></span><span class="esmaece"></span><div class="nome"><b>Bruno Sales</b><span>Diretor comercial</span></div></article>
+        <article class="pessoa"><span class="painel"></span><img src="https://snksergio.github.io/igreen-eventos-v2/speakers/juliana-cut.png" alt="Juliana Reis, head de treinamento" loading="lazy"><span class="desfoque"></span><span class="esmaece"></span><div class="nome"><b>Juliana Reis</b><span>Head de treinamento</span></div></article>
+        <article class="pessoa"><span class="painel"></span><img src="https://snksergio.github.io/igreen-eventos-v2/speakers/pedro-cut.png" alt="Pedro Rocha, licenciado destaque" loading="lazy"><span class="desfoque"></span><span class="esmaece"></span><div class="nome"><b>Pedro Rocha</b><span>Licenciado destaque</span></div></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROGRAMAÇÃO ================= -->
+  <section class="secao" id="programacao" data-bloco="Agenda" aria-labelledby="t-prog">
+    <div class="wrap prog">
+      <div class="prog-esq">
+        <span class="etiqueta"><i></i>12 de dezembro · 19h</span>
+        <h2 id="t-prog" class="h-grande revela">Programação da noite</h2>
+        <p class="lead revela" style="--i:1">Três horas, do credenciamento à conversa livre. Chegue cedo: as melhores conversas começam antes do palco.</p>
+        <a class="btn revela" style="--i:2" href="#inscricao">Quero participar <span class="seta"><svg class="icone"><use href="#seta"/></svg></span></a>
+      </div>
+      <ol class="prog-lista">
+        <li class="prog-item ativo revela"><time>19h00</time><div><h3>Credenciamento e boas-vindas</h3><p>Retire seu crachá, conheça o espaço e as soluções em exposição.</p><div class="tags"><span>Recepção</span><span>Exposição</span></div></div><div class="prog-foto"><img src="https://snksergio.github.io/igreen-eventos-v2/assets/video/past/arena-audience.jpg" alt="" loading="lazy"></div></li>
+        <li class="prog-item revela" style="--i:1"><time>19h30</time><div><h3>Abertura com Thiago</h3><p>Onde a iGreen está, para onde vai e o que muda para quem está na rede.</p><div class="tags"><span>Palco principal</span></div></div><div class="prog-foto"><img src="https://snksergio.github.io/igreen-eventos-v2/assets/img/past/moment-11.jpg" alt="" loading="lazy"></div></li>
+        <li class="prog-item revela" style="--i:2"><time>20h15</time><div><h3>Quem já economiza</h3><p>Clientes e licenciados contam números reais, sem filtro.</p><div class="tags"><span>Painel</span><span>Histórias</span></div></div><div class="prog-foto"><img src="https://snksergio.github.io/igreen-eventos-v2/assets/img/video-thumb.jpg" alt="" loading="lazy"></div></li>
+        <li class="prog-item revela" style="--i:3"><time>21h00</time><div><h3>Conversa livre e sorteios</h3><p>Perguntas abertas, brindes e networking até o fim da noite.</p><div class="tags"><span>Networking</span><span>Sorteios</span></div></div><div class="prog-foto"><img src="https://snksergio.github.io/igreen-eventos-v2/assets/img/past/moment-01.jpg" alt="" loading="lazy"></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================= NÚMEROS ================= -->
+  <section class="secao" data-bloco="Números" aria-labelledby="t-num">
+    <div class="wrap">
+      <h2 id="t-num" class="h-grande revela" style="margin-bottom: 30px">A iGreen<br><span class="apagado">em números</span></h2>
+      <div class="num-linha revela"><small>01</small><b><em>+</em><span data-conta="500">500</span> mil</b><p>clientes com <strong>energia limpa por assinatura</strong>, sem obra e sem instalação.</p></div>
+      <div class="num-linha revela" style="--i:1"><small>02</small><b><span data-conta="15">15</span><em>%</em></b><p>de <strong>economia média</strong> na conta de luz, todo mês.</p></div>
+      <div class="num-linha revela" style="--i:2"><small>03</small><b><em>+</em><span data-conta="30">30</span> mil</b><p><strong>licenciados</strong> levando a iGreen para todos os estados.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= LOCAL ================= -->
+  <section class="secao" id="local" data-bloco="Local" aria-labelledby="t-local">
+    <div class="wrap">
+      <div class="cabeca"><span class="etiqueta"><i></i>Entrada gratuita</span><h2 id="t-local" class="h-grande revela">Onde e quando</h2></div>
+      <div class="local">
+        <div class="mapa revela" role="img" aria-label="Mapa ilustrativo do entorno do Expominas, com a rota a pé desde a estação de metrô">
+          <svg class="mapa-svg" viewBox="0 0 800 560" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs>
+              <pattern id="ruas-a" width="42" height="42" patternUnits="userSpaceOnUse" patternTransform="rotate(-18)"><path d="M0 0H42M0 0V42" fill="none" stroke="rgba(243,246,236,0.06)" stroke-width="1.5"/></pattern>
+              <pattern id="ruas-b" width="34" height="58" patternUnits="userSpaceOnUse" patternTransform="rotate(16)"><path d="M0 0H34M0 0V58" fill="none" stroke="rgba(243,246,236,0.055)" stroke-width="1.4"/></pattern>
+              <pattern id="arvores" width="13" height="13" patternUnits="userSpaceOnUse"><circle cx="6.5" cy="6.5" r="1.7" fill="rgba(168,255,53,0.28)"/></pattern>
+              <radialGradient id="mapa-luz"><stop offset="0" stop-color="#a8ff35" stop-opacity="0.2"/><stop offset="1" stop-color="#a8ff35" stop-opacity="0"/></radialGradient>
+            </defs>
+            <rect width="800" height="560" fill="url(#ruas-a)"/>
+            <!-- bairro do outro lado da avenida, com as ruas em outro ângulo -->
+            <path d="M486 300C470 200 480 120 500-40H840V168C650 236 560 280 486 300Z" fill="#06110a"/>
+            <path d="M486 300C470 200 480 120 500-40H840V168C650 236 560 280 486 300Z" fill="url(#ruas-b)"/>
+            <!-- parque -->
+            <path d="M96 420C130 372 230 372 262 420C290 462 236 520 168 512C110 506 70 462 96 420Z" fill="rgba(168,255,53,0.06)" stroke="rgba(168,255,53,0.2)" stroke-width="1.2"/>
+            <path d="M96 420C130 372 230 372 262 420C290 462 236 520 168 512C110 506 70 462 96 420Z" fill="url(#arvores)"/>
+            <text x="178" y="450" text-anchor="middle" class="lugar">Parque</text>
+            <!-- córrego -->
+            <path d="M-40 352C120 340 230 300 330 340S520 420 840 380" fill="none" stroke="rgba(0,168,89,0.32)" stroke-width="5" stroke-linecap="round"/>
+            <!-- ruas secundárias -->
+            <path d="M-40 190C200 200 420 170 840 250" fill="none" stroke="rgba(243,246,236,0.08)" stroke-width="8"/>
+            <path d="M230-40C250 150 270 300 330 600" fill="none" stroke="rgba(243,246,236,0.07)" stroke-width="7"/>
+            <path d="M500-40C480 120 470 200 486 300" fill="none" stroke="rgba(243,246,236,0.08)" stroke-width="7"/>
+            <!-- avenida principal e anel viário, com nome -->
+            <path id="av-amazonas" d="M-40 520C140 450 290 362 404 326S650 236 840 168" fill="none" stroke="rgba(243,246,236,0.14)" stroke-width="14" stroke-linecap="round"/>
+            <path d="M-40 520C140 450 290 362 404 326S650 236 840 168" fill="none" stroke="rgba(6,17,10,0.7)" stroke-width="1" stroke-dasharray="8 8"/>
+            <path id="anel" d="M600 600C560 480 548 380 600 290S720 120 700-40" fill="none" stroke="rgba(243,246,236,0.17)" stroke-width="18"/>
+            <path d="M600 600C560 480 548 380 600 290S720 120 700-40" fill="none" stroke="rgba(6,17,10,0.85)" stroke-width="1.2" stroke-dasharray="12 10"/>
+            <text class="rua-nome" dy="3.5"><textPath href="#av-amazonas" startOffset="58%">AV. AMAZONAS</textPath></text>
+            <text class="rua-nome" dy="3.5"><textPath href="#anel" startOffset="20%">ANEL RODOVIÁRIO</textPath></text>
+            <!-- luz e pavilhão do evento -->
+            <circle cx="400" cy="280" r="200" fill="url(#mapa-luz)"/>
+            <rect x="340" y="233" width="120" height="70" rx="10" transform="rotate(-18 400 268)" fill="rgba(168,255,53,0.13)" stroke="rgba(168,255,53,0.6)" stroke-width="1.5"/>
+            <!-- rota a pé desde o metrô -->
+            <path class="rota" d="M300 392C330 370 352 352 372 330S392 304 398 292" fill="none" stroke="#a8ff35" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="1 8"/>
+            <circle cx="300" cy="392" r="12" fill="#06110a" stroke="rgba(243,246,236,0.55)" stroke-width="1.4"/>
+            <text x="300" y="396.5" text-anchor="middle" class="lugar" style="font-weight:600">M</text>
+            <text x="300" y="424" text-anchor="middle" class="lugar">Metrô Gameleira</text>
+            <text x="300" y="441" text-anchor="middle" class="lugar-lima">6 MIN A PÉ</text>
+          </svg>
+          <span class="pontos-base"></span><span class="pontos"></span>
+          <div class="pino"><span class="rotulo vidro"><b>Expominas</b><span>Auditório 2</span></span><span class="ponto"></span></div>
+          <div class="zoom vidro" aria-hidden="true"><span><svg class="icone"><use href="#mais"/></svg></span><span><svg class="icone"><use href="#menos"/></svg></span></div>
+        </div>
+        <div class="info card revela" style="--i:1">
+          <div class="info-data">
+            <span class="dia"><b>12</b><small>dez</small></span>
+            <p><b>Sábado, 12 de dezembro</b><span>Faltam <strong data-dias>25</strong> dias</span></p>
+          </div>
+          <ul class="info-linhas">
+            <li><span class="circ"><svg class="icone"><use href="#relogio"/></svg></span><div><small>Horário</small><b>19h às 22h</b><span>Credenciamento a partir das 18h30</span></div></li>
+            <li><span class="circ"><svg class="icone"><use href="#pin"/></svg></span><div><small>Endereço</small><b>Expominas · Auditório 2</b><span>Av. Amazonas, 6200 · Gameleira · Belo Horizonte, MG</span></div></li>
+          </ul>
+          <div class="info-chips"><span><svg class="icone"><use href="#carro"/></svg>Estacionamento no local</span><span><svg class="icone"><use href="#acesso"/></svg>Acessível</span></div>
+          <div class="acoes"><a class="btn" href="#inscricao">Garantir vaga <span class="seta"><svg class="icone"><use href="#seta"/></svg></span></a><a class="btn-fantasma" href="#local">Abrir no mapa</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= VÍDEO E DEPOIMENTOS ================= -->
+  <section class="secao" data-bloco="Vídeo e depoimentos" aria-labelledby="t-video">
+    <div class="wrap">
+      <div class="cabeca"><span class="etiqueta"><i></i>Última edição · São Paulo</span><h2 id="t-video" class="h-grande revela">Direto de <span class="lima">quem viveu</span> isso</h2></div>
+      <div class="video-palco revela">
+        <canvas class="video-luz" width="64" height="32" aria-hidden="true"></canvas>
+        <div class="video" role="button" tabindex="0" aria-label="Assistir ao resumo da última edição" data-video="https://snksergio.github.io/igreen-eventos-v2/assets/video/experience.mp4">
+          <video src="https://snksergio.github.io/igreen-eventos-v2/assets/video/past/arena-audience.mp4" poster="https://snksergio.github.io/igreen-eventos-v2/assets/video/past/arena-audience.jpg" muted loop playsinline preload="metadata"></video>
+          <span class="etiqueta duracao"><i></i>2:00</span>
+          <div class="centro"><span class="aro"><span><svg class="icone" style="width:22px;height:22px"><use href="#play"/></svg></span></span></div>
+          <div class="legenda-v"><div><b>Como foi a última edição</b><small>iGreen Live São Paulo · 2026</small></div></div>
+        </div>
+      </div>
+      <div class="depo">
+        <figure class="depo-cartao card revela"><span class="aspas" aria-hidden="true">“</span><blockquote>Saí do evento com três indicações agendadas e entendendo de verdade como explicar a economia.</blockquote><figcaption class="quem"><span class="ini" aria-hidden="true">CM</span><span class="txt"><b>Carla M.</b><small>Licenciada em Contagem, MG</small></span></figcaption></figure>
+        <figure class="depo-cartao card revela" style="--i:1"><span class="aspas" aria-hidden="true">“</span><blockquote>A conta caiu 17% no primeiro mês. Vim ao evento para entender como levar isso para a minha família.</blockquote><figcaption class="quem"><span class="ini" aria-hidden="true">PR</span><span class="txt"><b>Pedro R.</b><small>Cliente desde 2025</small></span></figcaption></figure>
+        <figure class="depo-cartao card revela" style="--i:2"><span class="aspas" aria-hidden="true">“</span><blockquote>Fui como cliente e voltei licenciada. O evento mostra o caminho com exemplos de quem já está nele.</blockquote><figcaption class="quem"><span class="ini" aria-hidden="true">MS</span><span class="txt"><b>Mariana S.</b><small>Licenciada em Betim, MG</small></span></figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PERGUNTAS ================= -->
+  <section class="secao" id="perguntas" data-bloco="Perguntas frequentes" aria-labelledby="t-faq">
+    <div class="wrap faq">
+      <div class="faq-esq">
+        <span class="etiqueta"><i></i>Antes de ir</span>
+        <h2 id="t-faq" class="h-grande revela">Perguntas de quem vai <span class="apagado">pela primeira vez</span></h2>
+        <p class="lead revela" style="--i:1">Inscrição, acompanhante, horário e o que levar: o essencial para chegar tranquilo no dia.</p>
+        <div class="ajuda revela" style="--i:2">
+          <b>Ainda com dúvida?</b>
+          <p>Fale com a equipe do evento pelo WhatsApp. A gente responde no mesmo dia.</p>
+          <a class="btn btn-whats" href="#"><svg aria-hidden="true"><use href="#whats"/></svg>Falar no WhatsApp <span class="seta"><svg class="icone"><use href="#seta"/></svg></span></a>
+        </div>
+      </div>
+      <div class="faq-lista revela" style="--i:1">
+        <details open><summary>O evento é gratuito?<span class="mais"><svg class="icone"><use href="#mais"/></svg></span></summary><p>Sim. A vaga é gratuita, mas limitada: confirme pelo formulário e guarde a mensagem que chega no WhatsApp.</p></details>
+        <details><summary>Preciso ser licenciado para participar?<span class="mais"><svg class="icone"><use href="#mais"/></svg></span></summary><p>Não. Clientes e curiosos são bem-vindos. Quem é licenciado pode levar convidados pelo link próprio.</p></details>
+        <details><summary>Posso levar acompanhante?<span class="mais"><svg class="icone"><use href="#mais"/></svg></span></summary><p>Pode. Cada pessoa precisa de uma inscrição, para garantirmos lugar para todos.</p></details>
+        <details><summary>Vai ter transmissão ao vivo?<span class="mais"><svg class="icone"><use href="#mais"/></svg></span></summary><p>Os principais momentos ficam disponíveis no app depois do evento. A experiência completa é presencial.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= INSCRIÇÃO ================= -->
+  <section class="cta" id="inscricao" data-bloco="Inscrição" aria-labelledby="t-cta">
+    <div class="cta-cartao">
+      <div class="cta-grade">
+        <div class="cta-pitch">
+          <h2 id="t-cta" class="cta-titulo revela">Vem viver isso<span>ao vivo, em BH.</span></h2>
+          <p class="cta-sub revela" style="--i:1">Uma noite de palco, histórias reais e gente que vive de energia limpa. Entrada gratuita, com vagas limitadas.</p>
+          <div class="cta-acoes revela" style="--i:2">
+            <a class="btn" href="#nome">Garantir minha vaga <span class="seta"><svg class="icone"><use href="#seta"/></svg></span></a>
+            <a class="btn-fantasma btn-whats" href="#"><svg aria-hidden="true"><use href="#whats"/></svg>Falar no WhatsApp</a>
+          </div>
+          <ul class="cta-info revela" style="--i:3">
+            <li><svg class="icone"><use href="#cal"/></svg>Sábado, 12 de dezembro · 19h às 22h</li>
+            <li><svg class="icone"><use href="#pin"/></svg>Expominas · Auditório 2 · Belo Horizonte, MG</li>
+            <li><svg class="icone"><use href="#ok"/></svg>Confirmação pelo WhatsApp, lugar garantido até 19h15</li>
+          </ul>
+        </div>
+        <form class="form revela" style="--i:2" onsubmit="event.preventDefault(); this.classList.add('enviado'); this.querySelector('.enviar-txt').textContent = 'Inscrição recebida';">
+          <div class="form-topo"><span class="etiqueta"><i></i>Inscrição</span><span class="gratis">Entrada gratuita</span></div>
+          <h3>Garanta sua vaga</h3>
+          <p>Leva menos de um minuto. A confirmação chega no seu WhatsApp.</p>
+          <div class="vagas"><div class="vagas-topo"><span>Vagas preenchidas</span><b>82%</b></div><span class="vagas-barra"><i style="--p: 82%"></i></span></div>
+          <div class="form-linha">
+            <label class="campo">Nome<input id="nome" required placeholder="Como quer ser chamado"></label>
+            <label class="campo">WhatsApp<input required inputmode="tel" placeholder="(31) 9 9999-9999"></label>
+          </div>
+          <label class="campo">Cidade<input placeholder="Onde você mora"></label>
+          <label class="aceite"><input class="aceite-input" type="checkbox" required><span class="aceite-caixa" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="aceite-txt">Aceito receber <b>avisos sobre este evento pelo WhatsApp</b>. Posso cancelar quando quiser.</span></label>
+          <button class="btn enviar" type="submit"><span class="enviar-txt">Quero participar</span> <span class="seta"><svg class="icone"><use href="#seta"/></svg></span></button>
+          <p class="nota">Seus dados só servem para avisos deste evento.</p>
+        </form>
+      </div>
+      <a class="letreiro" href="#nome" aria-label="Garanta seu lugar: ir para o formulário">
+        <span class="letreiro-trilho" aria-hidden="true">
+          <span class="letreiro-grupo"><span>Garanta seu lugar</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg><span>Garanta seu lugar</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+          <span class="letreiro-grupo"><span>Garanta seu lugar</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg><span>Garanta seu lugar</span><svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+        </span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<!-- ================= RODAPÉ ================= -->
+<footer class="rodape" data-bloco="Rodapé">
+  <div class="ceu" aria-hidden="true">
+    <img class="luz luz-faixa" src="https://snksergio.github.io/igreen-eventos-v2/assets/img/aurora-base.webp" alt="">
+    <span class="luz luz-corpo"></span>
+    <span class="luz luz-cortina-a"></span>
+    <span class="luz luz-cortina-b"></span>
+    <span class="luz luz-chao"></span>
+    <span class="pontos-base"></span><span class="pontos"></span>
+    <span class="grao"></span>
+    <span class="veu"></span>
+  </div>
+  <div class="rodape-in">
+    <div class="rodape-cabeca">
+      <h2 class="rodape-frase"><span>Te vejo em</span><span>Belo Horizonte.</span></h2>
+      <p class="rodape-prox"><span class="ponto-luz" aria-hidden="true"></span><span>Próxima parada: <b>Belo Horizonte</b>, 12 dez · Expominas</span></p>
+    </div>
+    <div class="rodape-linha">
+      <nav class="rodape-menu" aria-label="Menu do rodapé">
+        <a class="menu-a" href="#programacao"><span class="menu-rola"><span>Programação</span><span aria-hidden="true">Programação</span></span></a>
+        <a class="menu-a" href="#palestrantes"><span class="menu-rola"><span>Palestrantes</span><span aria-hidden="true">Palestrantes</span></span></a>
+        <a class="menu-a" href="#local"><span class="menu-rola"><span>Local</span><span aria-hidden="true">Local</span></span></a>
+        <a class="menu-a" href="#perguntas"><span class="menu-rola"><span>Perguntas</span><span aria-hidden="true">Perguntas</span></span></a>
+        <a class="menu-a" href="#inscricao"><span class="menu-rola"><span>Inscrição</span><span aria-hidden="true">Inscrição</span></span></a>
+      </nav>
+      <div class="rodape-quando">
+        <h3 class="rodape-h">Quando e onde</h3>
+        <ul class="rodape-lista">
+          <li class="destaque"><span>Sábado</span><span>12 dez</span></li>
+          <li><span>Credenciamento</span><span>18h30</span></li>
+          <li><span>Palco</span><span>19h às 22h</span></li>
+          <li><span>Local</span><span>Expominas · Aud. 2</span></li>
+          <li><span>Entrada</span><span>Gratuita</span></li>
+        </ul>
+        <a class="btn" href="#inscricao">Garantir minha vaga <span class="seta"><svg class="icone"><use href="#seta"/></svg></span></a>
+      </div>
+      <div class="rodape-contato">
+        <h3 class="rodape-h">Contato</h3>
+        <a class="link rodape-mail" href="#">contato@seuevento.com.br</a>
+        <a class="link rodape-whats" href="#">Falar no WhatsApp</a>
+        <p class="rodape-end">iGreen Energy · Belo Horizonte, MG</p>
+        <a class="btn-fantasma" href="#">Falar com a equipe</a>
+        <ul class="rodape-social">
+          <li><a class="link" href="#">Instagram</a></li>
+          <li><a class="link" href="#">YouTube</a></li>
+          <li><a class="link" href="#">LinkedIn</a></li>
+          <li><a class="link" href="#">WhatsApp</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="rodape-barra">
+      <p>© 2026 iGreen Energy</p>
+      <nav class="rodape-legal" aria-label="Legal"><a class="link" href="#">Política de privacidade</a><a class="link" href="#">Termos de uso</a><a class="link" href="#">Uso de dados</a></nav>
+      <a class="topo-link" href="#">Voltar ao topo <svg class="icone"><use href="#cima"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const io = new IntersectionObserver((itens) => itens.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("visivel"); io.unobserve(e.target); } }), { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+  document.querySelectorAll(".revela").forEach((el) => io.observe(el));
+
+  // a névoa do rodapé só se move enquanto ele está na tela
+  const rodape = document.querySelector(".rodape");
+  new IntersectionObserver(([e]) => rodape.classList.toggle("vivo", e.isIntersecting)).observe(rodape);
+
+  const relogio = document.querySelector(".relogio");
+  const alvo = new Date(relogio.dataset.alvo).getTime();
+  const pad = (n) => String(n).padStart(2, "0");
+  const dias = document.querySelector("[data-dias]");
+  const tic = () => {
+    let s = Math.max(0, Math.floor((alvo - Date.now()) / 1000));
+    const d = Math.floor(s / 86400); s -= d * 86400;
+    const h = Math.floor(s / 3600); s -= h * 3600;
+    const m = Math.floor(s / 60); s -= m * 60;
+    const v = { d: pad(d), h: pad(h), m: pad(m), s: pad(s) };
+    relogio.querySelectorAll("[data-u]").forEach((b) => (b.textContent = v[b.dataset.u]));
+    if (dias) dias.textContent = String(d);
+  };
+  tic(); setInterval(tic, 1000);
+
+  const reduzido = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---------- Mapa do Brasil em pontos ----------
+  // Contorno simplificado (longitude, latitude), do Oiapoque descendo pelo litoral. É ilustrativo:
+  // só precisa ler como Brasil numa grade de pontos.
+  const BR = [[-51.6,4.4],[-50.6,2],[-50,1],[-49.3,-0.2],[-48.4,-0.6],[-47.9,-0.6],[-46.9,-0.9],[-45.4,-1.3],[-44.6,-1.9],[-44.3,-2.5],[-43.4,-2.4],[-42.3,-2.8],[-41.4,-2.9],[-40.4,-2.8],[-39,-3.3],[-38.5,-3.7],[-37.5,-4.6],[-36.5,-5.1],[-35.5,-5.15],[-35.2,-5.6],[-34.95,-6.8],[-34.8,-7.15],[-34.85,-8],[-35.1,-8.9],[-35.7,-9.7],[-36.4,-10.5],[-37.1,-11],[-37.7,-11.9],[-38.5,-13],[-38.9,-13.9],[-39,-15],[-39,-16.4],[-39.2,-17.7],[-39.7,-18.9],[-40.2,-20],[-40.9,-21.3],[-41,-22],[-42,-22.95],[-43.2,-23],[-44.6,-23.2],[-45.4,-23.8],[-46.3,-24],[-47.2,-24.6],[-48,-25.3],[-48.5,-25.9],[-48.6,-26.9],[-48.6,-28],[-48.8,-28.6],[-49.7,-29.3],[-50.3,-30.3],[-51,-31.2],[-52.1,-32.1],[-52.7,-33],[-53.4,-33.75],[-53.5,-33],[-53.4,-32.6],[-54.6,-31.9],[-55.6,-30.9],[-56.4,-30.4],[-57.6,-30.2],[-56.5,-29.1],[-55.8,-28.3],[-55,-27.6],[-54.2,-27.2],[-53.8,-27.1],[-53.7,-26.3],[-53.8,-25.6],[-54.6,-25.6],[-54.3,-24.1],[-55.4,-23.9],[-55.7,-22.5],[-56.4,-22.2],[-57.9,-22.1],[-58.1,-20.2],[-57.9,-19.9],[-58.1,-17.3],[-58.4,-16.3],[-60.2,-16.2],[-60.2,-15.1],[-60.4,-13.6],[-61.9,-13.5],[-63.2,-12.5],[-64.4,-12.4],[-65.3,-11.4],[-65.35,-10.8],[-65.4,-9.7],[-66.6,-9.9],[-67.6,-10.6],[-68.6,-11.1],[-69.6,-10.95],[-70.6,-10.9],[-70.5,-9.5],[-72.1,-10],[-72.9,-9.4],[-73.2,-9.2],[-73.9,-7.5],[-73.7,-6.9],[-73.1,-6.4],[-72.9,-5.2],[-71,-4.4],[-69.95,-4.23],[-69.4,-1.1],[-69.6,-0.6],[-70,0.6],[-69.3,1],[-69.8,1.7],[-67.3,2.1],[-66.85,1.2],[-66.2,0.8],[-65.5,0.7],[-64.2,1.5],[-64,2],[-64.6,2.7],[-64.2,3.8],[-63,3.8],[-62.7,4],[-61.3,4.5],[-60.6,4.9],[-60.2,5.27],[-59.9,4.4],[-59.6,3.5],[-59.9,2.3],[-59,1.3],[-58.1,1.5],[-56.5,1.9],[-55.9,1.9],[-55,2.5],[-54.3,2.3],[-54,2.2],[-52.9,2.2],[-52.2,3.2]];
+  // Minas Gerais, o estado do evento: é o único que acende (contorno simplificado, ilustrativo)
+  const MG = [[-51,-19.75],[-50.4,-19.25],[-49.5,-18.65],[-48.5,-18.4],[-47.8,-18.1],[-47.4,-17.4],[-47.3,-16.6],[-47.2,-15.9],[-46.6,-15.3],[-45.9,-15],[-45,-14.6],[-44.3,-14.25],[-43.6,-14.6],[-42.7,-15],[-41.9,-15.4],[-41.1,-15.9],[-40.4,-16.6],[-39.9,-17.4],[-40.2,-17.95],[-40.9,-18.3],[-41,-19],[-41.1,-19.6],[-41.6,-20.3],[-41.9,-20.9],[-42.1,-21.3],[-42.5,-21.7],[-43.1,-22],[-43.8,-22.1],[-44.4,-22.3],[-44.8,-22.5],[-45.5,-22.8],[-46.4,-22.9],[-46.7,-22.5],[-46.8,-21.9],[-47.1,-21.3],[-47.4,-20.6],[-47.9,-20.2],[-48.6,-20.1],[-49.4,-20],[-50.2,-20]];
+  const dentro = (x, y, pol) => {
+    let c = false;
+    for (let i = 0, j = pol.length - 1; i < pol.length; j = i++) {
+      const [xi, yi] = pol[i], [xj, yj] = pol[j];
+      if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c;
+    }
+    return c;
+  };
+  const cartaoMapa = document.querySelector(".mapa-br");
+  const svgBr = cartaoMapa && cartaoMapa.querySelector(".br-svg");
+  if (svgBr) {
+    // grade fina de pontos, sem contorno: a forma de Minas aparece só pela cor dos pontos
+    const passo = 0.66;
+    let html = '<g class="br-mapa">';
+    for (let linha = 0, lat = 5.4; lat > -34; linha++, lat -= passo) {
+      for (let lon = -74 + (linha % 2) * passo / 2; lon < -34.6; lon += passo) {
+        if (!dentro(lon, lat, BR)) continue;
+        const emMG = dentro(lon, lat, MG);
+        html += `<circle class="${emMG ? "br-mg" : "br-n"}" cx="${lon.toFixed(2)}" cy="${(-lat).toFixed(2)}" r="${emMG ? 0.25 : 0.19}"/>`;
+      }
+    }
+    html += '<circle class="br-onda" cx="-43.94" cy="19.92" r="0.5"/><circle class="br-bh" cx="-43.94" cy="19.92" r="0.42"/><text class="br-rotulo" x="-39.4" y="20.6">BH</text></g>';
+    svgBr.innerHTML = html;
+
+    // clique aproxima em Minas: o meio do estado desliza para o centro do card enquanto a escala sobe
+    const grupo = svgBr.querySelector(".br-mapa");
+    const FOCO = [-44.9, 18.5], MEIO = [-56, 10.4], ESCALA = 3.3;
+    let z = 0, quadroZoom = 0;
+    const desenhaZoom = (k) => {
+      const s = 1 + (ESCALA - 1) * k;
+      const cx = FOCO[0] + (MEIO[0] - FOCO[0]) * k, cy = FOCO[1] + (MEIO[1] - FOCO[1]) * k;
+      grupo.setAttribute("transform", `translate(${cx.toFixed(3)} ${cy.toFixed(3)}) scale(${s.toFixed(4)}) translate(${-FOCO[0]} ${-FOCO[1]})`);
+    };
+    const suave = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    const zoomPara = (alvo) => {
+      const de = z, t0 = performance.now(), dur = reduzido ? 0 : 1200;
+      cancelAnimationFrame(quadroZoom);
+      const passoZ = (t) => {
+        const p = dur ? Math.min(1, (t - t0) / dur) : 1;
+        z = de + (alvo - de) * suave(p);
+        desenhaZoom(z);
+        if (p < 1) quadroZoom = requestAnimationFrame(passoZ);
+      };
+      quadroZoom = requestAnimationFrame(passoZ);
+    };
+    const alterna = () => {
+      const perto = !cartaoMapa.classList.contains("perto");
+      cartaoMapa.classList.toggle("perto", perto);
+      cartaoMapa.setAttribute("aria-pressed", String(perto));
+      zoomPara(perto ? 1 : 0);
+    };
+    cartaoMapa.addEventListener("click", alterna);
+    cartaoMapa.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); alterna(); } });
+  }
+
+  // ---------- Números que contam ao aparecer ----------
+  const fmt = new Intl.NumberFormat("pt-BR");
+  const contar = (el) => {
+    const alvo = Number(el.dataset.conta), dur = 1700, t0 = performance.now();
+    const passo = (t) => {
+      const p = Math.min(1, (t - t0) / dur);
+      el.textContent = fmt.format(Math.round(alvo * (p >= 1 ? 1 : 1 - Math.pow(2, -10 * p))));
+      if (p < 1) requestAnimationFrame(passo);
+    };
+    requestAnimationFrame(passo);
+  };
+  if (!reduzido) {
+    const ioNum = new IntersectionObserver((itens) => itens.forEach((e) => {
+      if (e.isIntersecting) { ioNum.unobserve(e.target); setTimeout(() => contar(e.target), 180); }
+    }), { threshold: 0.6 });
+    document.querySelectorAll("[data-conta]").forEach((el) => { el.textContent = "0"; ioNum.observe(el); });
+  }
+
+  // ---------- Carrossel de palestrantes: corre sozinho, para no hover, arrasta com inércia ----------
+  const carrossel = document.querySelector(".carrossel");
+  const trilho = carrossel && carrossel.querySelector(".trilho");
+  if (trilho) {
+    const originais = [...trilho.children];
+    for (let k = 0; k < 2; k++) originais.forEach((n) => { const c = n.cloneNode(true); c.setAttribute("aria-hidden", "true"); trilho.appendChild(c); });
+    const VEL = 36; // px por segundo, a mesma do iGreen Live
+    let larg = 0, pos = 0, vel = 0, sobre = false, arrasta = false, naTela = false, moveu = 0;
+    let x0 = 0, p0 = 0, xAnt = 0, tAnt = 0, ultimo = performance.now();
+    const dobra = (x) => { if (!larg) return x; while (x <= -2 * larg) x += larg; while (x > -larg) x -= larg; return x; };
+    const aplica = () => { trilho.style.transform = `translate3d(${pos.toFixed(2)}px, 0, 0)`; };
+    const mede = () => { larg = trilho.children[originais.length].offsetLeft - trilho.children[0].offsetLeft; pos = dobra(pos || -larg); aplica(); };
+    mede();
+    addEventListener("resize", mede);
+    new IntersectionObserver(([e]) => (naTela = e.isIntersecting), { rootMargin: "100px 0px" }).observe(carrossel);
+    if (matchMedia("(hover: hover)").matches) {
+      carrossel.addEventListener("mouseenter", () => (sobre = true));
+      carrossel.addEventListener("mouseleave", () => (sobre = false));
+    }
+    carrossel.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0) return;
+      arrasta = true; vel = 0; moveu = 0; x0 = xAnt = e.clientX; p0 = pos; tAnt = performance.now();
+      carrossel.setPointerCapture(e.pointerId); carrossel.classList.add("arrastando");
+    });
+    carrossel.addEventListener("pointermove", (e) => {
+      if (!arrasta) return;
+      const agora = performance.now(), dt = Math.max(8, agora - tAnt) / 1000;
+      vel = 0.7 * ((e.clientX - xAnt) / dt) + 0.3 * vel; xAnt = e.clientX; tAnt = agora;
+      moveu = Math.max(moveu, Math.abs(e.clientX - x0));
+      pos = dobra(p0 + e.clientX - x0); aplica();
+    });
+    const solta = () => {
+      if (!arrasta) return;
+      arrasta = false; carrossel.classList.remove("arrastando");
+      if (performance.now() - tAnt > 90) vel = 0;
+    };
+    carrossel.addEventListener("pointerup", solta);
+    carrossel.addEventListener("pointercancel", solta);
+    carrossel.addEventListener("click", (e) => { if (moveu > 6) { e.preventDefault(); e.stopPropagation(); } }, true);
+    const quadro = (t) => {
+      const dt = Math.min(0.05, (t - ultimo) / 1000); ultimo = t;
+      if (naTela && !arrasta && larg) {
+        if (Math.abs(vel) > 6) { pos = dobra(pos + vel * dt); vel *= Math.pow(0.05, dt); aplica(); }
+        else { vel = 0; if (!sobre && !reduzido) { pos = dobra(pos - VEL * dt); aplica(); } }
+      }
+      requestAnimationFrame(quadro);
+    };
+    requestAnimationFrame(quadro);
+  }
+
+  // ---------- Partículas atrás dos palestrantes (o campo do iGreen Live) ----------
+  // Poucos quadrados de propósito: cada um tem de ler como objeto, não como poeira. Sobem
+  // devagar, oscilam e se afastam do cursor com mola.
+  const tela = document.querySelector(".particulas");
+  if (tela) {
+    const ctx = tela.getContext("2d");
+    const fino = matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const TAU = Math.PI * 2, R = 190, EMPURRA = 2600, K = 38, C = 8.5;
+    const sorteia = (a, b) => a + Math.random() * (b - a);
+    let W = 0, H = 0, tempo = 0, quadros = [], ativa = false, tQuadro = 0;
+    const cursor = { x: -1e4, y: -1e4, on: false };
+    const cria = (y) => {
+      const grande = Math.random() < 0.3;
+      const s = grande ? sorteia(16, 30) : sorteia(6, 13);
+      const r = Math.random();
+      const tipo = grande ? (r < 0.6 ? "linha" : "cheio") : (r < 0.4 ? "brilho" : r < 0.75 ? "linha" : "cheio");
+      return {
+        bx: Math.random() * W, by: y, s, tipo,
+        a: tipo === "brilho" ? sorteia(0.5, 0.8) : grande ? sorteia(0.22, 0.36) : sorteia(0.3, 0.5),
+        ax1: sorteia(10, 26), ax2: sorteia(3, 10), fx1: sorteia(0.04, 0.09), fx2: sorteia(0.11, 0.2), px1: sorteia(0, TAU), px2: sorteia(0, TAU),
+        ay1: sorteia(8, 22), ay2: sorteia(3, 8), fy1: sorteia(0.03, 0.08), fy2: sorteia(0.1, 0.18), py1: sorteia(0, TAU), py2: sorteia(0, TAU),
+        sobe: sorteia(2, 7),
+        r0: Math.random() < 0.5 ? 0 : sorteia(-0.3, 0.3), ra: sorteia(0.08, 0.3), rf: sorteia(0.03, 0.08), rp: sorteia(0, TAU),
+        ox: 0, oy: 0, vx: 0, vy: 0, luz: 0
+      };
+    };
+    const monta = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = tela.offsetWidth; H = tela.offsetHeight;
+      tela.width = W * dpr; tela.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const n = Math.max(7, Math.min(18, Math.round((W * H) / 95000)));
+      quadros = Array.from({ length: n }, () => cria(Math.random() * H));
+    };
+    const canto = (x, y, w, h, r) => {
+      ctx.beginPath(); ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+    };
+    const desenha = (dt) => {
+      tempo += dt;
+      ctx.clearRect(0, 0, W, H);
+      let px = -1e4, py = -1e4;
+      if (cursor.on) { const b = tela.getBoundingClientRect(); px = cursor.x - b.left; py = cursor.y - b.top; }
+      for (let i = 0; i < quadros.length; i++) {
+        let q = quadros[i];
+        q.by -= q.sobe * dt;
+        if (q.by < -60) q = quadros[i] = cria(H + 60);
+        const x = q.bx + q.ax1 * Math.sin(tempo * q.fx1 * TAU + q.px1) + q.ax2 * Math.sin(tempo * q.fx2 * TAU + q.px2);
+        const y = q.by + q.ay1 * Math.sin(tempo * q.fy1 * TAU + q.py1) + q.ay2 * Math.sin(tempo * q.fy2 * TAU + q.py2);
+        let fx = 0, fy = 0, perto = 0;
+        const dx = x + q.ox - px, dy = y + q.oy - py, d = Math.hypot(dx, dy);
+        if (d < R && d > 0.01) { perto = (1 - d / R) ** 2; fx = (dx / d) * perto * EMPURRA; fy = (dy / d) * perto * EMPURRA; }
+        q.vx += (fx - K * q.ox - C * q.vx) * dt; q.vy += (fy - K * q.oy - C * q.vy) * dt;
+        q.ox += q.vx * dt; q.oy += q.vy * dt;
+        q.luz += (perto - q.luz) * Math.min(1, dt * 5);
+        const ang = q.r0 + q.ra * Math.sin(tempo * q.rf * TAU + q.rp) + q.vx * 0.0016;
+        const alfa = Math.min(1, q.a + q.luz * 0.5), meio = q.s / 2;
+        ctx.save();
+        ctx.translate(x + q.ox, y + q.oy); ctx.rotate(ang);
+        canto(-meio, -meio, q.s, q.s, Math.min(4, q.s * 0.2));
+        if (q.tipo === "linha") {
+          ctx.lineWidth = 1.25; ctx.strokeStyle = `rgba(168,255,53,${alfa.toFixed(3)})`; ctx.stroke();
+          if (q.luz > 0.02) { ctx.fillStyle = `rgba(168,255,53,${(q.luz * 0.12).toFixed(3)})`; ctx.fill(); }
+        } else if (q.tipo === "cheio") {
+          const g = ctx.createLinearGradient(-meio, -meio, meio, meio);
+          g.addColorStop(0, `rgba(196,255,120,${(alfa * 0.75).toFixed(3)})`);
+          g.addColorStop(1, `rgba(168,255,53,${(alfa * 0.18).toFixed(3)})`);
+          ctx.fillStyle = g; ctx.fill();
+          ctx.lineWidth = 1; ctx.strokeStyle = `rgba(216,255,166,${(alfa * 0.55).toFixed(3)})`; ctx.stroke();
+        } else {
+          ctx.shadowColor = `rgba(168,255,53,${alfa.toFixed(3)})`; ctx.shadowBlur = 10 + q.luz * 16;
+          ctx.fillStyle = `rgba(206,255,140,${alfa.toFixed(3)})`; ctx.fill();
+        }
+        ctx.restore();
+      }
+    };
+    monta(); desenha(0);
+    addEventListener("resize", () => { monta(); desenha(0); });
+    if (fino && !reduzido) {
+      addEventListener("pointermove", (e) => { cursor.x = e.clientX; cursor.y = e.clientY; cursor.on = true; }, { passive: true });
+      document.documentElement.addEventListener("pointerleave", () => (cursor.on = false));
+    }
+    if (!reduzido) {
+      const roda = (t) => { if (!ativa) return; desenha(Math.min(50, t - tQuadro) / 1000); tQuadro = t; requestAnimationFrame(roda); };
+      new IntersectionObserver(([e]) => {
+        if (e.isIntersecting && !ativa) { ativa = true; tQuadro = performance.now(); requestAnimationFrame(roda); }
+        else if (!e.isIntersecting) ativa = false;
+      }).observe(tela);
+    }
+  }
+
+  // ---------- Vídeo: prévia muda em loop enquanto está na tela; o clique toca o vídeo completo ----------
+  const cartaoVideo = document.querySelector(".video");
+  if (cartaoVideo) {
+    const v = cartaoVideo.querySelector("video");
+    if (!reduzido) {
+      new IntersectionObserver(([e]) => {
+        if (cartaoVideo.classList.contains("tocando")) return;
+        if (e.isIntersecting) v.play().catch(() => {}); else v.pause();
+      }, { threshold: 0.25 }).observe(cartaoVideo);
+    }
+    const toca = () => {
+      if (cartaoVideo.classList.contains("tocando")) return;
+      cartaoVideo.classList.add("tocando");
+      v.src = cartaoVideo.dataset.video; v.loop = false; v.muted = false; v.controls = true;
+      v.play().catch(() => {});
+    };
+    // brilho ambiente: copia o quadro para o canvas de trás ~15 vezes por segundo, com
+    // transparência, para a cor acompanhar o vídeo sem piscar
+    const palco = cartaoVideo.closest(".video-palco");
+    const luz = palco && palco.querySelector(".video-luz");
+    if (luz) {
+      const lc = luz.getContext("2d");
+      // o quadro ocupa o canvas inteiro (mesma proporção do card)
+      const fx = 0, fy = 0, fw = luz.width, fh = luz.height;
+      const pinta = (alfa) => {
+        if (v.readyState < 2) return;
+        try { lc.globalAlpha = alfa; lc.drawImage(v, fx, fy, fw, fh); palco.classList.add("aceso"); } catch (e) {}
+      };
+      let rodando = false, ultimoQuadro = 0;
+      const ciclo = (t) => {
+        if (!rodando) return;
+        if (t - ultimoQuadro > 66) { pinta(0.28); ultimoQuadro = t; }
+        requestAnimationFrame(ciclo);
+      };
+      v.addEventListener("playing", () => { if (!rodando) { rodando = true; requestAnimationFrame(ciclo); } });
+      v.addEventListener("pause", () => (rodando = false));
+      v.addEventListener("ended", () => (rodando = false));
+      v.addEventListener("loadeddata", () => pinta(1));
+      v.addEventListener("seeked", () => pinta(1));
+    }
+    cartaoVideo.addEventListener("click", toca);
+    cartaoVideo.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toca(); } });
+  }
+})();
+</script>
+</body>
+</html>

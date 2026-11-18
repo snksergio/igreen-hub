@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://igreen-hub.pages.dev/institucional/construtor-hotsites/estatico/sitemap.xml

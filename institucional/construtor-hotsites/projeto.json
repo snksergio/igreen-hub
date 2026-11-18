@@ -1,0 +1,15 @@
+{
+  "nome": "Construtor de hotsites de evento",
+  "descricao": "POC do construtor de hotsites de evento da iGreen: o marketing monta a página com peças prontas, o licenciado gera o próprio link e as inscrições ficam numa lista. Inclui o kit premium iGreen Live.",
+  "tipo": "poc",
+  "atualizado": "2026-11-18",
+  "paginas": [
+    { "nome": "Demo iGreen Live BH", "arquivo": "index.html#/p/igreen-live-bh" },
+    { "nome": "Painel de páginas", "arquivo": "index.html" },
+    { "nome": "Nova página com modelo", "arquivo": "index.html#/nova" },
+    { "nome": "Inscrições recebidas", "arquivo": "index.html#/inscricoes" },
+    { "nome": "Template da landing iGreen Live", "arquivo": "mockups/landing-evento.html" },
+    { "nome": "Página publicada em HTML estático", "arquivo": "estatico/igreen-live-bh/index.html" }
+  ],
+  "tags": ["page builder", "hotsite", "evento", "editor visual", "landing", "inscrição", "licenciado", "seo", "igreen live", "template"]
+}

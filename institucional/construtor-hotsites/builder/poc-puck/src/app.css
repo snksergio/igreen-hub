@@ -1,0 +1,2616 @@
+/*
+ * Interface do builder (não do hotsite). Direção visual: painéis flutuantes e arredondados sobre
+ * fundo pontilhado (print 1), controles segmentados e campos arredondados (print 2), destaque verde.
+ * As regras genéricas ficam presas a .ed (editor) e .app (telas internas): a prévia do site roda
+ * num iframe que recebe uma cópia deste CSS, e uma classe como .chip não pode vazar para lá.
+ */
+
+/* ================= Tokens ================= */
+:root {
+  --b-fundo: #f3f3f5;
+  --b-ponto: #d8dadf;
+  --b-painel: #ffffff;
+  --b-linha: #ededf0;
+  --b-linha-forte: #e1e2e6;
+  --b-texto: #17181c;
+  --b-apoio: #6d717a;
+  --b-fraco: #9da1a9;
+  --b-suave: #f5f5f7;
+  --b-trilho: #f0f0f3;
+  --b-rotulo: #5b5f68;
+  --b-codigo-fundo: #fbfbfc;
+  --b-linha-hover: #d3d5da;
+  --b-rolagem: #d8dade;
+  /* Verde da logomarca da iGreen (igreenenergy.com.br/assets/logos/igreen-logomarca.svg) */
+  --b-acento: #00a859;
+  --b-acento-hover: #009a51;
+  --b-sobre-acento: #ffffff;
+  --b-acento-forte: #007a3d;
+  --b-acento-vivo: #00a859;
+  --b-acento-suave: #e8f6ef;
+  --b-acento-borda: #a7dbbf;
+  --b-erro: #c2321f;
+  --b-erro-suave: #fdecea;
+  --b-aviso: #7a5a00;
+  --b-aviso-suave: #fff6d6;
+  --b-info: #1f4f8f;
+  --b-info-suave: #e8eff9;
+  --b-sombra: 0 1px 2px rgba(17, 19, 24, 0.04), 0 6px 20px rgba(17, 19, 24, 0.05);
+  --b-sombra-seg: 0 1px 2px rgba(17, 19, 24, 0.08), 0 0 0 1px rgba(17, 19, 24, 0.05);
+  /* Relevo dos botões (prints): a borda de baixo um pouco mais escura, como uma tecla */
+  --b-relevo: 0 1px 1px rgba(17, 19, 24, 0.04), inset 0 -1.5px 0 rgba(17, 19, 24, 0.07);
+  --b-relevo-acento: inset 0 -2px 0 rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 1px 2px rgba(0, 84, 44, 0.22);
+  --b-sombra-pop: 0 16px 40px rgba(17, 19, 24, 0.16), 0 2px 6px rgba(17, 19, 24, 0.06);
+  --b-r-g: 16px;
+  --b-r-m: 12px;
+  --b-r-p: 10px;
+  --b-fonte: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --b-mono: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+
+  /* Tema do Puck no verde do builder (vale também dentro do iframe da prévia) */
+  --puck-font-family: var(--b-fonte);
+  --puck-color-interactive: var(--b-acento-forte);
+  --puck-color-interactive-hover: #006633;
+  --puck-color-interactive-active: #00552b;
+  --puck-color-interactive-soft: var(--b-acento-suave);
+  --puck-color-interactive-soft-hover: #d8f0e3;
+  --puck-color-interactive-subtle: #f1faf5;
+  --puck-color-focus-ring: var(--b-acento-vivo);
+  --puck-color-selection-border: var(--b-acento);
+  --puck-color-selection-bg: rgba(0, 168, 89, 0.08);
+  --puck-color-line-placeholder: var(--b-acento-vivo);
+  --puck-color-border: var(--b-linha);
+  --puck-color-border-hover: var(--b-linha-forte);
+  --puck-color-text: var(--b-texto);
+  --puck-color-text-secondary: var(--b-apoio);
+  --puck-color-surface-subtle: var(--b-suave);
+  --puck-color-surface-muted: var(--b-fundo);
+  --puck-radius-m: 8px;
+  --puck-radius-l: 12px;
+  --puck-field-radius: var(--b-r-p);
+  --puck-field-color-border: var(--b-linha-forte);
+  --puck-field-color-border-hover: #c4c7cd;
+  --puck-actionbar-color-bg: var(--b-acento);
+  --puck-actionbar-color-text: var(--b-sobre-acento);
+  --puck-actionbar-opacity-text: 1;
+  --puck-actionbar-radius: var(--b-r-p);
+}
+
+/* ================= Base das telas do builder ================= */
+.ed,
+.app {
+  font-family: var(--b-fonte);
+  color: var(--b-texto);
+  -webkit-font-smoothing: antialiased;
+}
+:where(.ed, .app, .pp) button,
+:where(.ed, .app) input,
+:where(.ed, .app) textarea,
+:where(.ed, .app) select {
+  font: inherit;
+  color: inherit;
+}
+.ic {
+  flex: none;
+}
+
+/* Botão (print 1): 40 px, borda, canto 10 */
+:where(.ed, .app) .bt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--b-linha-forte);
+  border-radius: var(--b-r-p);
+  background: var(--b-painel);
+  color: var(--b-texto);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+:where(.ed, .app) .bt:hover {
+  background: var(--b-suave);
+}
+:where(.ed, .app) .bt:focus-visible,
+:where(.ed, .app) .seg button:focus-visible,
+:where(.ed, .app) .ar-no:focus-visible {
+  outline: 2px solid var(--b-acento-vivo);
+  outline-offset: 2px;
+}
+:where(.ed, .app) .bt:disabled {
+  color: var(--b-fraco);
+  cursor: default;
+  background: var(--b-painel);
+}
+:where(.ed, .app) .bt[aria-pressed="true"] {
+  background: var(--b-acento-suave);
+  border-color: var(--b-acento-vivo);
+}
+:where(.ed, .app) .bt-ic {
+  width: 40px;
+  padding: 0;
+}
+:where(.ed, .app) .bt-p {
+  height: 34px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+:where(.ed, .app) .bt-pri {
+  background: var(--b-acento);
+  border-color: var(--b-acento);
+  color: var(--b-sobre-acento);
+  font-weight: 600;
+}
+:where(.ed, .app) .bt-pri:hover {
+  background: var(--b-acento-hover);
+}
+:where(.ed, .app) .bt-perigo {
+  color: var(--b-erro);
+}
+
+/* Segmentado (print 2) */
+:where(.ed, .app) .seg {
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border-radius: var(--b-r-m);
+  background: var(--b-trilho);
+}
+:where(.ed, .app) .seg > button,
+:where(.ed, .app) .seg > a {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--b-apoio);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+:where(.ed, .app) .seg > :is(button, a):hover {
+  color: var(--b-texto);
+}
+:where(.ed, .app) .seg > :is(button[aria-pressed="true"], a[aria-current="page"]) {
+  background: var(--b-painel);
+  color: var(--b-texto);
+  box-shadow: var(--b-sombra-seg);
+}
+:where(.ed, .app) .seg > button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+:where(.ed, .app) .seg-ic > button {
+  flex: 0 0 auto;
+  width: 34px;
+  padding: 0;
+}
+:where(.ed, .app) .seg-quebra {
+  flex-wrap: wrap;
+}
+:where(.ed, .app) .seg-quebra > button {
+  flex: 1 1 auto;
+}
+
+/* Chip, selo, avatar, entrada */
+:where(.ed, .app) .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: var(--b-suave);
+  color: var(--b-apoio);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+:where(.ed, .app) .chip-trava {
+  background: var(--b-aviso-suave);
+  color: var(--b-aviso);
+}
+:where(.ed, .app) .selo {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--b-acento);
+  color: var(--b-sobre-acento);
+  font-size: 12px;
+  font-weight: 700;
+}
+:where(.ed, .app) .in {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--b-linha-forte);
+  border-radius: var(--b-r-p);
+  background: var(--b-painel);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+:where(.ed, .app) .in:focus,
+:where(.ed, .app) .in:focus-within {
+  border-color: var(--b-acento-forte);
+  box-shadow: 0 0 0 3px var(--b-acento-suave);
+}
+:where(.ed, .app) .in-prefixo {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+:where(.ed, .app) .in-prefixo span {
+  color: var(--b-fraco);
+}
+:where(.ed, .app) .in-prefixo input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: none;
+  background: none;
+  padding: 0;
+}
+:where(.ed, .app) .cp-campo {
+  display: grid;
+  gap: 6px;
+}
+:where(.ed, .app) .cp-campo > span:first-child,
+:where(.ed, .app) .cp-rotulo {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--b-texto);
+}
+
+/* Menu suspenso */
+.mn {
+  position: relative;
+}
+.mn-caixa {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 220px;
+  padding: 6px;
+  border-radius: var(--b-r-m);
+  background: var(--b-painel);
+  border: 1px solid var(--b-linha);
+  box-shadow: var(--b-sombra-pop);
+}
+.mn-caixa[data-lado="dir"] {
+  left: auto;
+  right: 0;
+}
+.mn-caixa[data-lado="centro"] {
+  left: 50%;
+  transform: translateX(-50%);
+}
+.mn-lista {
+  display: grid;
+}
+.mn-lista a,
+.mn-lista button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 38px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--b-texto);
+  font-size: 14px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.mn-lista a:hover,
+.mn-lista button:hover {
+  background: var(--b-suave);
+}
+.mn-lista .ic {
+  color: var(--b-apoio);
+}
+.mn-lista .mn-perigo {
+  color: var(--b-erro);
+}
+.mn-lista .mn-perigo .ic {
+  color: var(--b-erro);
+}
+.mn-form {
+  display: grid;
+  gap: 14px;
+  width: 320px;
+  padding: 10px;
+}
+.mn-nota {
+  margin: 0;
+  font-size: 12px;
+  color: var(--b-apoio);
+}
+
+/* ================= Telas internas (painel, nova página, inscrições, convite) ================= */
+.app {
+  min-height: 100vh;
+  background-color: var(--b-fundo);
+  background-image: radial-gradient(var(--b-ponto) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+.app-top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: 64px;
+  padding: 0 20px;
+  background: var(--b-painel);
+  border-bottom: 1px solid var(--b-linha);
+}
+.app-marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--b-texto);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+}
+.app-tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--b-suave);
+  color: var(--b-apoio);
+  font-size: 11px;
+  font-weight: 600;
+}
+.app-nav {
+  min-width: 260px;
+}
+.app-top-dir {
+  justify-self: end;
+  font-size: 13px;
+  color: var(--b-apoio);
+}
+.app-main {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  display: grid;
+  gap: 24px;
+}
+.app-card {
+  background: var(--b-painel);
+  border-radius: var(--b-r-g);
+  padding: 24px;
+  border: 1px solid var(--b-linha);
+  box-shadow: var(--b-sombra);
+}
+.app-card h1 {
+  font-size: 20px;
+  margin: 0 0 12px;
+}
+.app-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
+}
+.app-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.app-h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.app-h2 {
+  margin: 0 0 14px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.app-muted {
+  margin: 0;
+  color: var(--b-apoio);
+  font-size: 14px;
+}
+.app-row .app-muted {
+  margin-top: 4px;
+}
+.app-err {
+  margin: 0;
+  color: var(--b-erro);
+  font-size: 14px;
+}
+/* Botões antigos das telas internas, no estilo novo */
+.app-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: var(--b-r-p);
+  border: 1px solid var(--b-acento);
+  background: var(--b-acento);
+  color: var(--b-sobre-acento);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.app-btn:hover {
+  background: var(--b-acento-hover);
+}
+.app-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.app-btn--ghost {
+  background: var(--b-painel);
+  color: var(--b-texto);
+  border-color: var(--b-linha-forte);
+  font-weight: 500;
+}
+.app-btn--ghost:hover {
+  background: var(--b-suave);
+}
+.app-btn--danger {
+  background: var(--b-painel);
+  color: var(--b-erro);
+  border-color: #f2c4bf;
+  font-weight: 500;
+}
+.app-btn--danger:hover {
+  background: var(--b-erro-suave);
+}
+.app-btn--big {
+  height: 44px;
+  padding: 0 18px;
+  font-size: 15px;
+}
+.app-linkbtn {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: var(--b-acento-forte);
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.app-rodape {
+  text-align: center;
+}
+.app-empty {
+  display: grid;
+  gap: 12px;
+  text-align: center;
+  justify-items: center;
+  padding-top: 72px;
+}
+
+/* Lista de páginas: cards como os quadros do print 1 */
+.pg-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+/* A miniatura desenha a página a 1280 px e reduz: as colunas precisam poder encolher. */
+.pg,
+.nv-esq,
+.nv-dir,
+.nv-modelo {
+  grid-template-columns: minmax(0, 1fr);
+}
+.pg-thumb,
+.nv-tile,
+.nv-previa {
+  min-width: 0;
+  overflow: hidden;
+}
+.pg {
+  display: grid;
+  align-content: start;
+  border-radius: var(--b-r-g);
+  background: var(--b-painel);
+  border: 1px solid var(--b-linha);
+  box-shadow: var(--b-sombra);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.pg:hover {
+  box-shadow: 0 1px 2px rgba(17, 19, 24, 0.04), 0 14px 32px rgba(17, 19, 24, 0.1);
+  transform: translateY(-2px);
+}
+.pg-thumb {
+  padding: 12px 12px 0;
+  background: var(--b-suave);
+  cursor: pointer;
+}
+.pg-thumb .mini {
+  border-radius: 10px 10px 0 0;
+  border-bottom: 0;
+  box-shadow: 0 -1px 0 var(--b-linha), 0 8px 18px rgba(17, 19, 24, 0.08);
+}
+.pg-corpo {
+  display: grid;
+  gap: 6px;
+  padding: 16px 16px 12px;
+  border-top: 1px solid var(--b-linha);
+}
+.pg-titulo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+.pg-titulo strong {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.pg-slug {
+  font-size: 13px;
+  color: var(--b-apoio);
+}
+.pg-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.pg-quando {
+  font-size: 12px;
+  color: var(--b-fraco);
+}
+.pg-acoes {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 16px;
+}
+.pg-acoes .bt-pri {
+  flex: 1;
+}
+
+/* Miniatura de página */
+.mini {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid var(--b-linha);
+  background: #f5f9f0;
+}
+.mini-inner {
+  transform-origin: top left;
+  pointer-events: none;
+}
+.mini-vazia {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--b-apoio);
+  font-size: 14px;
+}
+
+/* Nova página (print 3: cards de escolha) */
+.nv {
+  display: grid;
+  gap: 24px;
+}
+.nv-grade {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: start;
+}
+.nv-esq,
+.nv-dir {
+  display: grid;
+  gap: 16px;
+}
+.nv-dir {
+  position: sticky;
+  top: 88px;
+}
+.nv-endereco {
+  margin: -6px 0 0;
+  font-size: 13px;
+  color: var(--b-apoio);
+}
+.nv-endereco code {
+  font-family: var(--b-mono);
+  font-size: 12px;
+  color: var(--b-texto);
+}
+.nv-modelos {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.nv-modelo {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  padding: 16px 16px 14px;
+  border-radius: var(--b-r-g);
+  border: 1px solid var(--b-linha);
+  background: var(--b-painel);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.nv-modelo:hover {
+  border-color: var(--b-linha-forte);
+}
+.nv-modelo input {
+  position: absolute;
+  opacity: 0;
+}
+.nv-modelo:has(input:focus-visible) {
+  outline: 2px solid var(--b-acento-vivo);
+  outline-offset: 2px;
+}
+.nv-modelo[data-on="true"] {
+  border: 2px solid var(--b-texto);
+  padding: 15px 15px 13px;
+  background: var(--b-suave);
+}
+.nv-tile {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--b-r-m);
+  background: var(--b-painel);
+  box-shadow: var(--b-sombra);
+  overflow: hidden;
+  color: var(--b-apoio);
+}
+.nv-tile .mini {
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+}
+.nv-modelo strong {
+  font-size: 15px;
+  font-weight: 600;
+}
+.nv-previa .mini {
+  border-radius: var(--b-r-m);
+  box-shadow: var(--b-sombra);
+}
+.nv-previa-zero {
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--b-r-m);
+  border: 2px dashed var(--b-linha-forte);
+  color: var(--b-apoio);
+  text-align: center;
+  font-size: 14px;
+}
+.nv-dir-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Formulários das telas internas (convite, inscrições) */
+.app-field {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 13px;
+}
+.app-field input,
+.app-field textarea,
+.app-actions select {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: var(--b-r-p);
+  border: 1px solid var(--b-linha-forte);
+  background: var(--b-painel);
+  outline: none;
+}
+.app-field textarea {
+  height: auto;
+  padding: 10px 12px;
+}
+.app-field input:focus,
+.app-field textarea:focus,
+.app-actions select:focus {
+  border-color: var(--b-acento-forte);
+  box-shadow: 0 0 0 3px var(--b-acento-suave);
+}
+.app-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+.app-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-top: 1px solid var(--b-linha);
+}
+.app-item > div:first-child {
+  display: grid;
+  gap: 4px;
+}
+.app-two {
+  display: grid;
+  gap: 24px;
+}
+@media (min-width: 800px) {
+  .app-two {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.app-form {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+.app-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--b-linha);
+  border-radius: var(--b-r-m);
+}
+.app-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.app-table th {
+  background: var(--b-suave);
+  color: var(--b-apoio);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.app-table th,
+.app-table td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--b-linha);
+  white-space: nowrap;
+}
+.app-table tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ================= Editor ================= */
+.ed {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--b-fundo);
+}
+.ed-puck {
+  flex: 1;
+  min-height: 0;
+}
+.ed-conflito {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 16px;
+  background: var(--b-aviso-suave);
+  color: #4d3800;
+  font-size: 14px;
+}
+
+/* Layout do Puck: sem a barra de abas, painel da esquerda flutuando sobre o pontilhado */
+.ed [class*="_PuckLayout-inner_"] {
+  --puck-pluginbar-width: 0px;
+  --puck-user-sidebar-left-width: 316px;
+  --puck-user-sidebar-right-width: 344px;
+  background-color: var(--b-fundo);
+  background-image: radial-gradient(var(--b-ponto) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+.ed [class*="_PuckLayout-nav_"] {
+  display: none;
+}
+.ed [class*="_PuckLayout-header_"] {
+  position: relative;
+  z-index: 3;
+}
+.ed [class*="_Sidebar--left_"] {
+  margin: 12px 0 12px 12px;
+  border: 1px solid var(--b-linha);
+  border-radius: var(--b-r-g);
+  background: var(--b-painel);
+  box-shadow: var(--b-sombra);
+  overflow: hidden;
+}
+.ed [class*="_Sidebar--left_"] [class*="_PuckPluginTab-body_"] {
+  height: 100%;
+}
+.ed [class*="_Sidebar-resizeHandle_"] {
+  opacity: 0;
+}
+.ed [class*="_Sidebar--right_"] {
+  background: var(--b-painel);
+  border-inline-start: 1px solid var(--b-linha);
+}
+.ed [class*="_Sidebar--right_"] [class*="_SidebarSection-title_"] {
+  display: none;
+}
+.ed [class*="_Sidebar--right_"] [class*="_SidebarSection_"] {
+  border: 0;
+}
+
+/* Área da prévia: transparente sobre o pontilhado, quadro com cantos e sombra */
+.ed [class*="_PuckCanvas_"] {
+  --puck-canvas-color-bg: transparent;
+  background: transparent;
+  padding: 14px 24px 24px;
+}
+.ed [class*="_PuckCanvas-controls_"] {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 14px;
+}
+.ed [class*="_ViewportControls-actions_"] {
+  align-items: center;
+  gap: 2px;
+  padding: 5px;
+  border-radius: 14px;
+  background: var(--b-painel);
+  border: 1px solid var(--b-linha);
+  box-shadow: var(--b-sombra);
+}
+.ed [class*="_ViewportControls-actionsInner_"] {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.ed [class*="_ViewportControls_"] button {
+  border-radius: 9px;
+  color: var(--b-apoio);
+}
+.ed [class*="_ViewportControls_"] button:hover {
+  background: var(--b-suave);
+  color: var(--b-texto);
+}
+.ed [class*="_ViewportControls-zoomSelect_"] {
+  min-width: 132px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--b-linha-forte);
+  border-radius: 9px;
+  background: var(--b-painel);
+  font-family: var(--b-fonte);
+  font-size: 13px;
+  font-weight: 600;
+}
+.ed [class*="_ViewportControls-divider_"] {
+  height: 22px;
+  margin: 0 4px;
+  background: var(--b-linha-forte);
+}
+.ed [class*="_PuckCanvas-root_"] {
+  outline: 1px solid var(--b-linha);
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(17, 19, 24, 0.05), 0 18px 40px rgba(17, 19, 24, 0.1);
+  overflow: hidden;
+}
+
+/* Seleção na prévia: contorno verde-escuro com anel branco por dentro (aparece em fundo claro,
+   escuro e na faixa verde). Fica no CSS do iframe, que recebe uma cópia deste arquivo. */
+[class*="_DraggableComponent--isSelected_"] > [class*="_DraggableComponent-overlayWrapper_"] > [class*="_DraggableComponent-overlay_"] {
+  box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.7);
+}
+[class*="_ActionBar_"] {
+  box-shadow: 0 6px 16px rgba(11, 26, 15, 0.22);
+}
+[class*="_ActionBar-label_"] {
+  font-family: var(--b-fonte);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ---------- Topo do editor ---------- */
+/* O topo vive dentro do cabeçalho do Puck, que tem overflow: auto e z-index 3: isso cortava os
+   menus suspensos (Hotsites, nome da página) e deixava os painéis por cima deles. O .Puck no
+   seletor faz a regra ganhar das do Puck em qualquer ordem: no build de produção o CSS do Puck
+   carrega depois deste arquivo. */
+.ed .Puck [class*="_PuckLayout-header_"] {
+  overflow: visible;
+  z-index: 40;
+}
+.tp {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  height: 64px;
+  padding: 0 16px;
+  background: var(--b-painel);
+  border-bottom: 1px solid var(--b-linha);
+}
+.tp-lado {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.tp-dir {
+  justify-content: flex-end;
+}
+.tp-marca {
+  padding: 0 10px 0 6px;
+  gap: 10px;
+  font-weight: 600;
+}
+.tp-logo {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--b-acento);
+  color: var(--b-sobre-acento);
+}
+.tp-div {
+  width: 1px;
+  height: 24px;
+  margin: 0 4px;
+  background: var(--b-linha-forte);
+}
+.tp .seg {
+  padding: 3px;
+}
+.tp .seg > button {
+  min-height: 32px;
+}
+.tp .seg > button[aria-pressed="true"] {
+  background: var(--b-acento);
+  color: var(--b-sobre-acento);
+  box-shadow: none;
+}
+.tp-centro {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-width: 0;
+}
+.tp-centro .mn {
+  min-width: 0;
+}
+/* Telas menores: os botões ficam só com ícone e o título encurta. */
+@media (max-width: 1320px) {
+  .tp-pessoa-txt,
+  .tp-salvo-txt {
+    display: none;
+  }
+  .tp-pessoa {
+    padding: 0 4px;
+  }
+}
+@media (max-width: 1100px) {
+  .tp .bt-rotulo {
+    display: none;
+  }
+  .tp .seg,
+  .tp .tp-div:last-of-type {
+    display: none;
+  }
+}
+@media (max-width: 900px) {
+  .tp-esconde-estreito {
+    display: none;
+  }
+}
+.tp-titulo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--b-r-p);
+  background: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tp-titulo:hover,
+.tp-titulo[aria-expanded="true"] {
+  background: var(--b-suave);
+}
+.tp-titulo-txt {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.tp-salvo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--b-apoio);
+  font-size: 13px;
+  white-space: nowrap;
+}
+.tp-salvo::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--b-acento-vivo);
+}
+.tp-salvo[data-erro]::before {
+  background: var(--b-erro);
+}
+.tp-salvo[data-erro] {
+  color: var(--b-erro);
+}
+.tp-pessoa {
+  gap: 8px;
+  padding: 0 12px 0 4px;
+}
+.tp-pessoa-txt {
+  display: grid;
+  text-align: left;
+  line-height: 1.15;
+}
+.tp-pessoa-txt small {
+  font-size: 11px;
+  color: var(--b-apoio);
+}
+.tp-pessoa-txt b {
+  font-size: 13px;
+  font-weight: 600;
+}
+.av {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3c7a3a, #0d1a10);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+.av[data-vazio] {
+  background: var(--b-suave);
+  color: var(--b-apoio);
+}
+
+/* ---------- Painel da esquerda ---------- */
+.pe {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+.pe-abas {
+  margin: 12px;
+}
+.pe-corpo {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 8px 16px;
+}
+.pe-corpo::-webkit-scrollbar,
+.ed [class*="_Sidebar--right_"]::-webkit-scrollbar {
+  width: 10px;
+}
+.pe-corpo::-webkit-scrollbar-thumb,
+.ed [class*="_Sidebar--right_"]::-webkit-scrollbar-thumb {
+  background: var(--b-rolagem);
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Estrutura */
+.ar {
+  display: grid;
+  gap: 4px;
+}
+.ar-pagina {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: var(--b-r-p);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  color: var(--b-apoio);
+}
+.ar-pagina:hover {
+  background: var(--b-suave);
+}
+.ar-pagina[aria-pressed="true"] {
+  background: var(--b-acento-suave);
+  border-color: var(--b-acento-borda);
+  color: var(--b-acento-forte);
+}
+.ar-txt {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+.ar-txt b {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--b-texto);
+}
+.ar-txt small {
+  font-size: 12px;
+  color: var(--b-apoio);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ar-cab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 38px;
+  padding: 0 10px;
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.ar-cab .ic {
+  color: var(--b-apoio);
+}
+.ar-conta {
+  margin-left: auto;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  background: var(--b-suave);
+  color: var(--b-apoio);
+  font-size: 12px;
+  font-weight: 600;
+}
+.ar-lista,
+.ar-campos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1px;
+}
+.ar-no {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 34px;
+  padding: 0 10px 0 6px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  text-align: left;
+  font-size: 13.5px;
+  color: var(--b-texto);
+  cursor: pointer;
+}
+button.ar-no:hover {
+  background: var(--b-suave);
+}
+.ar-no[aria-current] {
+  background: var(--b-suave);
+  font-weight: 600;
+}
+.ar-fixo {
+  padding-left: 26px;
+  color: var(--b-apoio);
+  cursor: default;
+}
+.ar-seta {
+  display: grid;
+  place-items: center;
+  width: 14px;
+  color: var(--b-fraco);
+}
+.ar-glifo {
+  color: var(--b-acento-forte);
+}
+.ar-fixo .ar-glifo {
+  color: var(--b-fraco);
+}
+.ar-nome {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ar-tec {
+  flex: none;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--b-fraco);
+}
+.ar-trava {
+  margin-left: auto;
+  color: var(--b-fraco);
+}
+.ar-campos {
+  margin: 2px 0 6px;
+}
+.ar-campo {
+  height: 30px;
+  padding-left: 34px;
+  font-size: 13px;
+  color: var(--b-apoio);
+}
+.ar-campo:hover {
+  color: var(--b-texto);
+}
+.ar-cglifo {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  background: var(--b-acento-suave);
+  color: var(--b-acento-forte);
+  font-size: 11px;
+  font-weight: 700;
+}
+.ar-vazio {
+  margin: 8px 10px;
+  font-size: 13px;
+  color: var(--b-apoio);
+}
+.ar-vazio button {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--b-acento-forte);
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Peças (gaveta do Puck): cards em duas colunas.
+   Régua do cartão do Kanban: 12 px entre cards, 12 px de respiro, título 15 px seminegrito,
+   apoio 12 px cinza, 2 px entre os dois. */
+.pe-pecas {
+  display: grid;
+  gap: 4px;
+  padding: 0 4px;
+}
+.pe-pecas [class*="_ComponentList-title_"] {
+  padding: 8px 0 4px;
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--b-fraco);
+}
+.pe-pecas [class*="_ComponentList-title_"]:hover {
+  background: none;
+  color: var(--b-apoio);
+}
+.pe-pecas [class*="_Drawer_"] {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding-bottom: 12px;
+}
+.pe-pecas [class*="_DrawerItem-draggable_"] {
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.pe-pecas [class*="_DrawerItem_"] {
+  margin: 0;
+}
+.dw-item {
+  display: grid;
+  gap: 2px;
+  align-content: start;
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--b-r-m);
+  border: 1px solid var(--b-linha);
+  background: var(--b-painel);
+  cursor: grab;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+.dw-item:hover {
+  border-color: var(--b-linha-forte);
+  box-shadow: var(--b-sombra);
+  transform: translateY(-1px);
+}
+.dw-tile {
+  display: grid;
+  place-items: center;
+  height: 64px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: var(--b-suave);
+}
+.dw-ilu {
+  display: block;
+  width: 70px;
+  height: 50px;
+}
+.dw-txt {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.dw-nome {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--b-texto);
+  overflow-wrap: anywhere;
+}
+.dw-sub {
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--b-apoio);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Imagens */
+.im {
+  display: grid;
+  gap: 12px;
+  padding: 0 4px;
+}
+.im-nota {
+  margin: 0 2px 4px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--b-apoio);
+}
+.im-grade {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.im-op,
+.im-enviar {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--b-r-m);
+  overflow: hidden;
+  cursor: pointer;
+}
+.im-op {
+  padding: 0;
+  border: 1px solid var(--b-linha);
+  background: var(--b-suave);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.im-op:hover {
+  box-shadow: 0 0 0 2px var(--b-acento-vivo);
+  transform: translateY(-1px);
+}
+.im-op img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.im-enviar {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 6px;
+  border: 1.5px dashed var(--b-linha-forte);
+  background: var(--b-painel);
+  color: var(--b-apoio);
+  font-size: 13px;
+  font-weight: 500;
+}
+.im-enviar:hover {
+  border-color: var(--b-acento-vivo);
+  color: var(--b-acento-forte);
+}
+.im-msg {
+  margin: 0 2px;
+  padding: 10px 12px;
+  border-radius: var(--b-r-p);
+  background: var(--b-acento-suave);
+  color: var(--b-acento-forte);
+  font-size: 13px;
+}
+
+/* ---------- Painel da direita (campos) ---------- */
+.cp-cabeca {
+  padding: 18px 20px 16px;
+  border-bottom: 1px solid var(--b-linha);
+}
+.cp-trilha {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--b-apoio);
+}
+.cp-trilha button {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+.cp-trilha button:hover {
+  color: var(--b-texto);
+  text-decoration: underline;
+}
+.cp-cabeca h2 {
+  margin: 6px 0 0;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.cp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.ed [class*="_PuckFields_"] {
+  --puck-field-label-font-size: 13px;
+  --puck-field-label-font-weight: 600;
+  --puck-field-label-color-text: var(--b-texto);
+  --puck-field-label-space-y: 8px;
+  --puck-field-space-y: 9px;
+  --puck-field-space-x: 12px;
+}
+.ed [class*="_PuckFields-field_"] {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--b-linha);
+}
+.ed [class*="_PuckFields-field_"] [class*="_PuckFields-field_"],
+.ed [class*="_ArrayFieldItem-fieldset_"] [class*="_PuckFields-field_"] {
+  padding: 0;
+  border: 0;
+}
+.ed [class*="_Input-labelIcon_"] {
+  display: none;
+}
+.ed :is([class*="_Input-input_"], [class*="_Input-select_"]) {
+  min-height: 40px;
+  font-size: 14px;
+}
+.ed textarea[class*="_Input-input_"] {
+  line-height: 1.45;
+}
+.ed :is([class*="_Input-input_"]):focus {
+  outline: none;
+  border-color: var(--b-acento-forte);
+  box-shadow: 0 0 0 3px var(--b-acento-suave);
+}
+/* Listas (cards, perguntas, pessoas…): cada item como um cartão */
+.ed [class*="_ArrayField_"] {
+  border: 0;
+  background: none;
+}
+.ed [class*="_ArrayField-inner_"] {
+  display: grid;
+  gap: 8px;
+}
+.ed [class*="_ArrayFieldItem_"] {
+  border: 1px solid var(--b-linha);
+  border-radius: var(--b-r-m);
+  background: var(--b-painel);
+  overflow: hidden;
+}
+.ed [class*="_ArrayFieldItem-summary_"] {
+  min-height: 42px;
+  padding: 0 12px;
+  font-size: 13.5px;
+  font-weight: 500;
+  background: var(--b-painel);
+}
+.ed [class*="_ArrayFieldItem-summary_"]:hover {
+  background: var(--b-suave);
+}
+.ed [class*="_ArrayFieldItem--isExpanded_"] > [class*="_ArrayFieldItem-summary_"] {
+  background: var(--b-suave);
+  border-bottom: 1px solid var(--b-linha);
+}
+.ed [class*="_ArrayFieldItem-body_"] {
+  padding: 14px 12px;
+}
+.ed [class*="_ArrayFieldItem-fieldset_"] {
+  display: grid;
+  gap: 14px;
+}
+.ed [class*="_ArrayField-addButton_"] {
+  min-height: 40px;
+  border: 1.5px dashed var(--b-linha-forte);
+  border-radius: var(--b-r-m);
+  background: var(--b-painel);
+  color: var(--b-apoio);
+  font-weight: 600;
+}
+.ed [class*="_ArrayField-addButton_"]:hover {
+  border-color: var(--b-acento-vivo);
+  color: var(--b-acento-forte);
+  background: var(--b-acento-suave);
+}
+.cp-radio {
+  display: grid;
+  gap: 8px;
+}
+
+/* Campo apontado pelo aviso: destaque por alguns segundos. */
+.campo-alvo {
+  outline: 3px solid var(--b-acento-vivo);
+  outline-offset: -3px;
+  background: var(--b-acento-suave);
+  transition: background 0.3s ease;
+}
+
+/* ---------- Campos próprios (imagem, data, código, arquivos, importar) ---------- */
+.fi-campo,
+.fi {
+  display: grid;
+  gap: 8px;
+}
+.fi-rotulo {
+  font-size: 13px;
+  font-weight: 600;
+}
+.fi-prev {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--b-r-m);
+  border: 1.5px dashed var(--b-linha-forte);
+  background: var(--b-suave);
+  overflow: hidden;
+  font-size: 12px;
+  color: var(--b-apoio);
+}
+.fi-prev img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.fi-acoes,
+.fi-linha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.fi-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: var(--b-r-p);
+  border: 1px solid var(--b-linha-forte);
+  background: var(--b-painel);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.fi-btn:hover {
+  background: var(--b-suave);
+}
+.fi-btn--pri {
+  background: var(--b-acento);
+  border-color: var(--b-acento);
+  color: var(--b-sobre-acento);
+  font-weight: 600;
+}
+.fi-btn--pri:hover {
+  background: var(--b-acento-hover);
+}
+.fi-btn--x {
+  color: var(--b-erro);
+}
+.fi-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.fi-bib {
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+  border-radius: var(--b-r-m);
+  background: var(--b-suave);
+}
+.fi-sub {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--b-fraco);
+}
+.fi-grade {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 4px;
+}
+.fi-op {
+  padding: 0;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background: var(--b-painel);
+  overflow: hidden;
+  cursor: pointer;
+}
+.fi-op[data-on="true"] {
+  border-color: var(--b-acento-vivo);
+}
+.fi-op img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.fi-link summary {
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--b-apoio);
+}
+.fi-linha {
+  margin-top: 6px;
+}
+.fi-linha input {
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--b-linha-forte);
+  font: inherit;
+  font-size: 12px;
+}
+.fi-msg {
+  margin: 0;
+  font-size: 12px;
+  color: var(--b-erro);
+}
+.fi-data {
+  height: 40px;
+  padding: 0 12px;
+  border-radius: var(--b-r-p);
+  border: 1px solid var(--b-linha-forte);
+  font: inherit;
+  font-size: 14px;
+}
+.fi-codigo {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--b-r-p);
+  border: 1px solid var(--b-linha-forte);
+  background: var(--b-codigo-fundo);
+  font-family: var(--b-mono);
+  font-size: 12px;
+  line-height: 1.55;
+  resize: vertical;
+  tab-size: 2;
+  outline: none;
+}
+.fi-codigo:focus {
+  border-color: var(--b-acento-forte);
+  box-shadow: 0 0 0 3px var(--b-acento-suave);
+}
+
+/* Guia da Seção livre */
+.gl {
+  display: grid;
+  gap: 10px;
+}
+.gl-nota {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--b-apoio);
+}
+.gl details {
+  border: 1px solid var(--b-linha);
+  border-radius: var(--b-r-p);
+  padding: 10px 12px;
+}
+.gl summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+.gl-lista {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.gl-lista li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 2px 8px;
+  align-items: center;
+  font-size: 12px;
+}
+.gl-lista li:not(:has(.gl-cor)) {
+  grid-template-columns: 1fr auto;
+}
+.gl-lista code {
+  font-family: var(--b-mono);
+  font-size: 11px;
+  word-break: break-all;
+}
+.gl-uso {
+  grid-column: 1 / -2;
+  color: var(--b-apoio);
+  font-size: 11px;
+}
+.gl-lista li:has(.gl-cor) .gl-uso {
+  grid-column: 2 / 3;
+}
+.gl-cor {
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  border: 1px solid var(--b-linha);
+}
+.gl-copiar {
+  grid-row: 1 / span 2;
+  grid-column: -2 / -1;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--b-linha-forte);
+  background: var(--b-painel);
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.gl-copiar:hover {
+  background: var(--b-suave);
+}
+.gl-ia {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border-radius: var(--b-r-m);
+  border: 1.5px solid var(--b-acento-vivo);
+  background: var(--b-painel);
+  box-shadow: 0 0 0 4px var(--b-acento-suave);
+}
+.gl-ia .gl-copiar {
+  grid-row: auto;
+  grid-column: auto;
+  justify-self: start;
+  min-height: 36px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--b-acento);
+  border-color: var(--b-acento);
+  color: var(--b-sobre-acento);
+}
+
+/* Arquivos da Seção livre */
+.arq-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.arq-lista li {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 4px 10px;
+  align-items: center;
+  padding: 8px;
+  border-radius: var(--b-r-p);
+  border: 1px solid var(--b-linha);
+}
+.arq-lista img,
+.arq-pdf {
+  grid-row: 1 / span 2;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+.arq-pdf {
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--b-suave);
+  color: var(--b-apoio);
+}
+.arq-lista code {
+  font-family: var(--b-mono);
+  font-size: 11px;
+  word-break: break-all;
+}
+.arq-acoes {
+  display: flex;
+  gap: 6px;
+}
+.arq-acoes .gl-copiar {
+  grid-row: auto;
+  grid-column: auto;
+}
+.arq-x {
+  color: var(--b-erro);
+}
+
+/* Importar código da IA */
+.imp-colar {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+.imp-resumo {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border-radius: var(--b-r-m);
+  background: var(--b-acento-suave);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.imp-resumo strong {
+  font-size: 13px;
+}
+.imp-resumo ul {
+  margin: 0;
+  padding-left: 16px;
+  display: grid;
+  gap: 2px;
+}
+
+/* ---------- Pop-over de prévia da peça (sai do editor, vai para o body) ---------- */
+.pp {
+  position: fixed;
+  z-index: 1000;
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: var(--b-r-g);
+  background: var(--b-painel);
+  border: 1px solid var(--b-linha);
+  box-shadow: var(--b-sombra-pop);
+  pointer-events: none;
+  font-family: var(--b-fonte);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--b-texto);
+}
+.pp-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.pp-head strong {
+  font-size: 16px;
+  font-weight: 600;
+}
+.pp-head span {
+  font-size: 12px;
+  color: var(--b-apoio);
+}
+.pp-prev {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--b-r-p);
+  border: 1px solid var(--b-linha);
+  background: #f5f9f0;
+}
+.pp-prev__inner {
+  transform-origin: top left;
+}
+.pp p {
+  margin: 0;
+}
+.pp-desc {
+  font-size: 14px;
+}
+.pp-como,
+.pp-campos {
+  color: var(--b-apoio);
+}
+.pp-como strong,
+.pp-campos strong {
+  color: var(--b-texto);
+  font-weight: 600;
+}
+.pp-dica {
+  font-size: 12px;
+  color: var(--b-acento-forte);
+  font-weight: 600;
+}
+
+/* ---------- Painel de SEO (flutua à esquerda, sobre o painel de peças) ---------- */
+.seo {
+  position: fixed;
+  z-index: 50;
+  top: 76px;
+  left: 12px;
+  bottom: 12px;
+  width: min(392px, calc(100vw - 24px));
+  overflow: auto;
+  display: grid;
+  align-content: start;
+  gap: 18px;
+  padding: 18px;
+  border-radius: var(--b-r-g);
+  background: var(--b-painel);
+  border: 1px solid var(--b-linha);
+  box-shadow: var(--b-sombra-pop);
+  font-family: var(--b-fonte);
+  font-size: 14px;
+  color: var(--b-texto);
+}
+.seo h3 {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--b-fraco);
+}
+.seo-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 17px;
+  font-weight: 600;
+}
+.seo-serp {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+  border-radius: var(--b-r-m);
+  border: 1px solid var(--b-linha);
+  font-family: Arial, sans-serif;
+}
+.seo-serp__url {
+  font-size: 12px;
+  color: #3c4043;
+}
+.seo-serp__titulo {
+  font-size: 18px;
+  line-height: 1.3;
+  color: #1a0dab;
+}
+.seo-serp__desc {
+  font-size: 13px;
+  line-height: 1.45;
+  color: #4d5156;
+}
+.seo-nota {
+  margin: 6px 0 0;
+  font-size: 12px;
+}
+.seo-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.seo-lista li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  line-height: 1.45;
+}
+.seo-lista li > span {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+}
+.seo-lista li[data-nivel="ok"] > span {
+  background: var(--b-acento-suave);
+  color: var(--b-acento-forte);
+}
+.seo-lista li[data-nivel="atencao"] > span {
+  background: var(--b-aviso-suave);
+  color: var(--b-aviso);
+}
+.seo-lista li[data-nivel="info"] > span {
+  background: var(--b-info-suave);
+  color: var(--b-info);
+}
+.seo-item {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+.seo-ir {
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 9px;
+  border: 1px solid var(--b-acento);
+  background: var(--b-acento);
+  color: var(--b-sobre-acento);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.seo-ir:hover {
+  background: var(--b-acento-hover);
+}
+.seo-lista li[data-nivel="info"] .seo-ir {
+  background: var(--b-painel);
+  color: var(--b-texto);
+  border-color: var(--b-linha-forte);
+  font-weight: 500;
+}
+.seo-json summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+.seo-json pre {
+  max-height: 280px;
+  overflow: auto;
+  margin: 10px 0 0;
+  padding: 12px;
+  border-radius: var(--b-r-p);
+  background: var(--b-suave);
+  font-family: var(--b-mono);
+  font-size: 11px;
+}
+
+/* ================= Refinos (rodada 8): relevo, suavidade e ajustes de layout ================= */
+
+/* Botões com relevo, como nos prints: borda de baixo um pouco mais escura. */
+:where(.ed, .app) .bt,
+.app-btn--ghost,
+.app-btn--danger,
+.fi-btn,
+.gl-copiar {
+  box-shadow: var(--b-relevo);
+}
+:where(.ed, .app) .bt-pri,
+.app-btn:not(.app-btn--ghost):not(.app-btn--danger),
+.fi-btn--pri,
+.seo-ir,
+.gl-ia .gl-copiar {
+  box-shadow: var(--b-relevo-acento);
+}
+:where(.ed, .app) .bt:active,
+.app-btn:active,
+.fi-btn:active {
+  transform: translateY(0.5px);
+  box-shadow: none;
+}
+:where(.ed, .app) .bt:disabled {
+  box-shadow: none;
+}
+:where(.ed, .app) .bt[aria-pressed="true"] {
+  background: var(--b-acento-suave);
+  border-color: var(--b-acento-borda);
+  color: var(--b-acento-forte);
+}
+.seo-lista li[data-nivel="info"] .seo-ir {
+  box-shadow: var(--b-relevo);
+}
+/* Segmento ativo: branco com borda leve e relevo (print 2). */
+:where(.ed, .app) .seg > :is(button[aria-pressed="true"], a[aria-current="page"]) {
+  box-shadow: 0 1px 2px rgba(17, 19, 24, 0.08), 0 0 0 1px rgba(17, 19, 24, 0.06), inset 0 -1px 0 rgba(17, 19, 24, 0.05);
+}
+.tp .seg > button[aria-pressed="true"] {
+  color: #fff;
+  box-shadow: var(--b-relevo-acento);
+}
+
+/* O menu do topo (Hotsites, título) não pode ficar preso dentro do cabeçalho. */
+.ed [class*="_PuckLayout-header_"] {
+  overflow: visible;
+}
+
+/* Painel de propriedades: uma divisória só entre campos, rótulos e campos mais suaves. */
+/* A linha entre campos é a do próprio Puck (só entre um campo e outro): a nossa sai. */
+.ed [class*="_PuckFields-field_"] {
+  border-bottom: 0;
+}
+.ed [class*="_PuckFields_"] {
+  --puck-field-label-font-weight: 500;
+  --puck-field-label-color-text: var(--b-rotulo);
+}
+.fi-rotulo,
+:where(.ed, .app) .cp-rotulo,
+:where(.ed, .app) .cp-campo > span:first-child {
+  font-weight: 500;
+  color: var(--b-rotulo);
+}
+.ed :is([class*="_Input-input_"], [class*="_Input-select_"]),
+.fi-codigo,
+.fi-data,
+:where(.ed, .app) .in {
+  border-color: var(--b-linha-forte);
+  box-shadow: 0 1px 1px rgba(17, 19, 24, 0.03);
+}
+.ed :is([class*="_Input-input_"]):hover,
+:where(.ed, .app) .in:hover {
+  border-color: var(--b-linha-hover);
+}
+.cp-cabeca {
+  padding: 18px 20px;
+}
+.ed [class*="_ArrayFieldItem_"] {
+  box-shadow: 0 1px 1px rgba(17, 19, 24, 0.03);
+}
+
+/* SEO e IA abre à direita, ao lado do painel de propriedades (que continua visível). */
+.seo {
+  left: auto;
+  right: 356px;
+}
+@media (max-width: 1100px) {
+  .seo {
+    right: 12px;
+  }
+}
+
+/* Categorias da gaveta: área de clique maior, fundo no hover e respiro antes dos cards. */
+.pe-pecas [class*="_ComponentList-title_"] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 36px;
+  padding: 0 10px;
+  margin: 6px 0 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.pe-pecas [class*="_ComponentList-title_"]:hover {
+  background: var(--b-suave);
+  color: var(--b-texto);
+}
+.pe-pecas [class*="_Drawer_"] {
+  padding-bottom: 16px;
+}
+
+/* Pop-over da peça: sempre encostado na borda do painel, com a mesma largura. */
+.pp {
+  transition: opacity 0.12s ease;
+}
+
+/* ================= Rodada 9: Estrutura, menu de ações, atalhos e ajustes finos ================= */
+
+/* As listas são grade: sem isto, um nome longo (sem quebra) alarga a coluna até o tamanho do texto,
+   a reticência nunca entra e a linha encosta na borda do painel. */
+.ar,
+.ar-lista,
+.ar-campos {
+  grid-template-columns: minmax(0, 1fr);
+}
+.ar-linha,
+.ar-pagina {
+  min-width: 0;
+}
+
+/* Estrutura: linha com seta (abre/fecha), nome (seleciona) e "⋯" (ações) */
+.ar-linha {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 34px;
+  padding: 0 4px 0 2px;
+  border-radius: 8px;
+}
+.ar-linha:hover {
+  background: var(--b-suave);
+}
+.ar-linha[data-atual] {
+  background: var(--b-trilho);
+}
+.ar-linha .ar-no {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 4px;
+  background: none;
+}
+.ar-linha .ar-no:hover,
+.ar-linha .ar-no[aria-current] {
+  background: none;
+}
+.ar-linha[data-atual] .ar-nome {
+  font-weight: 600;
+}
+.ar-seta,
+.ar-mais {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--b-fraco);
+  cursor: pointer;
+}
+.ar-seta:hover,
+.ar-mais:hover {
+  background: var(--b-linha);
+  color: var(--b-texto);
+}
+.ar-mais {
+  width: 26px;
+  opacity: 0;
+}
+.ar-linha:hover .ar-mais,
+.ar-linha[data-atual] .ar-mais,
+.ar-mais:focus-visible {
+  opacity: 1;
+}
+.ar-linha .ar-trava {
+  margin-left: auto;
+}
+.ar-fixo {
+  padding-left: 30px;
+}
+.ar-campo {
+  padding-left: 38px;
+}
+.ar-campo[aria-current] {
+  background: var(--b-acento-suave);
+  color: var(--b-acento-forte);
+  font-weight: 600;
+}
+.ar-campo[aria-current] .ar-cglifo {
+  background: var(--b-acento);
+  color: #fff;
+}
+.ar-dica {
+  margin: 10px 10px 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--b-fraco);
+}
+
+/* Menu de ações da seção (botão direito, "⋯") — sai no body, por cima de tudo */
+.mc {
+  position: fixed;
+  z-index: 1200;
+  display: grid;
+  min-width: 248px;
+  max-width: 300px;
+  padding: 6px;
+  border-radius: var(--b-r-m);
+  background: var(--b-painel);
+  border: 1px solid var(--b-linha);
+  box-shadow: var(--b-sombra-pop);
+  font-family: var(--b-fonte);
+  font-size: 14px;
+  color: var(--b-texto);
+}
+.mc-cab {
+  display: grid;
+  gap: 1px;
+  padding: 8px 10px 10px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--b-linha);
+}
+.mc-cab b {
+  font-size: 14px;
+  font-weight: 600;
+}
+.mc-cab span {
+  font-size: 12px;
+  color: var(--b-apoio);
+}
+.mc button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.mc button:hover:not(:disabled) {
+  background: var(--b-suave);
+}
+.mc button:disabled {
+  color: var(--b-fraco);
+  cursor: default;
+}
+.mc button .ic {
+  color: var(--b-apoio);
+}
+.mc button:disabled .ic {
+  color: var(--b-linha-forte);
+}
+.mc-fim {
+  margin-left: auto;
+}
+.mc kbd {
+  padding: 1px 6px;
+  border-radius: 5px;
+  border: 1px solid var(--b-linha-forte);
+  font-family: var(--b-fonte);
+  font-size: 11px;
+  color: var(--b-apoio);
+}
+.mc-div {
+  height: 1px;
+  margin: 4px 6px;
+  background: var(--b-linha);
+}
+.mc-perigo:not(:disabled),
+.mc-perigo:not(:disabled) .ic {
+  color: var(--b-erro);
+}
+.mc-lista {
+  max-height: 260px;
+  overflow: auto;
+  margin: 2px 0 4px 26px;
+  padding-left: 6px;
+  border-left: 1px solid var(--b-linha);
+}
+.mc-lista button {
+  min-height: 32px;
+  font-size: 13.5px;
+}
+.mc-lista button span {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--b-fraco);
+}
+.mc-grupo {
+  margin: 8px 10px 2px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--b-fraco);
+}
+.mc-nota {
+  margin: 4px 10px 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--b-aviso);
+}
+
+/* Botão "Destravar" dentro do aviso de peça travada */
+:where(.ed, .app) .chip-trava {
+  padding-right: 3px;
+}
+.chip-acao {
+  height: 18px;
+  margin-left: 2px;
+  padding: 0 8px;
+  border: 1px solid #ecd78b;
+  border-radius: 999px;
+  background: var(--b-painel);
+  color: var(--b-aviso);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.chip-acao:hover {
+  background: #fffbe9;
+}
+
+/* Barra de aparelho e zoom: o segundo divisor fica no centro, igual ao primeiro */
+.ed [class*="_ViewportControls-zoom_"] {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ed [class*="_ViewportControls-zoom_"] [class*="_ViewportControls-divider_"] {
+  margin: 0 2px 0 0;
+}
+
+/* Texto dos botões com relevo: 1 px acima, no centro da face (o relevo come 1,5–2 px embaixo) */
+:where(.ed, .app) .bt,
+.app-btn,
+.fi-btn {
+  padding-bottom: 2px;
+}
+
+/* Rótulos dos campos: medium e um cinza mais claro, para não disputar com o valor digitado */
+.ed [class*="_PuckFields_"] {
+  --puck-field-label-font-weight: 500;
+  --puck-field-label-color-text: var(--b-rotulo);
+}
+.fi-rotulo,
+:where(.ed, .app) .cp-rotulo,
+:where(.ed, .app) .cp-campo > span:first-child,
+.cp-radio .cp-rotulo {
+  font-weight: 500;
+  color: var(--b-rotulo);
+}
+
+/* Categorias da gaveta: mais juntas, e o título colado nos cards dele */
+.pe-pecas [class*="_ComponentList_"] {
+  margin: 0;
+}
+.pe-pecas [class*="_ComponentList-title_"] {
+  min-height: 32px;
+  margin: 0 0 4px;
+}
+.pe-pecas [class*="_Drawer_"] {
+  padding-bottom: 8px;
+}
+
+/* ================= Modo escuro do builder ================= */
+/* O atributo data-tema fica no <html> do builder. A prévia do site é um iframe sem ele,
+   então a página do evento continua igual nos dois modos. */
+:root[data-tema="escuro"] {
+  --b-fundo: #111214;
+  --b-ponto: #26282d;
+  --b-painel: #1a1b1f;
+  --b-linha: #2a2c32;
+  --b-linha-forte: #363940;
+  --b-linha-hover: #474a52;
+  --b-texto: #ececf0;
+  --b-apoio: #a3a7b0;
+  --b-fraco: #767a84;
+  --b-suave: #232429;
+  --b-trilho: #25272c;
+  --b-rotulo: #a3a7b0;
+  --b-codigo-fundo: #141518;
+  --b-rolagem: #3a3d44;
+  --b-acento: #00a859;
+  --b-acento-hover: #0bb865;
+  --b-acento-forte: #4cd494;
+  --b-acento-vivo: #00a859;
+  --b-acento-suave: rgba(0, 168, 89, 0.16);
+  --b-acento-borda: rgba(0, 168, 89, 0.5);
+  --b-erro: #ff7b6c;
+  --b-erro-suave: rgba(255, 123, 108, 0.12);
+  --b-aviso: #f0c75e;
+  --b-aviso-suave: rgba(240, 199, 94, 0.14);
+  --b-info: #93b8ff;
+  --b-info-suave: rgba(147, 184, 255, 0.14);
+  --b-sombra: 0 1px 2px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --b-sombra-seg: 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --b-sombra-pop: 0 18px 44px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.45);
+  --b-relevo: 0 1px 1px rgba(0, 0, 0, 0.35), inset 0 -1.5px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --b-relevo-acento: inset 0 -2px 0 rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.45);
+
+  /* Puck no escuro: superfícies, texto e a escala de cinzas invertida */
+  --puck-color-surface: var(--b-painel);
+  --puck-color-surface-subtle: var(--b-suave);
+  --puck-color-surface-muted: var(--b-fundo);
+  --puck-color-text: var(--b-texto);
+  --puck-color-text-secondary: var(--b-apoio);
+  --puck-color-border: var(--b-linha);
+  --puck-color-border-hover: var(--b-linha-forte);
+  --puck-color-interactive: var(--b-acento-forte);
+  --puck-color-interactive-soft: rgba(0, 168, 89, 0.16);
+  --puck-color-interactive-soft-hover: rgba(0, 168, 89, 0.24);
+  --puck-color-interactive-subtle: rgba(0, 168, 89, 0.1);
+  --puck-field-color-border: var(--b-linha-forte);
+  --puck-field-color-border-hover: var(--b-linha-hover);
+  --puck-color-grey-01: #f2f2f4;
+  --puck-color-grey-02: #e4e4e8;
+  --puck-color-grey-03: #c9cbd0;
+  --puck-color-grey-04: #a8abb2;
+  --puck-color-grey-05: #8a8d95;
+  --puck-color-grey-06: #6e717a;
+  --puck-color-grey-07: #575a62;
+  --puck-color-grey-08: #45474e;
+  --puck-color-grey-09: #36383e;
+  --puck-color-grey-10: #2c2e33;
+  --puck-color-grey-11: #242529;
+  --puck-color-grey-12: #1e1f23;
+}
+:root[data-tema="escuro"] :is(.ed, .app) {
+  color-scheme: dark;
+}
+/* Fundo do documento (aparece enquanto a tela carrega e na rolagem elástica). */
+:root[data-tema="escuro"],
+:root[data-tema="escuro"] body {
+  background: var(--b-fundo);
+}
+/* Páginas desenhadas dentro do builder (miniaturas, prévia da peça): texto do site, não do tema. */
+:where(.ed, .app, .pp) .hs {
+  color: var(--texto);
+}
+/* Prévia do resultado do Google: continua um cartão branco, como no Google. */
+.seo-serp {
+  background: #fff;
+}
+:root[data-tema="escuro"] .seo-nota {
+  color: var(--b-fraco);
+}
+:root[data-tema="escuro"] .app-btn--danger {
+  border-color: rgba(255, 123, 108, 0.4);
+}
+:root[data-tema="escuro"] .ed-conflito {
+  color: var(--b-aviso);
+}
+:root[data-tema="escuro"] .chip-acao {
+  border-color: rgba(240, 199, 94, 0.45);
+}
+:root[data-tema="escuro"] .chip-acao:hover {
+  background: rgba(240, 199, 94, 0.12);
+}
+:root[data-tema="escuro"] .dw-tile,
+:root[data-tema="escuro"] .pg-thumb {
+  background: #232429;
+}
+:root[data-tema="escuro"] .bt-pri,
+:root[data-tema="escuro"] .app-btn:not(.app-btn--ghost):not(.app-btn--danger) {
+  color: #fff;
+}
+.app-top-dir {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
