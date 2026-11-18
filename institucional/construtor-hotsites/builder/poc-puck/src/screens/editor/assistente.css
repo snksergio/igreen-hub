@@ -64,7 +64,7 @@
   }
 }
 
-/* ---------- Painel ---------- */
+/* ---------- Painel (vidro leve) ---------- */
 .ia {
   --ia-verde: linear-gradient(135deg, #00843f 0%, #00a859 55%, #6fdc66 100%);
   position: fixed;
@@ -75,12 +75,12 @@
   grid-template-rows: auto minmax(0, 1fr) auto auto;
   width: min(420px, calc(100vw - 24px));
   height: min(680px, calc(100vh - 96px));
-  border: 1px solid transparent;
   border-radius: 24px;
-  background:
-    linear-gradient(var(--b-painel), var(--b-painel)) padding-box,
-    linear-gradient(165deg, rgba(0, 168, 89, 0.5), rgba(0, 168, 89, 0) 34%, var(--b-linha-forte) 100%) border-box;
-  box-shadow: 0 28px 64px -16px rgba(0, 40, 20, 0.28), 0 8px 22px rgba(17, 19, 24, 0.08);
+  /* Vidro: o fundo deixa passar a prévia desfocada atrás do painel */
+  background: color-mix(in srgb, var(--b-painel) 78%, transparent);
+  -webkit-backdrop-filter: blur(26px) saturate(1.7);
+  backdrop-filter: blur(26px) saturate(1.7);
+  box-shadow: 0 28px 64px -16px rgba(0, 40, 20, 0.3), 0 8px 22px rgba(17, 19, 24, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5);
   color: var(--b-texto);
   font-family: var(--b-fonte);
   overflow: hidden;
@@ -88,13 +88,27 @@
   transform-origin: 85% 100%;
   animation: ia-abre 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+/* Borda que puxa para o verde no canto de cima, desenhada por cima do vidro */
+.ia::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(165deg, rgba(0, 168, 89, 0.55), rgba(0, 168, 89, 0) 34%, var(--b-linha-forte) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+}
 @keyframes ia-abre {
   from {
     opacity: 0;
     transform: translateY(14px) scale(0.97);
   }
 }
-/* Brilho verde suave no canto de cima: dá profundidade sem virar decoração */
+/* Brilhos verdes por trás do conteúdo: é o que faz o vidro dos cartões aparecer */
 .ia-aura {
   position: absolute;
   top: -150px;
@@ -103,8 +117,17 @@
   width: 340px;
   height: 340px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(0, 168, 89, 0.22), rgba(127, 227, 107, 0.1) 45%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 168, 89, 0.24), rgba(127, 227, 107, 0.1) 45%, transparent 70%);
   pointer-events: none;
+}
+.ia-aura-2 {
+  top: auto;
+  right: auto;
+  bottom: 40px;
+  left: -140px;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(127, 227, 107, 0.2), rgba(0, 168, 89, 0.06) 50%, transparent 70%);
 }
 @media (max-width: 1100px) {
   .ia,
@@ -163,49 +186,155 @@
   outline-offset: 2px;
 }
 
-/* A esfera */
+/* ---------- A esfera líquida ----------
+   Quatro gotas verdes passeiam em volta de um núcleo; o filtro "goo" (SVG) funde as bordas como
+   líquido. Uma quinta gota segue o ponteiro (--mx, --my) e volta com mola, como gelatina.
+   Pensando (.ia-orbe-ativo), tudo acelera. */
+.ia-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
 .ia-orbe {
+  --vel: 1;
+  --mx: 0;
+  --my: 0;
   position: relative;
   flex: none;
   width: 26px;
   height: 26px;
-  border-radius: 50%;
-  overflow: hidden;
-  background: #00a859;
-  box-shadow: 0 4px 14px rgba(0, 168, 89, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.25);
 }
-.ia-orbe::before {
-  content: "";
+.ia-orbe-ativo {
+  --vel: 0.4;
+}
+.ia-goo {
   position: absolute;
-  inset: -35%;
-  background: conic-gradient(from 20deg, #00843f, #00c46a, #9be97d, #e4fbe9, #36d37a, #00843f);
-  filter: blur(3px);
+  inset: -22%;
+  filter: url(#ia-goo-p);
 }
-.ia-orbe::after {
-  content: "";
+.ia-goo i {
   position: absolute;
-  inset: 0;
+  left: 50%;
+  top: 50%;
   border-radius: 50%;
-  background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0) 38%);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
 }
-.ia-orbe-ativo::before {
-  animation: ia-gira 2.4s linear infinite;
+.ia-goo i:nth-child(1) {
+  width: 70%;
+  height: 70%;
+  margin: -35% 0 0 -35%;
+  background: radial-gradient(circle at 35% 30%, #d6fadf, #2fc777 42%, #00813e 100%);
+  animation-name: ia-nucleo;
+  animation-duration: calc(5s * var(--vel));
 }
-.ia-orbe-g {
-  width: 64px;
-  height: 64px;
-  box-shadow: 0 16px 40px rgba(0, 168, 89, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+.ia-goo i:nth-child(2) {
+  width: 42%;
+  height: 42%;
+  margin: -21% 0 0 -21%;
+  background: #8be873;
+  animation-name: ia-gota-a;
+  animation-duration: calc(4.4s * var(--vel));
 }
-.ia-orbe-g::before {
-  filter: blur(6px);
-  animation: ia-gira 14s linear infinite;
+.ia-goo i:nth-child(3) {
+  width: 38%;
+  height: 38%;
+  margin: -19% 0 0 -19%;
+  background: #00b862;
+  animation-name: ia-gota-b;
+  animation-duration: calc(5.8s * var(--vel));
 }
-@keyframes ia-gira {
-  to {
-    transform: rotate(360deg);
+.ia-goo i:nth-child(4) {
+  width: 30%;
+  height: 30%;
+  margin: -15% 0 0 -15%;
+  background: #4fdc8c;
+  animation-name: ia-gota-c;
+  animation-duration: calc(3.7s * var(--vel));
+}
+.ia-goo i.ia-segue {
+  width: 34%;
+  height: 34%;
+  margin: -17% 0 0 -17%;
+  background: #22c470;
+  transform: translate(calc(var(--mx) * 105%), calc(var(--my) * 105%));
+  transition: transform 0.55s cubic-bezier(0.34, 1.7, 0.5, 1);
+  animation: none;
+}
+@keyframes ia-nucleo {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.07) translate(2%, -2%);
   }
 }
-
+@keyframes ia-gota-a {
+  0%,
+  100% {
+    transform: translate(-70%, -55%) scale(1);
+  }
+  33% {
+    transform: translate(75%, -40%) scale(1.12);
+  }
+  66% {
+    transform: translate(20%, 80%) scale(0.88);
+  }
+}
+@keyframes ia-gota-b {
+  0%,
+  100% {
+    transform: translate(80%, 50%) scale(0.95);
+  }
+  40% {
+    transform: translate(-75%, 45%) scale(1.15);
+  }
+  75% {
+    transform: translate(-10%, -85%) scale(0.9);
+  }
+}
+@keyframes ia-gota-c {
+  0%,
+  100% {
+    transform: translate(0, 95%) scale(0.9);
+  }
+  50% {
+    transform: translate(10%, -100%) scale(1.2);
+  }
+}
+/* Brilho de vidro por cima do líquido */
+.ia-luz {
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 30%),
+    radial-gradient(circle at 70% 82%, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0) 30%);
+  pointer-events: none;
+}
+.ia-orbe-g {
+  width: 72px;
+  height: 72px;
+}
+.ia-orbe-g .ia-goo {
+  filter: url(#ia-goo-g);
+  transform: translate(calc(var(--mx) * 6%), calc(var(--my) * 6%));
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+/* Sombra de luz embaixo, como se a esfera flutuasse */
+.ia-orbe-g::after {
+  content: "";
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  bottom: -20%;
+  height: 16%;
+  border-radius: 50%;
+  background: rgba(0, 150, 75, 0.35);
+  filter: blur(7px);
+  z-index: -1;
+}
 /* ---------- Conversa ---------- */
 .ia-corpo {
   display: flex;
@@ -732,21 +861,76 @@
   color: var(--b-fraco);
 }
 
-/* Tema escuro do construtor: menos brilho e sombra mais funda */
+/* ---------- Vidro nos cartões (sugestões, proposta, caixa de pedido) ---------- */
+.ia-sug button {
+  border-color: color-mix(in srgb, var(--b-painel) 55%, var(--b-linha-forte));
+  background: color-mix(in srgb, var(--b-painel) 50%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  backdrop-filter: blur(16px) saturate(1.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), 0 8px 18px -12px rgba(0, 40, 20, 0.28);
+}
+.ia-sug button:hover {
+  border-color: var(--b-acento-borda);
+  background: color-mix(in srgb, var(--b-acento-suave) 75%, transparent);
+}
+.ia-sug-ic {
+  background: color-mix(in srgb, var(--b-painel) 70%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--b-linha-forte) 70%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.ia-eu p {
+  background: color-mix(in srgb, var(--b-trilho) 82%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.ia-prop {
+  border-color: color-mix(in srgb, var(--b-linha-forte) 70%, transparent);
+  background: color-mix(in srgb, var(--b-painel) 68%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  backdrop-filter: blur(18px) saturate(1.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 10px 26px -14px rgba(0, 40, 20, 0.3);
+}
+.ia-prop-acoes,
+.ia-aviso {
+  background: color-mix(in srgb, var(--b-suave) 55%, transparent);
+}
+.ia-caixa {
+  background: color-mix(in srgb, var(--b-painel) 80%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 10px 26px -14px rgba(0, 40, 20, 0.25);
+}
+.ia-refinos button,
+.ia-contexto:not([aria-pressed="true"]) {
+  background: color-mix(in srgb, var(--b-painel) 60%, transparent);
+}
+
+/* Tema escuro do construtor: vidro mais escuro, reflexo mais fraco, sombra mais funda */
 :root[data-tema="escuro"] .ia {
-  box-shadow: 0 28px 64px -16px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.02);
+  background: color-mix(in srgb, var(--b-painel) 74%, transparent);
+  box-shadow: 0 28px 64px -16px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 :root[data-tema="escuro"] .ia-aura {
-  opacity: 0.6;
+  opacity: 0.7;
+}
+:root[data-tema="escuro"] :is(.ia-sug button, .ia-prop, .ia-caixa) {
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 10px 26px -14px rgba(0, 0, 0, 0.6);
+}
+:root[data-tema="escuro"] .ia-sug-ic {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ia,
   .ia-pensa li,
   .ia-fab-brilho,
-  .ia-orbe::before,
+  .ia-goo i,
   .ia-brilho-txt,
   .ia-passo-ic i {
     animation: none;
+  }
+  .ia-goo,
+  .ia-goo i.ia-segue {
+    transition: none;
   }
 }

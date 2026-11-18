@@ -1,5 +1,5 @@
 import { createUsePuck } from "@puckeditor/core";
-import { useEffect, useLayoutEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent, type PointerEvent as EventoPonteiro, type ReactNode } from "react";
 import { CATALOGO, type PecaId } from "../../puck/catalogo";
 import { Icone, type NomeIcone } from "../../ui/Icone";
 import "./assistente.css";
@@ -54,9 +54,59 @@ function proporPara(pedido: string, onde: string, temAnexo: boolean): Proposta {
 
 const PASSOS = (onde: string) => [`Lendo ${onde === "página inteira" ? "a página" : onde}`, "Escolhendo peças do design system", "Montando a proposta"];
 
-/** A esfera do assistente: o único elemento com movimento contínuo do painel. */
+/**
+ * A esfera do assistente, como um líquido: gotas verdes que se movem e se fundem (filtro "goo"
+ * do SVG). Pensando, ela acelera. A grande estica na direção do ponteiro e volta como gelatina.
+ */
 function Orbe({ grande = false, ativo = false }: { grande?: boolean; ativo?: boolean }) {
-  return <span className={`ia-orbe${grande ? " ia-orbe-g" : ""}${ativo ? " ia-orbe-ativo" : ""}`} aria-hidden="true" />;
+  return (
+    <span className={`ia-orbe${grande ? " ia-orbe-g" : ""}${ativo ? " ia-orbe-ativo" : ""}`} aria-hidden="true">
+      <span className="ia-goo">
+        <i />
+        <i />
+        <i />
+        <i />
+        <i className="ia-segue" />
+      </span>
+      <span className="ia-luz" />
+    </span>
+  );
+}
+
+/**
+ * Filtros do efeito líquido: o desfoque junta as gotas e mistura as cores; o corte de transparência
+ * devolve uma borda lisa. O resultado é um corpo só, sem as bolas aparecendo.
+ */
+function FiltrosLiquidos() {
+  return (
+    <svg className="ia-defs" width="0" height="0" aria-hidden="true" focusable="false">
+      <filter id="ia-goo-g" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="borrado" />
+        <feColorMatrix in="borrado" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -11" result="gota" />
+      </filter>
+      <filter id="ia-goo-p" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="borrado" />
+        <feColorMatrix in="borrado" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" result="gota" />
+      </filter>
+    </svg>
+  );
+}
+
+/** Leva a posição do ponteiro (de -1 a 1 em cada eixo) para a esfera grande esticar na direção dele. */
+function seguirPonteiro(e: EventoPonteiro<HTMLElement>) {
+  const orbe = e.currentTarget.querySelector<HTMLElement>(".ia-orbe-g");
+  if (!orbe) return;
+  const r = orbe.getBoundingClientRect();
+  const dx = (e.clientX - (r.left + r.width / 2)) / (r.width * 2.2);
+  const dy = (e.clientY - (r.top + r.height / 2)) / (r.height * 2.2);
+  const lim = (v: number) => Math.max(-1, Math.min(1, v));
+  orbe.style.setProperty("--mx", lim(dx).toFixed(3));
+  orbe.style.setProperty("--my", lim(dy).toFixed(3));
+}
+function soltarPonteiro(e: EventoPonteiro<HTMLElement>) {
+  const orbe = e.currentTarget.querySelector<HTMLElement>(".ia-orbe-g");
+  orbe?.style.setProperty("--mx", "0");
+  orbe?.style.setProperty("--my", "0");
 }
 
 export function Assistente() {
@@ -130,7 +180,9 @@ export function Assistente() {
       )}
       {aberto && (
         <section className="ia" role="dialog" aria-label="Assistente de IA">
+          <FiltrosLiquidos />
           <span className="ia-aura" aria-hidden="true" />
+          <span className="ia-aura ia-aura-2" aria-hidden="true" />
           <header className="ia-topo">
             <Orbe ativo={pensando !== null} />
             <div className="ia-tit">
@@ -157,10 +209,10 @@ export function Assistente() {
 
           <div className="ia-corpo" role="log" aria-live="polite">
             {vazio ? (
-              <div className="ia-boas">
+              <div className="ia-boas" onPointerMove={seguirPonteiro} onPointerLeave={soltarPonteiro}>
                 <Orbe grande />
                 <h2>O que vamos construir?</h2>
-                <p>Peça uma seção, um texto ou um ajuste de visual. Eu proponho as mudanças e você aprova antes de aplicar.</p>
+                <p>Peça uma seção, um texto ou um ajuste de visual. Você aprova antes de aplicar.</p>
                 <ul className="ia-sug">
                   {SUGESTOES.map((s) => (
                     <li key={s.titulo}>
