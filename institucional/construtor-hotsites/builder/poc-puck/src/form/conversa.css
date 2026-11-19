@@ -1043,8 +1043,8 @@ textarea.cv-in {
 
 /* ---------- Tela final: o ingresso pendurado à esquerda, a confirmação à direita ----------
    No jeito de um app de ingressos: fundo neutro (o mesmo da conversa), um ingresso de papel preso
-   por uma alça no alto do modal e a confirmação centrada, com selo, evento, data e um botão escuro.
-   O ingresso cai do alto, estica a alça e balança até parar, como o crachá do rodapé do kit Live. */
+   por uma alça no alto do modal e a confirmação centrada, com selo, evento, data e o botão principal
+   no verde do construtor. A mesma composição serve a página "Ver meu ingresso". */
 .fm-fundo:has(.fm-sucesso) {
   background: rgba(10, 12, 14, 0.42);
 }
@@ -1053,7 +1053,7 @@ textarea.cv-in {
 }
 .fm-modal:has(.fm-sucesso) {
   position: relative;
-  width: min(900px, 100%);
+  width: min(920px, 100%);
   border: 1px solid var(--cv-linha-forte);
   border-radius: 26px;
   background: var(--cv-painel);
@@ -1079,10 +1079,9 @@ textarea.cv-in {
 }
 
 .fm-sucesso {
-  --tk-fundo: var(--cv-painel);
   display: grid;
-  grid-template-columns: minmax(300px, 44%) minmax(0, 1fr);
-  min-height: min(640px, calc(100dvh - 40px));
+  grid-template-columns: minmax(320px, 44%) minmax(0, 1fr);
+  min-height: min(660px, calc(100dvh - 40px));
   color: var(--cv-texto);
 }
 .fm-sucesso-ingresso {
@@ -1091,14 +1090,13 @@ textarea.cv-in {
   justify-content: center;
   align-items: flex-start;
   padding-bottom: 44px;
-  overflow: hidden;
 }
 .fm-sucesso-txt {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 56px 48px 48px 24px;
+  padding: 56px 48px 44px 24px;
   text-align: center;
 }
 .fm-sucesso-selo svg {
@@ -1135,7 +1133,7 @@ textarea.cv-in {
   color: #ffcf6b;
 }
 .fm-sucesso-sub {
-  max-width: 360px;
+  max-width: 380px;
   margin: 0;
   font-size: 16px;
   line-height: 1.5;
@@ -1146,7 +1144,7 @@ textarea.cv-in {
   color: var(--cv-texto);
 }
 .fm-sucesso-linha {
-  width: min(100%, 340px);
+  width: min(100%, 360px);
   margin: 26px 0 22px;
   border: 0;
   border-top: 1px solid var(--cv-linha);
@@ -1169,9 +1167,10 @@ textarea.cv-in {
   align-items: center;
   gap: 7px;
   padding: 5px 14px 5px 10px;
+  border: 1px solid var(--cv-linha-forte);
   border-radius: 999px;
-  background: var(--cv-texto);
-  color: var(--cv-painel);
+  background: var(--cv-suave);
+  color: var(--cv-texto);
   font-size: 12.5px;
   font-weight: 600;
 }
@@ -1186,38 +1185,43 @@ textarea.cv-in {
 .fm-sucesso-acoes {
   display: grid;
   justify-items: center;
-  gap: 12px;
-  width: min(100%, 340px);
+  gap: 14px;
+  width: min(100%, 360px);
   margin-top: 30px;
 }
+/* Botão principal no verde do construtor, igual aos da conversa */
 .fm-sucesso-bt {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 52px;
+  padding: 0 20px;
+  border: 0;
   border-radius: 999px;
-  background: var(--cv-texto);
-  color: var(--cv-painel);
+  background: var(--cv-verde);
+  color: #fff;
+  font: inherit;
   font-size: 16px;
   font-weight: 600;
   text-decoration: none;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  box-shadow: 0 10px 22px -10px rgba(0, 168, 89, 0.7);
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
 }
 .fm-sucesso-bt:hover {
-  opacity: 0.9;
+  box-shadow: 0 12px 26px -10px rgba(0, 168, 89, 0.85);
 }
 .fm-sucesso-bt:active {
   transform: scale(0.98);
 }
 .fm-sucesso-agenda {
-  margin: 0;
+  margin: -2px 0 0;
   font-size: 13.5px;
   color: var(--cv-apoio);
 }
 .fm-sucesso-agenda a,
 .fm-sucesso-agenda button,
-.fm-sucesso-nota button,
 .fm-sucesso-extra a {
   padding: 0;
   border: 0;
@@ -1230,49 +1234,95 @@ textarea.cv-in {
   text-underline-offset: 3px;
   cursor: pointer;
 }
-.fm-sucesso-nota {
+/* WhatsApp em destaque: um cartão com o verde do WhatsApp, a mesma largura do botão */
+.fm-zap-bloco {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+}
+.fm-zap {
   display: flex;
-  align-items: flex-start;
-  gap: 7px;
-  max-width: 360px;
-  margin: 22px 0 0;
-  font-size: 13.5px;
-  line-height: 1.5;
-  color: var(--cv-apoio);
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 12px 12px 12px;
+  border: 1px solid var(--cv-linha-forte);
+  border-radius: 16px;
+  background: var(--cv-suave);
   text-align: left;
 }
-.fm-sucesso-nota svg {
+.fm-zap-ic {
+  display: grid;
+  place-items: center;
   flex: none;
-  width: 16px;
-  height: 16px;
-  margin-top: 2px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #25d366;
+  box-shadow: 0 6px 14px -6px rgba(37, 211, 102, 0.7);
+}
+.fm-zap-ic svg {
+  width: 22px;
+  height: 22px;
+  fill: #fff;
+}
+.fm-zap-ic .fm-zap-fone {
+  fill: #25d366;
+}
+.fm-zap-txt {
+  display: grid;
+  flex: 1;
+  gap: 1px;
+  min-width: 0;
+  line-height: 1.35;
+}
+.fm-zap-txt b {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cv-texto);
+}
+.fm-zap-txt small {
+  font-size: 12.5px;
+  color: var(--cv-apoio);
+}
+.fm-zap-ver {
+  flex: none;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--cv-linha-forte);
+  border-radius: 999px;
+  background: var(--cv-painel);
+  color: var(--cv-texto);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.fm-zap-ver:hover {
+  border-color: var(--cv-linha-hover);
 }
 .fm-sucesso-msg {
-  width: min(100%, 380px);
-  margin-top: 14px;
+  width: 100%;
   text-align: left;
 }
 .fm-sucesso-extra {
-  margin: 14px 0 0;
+  max-width: 360px;
+  margin: 16px 0 0;
   font-size: 12.5px;
   color: var(--cv-fraco);
 }
 .fm-sucesso-bt:focus-visible,
-.fm-sucesso-agenda :is(a, button):focus-visible,
-.fm-sucesso-nota button:focus-visible {
+.fm-zap-ver:focus-visible,
+.fm-sucesso-agenda :is(a, button):focus-visible {
   outline: 2px solid var(--cv-acento);
   outline-offset: 3px;
 }
 /* Depois que o ingresso cai, o selo aparece e o texto sobe de leve */
 .fm-sucesso-txt > * {
-  animation: fm-sucesso-entra 0.5s 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: fm-sucesso-entra 0.5s 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 .fm-sucesso-txt > .fm-sucesso-selo {
-  animation: fm-sucesso-selo 0.6s 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation: fm-sucesso-selo 0.65s 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 @keyframes fm-sucesso-entra {
   from {
@@ -1287,315 +1337,336 @@ textarea.cv-in {
   }
 }
 
-/* ---------- O ingresso pendurado ---------- */
-.tk-pendurado {
-  animation: tk-cai 0.95s 0.08s cubic-bezier(0.32, 0.72, 0.2, 1) both;
-}
-@keyframes tk-cai {
-  0% {
-    transform: translateY(-112%);
-  }
-  55% {
-    transform: translateY(2.5%);
-  }
-  76% {
-    transform: translateY(-1%);
-  }
-  100% {
-    transform: none;
-  }
-}
-/* Gira em volta do ponto de cima da alça; a sombra segue o recorte do papel */
+/* ---------- O ingresso pendurado: alça, presilha e o papel ---------- */
 .tk-balanco {
+  --tk-alca: 84px;
   position: relative;
   display: grid;
   justify-items: center;
   transform-origin: 50% 0;
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
-  filter: drop-shadow(0 20px 22px rgba(10, 20, 15, 0.22)) drop-shadow(0 2px 3px rgba(10, 20, 15, 0.12));
-}
-.tk-balanco[data-arrastando] {
-  cursor: grabbing;
 }
 .tk-alca {
   position: relative;
   z-index: 2;
+  width: 60px;
+  height: var(--tk-alca);
+}
+.tk-alca-cordas {
   display: block;
-  width: 64px;
-  height: 96px;
-  margin-bottom: -22px;
+  width: 100%;
+  height: 100%;
   overflow: visible;
 }
-.tk-alca path {
+.tk-alca-cordas path {
   fill: none;
-  stroke: #2a2c31;
-  stroke-width: 3.4;
   stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
 }
-.fm-fundo[data-tema="live"] .tk-alca path,
-.fm-pagina[data-tema="live"] .tk-alca path {
-  stroke: #5b5f68;
+.tk-corda {
+  stroke: #1d1e22;
+  stroke-width: 3.6;
 }
-/* Pendurado, o papel ganha a borda de baixo picotada */
-.tk-balanco .tk {
-  box-shadow: none;
-  -webkit-mask: linear-gradient(#000 0 0) top / 100% calc(100% - 6px) no-repeat, radial-gradient(circle 4px at 50% 100%, #0000 97%, #000 100%) bottom / 12px 6px repeat-x;
-  mask: linear-gradient(#000 0 0) top / 100% calc(100% - 6px) no-repeat, radial-gradient(circle 4px at 50% 100%, #0000 97%, #000 100%) bottom / 12px 6px repeat-x;
+.tk-corda-brilho {
+  stroke: rgba(255, 255, 255, 0.24);
+  stroke-width: 1;
+  transform: translateX(-0.7px);
+}
+/* Presilha de metal onde as duas pontas da alça se juntam */
+.tk-presilha {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 9px;
+  height: 14px;
+  margin-left: -4.5px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #5f636b, #eef0f2 42%, #a3a7ae 68%, #565a62);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+/* A ponta da alça que entra no furo do ingresso */
+.tk-alca-ponta {
+  position: absolute;
+  top: calc(100% + 3px);
+  left: 50%;
+  width: 3.6px;
+  height: 23px;
+  margin-left: -1.8px;
+  border-radius: 0 0 2px 2px;
+  background: linear-gradient(180deg, #1d1e22, #1d1e22 70%, rgba(29, 30, 34, 0.35));
+}
+.fm-fundo[data-tema="live"] .tk-corda,
+.fm-pagina[data-tema="live"] .tk-corda {
+  stroke: #2e3036;
+}
+.fm-fundo[data-tema="live"] .tk-corda-brilho,
+.fm-pagina[data-tema="live"] .tk-corda-brilho {
+  stroke: rgba(255, 255, 255, 0.32);
+}
+.fm-fundo[data-tema="live"] .tk-alca-ponta,
+.fm-pagina[data-tema="live"] .tk-alca-ponta {
+  background: #2e3036;
+}
+/* O papel: o furo fica 24px abaixo do topo, na ponta da alça; a sombra segue o recorte */
+.tk-papel {
+  margin-top: 2px;
+  filter: drop-shadow(0 1px 1px rgba(20, 16, 8, 0.22)) drop-shadow(0 20px 22px rgba(10, 20, 15, 0.22));
+}
+.fm-fundo[data-tema="live"] .tk-papel,
+.fm-pagina[data-tema="live"] .tk-papel {
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5)) drop-shadow(0 22px 26px rgba(0, 0, 0, 0.55));
 }
 
-/* ---------- O ingresso de papel ---------- */
+/* ---------- O ingresso de papel ----------
+   Medidas fixas (280 x 500) para os recortes caírem certinho nos picotes: o furo a 24px do topo,
+   os recortes das laterais a 104px (marca | corpo) e a 404px (corpo | canhoto). */
 .tk {
-  --tk-papel: #f3f1eb;
-  --tk-tinta: #18191d;
-  --tk-apoio: #6b6d73;
-  --tk-linha: rgba(24, 25, 29, 0.24);
+  --tk-tinta: #141518;
+  --tk-apoio: #6f6a60;
+  --tk-linha: rgba(40, 32, 18, 0.16);
   --tk-mono: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
   position: relative;
-  width: 268px;
-  max-width: 100%;
-  border-radius: 12px;
-  background: var(--tk-papel);
+  display: flex;
+  flex-direction: column;
+  width: 280px;
+  height: 500px;
   color: var(--tk-tinta);
   font-family: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   text-align: left;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 22px 40px -18px rgba(10, 20, 15, 0.45);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 28%, rgba(0, 0, 0, 0) 72%, rgba(60, 40, 10, 0.035)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .27 0 0 0 0 .2 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    #f5f2ea;
+  -webkit-mask: radial-gradient(circle 10px at 0 104px, #0000 96%, #000 100%), radial-gradient(circle 10px at 100% 104px, #0000 96%, #000 100%),
+    radial-gradient(circle 10px at 0 404px, #0000 96%, #000 100%), radial-gradient(circle 10px at 100% 404px, #0000 96%, #000 100%),
+    radial-gradient(circle 8px at 0 0, #0000 96%, #000 100%), radial-gradient(circle 8px at 100% 0, #0000 96%, #000 100%),
+    radial-gradient(circle 6.5px at 50% 24px, #0000 96%, #000 100%), radial-gradient(circle 3.6px at 50% 100%, #0000 94%, #000 100%) 0 0 / 10px 100% repeat-x;
+  -webkit-mask-composite: source-in;
+  mask: radial-gradient(circle 10px at 0 104px, #0000 96%, #000 100%), radial-gradient(circle 10px at 100% 104px, #0000 96%, #000 100%),
+    radial-gradient(circle 10px at 0 404px, #0000 96%, #000 100%), radial-gradient(circle 10px at 100% 404px, #0000 96%, #000 100%),
+    radial-gradient(circle 8px at 0 0, #0000 96%, #000 100%), radial-gradient(circle 8px at 100% 0, #0000 96%, #000 100%),
+    radial-gradient(circle 6.5px at 50% 24px, #0000 96%, #000 100%), radial-gradient(circle 3.6px at 50% 100%, #0000 94%, #000 100%) 0 0 / 10px 100% repeat-x;
+  mask-composite: intersect;
 }
-/* O furo da alça, com o ilhós */
-.tk-furo {
+/* Ilhós de metal em volta do furo */
+.tk-ilhos {
   position: absolute;
-  top: 12px;
+  top: 24px;
   left: 50%;
-  width: 18px;
-  height: 18px;
-  margin-left: -9px;
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
   border-radius: 50%;
-  background: var(--tk-fundo, #fff);
-  box-shadow: 0 0 0 3.5px #2a2c31, inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  background: radial-gradient(circle, #0000 6.6px, rgba(0, 0, 0, 0.45) 7px, #0000 8.6px, #0000 12.4px, rgba(0, 0, 0, 0.3) 13.6px, #0000 14px),
+    conic-gradient(from 210deg, #fdfdfd, #9a9ea6 18%, #e8e9eb 36%, #6e727b 58%, #d9dbdf 78%, #fdfdfd);
+  -webkit-mask: radial-gradient(circle, #0000 6.6px, #000 7.1px, #000 13.4px, #0000 14px);
+  mask: radial-gradient(circle, #0000 6.6px, #000 7.1px, #000 13.4px, #0000 14px);
 }
 .tk-cab {
   display: flex;
+  flex: none;
   align-items: flex-end;
   justify-content: space-between;
   gap: 12px;
-  padding: 42px 18px 14px;
-}
-.tk-marca {
-  display: grid;
-  justify-items: start;
-  gap: 7px;
-}
-.tk-marca b {
-  font-size: 25px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.035em;
-}
-.tk-selo {
-  padding: 2px 9px;
-  border: 1.2px solid var(--tk-tinta);
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 600;
+  height: 104px;
+  padding: 0 20px 18px;
 }
 .tk-logo {
+  display: block;
+  width: auto;
+  height: 25px;
+  color: var(--tk-tinta);
+}
+.tk-num {
   display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 13px;
-  background: linear-gradient(135deg, #00843f 0%, #00a859 55%, #6fdc66 100%);
+  justify-items: end;
+  gap: 1px;
+  font-family: var(--tk-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
-.tk-logo svg {
-  width: 22px;
-  height: 22px;
-  fill: none;
-  stroke: #fff;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.tk-num .tk-rot {
+  margin: 0;
 }
-/* Picote: linha tracejada com dois recortes nas laterais, na cor do fundo atrás do ingresso */
-.tk-corte {
-  position: relative;
-  height: 0;
-  margin: 0 12px;
-  border-top: 1.5px dashed var(--tk-linha);
-}
-.tk-corte::before,
-.tk-corte::after {
-  content: "";
+/* Picote: uma fileira de furinhos entre os recortes das laterais */
+.tk-picote {
   position: absolute;
-  top: -8px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--tk-fundo, #fff);
+  left: 15px;
+  right: 15px;
+  height: 4px;
+  margin-top: -2px;
+  background: radial-gradient(circle 1.4px, rgba(70, 56, 30, 0.34) 92%, #0000) 0 50% / 8px 4px repeat-x;
 }
-.tk-corte::before {
-  left: -20px;
+.tk-cab + .tk-picote {
+  top: 104px;
 }
-.tk-corte::after {
-  right: -20px;
+.tk-dados + .tk-picote {
+  top: 404px;
 }
 .tk-rot {
   margin-bottom: 3px;
   font-family: var(--tk-mono);
   font-size: 9px;
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--tk-apoio);
 }
 .tk-info {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 12px 18px;
+  flex: none;
+  grid-template-columns: 0.9fr 1.1fr;
+  height: 70px;
+  padding: 14px 20px 10px;
 }
 .tk-info > div {
   display: grid;
   align-content: start;
-  gap: 1px;
   min-width: 0;
   font-family: var(--tk-mono);
   font-size: 10.5px;
-  line-height: 1.35;
+  line-height: 1.4;
   letter-spacing: 0.01em;
   text-transform: uppercase;
-  overflow-wrap: anywhere;
 }
 .tk-info > div + div {
   padding-left: 12px;
   border-left: 1px solid var(--tk-linha);
 }
-/* A arte do evento, nas cores da marca */
+.tk-corta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* A arte do evento: verde-escuro da marca com o brilho verde-lima, a logo e o selo do kit Live */
 .tk-arte {
   position: relative;
-  height: 152px;
-  margin: 0 12px 12px;
-  padding: 12px;
-  border-radius: 6px;
-  background: #0e1512;
+  flex: none;
+  height: 156px;
+  margin: 0 14px 12px;
+  padding: 14px;
+  border-radius: 8px;
+  background: radial-gradient(120% 95% at 100% 100%, rgba(168, 255, 53, 0.55), rgba(0, 168, 89, 0.22) 38%, #0000 66%),
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.09) 1px, #0000 1.3px) 0 0 / 11px 11px, linear-gradient(160deg, #0b2314, #04110a 72%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   color: #fff;
   overflow: hidden;
+}
+.tk-arte-luz {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, #0000 38%, rgba(255, 255, 255, 0.07) 48%, #0000 58%);
 }
 .tk-arte strong {
   position: relative;
   z-index: 1;
   display: -webkit-box;
-  max-width: 62%;
+  max-width: 80%;
   overflow: hidden;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 3;
   font-size: 19px;
   font-weight: 700;
-  line-height: 1.05;
+  line-height: 1.08;
   letter-spacing: -0.025em;
 }
-.tk-arte-pe {
+.tk-arte-brilho {
   position: absolute;
-  left: 12px;
-  bottom: 10px;
-  z-index: 1;
-  font-size: 10.5px;
-  font-weight: 600;
-  line-height: 1.15;
-  opacity: 0.9;
+  top: 14px;
+  right: 14px;
+  width: 16px;
+  height: 16px;
+  fill: #a8ff35;
 }
-.tk-arte i {
+.tk-arte-logo {
   position: absolute;
-  display: block;
+  left: 14px;
+  bottom: 13px;
+  width: auto;
+  height: 21px;
+  color: #a8ff35;
 }
-.tk-f1 {
-  top: 0;
-  right: 0;
-  width: 78px;
-  height: 78px;
-  border-radius: 0 0 0 78px;
-  background: #a8ff35;
-}
-.tk-f2 {
-  right: 44px;
-  bottom: 0;
-  width: 38px;
-  height: 92px;
-  border-radius: 19px 19px 0 0;
-  background: #00a859;
-}
-.tk-f3 {
-  right: 0;
-  bottom: 0;
-  width: 40px;
-  height: 118px;
-  border-radius: 40px 0 0 0;
-  background: #0b6b3a;
-}
-.tk-f4 {
-  left: 64px;
-  bottom: -18px;
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  background: #d8f6e3;
+.tk-arte-ano {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  font-family: var(--tk-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.72);
 }
 .tk-dados {
   display: grid;
-  grid-template-columns: 0.9fr 1fr 1.25fr;
+  flex: none;
+  grid-template-columns: 0.8fr 1.2fr;
+  height: 62px;
   margin: 0;
-  padding: 12px 16px;
+  padding: 4px 20px 10px;
 }
 .tk-dados > div {
   min-width: 0;
 }
 .tk-dados > div + div {
-  margin-left: 10px;
-  padding-left: 10px;
+  padding-left: 12px;
   border-left: 1px solid var(--tk-linha);
 }
 .tk-dados dt {
   margin-bottom: 3px;
   font-family: var(--tk-mono);
   font-size: 9px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--tk-apoio);
 }
 .tk-dados dd {
+  display: -webkit-box;
   margin: 0;
-  font-size: 11.5px;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 12px;
   font-weight: 700;
   line-height: 1.2;
   text-transform: uppercase;
-  overflow-wrap: anywhere;
 }
-.tk-codigo {
-  font-family: var(--tk-mono);
-  letter-spacing: 0.06em;
-}
-.tk-pe {
+/* Canhoto: o QR code da entrada */
+.tk-canhoto {
   display: flex;
+  flex: none;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px 18px 14px;
+  gap: 14px;
+  height: 96px;
+  padding: 6px 18px 6px 18px;
+}
+.tk-qr {
+  flex: none;
+  padding: 4px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--tk-linha);
 }
 .tk-qr .fm-qr {
   display: block;
-  border-radius: 4px;
 }
-.tk-pe-txt {
+.tk-canhoto-txt {
   display: grid;
   flex: 1;
-  gap: 2px;
-  font-family: var(--tk-mono);
-  font-size: 9px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  min-width: 0;
 }
-.tk-pe-txt .tk-rot {
-  margin: 0;
+.tk-canhoto-txt .tk-rot {
+  margin-bottom: 2px;
   color: var(--tk-tinta);
 }
+.tk-codigo {
+  font-family: var(--tk-mono);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
 .tk-url {
+  font-family: var(--tk-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--tk-apoio);
 }
 .tk-seta {
@@ -1615,13 +1686,13 @@ textarea.cv-in {
 }
 .tk-carimbo {
   position: absolute;
-  top: 54%;
+  top: 255px;
   left: 50%;
   z-index: 3;
   padding: 6px 12px;
   border: 2.5px solid #b77900;
   border-radius: 8px;
-  background: rgba(243, 241, 235, 0.94);
+  background: rgba(245, 242, 234, 0.94);
   color: #8a5a00;
   font-size: 12.5px;
   font-weight: 800;
@@ -1633,6 +1704,46 @@ textarea.cv-in {
 .tk[data-estado="ok"] .tk-carimbo {
   border-color: #6b6d73;
   color: #4a4c52;
+}
+
+/* ---------- Página "Ver meu ingresso": o mesmo cartão da confirmação, sobre um fundo neutro ---------- */
+.ig2 {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 32px 16px;
+  background: #f2f2f4;
+}
+.fm-pagina[data-tema="live"].ig2 {
+  background: #0e0f11;
+}
+.ig2-cartao {
+  position: relative;
+  width: min(940px, 100%);
+  border: 1px solid var(--cv-linha-forte);
+  border-radius: 26px;
+  background: var(--cv-painel);
+  box-shadow: 0 30px 70px -24px rgba(17, 19, 24, 0.28), 0 6px 18px rgba(17, 19, 24, 0.06);
+  overflow: hidden;
+}
+.ig2-vazio {
+  max-width: 520px;
+  padding: 40px 32px;
+  text-align: center;
+}
+.ig2-pagar {
+  max-width: 560px;
+  padding: 28px;
+}
+.ig2-entrada-ic {
+  background: var(--cv-texto);
+  box-shadow: none;
+}
+.ig2-entrada-ic svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--cv-painel);
 }
 
 @media (max-width: 720px) {
@@ -1649,15 +1760,23 @@ textarea.cv-in {
     padding-bottom: 6px;
     zoom: 0.8;
   }
-  .tk-alca {
-    height: 72px;
+  .tk-balanco {
+    --tk-alca: 70px;
   }
   .fm-sucesso-txt {
-    padding: 18px 24px 32px;
+    padding: 18px 22px 32px;
+  }
+  .ig2 {
+    place-items: start stretch;
+    padding: 0;
+  }
+  .ig2-cartao {
+    min-height: 100dvh;
+    border: 0;
+    border-radius: 0;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .tk-pendurado,
   .fm-sucesso-txt > *,
   .fm-sucesso-txt > .fm-sucesso-selo {
     animation: none;
