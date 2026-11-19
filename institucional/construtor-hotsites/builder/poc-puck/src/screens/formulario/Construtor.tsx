@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Campo as CampoView } from "../../form/Campo";
 import { FormNoEstilo } from "../FormAvulso";
+import { Maquete } from "./Maquete";
 import "../../form/form.css";
 import {
   ACEITA,
@@ -260,7 +261,12 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
               No modal
             </button>
           </div>
-          {vista === "montagem" && <Montagem f={f} sel={sel} escolher={escolher} mover={mover} duplicar={duplicar} apagar={apagar} />}
+          {vista === "montagem" && (
+            <div className="fc-mont">
+              <Montagem f={f} sel={sel} escolher={escolher} mover={mover} duplicar={duplicar} apagar={apagar} />
+              <Maquete f={f} paginas={usam} preferida={pagina} semPagina={<NaPagina f={f} />} />
+            </div>
+          )}
           {vista === "pagina" && <NaPagina f={f} />}
           {vista === "modal" && <NoModal f={f} paginaId={pagina?.id} />}
         </main>
