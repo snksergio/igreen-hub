@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { camposNaPagina, etapasDoModal, mascaraCpf, mascaraWhats, UFS, validarCampo, validarCampos, visivel, type Campo, type Formulario } from "../lib/formularios";
 import { reais } from "../lib/ingresso";
-import { inscrever, totalDoIngresso, type Resultado } from "../lib/inscrever";
+import { inscrever, pagar, totalDoIngresso, type Resultado } from "../lib/inscrever";
 import type { Respostas, Submission } from "../lib/submissions";
 import { Anexo, Campo as CampoView } from "./Campo";
 import { Confirmacao } from "./Confirmacao";
@@ -10,25 +11,29 @@ import "./conversa.css";
 
 /* Inscrição como conversa, no mesmo jeito do chat do assistente do construtor: cores neutras,
    a esfera da marca falando sem balão, as respostas da pessoa num balão cinza à direita.
-   - uma pergunta por vez, com uma frase de ligação ("Prazer, Ana!", "Anotado.") para soar como gente;
+   - cada fala nova vem com os três pontinhos e depois é "digitada" aos poucos;
+   - entre as perguntas, uma frase que reage à resposta ("Prazer, Ana! 😊", "Ah, Contagem! Anotado.");
    - perguntas de escolha: as opções aparecem embaixo da pergunta e a caixa de texto fica parada;
-   - o que veio da página aparece num cartão da pessoa; tocar numa resposta corrige ali mesmo;
-   - nada é enviado antes de a pessoa conferir e confirmar;
-   - o progresso é só uma linha fina no topo, sem nomes de etapa. */
+   - tocar numa resposta corrige ali mesmo;
+   - no fim, um resumo de tudo para conferir antes de confirmar; nada é enviado antes disso;
+   - o progresso é só uma linha fina no topo, sem nomes de etapa.
+   No modal há também um botão de teste, fora da caixa, que faz o caminho feliz até a confirmação. */
 
 type Fase = { tipo: "conversa" } | { tipo: "pagamento"; sub: Submission } | { tipo: "fim"; sub: Submission; espera: boolean };
 type Aviso = { texto: string; campo?: string; tentar?: boolean };
 type Valor = string | string[] | undefined;
+type Parte = { texto: string; cls?: string };
 
 const primeiroNome = (v: unknown) => (typeof v === "string" ? v.trim().split(/\s+/)[0] : "");
 const temValor = (v: unknown) => v !== undefined && v !== "" && !(Array.isArray(v) && !v.length);
-const ESPERA_DIGITANDO = 480;
+const ESPERA_DIGITANDO = 420;
 const ESCOLHA = new Set<Campo["tipo"]>(["unica", "lista", "multipla", "lgpd"]);
 const SEM_TEXTO = new Set<Campo["tipo"]>(["unica", "lista", "multipla", "lgpd", "ingresso", "anexo", "info", "oculto", "etapa"]);
 const CURTO: Record<string, string> = { nome: "Nome", whats: "WhatsApp", email: "E-mail", cidade: "Cidade" };
-const LIGACOES = ["Anotado.", "Perfeito.", "Combinado.", "Show, obrigado!", "Entendi."];
+/** Escolhe uma frase pela posição: varia ao longo da conversa, mas não troca quando a tela redesenha. */
+const umaDe = (frases: string[], i: number) => frases[i % frases.length];
 
-/** Nome curto do campo, para o cartão de dados e a correção. */
+/** Nome curto do campo, para os cartões de dados e a correção. */
 const rotuloCurto = (c: Campo) => (c.base ? CURTO[c.base] : c.rotulo.replace(/\s*\([^)]*\)/g, "").trim()) || "Resposta";
 
 /** A resposta como aparece no balão da pessoa. */
@@ -65,41 +70,89 @@ function perguntaDe(c: Campo): string {
   return porTipo[c.tipo] ?? r;
 }
 
-/**
- * A frase que liga uma pergunta à resposta anterior, para a conversa não soar como formulário.
- * Determinística (pela posição), para não trocar de texto quando a tela redesenha.
- */
+/** A frase que reage à resposta anterior, para a conversa não soar como formulário. */
 function ligacao(anterior: Campo | undefined, c: Campo, r: Respostas, i: number, veioDaPagina: boolean): string {
   if (c.tipo === "info") return "";
-  if (c.tipo === "lgpd") return "Última coisa, prometo.";
-  if (!anterior) return veioDaPagina ? "Pra fechar a sua inscrição, só preciso de mais algumas coisinhas." : "";
+  if (c.tipo === "lgpd") return "Última coisa, prometo. 🙏";
+  if (!anterior) return veioDaPagina ? "Pra fechar a sua inscrição, só preciso de mais algumas coisinhas." : "Pra começar:";
   if (anterior.tipo === "info") return "";
   const v = r[anterior.id];
-  if (!temValor(v)) return "Sem problema.";
-  if (anterior.base === "nome") return `Prazer, ${primeiroNome(v)}!`;
-  if (anterior.tipo === "whats") return "Anotado. É por lá que vai chegar a sua confirmação.";
-  return LIGACOES[i % LIGACOES.length];
+  if (!temValor(v)) return umaDe(["Sem problema, seguimos.", "Tudo bem, pode deixar sem.", "Sem problema!"], i);
+  if (anterior.base === "nome") return `Prazer, ${primeiroNome(v)}! 😊`;
+  switch (anterior.tipo) {
+    case "whats":
+      return "Anotado! É por lá que vai chegar a sua confirmação.";
+    case "email":
+      return "Show, e-mail anotado.";
+    case "cpf":
+      return "Valeu! CPF anotado.";
+    case "cidade":
+      return `Ah, ${String(v).split("/")[0].trim()}! Anotado.`;
+    case "ingresso":
+      return v === "meia" ? "Meia-entrada escolhida. 👍" : "Ingresso escolhido. 👍";
+    case "anexo":
+      return "Recebi o arquivo, obrigado!";
+    case "multipla":
+      return Array.isArray(v) && v.length > 1 ? "Boa, ótimas escolhas!" : "Boa escolha!";
+    case "unica":
+    case "lista": {
+      const s = String(v).trim().toLowerCase();
+      if (s === "sim") return "Que bom!";
+      if (s === "não" || s === "nao") return "Tudo bem!";
+      return umaDe(["Boa escolha!", "Legal, anotado!", "Entendi, obrigado!"], i);
+    }
+  }
+  return umaDe(["Perfeito, obrigado!", "Anotado!", "Ótimo!", "Show!"], i);
 }
 
 /** Negrito com **asteriscos** (texto do aceite). */
 const rico = (t: string): ReactNode[] => t.split(/(\*\*[^*]+\*\*)/g).map((p, i) => (p.startsWith("**") && p.endsWith("**") ? <b key={i}>{p.slice(2, -2)}</b> : p));
 
-/** A pergunta vem em destaque; a frase de ligação antes dela, mais apagada. */
-function TextoDaPergunta({ c, liga }: { c: Campo; liga: string }) {
-  if (c.tipo === "info") return <p>{c.rotulo}</p>;
+/**
+ * Texto que vai sendo "digitado", como nos chats de IA. A fala da vez escreve aos poucos e avisa
+ * quando termina (aí aparecem as opções e a caixa de escrever). O leitor de tela recebe o texto
+ * inteiro de uma vez; o que vai aparecendo na tela fica escondido dele.
+ */
+function Escrita({ partes, vez = false, animar = true, fim, cresce }: { partes: Parte[]; vez?: boolean; animar?: boolean; fim?: () => void; cresce?: () => void }) {
+  const letras = partes.map((p) => Array.from(p.texto));
+  const total = letras.reduce((n, l) => n + l.length, 0);
+  const [n, setN] = useState(vez && animar ? 0 : total);
+  useEffect(() => {
+    if (n >= total) {
+      if (vez) fim?.();
+      return;
+    }
+    cresce?.();
+    const t = window.setTimeout(() => setN((x) => Math.min(total, x + 2)), 16);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [n, total, vez]);
+  let resto = n;
+  return (
+    <>
+      {partes.map((p, i) => {
+        const visivel = letras[i].slice(0, Math.max(0, resto)).join("");
+        resto -= letras[i].length;
+        return (
+          <p key={i} className={`${p.cls ?? ""}${visivel || i === 0 ? "" : " cv-sr"}`}>
+            <span aria-hidden="true">{visivel}</span>
+            <span className="cv-sr">{p.texto}</span>
+          </p>
+        );
+      })}
+    </>
+  );
+}
+
+function partesDaPergunta(c: Campo, liga: string): Parte[] {
+  if (c.tipo === "info") return [{ texto: c.rotulo }];
   const pergunta =
     c.tipo === "lgpd"
       ? "Posso usar seus dados para a inscrição e para te mandar os avisos do evento?"
       : c.tipo === "ingresso"
         ? "Agora, o seu ingresso. Qual você prefere?"
         : perguntaDe(c);
-  return (
-    <>
-      {liga && <p className="cv-liga">{liga}</p>}
-      <p className="cv-pergunta">{pergunta}</p>
-      {c.tipo === "lgpd" && <p className="cv-termo">{rico(c.rotulo)}</p>}
-    </>
-  );
+  return [...(liga ? [{ texto: liga, cls: "cv-liga" }] : []), { texto: pergunta, cls: "cv-pergunta" }];
 }
 
 /** A esfera da marca: a mesma do assistente do construtor. Parada; respira só enquanto "digita". */
@@ -159,6 +212,41 @@ function Resposta({ id, texto, rotulo, editar }: { id?: string; texto: string; r
   );
 }
 
+/** Resposta de teste para cada tipo de campo (botão "Simular fluxo feliz"). */
+function valorDeTeste(c: Campo): Valor {
+  switch (c.tipo) {
+    case "texto":
+      return c.base === "nome" || c.validacao === "nome-completo" ? "Ana Teste" : "Teste";
+    case "paragrafo":
+      return "Resposta de teste.";
+    case "email":
+      return "ana.teste@exemplo.com";
+    case "whats":
+      return "(31) 9 9999-0000";
+    case "cpf":
+      return "529.982.247-25";
+    case "data":
+      return "1990-05-10";
+    case "numero":
+      return String(c.minimo ?? 1);
+    case "cidade":
+      return "Belo Horizonte/MG";
+    case "unica":
+    case "lista":
+      return c.opcoes?.[0];
+    case "multipla":
+      return c.opcoes?.length ? [c.opcoes[0]] : undefined;
+    case "lgpd":
+      return "sim";
+    case "anexo":
+      return "comprovante.pdf · 120 KB";
+    case "ingresso":
+      return "inteira";
+    default:
+      return undefined;
+  }
+}
+
 export function Conversa({
   form,
   ctx,
@@ -170,7 +258,7 @@ export function Conversa({
   ctx: Contexto;
   iniciais?: Respostas;
   completo: boolean;
-  /** No modal: o X do cabeçalho da conversa. */
+  /** No modal: o X do cabeçalho da conversa (e o botão de teste fora da caixa). */
   fechar?: () => void;
 }) {
   const etapas = useMemo(() => etapasDoModal(form, completo), [form, completo]);
@@ -182,11 +270,14 @@ export function Conversa({
   const [aviso, setAviso] = useState<Aviso | null>(null);
   const [fase, setFase] = useState<Fase>({ tipo: "conversa" });
   const [editando, setEditando] = useState<string | null>(null);
+  // De onde veio a correção: da própria resposta na conversa ou do resumo do fim.
+  const [ondeEdita, setOndeEdita] = useState<"conversa" | "resumo">("conversa");
   const [confirmou, setConfirmou] = useState(false);
   const [enviando, setEnviando] = useState(false);
   // Escolha do ingresso (inteira ou meia, declaração e cupom) enquanto a pessoa não confirma.
   const [ingresso, setIngresso] = useState<Respostas>({});
   const [erroIngresso, setErroIngresso] = useState("");
+  const [corpo, setCorpo] = useState<HTMLElement | null>(null);
   const raiz = useRef<HTMLDivElement>(null);
   const log = useRef<HTMLDivElement>(null);
   const enviado = useRef(false);
@@ -203,11 +294,18 @@ export function Conversa({
   const cobra = fase.tipo === "pagamento" || Boolean(total && total.total > 0);
   const conversando = fase.tipo === "conversa" && !enviando;
   const nome = primeiroNome(r.nome ?? iniciais.nome);
-  // "Digitando": cada fala nova (a pergunta da vez, a conferência, o pagamento) espera um instante.
-  // Vem de comparar com a última fala mostrada, para a pergunta nova nunca aparecer antes dos três pontinhos.
+  // Cada fala nova (a pergunta da vez, o resumo, o pagamento): primeiro os três pontinhos,
+  // depois o texto sendo escrito; só então aparecem as opções e a caixa de escrever.
   const vez = fase.tipo === "conversa" ? (atual?.id ?? "conferir") : fase.tipo;
   const [vista, setVista] = useState<string | null>(null);
+  const [escrita, setEscrita] = useState<string | null>(null);
   const digitando = vista !== vez;
+  const pronto = !digitando && escrita === vez;
+  const terminou = () => setEscrita(vez);
+  const acompanhar = () => {
+    const l = log.current;
+    if (l) l.scrollTop = l.scrollHeight;
+  };
 
   // Progresso: só uma linha. O que veio da página já conta; o pagamento é o último pedaço.
   const doModal = new Set(perguntas.map((c) => c.id));
@@ -215,18 +313,20 @@ export function Conversa({
   const prontas = contam.filter((c) => !doModal.has(c.id) || feitos.includes(c.id)).length;
   const progresso = fase.tipo === "pagamento" ? 0.92 : (contam.length ? prontas / contam.length : 1) * (cobra ? 0.84 : 0.94);
 
+  useEffect(() => setCorpo(raiz.current?.ownerDocument.body ?? null), []);
+
   useEffect(() => {
     if (!digitando) return;
     const t = window.setTimeout(() => setVista(vez), reduz ? 0 : ESPERA_DIGITANDO);
     return () => window.clearTimeout(t);
   }, [vez, digitando, reduz]);
 
-  // Texto informativo não espera resposta: segue sozinho.
+  // Texto informativo não espera resposta: segue sozinho depois de escrito.
   useEffect(() => {
-    if (!atual || atual.tipo !== "info" || digitando) return;
+    if (!atual || atual.tipo !== "info" || !pronto) return;
     const t = window.setTimeout(() => setFeitos((f) => [...f, atual.id]), 900);
     return () => window.clearTimeout(t);
-  }, [atual, digitando]);
+  }, [atual, pronto]);
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
@@ -234,19 +334,19 @@ export function Conversa({
   useEffect(() => {
     if (editando) return;
     log.current?.scrollTo({ top: log.current.scrollHeight, behavior: reduz ? "auto" : "smooth" });
-    if (digitando) return;
+    if (!pronto) return;
     const alvo =
       raiz.current?.querySelector<HTMLElement>(".cv-escrever .cv-in:not(:disabled)") ?? raiz.current?.querySelector<HTMLElement>(".cv-agora button:not(:disabled)");
     alvo?.focus({ preventScroll: true });
-  }, [feitos.length, digitando, aviso, fase.tipo, enviando, editando, confirmou, reduz]);
+  }, [feitos.length, digitando, pronto, aviso, fase.tipo, enviando, editando, confirmou, reduz]);
 
-  // Corrigindo: mostra a resposta e põe o foco no campo da correção.
+  // Corrigindo: mostra a correção aberta e põe o foco no campo dela.
   useEffect(() => {
     if (!editando) return;
-    const bloco = raiz.current?.querySelector(`[data-resposta="${CSS.escape(editando)}"]`);
+    const bloco = raiz.current?.querySelector("[data-corrigindo]");
     bloco?.scrollIntoView({ block: "nearest", behavior: reduz ? "auto" : "smooth" });
     bloco?.querySelector<HTMLElement>("input:not([type=file]), textarea, .cv-chip")?.focus({ preventScroll: true });
-  }, [editando, reduz]);
+  }, [editando, ondeEdita, reduz]);
 
   function responder(c: Campo, valor: Valor, extra: Respostas = {}) {
     setR((x) => {
@@ -264,7 +364,7 @@ export function Conversa({
     enviado.current = false;
   }
 
-  function editar(c: Campo) {
+  function editar(c: Campo, onde: "conversa" | "resumo" = "conversa") {
     // Corrigir volta a conversa para a conferência: o aviso some e o "Confirmar" reaparece depois.
     setAviso(null);
     setConfirmou(false);
@@ -275,8 +375,10 @@ export function Conversa({
       setEditando(null);
       return;
     }
+    setOndeEdita(onde);
     setEditando(c.id);
   }
+  const corrigindo = (c: Campo, onde: "conversa" | "resumo") => editando === c.id && ondeEdita === onde;
 
   function concluir(res: Resultado) {
     if (!res.ok) {
@@ -310,6 +412,48 @@ export function Conversa({
     );
   }
 
+  /**
+   * Só para teste da POC: completa o que falta com dados de teste, envia, aprova o pagamento
+   * simulado e mostra a tela final. Se o WhatsApp ou o e-mail já estiverem inscritos, tenta com outros.
+   */
+  function fluxoFeliz() {
+    window.clearTimeout(timer.current);
+    if (fase.tipo === "pagamento") {
+      setFase({ tipo: "fim", sub: pagar(fase.sub, true, "pix", ctx.previa), espera: false });
+      return;
+    }
+    const rr: Respostas = { ...r };
+    for (let volta = 0; volta < 6; volta++) {
+      let mudou = false;
+      for (const c of form.campos) {
+        if (c.tipo === "info" || c.tipo === "etapa" || c.tipo === "oculto" || !visivel(c, rr) || temValor(rr[c.id])) continue;
+        const v = valorDeTeste(c);
+        if (temValor(v)) {
+          rr[c.id] = v!;
+          mudou = true;
+        }
+      }
+      if (!mudou) break;
+    }
+    let res = inscrever(form, rr, ctx);
+    if (!res.ok) {
+      const n = String(Date.now()).slice(-8);
+      for (const c of form.campos) {
+        if (c.tipo === "whats") rr[c.id] = `(31) 9 ${n.slice(0, 4)}-${n.slice(4)}`;
+        if (c.tipo === "email") rr[c.id] = `teste.${n}@exemplo.com`;
+      }
+      res = inscrever(form, rr, ctx);
+    }
+    setR(rr);
+    setEditando(null);
+    if (!res.ok) {
+      setAviso({ texto: res.motivo, tentar: true });
+      return;
+    }
+    enviado.current = true;
+    setFase({ tipo: "fim", sub: res.aPagar ? pagar(res.sub, true, "pix", ctx.previa) : res.sub, espera: res.espera });
+  }
+
   function continuarIngresso(c: Campo) {
     const rr = { ...r, ...ingresso };
     const escolha = (rr[c.id] as string) ?? "inteira";
@@ -322,8 +466,9 @@ export function Conversa({
 
   if (fase.tipo === "fim") return <Confirmacao sub={fase.sub} page={ctx.page} form={form} espera={fase.espera} previa={ctx.previa} />;
 
-  // A caixa de baixo só recebe texto quando a pergunta da vez é de escrever.
-  const alvo = conversando && !editando && atual && !digitando ? atual : undefined;
+  // A caixa de baixo só recebe texto quando a pergunta da vez é de escrever e já terminou de aparecer.
+  const alvo = conversando && !editando && atual && pronto ? atual : undefined;
+  const escrevendo = (fase.tipo !== "conversa" || Boolean(atual) || !confirmou) && !pronto;
   const dica = enviando
     ? "Enviando a sua inscrição…"
     : fase.tipo === "pagamento"
@@ -332,7 +477,7 @@ export function Conversa({
         ? "Corrigindo uma resposta acima"
         : !atual
           ? "Confira e confirme acima"
-          : digitando || atual.tipo === "info"
+          : !pronto || atual.tipo === "info"
             ? "Escreva aqui"
             : atual.tipo === "multipla"
               ? "Marque as opções acima"
@@ -341,16 +486,18 @@ export function Conversa({
                 : atual.tipo === "anexo"
                   ? "Anexe o arquivo acima"
                   : "Escolha uma opção acima";
+  // O resumo do fim: o que veio da página e as respostas da conversa.
+  const resumo = [...daPagina, ...respondidas.filter((c) => c.tipo !== "info" && c.tipo !== "lgpd")];
 
   return (
     <div className="cv" ref={raiz}>
       <span className="cv-aura" aria-hidden="true" />
 
       <header className="cv-topo">
-        <Orbe grande ativo={(digitando && fase.tipo === "conversa" && Boolean(atual)) || enviando} />
+        <Orbe grande ativo={escrevendo || enviando} />
         <div className="cv-quem">
           <strong>{ctx.page?.title ?? "Inscrição"}</strong>
-          <span>{(digitando && atual && fase.tipo === "conversa") || enviando ? "digitando…" : "Inscrição"}</span>
+          <span>{escrevendo || enviando ? "digitando…" : "Inscrição"}</span>
         </div>
         {ctx.previa && (
           <span className="cv-previa" title="A inscrição não é gravada">
@@ -371,71 +518,72 @@ export function Conversa({
 
       <div className="cv-log" ref={log} role="log" aria-live="polite" aria-label="Conversa da inscrição">
         <div className="cv-par">
-        <Fala>
-          <p>
-            Oi{nome ? `, ${nome}` : ""}! 👋{" "}
-            {ctx.page ? (
-              <>
-                Que bom que você quer participar do <b>{ctx.page.title}</b>.
-              </>
-            ) : (
-              "Que bom ter você por aqui."
-            )}
-          </p>
-          <p>{daPagina.length ? "Já peguei os dados que você colocou na página:" : "Vou fazer a sua inscrição por aqui mesmo. É rapidinho, menos de um minuto."}</p>
-        </Fala>
-
-        {daPagina.length > 0 && (
-          <div className="cv-eu">
-            <div className="cv-dados">
-              {daPagina.map((c) =>
-                editando === c.id ? (
-                  <div key={c.id} className="cv-dado cv-dado-edita" data-resposta={c.id}>
-                    <span className="cv-dado-rot">{rotuloCurto(c)}</span>
-                    <Corrigir c={c} valor={r[c.id]} salvar={(v) => responder(c, v)} cancelar={() => setEditando(null)} />
-                  </div>
-                ) : (
-                  <button
-                    key={c.id}
-                    type="button"
-                    className="cv-dado"
-                    data-resposta={c.id}
-                    disabled={!conversando}
-                    onClick={() => editar(c)}
-                    aria-label={`${rotuloCurto(c)}: ${textoDaResposta(c, r, form, ctx.pageId)}. Corrigir`}
-                  >
-                    <span className="cv-dado-txt">
-                      <span className="cv-dado-rot">{rotuloCurto(c)}</span>
-                      <span className="cv-dado-val">{temValor(r[c.id]) ? textoDaResposta(c, r, form, ctx.pageId) : "Não informado"}</span>
-                    </span>
-                    {conversando && (
-                      <span className="cv-eu-ic">
-                        <Lapis />
-                      </span>
-                    )}
-                  </button>
-                )
+          <Fala>
+            <p>
+              Oi{nome ? `, ${nome}` : ""}! 👋{" "}
+              {ctx.page ? (
+                <>
+                  Que bom que você quer participar do <b>{ctx.page.title}</b>.
+                </>
+              ) : (
+                "Que bom ter você por aqui."
               )}
+            </p>
+            <p>{daPagina.length ? "Já peguei os dados que você colocou na página:" : "Vou fazer a sua inscrição por aqui mesmo. É rapidinho, menos de um minuto."}</p>
+          </Fala>
+
+          {daPagina.length > 0 && (
+            <div className="cv-eu">
+              <div className="cv-dados">
+                {daPagina.map((c) =>
+                  corrigindo(c, "conversa") ? (
+                    <div key={c.id} className="cv-dado cv-dado-edita" data-corrigindo="">
+                      <span className="cv-dado-rot">{rotuloCurto(c)}</span>
+                      <Corrigir c={c} valor={r[c.id]} salvar={(v) => responder(c, v)} cancelar={() => setEditando(null)} />
+                    </div>
+                  ) : (
+                    <button
+                      key={c.id}
+                      type="button"
+                      className="cv-dado"
+                      disabled={!conversando}
+                      onClick={() => editar(c)}
+                      aria-label={`${rotuloCurto(c)}: ${textoDaResposta(c, r, form, ctx.pageId)}. Corrigir`}
+                    >
+                      <span className="cv-dado-txt">
+                        <span className="cv-dado-rot">{rotuloCurto(c)}</span>
+                        <span className="cv-dado-val">{temValor(r[c.id]) ? textoDaResposta(c, r, form, ctx.pageId) : "Não informado"}</span>
+                      </span>
+                      {conversando && (
+                        <span className="cv-eu-ic">
+                          <Lapis />
+                        </span>
+                      )}
+                    </button>
+                  )
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
         </div>
 
         {/* Respondidas e a pergunta da vez numa lista só: ao responder, a pergunta continua no lugar
             e só a resposta entra. */}
         {lista.map((c, i) => {
           const daVez = c === atual;
+          const mostra = daVez && pronto;
           return (
             <div key={c.id} className="cv-par">
               {daVez && digitando ? (
                 <Digitando />
               ) : (
                 <Fala agora={daVez}>
-                  <TextoDaPergunta c={c} liga={ligacao(lista[i - 1], c, r, i, daPagina.length > 0)} />
-                  {daVez && c.ajuda && c.tipo !== "info" && <p className="cv-ajuda">{c.ajuda}</p>}
-                  {daVez && ESCOLHA.has(c.tipo) && <Escolhas key={c.id} c={c} valor={r[c.id]} escolher={(v) => responder(c, v)} pular={!c.obrigatorio && c.tipo !== "lgpd"} agora />}
-                  {daVez && c.tipo === "anexo" && <PerguntaAnexo key={c.id} c={c} inicial="" enviar={(v) => responder(c, v)} pular={!c.obrigatorio} agora />}
-                  {daVez && c.tipo === "ingresso" && (
+                  <Escrita partes={partesDaPergunta(c, ligacao(lista[i - 1], c, r, i, daPagina.length > 0))} vez={daVez} animar={!reduz} fim={terminou} cresce={acompanhar} />
+                  {c.tipo === "lgpd" && (!daVez || pronto) && <p className="cv-termo">{rico(c.rotulo)}</p>}
+                  {mostra && c.ajuda && c.tipo !== "info" && <p className="cv-ajuda">{c.ajuda}</p>}
+                  {mostra && ESCOLHA.has(c.tipo) && <Escolhas key={c.id} c={c} valor={r[c.id]} escolher={(v) => responder(c, v)} pular={!c.obrigatorio && c.tipo !== "lgpd"} agora />}
+                  {mostra && c.tipo === "anexo" && <PerguntaAnexo key={c.id} c={c} inicial="" enviar={(v) => responder(c, v)} pular={!c.obrigatorio} agora />}
+                  {mostra && c.tipo === "ingresso" && (
                     <>
                       <div className="cv-cartao cv-ing">
                         <CampoView
@@ -467,8 +615,8 @@ export function Conversa({
               )}
               {!daVez &&
                 c.tipo !== "info" &&
-                (editando === c.id ? (
-                  <div className="cv-eu" data-resposta={c.id}>
+                (corrigindo(c, "conversa") ? (
+                  <div className="cv-eu" data-corrigindo="">
                     <div className="cv-corrige">
                       <p className="cv-corrige-tit">Corrigindo a resposta</p>
                       <Corrigir c={c} valor={r[c.id]} salvar={(v) => responder(c, v)} cancelar={() => setEditando(null)} />
@@ -486,23 +634,68 @@ export function Conversa({
           );
         })}
 
-        {/* Tudo respondido: a pessoa confere e confirma. Só aqui a inscrição é enviada. */}
-        {!atual && !(digitando && fase.tipo === "conversa") && (
-          <div className="cv-par">
-            <Fala agora={!confirmou && conversando}>
-              <p className="cv-pergunta">Pronto{nome ? `, ${nome}` : ""}! Dá uma conferida nas respostas aqui em cima.</p>
-              <p className="cv-liga">Se alguma estiver errada, é só tocar nela pra corrigir.</p>
-              {!confirmou && conversando && (
-                <div className="cv-rapidas cv-agora">
-                  <button type="button" className="cv-bt-pri" onClick={confirmar}>
-                    {cobra ? "Confirmar e ir para o pagamento" : "Confirmar inscrição"}
-                  </button>
-                </div>
-              )}
-            </Fala>
-            {confirmou && <Resposta texto={cobra ? "Confirmar e ir para o pagamento" : "Confirmar inscrição"} />}
-          </div>
-        )}
+        {/* Tudo respondido: o resumo de tudo para conferir. Só aqui a inscrição é enviada. */}
+        {!atual &&
+          (fase.tipo === "conversa" && digitando ? (
+            <Digitando />
+          ) : (
+            <div className="cv-par">
+              <Fala agora={!confirmou && conversando}>
+                <Escrita
+                  partes={[
+                    { texto: `Legal${nome ? `, ${nome}` : ""}! Agora eu tenho tudo o que preciso. 🙌`, cls: "cv-pergunta" },
+                    { texto: "Dá uma conferida se está tudo certinho:", cls: "cv-liga" },
+                  ]}
+                  vez={fase.tipo === "conversa"}
+                  animar={!reduz}
+                  fim={terminou}
+                  cresce={acompanhar}
+                />
+                {(pronto || fase.tipo !== "conversa" || confirmou) && (
+                  <>
+                    <div className="cv-resumo">
+                      {resumo.map((c) =>
+                        corrigindo(c, "resumo") ? (
+                          <div key={c.id} className="cv-resumo-linha cv-resumo-edita" data-corrigindo="">
+                            <span className="cv-resumo-rot">{rotuloCurto(c)}</span>
+                            <Corrigir c={c} valor={r[c.id]} salvar={(v) => responder(c, v)} cancelar={() => setEditando(null)} />
+                          </div>
+                        ) : (
+                          <button
+                            key={c.id}
+                            type="button"
+                            className="cv-resumo-linha"
+                            disabled={!conversando || confirmou}
+                            onClick={() => editar(c, "resumo")}
+                            aria-label={`${rotuloCurto(c)}: ${textoDaResposta(c, r, form, ctx.pageId)}. Corrigir`}
+                          >
+                            <span className="cv-resumo-rot">{rotuloCurto(c)}</span>
+                            <span className="cv-resumo-val">{temValor(r[c.id]) ? textoDaResposta(c, r, form, ctx.pageId) : "Não informado"}</span>
+                            {conversando && !confirmou && (
+                              <span className="cv-eu-ic">
+                                <Lapis />
+                              </span>
+                            )}
+                          </button>
+                        )
+                      )}
+                    </div>
+                    {!confirmou && conversando && (
+                      <>
+                        <p className="cv-liga">Se algo estiver errado, é só tocar no item pra corrigir. Está tudo certo?</p>
+                        <div className="cv-rapidas cv-agora">
+                          <button type="button" className="cv-bt-pri" onClick={confirmar}>
+                            {cobra ? "Tudo certo, ir para o pagamento" : "Tudo certo, confirmar inscrição"}
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </>
+                )}
+              </Fala>
+              {confirmou && <Resposta texto={cobra ? "Tudo certo! Vamos pro pagamento." : "Tudo certo, pode confirmar!"} />}
+            </div>
+          ))}
         {enviando && <Digitando />}
         {aviso && conversando && (
           <Fala alerta agora>
@@ -514,7 +707,7 @@ export function Conversa({
                   className="cv-bt-pri"
                   onClick={() => {
                     const c = form.campos.find((x) => x.id === aviso.campo);
-                    if (c) editar(c);
+                    if (c) editar(c, "resumo");
                   }}
                 >
                   Corrigir
@@ -533,15 +726,23 @@ export function Conversa({
             <Digitando />
           ) : (
             <Fala agora>
-              <p className="cv-pergunta">Inscrição feita! 🎉 Agora é só pagar o ingresso pra garantir a sua vaga.</p>
-              <div className="cv-cartao cv-pag">
-                <Pagamento
-                  sub={fase.sub}
-                  previa={ctx.previa}
-                  resolver={(sub, aprovado) => aprovado && setFase({ tipo: "fim", sub, espera: false })}
-                  desistir={() => setFase({ tipo: "fim", sub: fase.sub, espera: false })}
-                />
-              </div>
+              <Escrita
+                partes={[{ texto: "Inscrição feita! 🎉 Agora é só pagar o ingresso pra garantir a sua vaga.", cls: "cv-pergunta" }]}
+                vez
+                animar={!reduz}
+                fim={terminou}
+                cresce={acompanhar}
+              />
+              {pronto && (
+                <div className="cv-cartao cv-pag">
+                  <Pagamento
+                    sub={fase.sub}
+                    previa={ctx.previa}
+                    resolver={(sub, aprovado) => aprovado && setFase({ tipo: "fim", sub, espera: false })}
+                    desistir={() => setFase({ tipo: "fim", sub: fase.sub, espera: false })}
+                  />
+                </div>
+              )}
             </Fala>
           ))}
       </div>
@@ -566,6 +767,22 @@ export function Conversa({
           </div>
         )}
       </div>
+
+      {/* Botão de teste, fora da caixa do modal: faz o caminho feliz até a tela final */}
+      {fechar &&
+        corpo &&
+        createPortal(
+          <button type="button" className="cv-teste" onClick={fluxoFeliz}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5.5v13l10.5-6.5z" />
+            </svg>
+            <span>
+              <b>Simular fluxo feliz</b>
+              <small>Teste: preenche, confirma e paga</small>
+            </span>
+          </button>,
+          corpo
+        )}
     </div>
   );
 }

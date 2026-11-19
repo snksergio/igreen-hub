@@ -310,6 +310,7 @@
   margin-top: 1px;
 }
 .cv-fala-txt {
+  position: relative;
   display: grid;
   flex: 1;
   gap: 8px;
@@ -447,6 +448,8 @@
 }
 .cv-eu-bt:hover .cv-eu-ic,
 .cv-eu-bt:focus-visible .cv-eu-ic,
+.cv-resumo-linha:hover:not(:disabled) .cv-eu-ic,
+.cv-resumo-linha:focus-visible .cv-eu-ic,
 .cv-dado:hover .cv-eu-ic,
 .cv-dado:focus-visible .cv-eu-ic {
   opacity: 1;
@@ -880,6 +883,161 @@ textarea.cv-in {
   }
   .cv-linha-prog i {
     transition: none;
+  }
+}
+
+/* Texto só para leitor de tela (o que vai sendo "digitado" na tela fica escondido dele) */
+.cv-sr {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Resumo antes de confirmar: tudo o que a pessoa informou, cada linha corrige ---------- */
+.cv-resumo {
+  display: grid;
+  margin-top: 4px;
+  border: 1px solid var(--cv-linha-forte);
+  border-radius: 16px;
+  background: var(--cv-painel);
+  box-shadow: var(--cv-sombra);
+  overflow: hidden;
+  animation: cv-entra 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.cv-resumo-linha {
+  display: grid;
+  grid-template-columns: minmax(96px, 34%) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  padding: 9px 10px 9px 16px;
+  border: 0;
+  background: none;
+  color: var(--cv-texto);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.cv-resumo-linha + .cv-resumo-linha {
+  border-top: 1px solid var(--cv-linha);
+}
+.cv-resumo-linha:hover:not(:disabled) {
+  background: var(--cv-suave);
+}
+.cv-resumo-linha:disabled {
+  cursor: default;
+}
+.cv-resumo-rot {
+  font-size: 13px;
+  color: var(--cv-apoio);
+}
+.cv-resumo-val {
+  font-size: 14.5px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.cv-resumo-edita {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  padding: 12px 14px 14px 16px;
+  background: var(--cv-suave);
+  cursor: default;
+}
+.cv-resumo-linha:focus-visible {
+  outline: 2px solid var(--cv-acento);
+  outline-offset: -2px;
+}
+@media (max-width: 520px) {
+  .cv-resumo-linha {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 1px;
+  }
+  .cv-resumo-rot,
+  .cv-resumo-val {
+    grid-column: 1;
+  }
+  .cv-resumo-linha .cv-eu-ic {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+  }
+}
+
+/* ---------- Botão de teste (só na POC): fora do modal, faz o caminho feliz até a tela final ---------- */
+.cv-teste {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 2147483001;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px 9px 10px;
+  border: 1px dashed rgba(255, 255, 255, 0.4);
+  border-radius: 14px;
+  background: rgba(23, 24, 28, 0.92);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-family: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.cv-teste:hover {
+  border-color: rgba(255, 255, 255, 0.7);
+  background: #17181c;
+}
+.cv-teste:focus-visible {
+  outline: 2px solid #00a859;
+  outline-offset: 2px;
+}
+.cv-teste svg {
+  box-sizing: border-box;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  padding: 8px 7px 8px 9px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00843f 0%, #00a859 55%, #6fdc66 100%);
+  fill: #fff;
+}
+.cv-teste span {
+  display: grid;
+  line-height: 1.25;
+}
+.cv-teste b {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.cv-teste small {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.62);
+}
+@media (max-width: 600px) {
+  .cv-teste {
+    top: 8px;
+    bottom: auto;
+    left: 50%;
+    padding: 5px 12px 5px 6px;
+    transform: translateX(-50%);
+  }
+  .cv-teste small {
+    display: none;
+  }
+  .cv-teste svg {
+    width: 24px;
+    height: 24px;
+    padding: 6px 5px 6px 7px;
   }
 }
 
