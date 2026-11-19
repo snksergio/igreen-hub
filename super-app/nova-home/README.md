@@ -1,12 +1,11 @@
 # Nova home · reestruturação
 
-Propostas da reestruturação da home do app, para validar com as áreas. Não são telas finais: cada página mostra opções de estilo lado a lado, todas com o mesmo conteúdo, para comparar só o que muda. Cada página começa por um quadro "Leia primeiro" que explica o que olhar.
+Propostas da reestruturação da home do app, para validar com as áreas. Não são telas finais: cada página mostra opções de estilo lado a lado, todas com o mesmo conteúdo, para comparar só o que muda. Cada linha de telas começa por um quadro que explica o que ela mostra e o que olhar.
 
 As páginas:
-- **1 · Topo da home · estilos:** seis jeitos de desenhar o topo da home, com a mesma conta e o mesmo conteúdo.
-- **2 · Proposta de nova home:** a home inteira com o topo escolhido, vista por cada aba do cartão (Pay, Cashback e Eletroposto), dois jeitos de mostrar um aviso importante e o convite para quem ainda não tem o produto.
-- **3 · Tela de Produtos:** a tela escolhida, com o banner em foto ou ilustrado, e duas outras formas de organizar a tela.
-- **4 · Banner de Produtos · estilos:** sete estilos para o banner do topo da tela de Produtos, todos com o exemplo do Seguro auto.
+- **1 · Topo da home · estilos:** cinco jeitos de desenhar o topo da home, com a mesma conta e o mesmo conteúdo.
+- **2 · Proposta de nova home:** a home com o topo escolhido, vista por cada aba do cartão (Pay, Cashback e Eletroposto), dois jeitos de mostrar um aviso importante e o convite para quem ainda não tem o produto. A primeira tela mostra a home inteira; as outras, só a altura do celular.
+- **3 · Tela de Produtos e banners:** a tela de Produtos inteira e, embaixo, dez estilos para o banner do topo, todos com o exemplo do Seguro auto e a mesma tela embaixo.
 
 Valores, nomes e placas são fictícios.
 
@@ -18,7 +17,8 @@ Cada página mostra as telas nas posições do canvas, em fundo escuro: arraste 
 |---|---|
 | 1 · Topo da home · estilos | https://igreen-hub.pages.dev/super-app/nova-home/index.html |
 | 2 · Proposta de nova home | https://igreen-hub.pages.dev/super-app/nova-home/home.html |
-| 3 · Tela de Produtos | https://igreen-hub.pages.dev/super-app/nova-home/produtos.html |
-| 4 · Banner de Produtos · estilos | https://igreen-hub.pages.dev/super-app/nova-home/banners.html |
+| 3 · Tela de Produtos e banners | https://igreen-hub.pages.dev/super-app/nova-home/produtos.html |
+
+`banners.html` era a antiga página 4 (os estilos de banner, hoje dentro da página 3) e só leva para eles, para os links já compartilhados continuarem abrindo.
 
 As imagens das telas estão em `assets/`, com o nome do arquivo igual ao do canvas. Os títulos das linhas vieram do canvas.
