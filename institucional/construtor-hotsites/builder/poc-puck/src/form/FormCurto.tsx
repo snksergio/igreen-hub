@@ -1,6 +1,6 @@
 import { useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import { registrarUmaVez } from "../lib/eventos";
-import { camposNaPagina, validarCampos, type Formulario } from "../lib/formularios";
+import { camposNaPagina, validarCampos, type AjusteSecao, type Formulario } from "../lib/formularios";
 import type { Respostas } from "../lib/submissions";
 import { usePageCtx } from "../puck/context";
 import { abrirFormulario } from "./abrir";
@@ -13,6 +13,7 @@ import "./form.css";
  */
 export function FormCurto({
   form,
+  ajuste,
   pele,
   topo,
   botao,
@@ -22,6 +23,8 @@ export function FormCurto({
 }: {
   style?: CSSProperties;
   form: Formulario;
+  /** Ajuste da seção: esconder ou trazer campos só aqui, sem mudar o formulário. */
+  ajuste?: AjusteSecao;
   pele: Pele;
   topo?: ReactNode;
   botao: ReactNode;
@@ -32,7 +35,7 @@ export function FormCurto({
   const [r, setR] = useState<Respostas>({});
   const [erros, setErros] = useState<Record<string, string>>({});
   const ref = useRef<HTMLFormElement>(null);
-  const campos = camposNaPagina(form);
+  const campos = camposNaPagina(form, ajuste);
 
   const muda = (id: string, v: string | string[] | undefined) => {
     setR((x) => {
@@ -58,7 +61,7 @@ export function FormCurto({
     const e = validarCampos(campos, r);
     setErros(e);
     if (Object.keys(e).length) return;
-    abrirFormulario(ref.current!.ownerDocument, { formId: form.id, iniciais: r, completo: false });
+    abrirFormulario(ref.current!.ownerDocument, { formId: form.id, iniciais: r, completo: false, ajuste });
   }
 
   return (

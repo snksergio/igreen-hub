@@ -317,24 +317,35 @@ export function dividirEtapas(campos: Campo[]): Etapa[] {
 }
 
 /**
- * O campo fica mesmo na página? Só se estiver marcado e, tendo condição, o campo de que depende
- * também estiver na página. Senão ele iria para um lugar onde a resposta que o libera não existe.
+ * Ajuste de uma seção da página sobre o formulário: id do campo → fica na seção (true) ou vai
+ * para a janela (false). Campo fora do ajuste segue o que o formulário diz.
  */
-export function ficaNaPagina(f: Formulario, c: Campo, visto = new Set<string>()): boolean {
-  if (!c.naPagina || c.tipo === "etapa" || c.tipo === "oculto" || c.tipo === "ingresso") return false;
+export type AjusteSecao = Record<string, boolean>;
+
+/** Campos que podem ficar na página (os outros só existem na janela ou nem aparecem). */
+export const podeFicarNaPagina = (c: Campo) => c.tipo !== "etapa" && c.tipo !== "oculto" && c.tipo !== "ingresso";
+
+/**
+ * O campo fica mesmo na página? Só se estiver marcado (no formulário ou no ajuste da seção) e,
+ * tendo condição, o campo de que depende também ficar. Senão ele iria para um lugar onde a
+ * resposta que o libera não existe.
+ */
+export function ficaNaPagina(f: Formulario, c: Campo, visto = new Set<string>(), ajuste?: AjusteSecao): boolean {
+  const marcado = ajuste?.[c.id] ?? c.naPagina;
+  if (!marcado || !podeFicarNaPagina(c)) return false;
   if (!c.condicao?.campo) return true;
   if (visto.has(c.id)) return false;
   visto.add(c.id);
   const pai = f.campos.find((x) => x.id === c.condicao!.campo);
-  return Boolean(pai && ficaNaPagina(f, pai, visto));
+  return Boolean(pai && ficaNaPagina(f, pai, visto, ajuste));
 }
 
 /** Os campos que vão para a página (versão curta). */
-export const camposNaPagina = (f: Formulario) => f.campos.filter((c) => ficaNaPagina(f, c));
+export const camposNaPagina = (f: Formulario, ajuste?: AjusteSecao) => f.campos.filter((c) => ficaNaPagina(f, c, new Set(), ajuste));
 
 /** O que sobra para o modal, já em etapas. `completo`: o modal direto mostra tudo. */
-export function etapasDoModal(f: Formulario, completo: boolean): Etapa[] {
-  return dividirEtapas(completo ? f.campos : f.campos.filter((c) => !ficaNaPagina(f, c)));
+export function etapasDoModal(f: Formulario, completo: boolean, ajuste?: AjusteSecao): Etapa[] {
+  return dividirEtapas(completo ? f.campos : f.campos.filter((c) => !ficaNaPagina(f, c, new Set(), ajuste)));
 }
 
 /** Tira as respostas de campos que a lógica escondeu (não vão para a lista nem para o CSV). */

@@ -1,10 +1,10 @@
 import type { ComponentConfig } from "@puckeditor/core";
 import { useState, type CSSProperties, type FormEvent } from "react";
 import { FormCurto } from "../../../form/FormCurto";
-import { getFormulario } from "../../../lib/formularios";
+import { getFormulario, type AjusteSecao } from "../../../lib/formularios";
 import { BotaoLima, Icone, rico, Seta, useHref, useLive } from "../../../live/ui";
 import { addSubmission } from "../../../lib/submissions";
-import { formularioField } from "../../fields/FormularioField";
+import { camposSecaoField, formularioField } from "../../fields/FormularioField";
 import { usePageCtx, useTokens } from "../../context";
 import { validarInscricao } from "../Inscricao";
 import { ctaFields, travaPermissions, type CtaProps } from "../../ui";
@@ -29,6 +29,8 @@ export type LiveInscricaoProps = CtaProps & {
   letreiro: string;
   /** Formulário da biblioteca (Etapa 3). Vazio: os campos fixos de antes. */
   formularioId?: string;
+  /** Campos escondidos ou trazidos só nesta seção (o formulário não muda). */
+  camposSecao?: AjusteSecao;
   travado?: boolean;
 };
 
@@ -160,6 +162,7 @@ function View(p: LiveInscricaoProps) {
             ) : form ? (
               <FormCurto
                 form={form}
+                ajuste={p.camposSecao}
                 pele="live"
                 className="form revela"
                 {...i(2)}
@@ -313,7 +316,13 @@ export const LiveInscricao: ComponentConfig<LiveInscricaoProps> = {
   resolveFields: (data, { fields }) => {
     if (!data.props.formularioId) return fields;
     const { pedirCidade: _a, textoConsentimento: _b, ...resto } = fields;
-    return resto as typeof fields;
+    return { formularioId: resto.formularioId, camposSecao: camposSecaoField(data.props.formularioId), ...resto } as typeof fields;
+  },
+  // Trocou de formulário: o ajuste de campos era do outro (ids diferentes), então volta ao padrão.
+  resolveData: (data, { lastData, trigger }) => {
+    const antes = lastData?.props.formularioId;
+    if (trigger === "load" || !lastData || antes === data.props.formularioId || !data.props.camposSecao) return data;
+    return { ...data, props: { ...data.props, camposSecao: undefined } };
   },
   resolvePermissions: travaPermissions,
   render: (p) => <View {...p} />,

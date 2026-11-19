@@ -114,9 +114,9 @@ function Modal({ pedido, doc, fechar }: { pedido: PedidoFormulario; doc: Documen
                 previa: ctx.mode !== "publico" || fechada === "rascunho" || fechada === "agendada",
               };
               return form.estilo === "formulario" ? (
-                <Fluxo form={form} completo={pedido.completo} iniciais={pedido.iniciais} ctx={contexto} />
+                <Fluxo form={form} completo={pedido.completo} ajuste={pedido.ajuste} iniciais={pedido.iniciais} ctx={contexto} />
               ) : (
-                <Conversa form={form} completo={pedido.completo} iniciais={pedido.iniciais} ctx={contexto} fechar={fechar} />
+                <Conversa form={form} completo={pedido.completo} ajuste={pedido.ajuste} iniciais={pedido.iniciais} ctx={contexto} fechar={fechar} />
               );
             })()
           )}

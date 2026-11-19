@@ -1,22 +1,7 @@
-/* Campo "Formulário" das peças de inscrição, no painel da direita do editor. */
+/* Campos "Formulário" e "Campos nesta seção" das peças de inscrição, no painel da direita do editor. */
 .ff {
   display: grid;
   gap: 8px;
-}
-.ff-sel {
-  width: 100%;
-  height: 38px;
-  padding: 0 10px;
-  border: 1px solid var(--b-linha-forte, #e1e2e6);
-  border-radius: var(--b-r-p, 10px);
-  background: var(--b-painel, #fff);
-  color: var(--b-texto, #17181c);
-  font: inherit;
-  font-size: 13.5px;
-}
-.ff-sel:focus-visible {
-  outline: 2px solid var(--b-acento-vivo, #00a859);
-  outline-offset: 1px;
 }
 .ff-resumo {
   margin: 0;
@@ -28,18 +13,295 @@
   color: var(--b-acento-forte, #007a3d);
   font-weight: 600;
 }
-.ff-bt {
+
+/* ---------- Formulário integrado ---------- */
+.ff-ligado {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--b-acento-borda, rgba(0, 168, 89, 0.3));
+  border-radius: 12px;
+  background: var(--b-acento-suave, rgba(0, 168, 89, 0.08));
+}
+.ff-ligado-topo {
+  display: flex;
+  gap: 10px;
+  min-width: 0;
+}
+.ff-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--b-acento, #00a859);
+  color: var(--b-sobre-acento, #fff);
+}
+.ff-ligado-txt {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  line-height: 1.3;
+}
+.ff-ligado-txt small {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--b-acento-forte, #007a3d);
+}
+.ff-ligado-txt b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--b-texto, #17181c);
+}
+.ff-ligado-txt > span {
+  font-size: 12px;
+  color: var(--b-apoio, #6d717a);
+}
+.ff-acoes {
+  display: flex;
+  gap: 8px;
+}
+.ff-bt,
+.ff-bt-sec {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 36px;
+  gap: 6px;
+  height: 34px;
+  padding: 0 12px;
   border-radius: var(--b-r-p, 10px);
-  background: var(--b-acento, #00a859);
-  color: var(--b-sobre-acento, #fff);
-  font-size: 13.5px;
+  font: inherit;
+  font-size: 13px;
   font-weight: 600;
   text-decoration: none;
+  cursor: pointer;
+}
+.ff-bt {
+  flex: 1;
+  border: 0;
+  background: var(--b-acento, #00a859);
+  color: var(--b-sobre-acento, #fff);
 }
 .ff-bt:hover {
   background: var(--b-acento-hover, #009a51);
+}
+.ff-bt-sec {
+  border: 1px solid var(--b-linha-forte, #e1e2e6);
+  background: var(--b-painel, #fff);
+  color: var(--b-texto, #17181c);
+}
+.ff-bt-sec:hover {
+  background: var(--b-trilho, #f1f2f4);
+}
+.ff-bt:focus-visible,
+.ff-bt-sec:focus-visible,
+.ff-link:focus-visible {
+  outline: 2px solid var(--b-acento-vivo, #00a859);
+  outline-offset: 2px;
+}
+
+/* ---------- Escolher: lista de opções ---------- */
+.ff-escolha {
+  display: grid;
+  gap: 8px;
+}
+.ff-busca {
+  position: relative;
+  display: block;
+  color: var(--b-fraco, #9a9ea6);
+}
+.ff-busca svg {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.ff-busca input {
+  width: 100%;
+  height: 36px;
+  padding: 0 10px 0 30px;
+  border: 1px solid var(--b-linha-forte, #e1e2e6);
+  border-radius: var(--b-r-p, 10px);
+  background: var(--b-painel, #fff);
+  color: var(--b-texto, #17181c);
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+}
+.ff-busca input:focus {
+  border-color: var(--b-acento-forte, #007a3d);
+  box-shadow: 0 0 0 3px var(--b-acento-suave, rgba(0, 168, 89, 0.12));
+}
+.ff-opcoes {
+  display: grid;
+  gap: 6px;
+  max-height: 320px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.ff-op {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--b-linha, #ebecef);
+  border-radius: 10px;
+  background: var(--b-painel, #fff);
+  cursor: pointer;
+}
+.ff-op:hover {
+  border-color: var(--b-linha-forte, #e1e2e6);
+  background: var(--b-suave, #f7f7f8);
+}
+.ff-op:has(input:checked) {
+  border-color: var(--b-acento-vivo, #00a859);
+  background: var(--b-acento-suave, rgba(0, 168, 89, 0.08));
+}
+.ff-op:has(input:focus-visible) {
+  outline: 2px solid var(--b-acento-vivo, #00a859);
+  outline-offset: 1px;
+}
+.ff-op input {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 1px 0 0;
+  accent-color: var(--b-acento, #00a859);
+}
+.ff-op > span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  line-height: 1.3;
+}
+.ff-op b {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--b-texto, #17181c);
+}
+.ff-op small {
+  font-size: 12px;
+  color: var(--b-apoio, #6d717a);
+}
+.ff-rodape {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+}
+.ff-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  justify-self: start;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--b-acento-forte, #007a3d);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+.ff-link:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Campos nesta seção ---------- */
+.ff-campos {
+  display: grid;
+  gap: 10px;
+}
+.ff-grupo {
+  display: grid;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--b-linha, #ebecef);
+  border-radius: 12px;
+  background: var(--b-painel, #fff);
+}
+.ff-etapa {
+  padding: 6px 8px 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--b-apoio, #6d717a);
+}
+.ff-campo {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.ff-campo:hover {
+  background: var(--b-suave, #f7f7f8);
+}
+.ff-campo input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.ff-caixa {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  border: 1.5px solid var(--b-linha-forte, #c9ccd2);
+  border-radius: 5px;
+  background: var(--b-painel, #fff);
+  color: transparent;
+}
+.ff-campo input:checked + .ff-caixa {
+  border-color: var(--b-acento, #00a859);
+  background: var(--b-acento, #00a859);
+  color: var(--b-sobre-acento, #fff);
+}
+.ff-campo input:focus-visible + .ff-caixa {
+  outline: 2px solid var(--b-acento-vivo, #00a859);
+  outline-offset: 2px;
+}
+.ff-campo-txt {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+  line-height: 1.3;
+}
+.ff-campo-txt b {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--b-texto, #17181c);
+}
+.ff-campo-txt small {
+  font-size: 11.5px;
+  color: var(--b-acento-forte, #007a3d);
+}
+.ff-campo[data-fora] .ff-campo-txt b {
+  color: var(--b-apoio, #6d717a);
+}
+.ff-campo[data-fora] .ff-campo-txt small {
+  color: var(--b-fraco, #9a9ea6);
+}
+.ff-campo-txt em {
+  font-style: normal;
+  color: var(--b-info, #2f6fde);
+}
+.ff-conta {
+  margin: 0;
+  font-size: 12px;
+  color: var(--b-apoio, #6d717a);
 }

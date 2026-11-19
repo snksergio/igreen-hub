@@ -1,9 +1,9 @@
 import type { ComponentConfig } from "@puckeditor/core";
 import { useState, type FormEvent } from "react";
 import { FormCurto } from "../../form/FormCurto";
-import { getFormulario } from "../../lib/formularios";
+import { getFormulario, type AjusteSecao } from "../../lib/formularios";
 import { addSubmission } from "../../lib/submissions";
-import { formularioField } from "../fields/FormularioField";
+import { camposSecaoField, formularioField } from "../fields/FormularioField";
 import { usePageCtx, useTokens } from "../context";
 import { fundoField, r, Section, travaPermissions, type Fundo } from "../ui";
 
@@ -19,6 +19,8 @@ export type InscricaoProps = {
   fundo: Fundo;
   /** Formulário da biblioteca (Etapa 3). Vazio: os campos fixos de antes. */
   formularioId?: string;
+  /** Campos escondidos ou trazidos só nesta seção (o formulário não muda). */
+  camposSecao?: AjusteSecao;
   travado?: boolean;
 };
 
@@ -90,6 +92,7 @@ function View(p: InscricaoProps) {
       <Section id="inscricao" fundo={p.fundo} travado={p.travado}>
         <FormCurto
           form={form}
+          ajuste={p.camposSecao}
           pele="hs"
           className="hs-form"
           topo={
@@ -219,7 +222,13 @@ export const Inscricao: ComponentConfig<InscricaoProps> = {
   resolveFields: (data, { fields }) => {
     if (!data.props.formularioId) return fields;
     const { pedirCidade: _a, rotuloInteresse: _b, opcoesInteresse: _c, textoConsentimento: _d, ...resto } = fields;
-    return resto as typeof fields;
+    return { formularioId: resto.formularioId, camposSecao: camposSecaoField(data.props.formularioId), ...resto } as typeof fields;
+  },
+  // Trocou de formulário: o ajuste de campos era do outro (ids diferentes), então volta ao padrão.
+  resolveData: (data, { lastData, trigger }) => {
+    const antes = lastData?.props.formularioId;
+    if (trigger === "load" || !lastData || antes === data.props.formularioId || !data.props.camposSecao) return data;
+    return { ...data, props: { ...data.props, camposSecao: undefined } };
   },
   resolvePermissions: travaPermissions,
   render: (p) => <View {...p} />,

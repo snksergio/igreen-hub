@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { camposNaPagina, etapasDoModal, mascaraCpf, mascaraWhats, UFS, validarCampo, validarCampos, visivel, type Campo, type Formulario } from "../lib/formularios";
+import { camposNaPagina, etapasDoModal, mascaraCpf, mascaraWhats, UFS, validarCampo, validarCampos, visivel, type AjusteSecao, type Campo, type Formulario } from "../lib/formularios";
 import { reais } from "../lib/ingresso";
 import { inscrever, pagar, totalDoIngresso, type Resultado } from "../lib/inscrever";
 import type { Respostas, Submission } from "../lib/submissions";
@@ -252,19 +252,22 @@ export function Conversa({
   ctx,
   iniciais = {},
   completo,
+  ajuste,
   fechar,
 }: {
   form: Formulario;
   ctx: Contexto;
   iniciais?: Respostas;
   completo: boolean;
+  /** Ajuste da seção que abriu a conversa (campos escondidos ou trazidos só nela). */
+  ajuste?: AjusteSecao;
   /** No modal: o X do cabeçalho da conversa (e o botão de teste fora da caixa). */
   fechar?: () => void;
 }) {
-  const etapas = useMemo(() => etapasDoModal(form, completo), [form, completo]);
+  const etapas = useMemo(() => etapasDoModal(form, completo, ajuste), [form, completo, ajuste]);
   const perguntas = useMemo(() => etapas.flatMap((e) => e.campos.filter((c) => c.tipo !== "oculto")), [etapas]);
   // O que a pessoa já preencheu na página: vira o cartão dela no começo da conversa.
-  const [daPagina] = useState(() => (completo ? [] : camposNaPagina(form).filter((c) => c.tipo !== "info" && c.tipo !== "lgpd" && temValor(iniciais[c.id]))));
+  const [daPagina] = useState(() => (completo ? [] : camposNaPagina(form, ajuste).filter((c) => c.tipo !== "info" && c.tipo !== "lgpd" && temValor(iniciais[c.id]))));
   const [r, setR] = useState<Respostas>(iniciais);
   const [feitos, setFeitos] = useState<string[]>([]);
   const [aviso, setAviso] = useState<Aviso | null>(null);

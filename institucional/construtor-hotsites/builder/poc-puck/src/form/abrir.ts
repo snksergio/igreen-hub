@@ -1,3 +1,4 @@
+import type { AjusteSecao } from "../lib/formularios";
 import type { Respostas } from "../lib/submissions";
 
 /* Abrir o formulário em modal de qualquer lugar da página (peça de inscrição, botão "Formulário
@@ -12,6 +13,8 @@ export type PedidoFormulario = {
   iniciais?: Respostas;
   /** true: mostra todos os campos (modal direto). false: só os que não estão na página. */
   completo: boolean;
+  /** Ajuste da seção que abriu: quais campos ficaram nela e quais vão para a janela. */
+  ajuste?: AjusteSecao;
 };
 
 export function abrirFormulario(doc: Document, pedido: PedidoFormulario) {

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
-import { etapasDoModal, validarCampos, visivel, type Formulario } from "../lib/formularios";
+import { etapasDoModal, validarCampos, visivel, type AjusteSecao, type Formulario } from "../lib/formularios";
 import { reais } from "../lib/ingresso";
 import { inscrever, pagar, type Resultado } from "../lib/inscrever";
 import type { PageRecord } from "../lib/pages";
@@ -24,8 +24,20 @@ type Fase = { tipo: "form" } | { tipo: "pagamento"; sub: Submission } | { tipo: 
  * O formulário em etapas, o pagamento simulado e a confirmação. Mostra só o que falta
  * (a versão curta já veio da página) ou tudo (modal direto e endereço próprio).
  */
-export function Fluxo({ form, ctx, iniciais = {}, completo }: { form: Formulario; ctx: Contexto; iniciais?: Respostas; completo: boolean }) {
-  const etapas = useMemo(() => etapasDoModal(form, completo), [form, completo]);
+export function Fluxo({
+  form,
+  ctx,
+  iniciais = {},
+  completo,
+  ajuste,
+}: {
+  form: Formulario;
+  ctx: Contexto;
+  iniciais?: Respostas;
+  completo: boolean;
+  ajuste?: AjusteSecao;
+}) {
+  const etapas = useMemo(() => etapasDoModal(form, completo, ajuste), [form, completo, ajuste]);
   const [passo, setPasso] = useState(0);
   const [r, setR] = useState<Respostas>(iniciais);
   const [erros, setErros] = useState<Record<string, string>>({});
