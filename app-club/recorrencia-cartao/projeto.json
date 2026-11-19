@@ -5,7 +5,8 @@
   "atualizado": "2026-11-18",
   "paginas": [
     { "nome": "App: recorrência do pagamento", "arquivo": "index.html" },
-    { "nome": "Link de cadastro: oferta da recorrência", "arquivo": "link-cadastro/index.html" }
+    { "nome": "Link de cadastro: oferta da recorrência", "arquivo": "link-cadastro/index.html" },
+    { "nome": "Banners: os 7 escolhidos e outros exemplos (Eletroposto)", "arquivo": "banners/index.html" }
   ],
   "tags": ["recorrência", "cartão", "pagamento automático", "fatura", "cartão recusado", "cadastro de cartão", "link de indicação", "teste automático", "Pix da energia", "banner"]
 }
