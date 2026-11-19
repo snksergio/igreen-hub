@@ -458,3 +458,63 @@ li[data-estado="agora"] .ps-n {
     radial-gradient(55% 55% at 8% 88%, rgba(76, 212, 148, 0.4), transparent 66%),
     linear-gradient(160deg, #0b4a26 0%, #06301a 55%, #031a0e 100%);
 }
+
+/* ---------- Passos feitos: check verde, nome firme e a linha até o próximo já verde ---------- */
+li[data-estado="antes"] .ps-n {
+  background: var(--b-acento);
+  color: #fff;
+  box-shadow: 0 0 0 3px var(--b-acento-suave);
+}
+.app .ps-lista li[data-estado="antes"] button {
+  color: var(--b-texto);
+}
+.app .ps-lista li[data-estado="antes"] button:hover .ps-n {
+  background: var(--b-acento-hover);
+}
+/* O passo de agora: o número no anel verde, para não confundir com o feito */
+li[data-estado="agora"] .ps-n {
+  background: var(--b-painel);
+  color: var(--b-acento-forte);
+  box-shadow: inset 0 0 0 2px var(--b-acento);
+}
+.ps-lista li[data-estado="antes"] + li::before {
+  height: 2px;
+  background: var(--b-acento);
+}
+/* "(feito)" só para leitor de tela: na tela, o check já diz */
+.ps-feito {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Coluna do meio estreita: os passos que não são o de agora mostram só o número ou o check */
+.fc-meio {
+  container-type: inline-size;
+}
+@container (max-width: 600px) {
+  .ps-lista li:not([data-estado="agora"]) .ps-nome {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .app .ps-lista li:not([data-estado="agora"]) button {
+    padding: 0 6px;
+  }
+  .ps-lista li + li::before {
+    width: 18px;
+  }
+}
+.app .ps-barra .seg {
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+.app .ps-barra .seg > button {
+  white-space: normal;
+}

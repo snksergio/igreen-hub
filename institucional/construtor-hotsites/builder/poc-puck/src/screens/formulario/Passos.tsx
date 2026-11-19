@@ -46,9 +46,12 @@ export function Passos({ atual, ir }: { atual: Passo; ir: (p: Passo) => void }) 
           <li key={p.id} data-estado={n < i ? "antes" : n === i ? "agora" : "depois"}>
             <button type="button" aria-current={n === i ? "step" : undefined} onClick={() => ir(p.id)}>
               <span className="ps-n" aria-hidden="true">
-                {n + 1}
+                {n < i ? <Icone nome="check" tamanho={14} /> : n + 1}
               </span>
-              <span className="ps-nome">{p.titulo}</span>
+              <span className="ps-nome">
+                {p.titulo}
+                {n < i && <span className="ps-feito"> (feito)</span>}
+              </span>
             </button>
           </li>
         ))}
@@ -98,7 +101,7 @@ export function secaoDoFormulario(p: PageRecord | undefined, formId: string) {
 
 /* ---------- Passo 2: o cartão na página ---------- */
 
-const LARGURA = 470; // a página desenhada como num celular grande (um pouco mais larga, para não achatar)
+const LARGURA = 580; // a página no layout de celular (vale até 640 px), larga o bastante para não achatar o cartão
 const MARGEM = 32; // onde o cartão fica, a partir do topo da tela da página
 const VOLTA = 18; // quanto do fundo da seção aparece em volta do cartão
 
