@@ -14,7 +14,8 @@ export type EstadoInscricao = {
 
 export type PageCtx = {
   persona: Persona;
-  mode: "editor" | "publico" | "miniatura";
+  /** previa: igual à pública, mas nada é gravado (visita, início de formulário, inscrição). */
+  mode: "editor" | "publico" | "miniatura" | "previa";
   pageId: string;
   pageSlug: string;
   estatico?: boolean;

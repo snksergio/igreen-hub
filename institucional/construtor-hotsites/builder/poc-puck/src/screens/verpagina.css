@@ -1,0 +1,88 @@
+/* Ver página: a página em tamanhos de tela diferentes ou lado a lado. Tokens do app (--b-*). */
+.vp {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+}
+.vp-topo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--b-linha);
+  background: var(--b-painel);
+}
+.vp-lado {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.vp-dir {
+  justify-content: flex-end;
+  gap: 8px;
+}
+.vp-titulo {
+  display: grid;
+  min-width: 0;
+  line-height: 1.25;
+}
+.vp-titulo b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+}
+.vp-titulo small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--b-apoio);
+}
+.app .vp-modos {
+  flex-wrap: nowrap;
+}
+.app .vp-modos > button {
+  flex: 0 0 auto;
+}
+.vp-div {
+  align-self: center;
+  width: 1px;
+  height: 18px;
+  margin: 0 4px;
+  background: var(--b-linha-forte);
+}
+.vp-area {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  overflow: auto;
+}
+.vp-telas {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+@media (max-width: 1100px) {
+  .vp-some {
+    display: none;
+  }
+  .vp-titulo small {
+    display: none;
+  }
+}
+@media (max-width: 720px) {
+  .vp-topo {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 8px;
+    padding: 8px 10px;
+  }
+  .vp-titulo {
+    display: none;
+  }
+}

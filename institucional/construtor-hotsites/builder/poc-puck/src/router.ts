@@ -5,6 +5,7 @@ export type Route =
   | { name: "nova" }
   | { name: "editar"; id: string }
   | { name: "publica"; slug: string; query: URLSearchParams }
+  | { name: "ver"; slug: string; query: URLSearchParams }
   | { name: "convite"; slug: string }
   | { name: "inscricoes" }
   | { name: "pagina"; id: string; aba: AbaPagina }
@@ -34,6 +35,7 @@ export function parseHash(hash: string): Route {
   if (parts[0] === "nova") return { name: "nova" };
   if (parts[0] === "editar" && parts[1]) return { name: "editar", id: parts[1] };
   if (parts[0] === "p" && parts[1]) return { name: "publica", slug: parts[1], query: new URLSearchParams(qs) };
+  if (parts[0] === "ver" && parts[1]) return { name: "ver", slug: parts[1], query: new URLSearchParams(qs) };
   if (parts[0] === "convite" && parts[1]) return { name: "convite", slug: parts[1] };
   if (parts[0] === "inscricoes") return { name: "inscricoes" };
   if (parts[0] === "pagina" && parts[1]) {

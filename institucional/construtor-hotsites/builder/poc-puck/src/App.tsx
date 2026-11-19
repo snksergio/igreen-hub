@@ -16,6 +16,7 @@ const Construtor = lazy(() => import("./screens/formulario/Construtor").then((m)
 const FormAvulso = lazy(() => import("./screens/FormAvulso").then((m) => ({ default: m.FormAvulso })));
 const Checkin = lazy(() => import("./screens/Checkin").then((m) => ({ default: m.Checkin })));
 const Ingresso = lazy(() => import("./screens/Ingresso").then((m) => ({ default: m.Ingresso })));
+const VerPagina = lazy(() => import("./screens/VerPagina").then((m) => ({ default: m.VerPagina })));
 const Numeros = lazy(() => import("./screens/Numeros").then((m) => ({ default: m.Numeros })));
 
 function Tela() {
@@ -29,6 +30,8 @@ function Tela() {
       return <Editor key={r.id} id={r.id} />;
     case "publica":
       return <Publica key={r.slug} slug={r.slug} query={r.query} />;
+    case "ver":
+      return <VerPagina key={r.slug} slug={r.slug} query={r.query} />;
     case "convite":
       return <Convite key={r.slug} slug={r.slug} />;
     case "inscricoes":

@@ -1,6 +1,6 @@
 import { createUsePuck, useGetPuck } from "@puckeditor/core";
 import { useMemo } from "react";
-import { PERSONA_DEMO } from "../../lib/persona";
+import { PERSONA_DEMO, PERSONA_KEYS } from "../../lib/persona";
 import { montarSeo } from "../../lib/seo";
 import { uid } from "../../lib/slug";
 import { Icone } from "../../ui/Icone";
@@ -179,11 +179,19 @@ export function Topo() {
           <span className="bt-rotulo">SEO e IA</span>
           {pendencias > 0 && <span className="selo">{pendencias}</span>}
         </button>
-        <a className="bt bt-pri" href={`#/p/${ed.pageSlug}`} target="_blank" rel="noopener">
+        <a className="bt bt-pri" href={verPagina(ed.pageSlug, ed.comoLicenciado)} target="_blank" rel="noopener" title="Ver a página no computador, tablet e celular">
           <span className="bt-rotulo">Ver página</span>
           <Icone nome="externo" tamanho={16} />
         </a>
       </div>
     </header>
   );
+}
+
+/** Tela de prévia por tamanho de tela. Com "Ver como licenciado" ligado, a página abre com o link dele. */
+function verPagina(slug: string, comoLicenciado: boolean) {
+  const q = new URLSearchParams();
+  if (comoLicenciado) for (const k of PERSONA_KEYS) if (PERSONA_DEMO[k]) q.set(k, PERSONA_DEMO[k]!);
+  const qs = q.toString();
+  return `#/ver/${encodeURIComponent(slug)}${qs ? `?${qs}` : ""}`;
 }
