@@ -919,8 +919,14 @@
 .lv .campo select[data-vazio] {
   color: rgba(243, 246, 236, 0.3);
 }
-.lv .campo select option {
-  color: #111;
+/* As opções da lista no escuro, com texto claro (antes o texto escuro sumia no fundo escuro) */
+.lv .campo select option,
+.fm-fundo[data-tema="live"] .fm-campo select.fm-input option,
+.fm-pagina[data-tema="live"] .fm-campo select.fm-input option,
+.fm-fundo[data-tema="live"] .fm-cidade select.fm-input option,
+.fm-pagina[data-tema="live"] .fm-cidade select.fm-input option {
+  background: #0d1510;
+  color: #f3f6ec;
 }
 
 /* ---------- Anexo ---------- */
