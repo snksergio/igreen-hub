@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Campo as CampoView } from "../../form/Campo";
 import { Conversa, valorDeTeste } from "../../form/Conversa";
 import { Fluxo } from "../../form/Fluxo";
@@ -9,6 +10,7 @@ import type { PageRecord } from "../../lib/pages";
 import type { Respostas } from "../../lib/submissions";
 import { enderecoPrevia } from "../../ui/Aparelho";
 import { Icone } from "../../ui/Icone";
+import "../../ui/confirmar.css";
 import "./passos.css";
 
 /* O construtor de formulário em três passos: montar as perguntas, ver o que fica na página e
@@ -96,21 +98,21 @@ export function secaoDoFormulario(p: PageRecord | undefined, formId: string) {
     | undefined;
 }
 
-/** Página do kit Live: a janela de inscrição dela é escura. */
-const ehLive = (p: PageRecord | undefined) => Boolean(p?.data.content?.some((b) => b.type.startsWith("Live")));
 
 /* ---------- Passo 2: o cartão na página ---------- */
 
 const LARGURA = 390; // a página desenhada como num celular
-const MARGEM = 24;
+const MARGEM = 32; // onde o cartão fica, a partir do topo da tela da página
+const VOLTA = 18; // quanto do fundo da seção aparece em volta do cartão
 
 /**
- * Só o cartão do formulário, recortado da página de verdade (desenhada na largura de um celular).
- * A altura acompanha o cartão: muda quando uma pergunta entra ou sai da página.
+ * O cartão do formulário recortado da página de verdade (desenhada na largura de um celular), com
+ * um pouco do fundo da seção em volta, como no site. A altura acompanha o cartão: muda quando uma
+ * pergunta entra ou sai da página.
  */
 function RecorteDoCartao({ src }: { src: string }) {
   const frame = useRef<HTMLIFrameElement>(null);
-  const [caixa, setCaixa] = useState<{ x: number; y: number; w: number; h: number; raio: string } | null>(null);
+  const [caixa, setCaixa] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
 
   useEffect(() => {
     setCaixa(null);
@@ -130,7 +132,9 @@ function RecorteDoCartao({ src }: { src: string }) {
       const r = alvo.getBoundingClientRect();
       const topo = r.top + w.scrollY;
       if (Math.abs(r.top - MARGEM) > 1) w.scrollTo(0, Math.max(0, topo - MARGEM));
-      const n = { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.ceil(r.height), raio: w.getComputedStyle(alvo).borderRadius };
+      const x = Math.max(0, Math.round(r.left) - VOLTA);
+      const y = Math.max(0, Math.round(r.top) - VOLTA);
+      const n = { x, y, w: Math.min(LARGURA, Math.round(r.right) + VOLTA) - x, h: Math.ceil(r.bottom) + VOLTA - y };
       const chave = JSON.stringify(n);
       if (chave !== ultimo) {
         ultimo = chave;
@@ -142,12 +146,7 @@ function RecorteDoCartao({ src }: { src: string }) {
 
   const altura = Math.max(844, (caixa?.h ?? 0) + MARGEM * 2);
   return (
-    <div
-      className="ps-recorte"
-      data-pronto={caixa ? "" : undefined}
-      style={caixa ? { width: caixa.w, height: caixa.h, borderRadius: caixa.raio } : { width: LARGURA - 32, height: 460 }}
-      inert
-    >
+    <div className="ps-recorte" data-pronto={caixa ? "" : undefined} style={caixa ? { width: caixa.w, height: caixa.h } : { width: LARGURA, height: 460 }} inert>
       <iframe
         ref={frame}
         src={src}
@@ -221,25 +220,122 @@ export function NaPagina({ f, pagina }: { f: Formulario; pagina: PageRecord | un
 
 /* ---------- Passo 3: a janela que abre ao enviar ---------- */
 
+const TELA = { largura: 880, altura: 820 }; // a página como numa tela de notebook pequena
+
+/** O que a pessoa já teria digitado no cartão da página (valores de teste). */
+function respostasDaPagina(f: Formulario, ajuste: AjusteSecao | undefined): Respostas {
+  const r: Respostas = {};
+  for (const c of camposNaPagina(f, ajuste)) {
+    if (c.tipo === "info") continue;
+    const v = valorDeTeste(c);
+    if (v !== undefined) r[c.id] = v;
+  }
+  return r;
+}
+
 /**
- * A janela de inscrição com o mesmo desenho da página (claro, ou escuro no kit Live): o mesmo
- * modal, só que parado aqui em vez de flutuar sobre a página.
+ * A página de verdade com a janela de inscrição aberta por cima, como no site: o mesmo desenho,
+ * o mesmo tema e a página escurecida atrás. Dá para responder e testar; nada é gravado.
  */
+function JanelaNoSite({ f, src, ajuste, direto, rodada }: { f: Formulario; src: string; ajuste: AjusteSecao | undefined; direto: boolean; rodada: number }) {
+  const frame = useRef<HTMLIFrameElement>(null);
+  const palco = useRef<HTMLDivElement>(null);
+  const [largura, setLargura] = useState(760);
+  // Mudou o formulário (perguntas, estilo, textos): reabre a janela já com o que mudou.
+  const assinatura = JSON.stringify([f.campos, f.estilo, f.botaoFinal, f.regras]);
+
+  useEffect(() => {
+    const el = palco.current;
+    if (!el) return;
+    const medir = () => setLargura(el.clientWidth);
+    medir();
+    const ro = new ResizeObserver(medir);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const fr = frame.current;
+    if (!fr) return;
+    let timer = 0;
+    let tentativas = 0;
+    const abrir = () => {
+      window.clearTimeout(timer);
+      const w = fr.contentWindow as (Window & typeof globalThis) | null;
+      const d = fr.contentDocument;
+      if (!w || !d?.querySelector("[data-form-inscricao]")) {
+        if (++tentativas < 80) timer = window.setTimeout(abrir, 150);
+        return;
+      }
+      // Fecha a que estiver aberta e abre de novo, do começo.
+      d.dispatchEvent(new w.KeyboardEvent("keydown", { key: "Escape" }));
+      timer = window.setTimeout(() => {
+        const pedido = { formId: f.id, completo: direto, iniciais: direto ? {} : respostasDaPagina(f, ajuste), ajuste };
+        d.dispatchEvent(new w.CustomEvent("igreen:formulario", { detail: pedido }));
+      }, 80);
+    };
+    // Espera o construtor salvar (e a página da prévia receber) antes de reabrir.
+    timer = window.setTimeout(abrir, 450);
+    const aoCarregar = () => {
+      tentativas = 0;
+      abrir();
+    };
+    fr.addEventListener("load", aoCarregar);
+    return () => {
+      window.clearTimeout(timer);
+      fr.removeEventListener("load", aoCarregar);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [src, direto, rodada, assinatura]);
+
+  const escala = Math.min(1, largura / TELA.largura);
+  return (
+    <div className="ps-tela" ref={palco}>
+      <div className="ps-tela-caixa" style={{ width: TELA.largura * escala, height: TELA.altura * escala }}>
+        <iframe
+          ref={frame}
+          src={src}
+          title="Prévia da janela de inscrição na página"
+          style={{ width: TELA.largura, height: TELA.altura, transform: `scale(${escala})` }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/** Sem página ligada: a janela com o desenho do site, parada aqui. */
+function JanelaSemPagina({ f, direto, rodada, recomecar }: { f: Formulario; direto: boolean; rodada: number; recomecar: () => void }) {
+  const ctx = { page: undefined, pageId: "", pageSlug: "", origem: "direto", previa: true };
+  const chave = `${direto}-${rodada}-${f.estilo}-${f.atualizadoEm}`;
+  const iniciais = direto ? {} : respostasDaPagina(f, undefined);
+  return (
+    <div className="fm-fundo ps-janela" data-tema="claro">
+      <div className="fm-modal" role="dialog" aria-label="Prévia da janela de inscrição">
+        <header className="fm-modal-topo">
+          <span className="fm-modal-evento">Inscrição</span>
+          <button type="button" className="fm-fechar" onClick={recomecar} aria-label="Fechar (recomeça a prévia)">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </header>
+        <div className="fm-modal-corpo">
+          {f.estilo === "formulario" ? (
+            <Fluxo key={chave} form={f} completo={direto} iniciais={iniciais} ctx={ctx} />
+          ) : (
+            <Conversa key={chave} form={f} completo={direto} iniciais={iniciais} ctx={ctx} fechar={recomecar} />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function AoEnviar({ f, pagina }: { f: Formulario; pagina: PageRecord | undefined }) {
   const [direto, setDireto] = useState(false);
   const [rodada, setRodada] = useState(0);
-  const ajuste = secaoDoFormulario(pagina, f.id)?.props.camposSecao;
-  const tema = ehLive(pagina) ? "live" : "claro";
-  const iniciais: Respostas = {};
-  if (!direto)
-    for (const c of camposNaPagina(f, ajuste)) {
-      if (c.tipo === "info") continue;
-      const v = valorDeTeste(c);
-      if (v !== undefined) iniciais[c.id] = v;
-    }
-  const ctx = { page: pagina, pageId: pagina?.id ?? "", pageSlug: pagina?.slug ?? "", origem: "direto", previa: true };
+  const secao = secaoDoFormulario(pagina, f.id);
   const recomecar = () => setRodada((n) => n + 1);
-  const chave = `${direto}-${rodada}-${f.estilo}-${f.atualizadoEm}`;
 
   return (
     <div className="ps-palco ps-palco-largo">
@@ -257,26 +353,69 @@ export function AoEnviar({ f, pagina }: { f: Formulario; pagina: PageRecord | un
           Recomeçar
         </button>
       </div>
-      <div className="fm-fundo ps-janela" data-tema={tema}>
-        <div className="fm-modal" role="dialog" aria-label="Prévia da janela de inscrição">
-          <header className="fm-modal-topo">
-            <span className="fm-modal-evento">{pagina?.title ?? "Inscrição"}</span>
-            <button type="button" className="fm-fechar" onClick={recomecar} aria-label="Fechar (recomeça a prévia)">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M6 6l12 12M18 6L6 18" />
-              </svg>
-            </button>
-          </header>
-          <div className="fm-modal-corpo">
-            {f.estilo === "formulario" ? (
-              <Fluxo key={chave} form={f} completo={direto} ajuste={ajuste} iniciais={iniciais} ctx={ctx} />
-            ) : (
-              <Conversa key={chave} form={f} completo={direto} ajuste={ajuste} iniciais={iniciais} ctx={ctx} fechar={recomecar} />
-            )}
-          </div>
+      {pagina && secao?.props.id ? (
+        <>
+          <JanelaNoSite f={f} src={enderecoPrevia(pagina.slug)} ajuste={secao.props.camposSecao} direto={direto} rodada={rodada} />
+          <p className="ps-legenda">
+            <span>
+              Assim fica em <b>{pagina.title}</b>. Se fechar a janela, use “Recomeçar” para abrir de novo.
+            </span>
+          </p>
+        </>
+      ) : (
+        <>
+          <p className="ps-aviso">
+            <Icone nome="alerta" tamanho={15} />
+            Este formulário ainda não está em nenhuma página. A janela aparece aqui com o desenho claro do site.
+          </p>
+          <JanelaSemPagina f={f} direto={direto} rodada={rodada} recomecar={recomecar} />
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ---------- Concluir: aviso de que deu tudo certo ---------- */
+
+/**
+ * Depois de "Concluir formulário": confirma que está tudo salvo, mostra o resumo e leva de volta.
+ * Esc ou "Continuar editando" fecham.
+ */
+export function Concluido({ f, pagina, voltar, fechar }: { f: Formulario; pagina: PageRecord | undefined; voltar: { href: string; fim: string }; fechar: () => void }) {
+  const botao = useRef<HTMLAnchorElement>(null);
+  useEffect(() => {
+    const anterior = document.activeElement as HTMLElement | null;
+    botao.current?.focus();
+    const tecla = (e: KeyboardEvent) => e.key === "Escape" && fechar();
+    document.addEventListener("keydown", tecla);
+    return () => {
+      document.removeEventListener("keydown", tecla);
+      anterior?.focus?.();
+    };
+  }, [fechar]);
+  const alvo = document.querySelector(".app") ?? document.body;
+  return createPortal(
+    <div className="cfm-fundo" onMouseDown={(e) => e.target === e.currentTarget && fechar()}>
+      <div className="cfm ps-ok" role="dialog" aria-modal="true" aria-labelledby="ps-ok-tit">
+        <span className="ps-ok-ic" aria-hidden="true">
+          <Icone nome="check" tamanho={22} />
+        </span>
+        <h2 id="ps-ok-tit">Formulário concluído</h2>
+        <div className="cfm-txt">
+          <ResumoConclusao f={f} pagina={pagina} />
+        </div>
+        <div className="cfm-acoes">
+          <button type="button" className="bt" onClick={fechar}>
+            Continuar editando
+          </button>
+          <a ref={botao} className="bt bt-pri" href={voltar.href}>
+            {voltar.fim}
+            <Icone nome="chevDir" tamanho={15} />
+          </a>
         </div>
       </div>
-    </div>
+    </div>,
+    alvo
   );
 }
 
@@ -351,7 +490,7 @@ export function ResumoConclusao({ f, pagina }: { f: Formulario; pagina: PageReco
   const noCartao = camposNaPagina(f).filter((c) => !naoPergunta(c)).length;
   return (
     <>
-      <p>Tudo o que você fez já está salvo. Ao concluir, você volta para onde estava.</p>
+      <p>Alterações salvas com sucesso.</p>
       <ul className="pl-resumo">
         <li>
           <b>{total}</b> {total === 1 ? "pergunta" : "perguntas"} no formulário

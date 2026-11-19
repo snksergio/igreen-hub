@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Campo as CampoView } from "../../form/Campo";
-import { AoEnviar, ListaNaPagina, NaPagina, NavPasso, Passos, ResumoConclusao, secaoDoFormulario, type Passo } from "./Passos";
-import { useConfirmar } from "../../ui/Confirmar";
+import { AoEnviar, Concluido, ListaNaPagina, NaPagina, NavPasso, Passos, secaoDoFormulario, type Passo } from "./Passos";
 import "../../form/form.css";
 import {
   ACEITA,
@@ -91,11 +90,11 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
   const paginaDaPrevia = f ? [pagina, ...usam].find((p) => secaoDoFormulario(p, f.id)) : undefined;
   const voltar =
     query.get("voltar") === "editor" && paginaId
-      ? { href: `#/editar/${paginaId}`, rotulo: "Voltar ao construtor da página", fim: "Concluir e voltar ao construtor" }
+      ? { href: `#/editar/${paginaId}`, rotulo: "Voltar ao construtor da página", fim: "Voltar ao construtor da página" }
       : paginaId
-        ? { href: `#/pagina/${paginaId}`, rotulo: "Voltar à página", fim: "Concluir e voltar à página" }
-        : { href: "#/formularios", rotulo: "Formulários", fim: "Concluir e ver os formulários" };
-  const { pedir, dialogo } = useConfirmar();
+        ? { href: `#/pagina/${paginaId}`, rotulo: "Voltar à página", fim: "Voltar à página" }
+        : { href: "#/formularios", rotulo: "Formulários", fim: "Ver os formulários" };
+  const [concluido, setConcluido] = useState(false);
 
   // Salva sozinho, como o construtor de página. Ao sair da tela antes do intervalo, salva na hora.
   const pendente = useRef<Formulario | null>(null);
@@ -272,18 +271,9 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
           <NavPasso
             atual={vista}
             ir={irPara}
-            concluir={() =>
-              pedir({
-                titulo: "Concluir o formulário?",
-                texto: <ResumoConclusao f={f} pagina={paginaDaPrevia} />,
-                confirmar: voltar.fim,
-                aoConfirmar: () => {
-                  location.hash = voltar.href;
-                },
-              })
-            }
+            concluir={() => setConcluido(true)}
           />
-          {dialogo}
+          {concluido && <Concluido f={f} pagina={paginaDaPrevia} voltar={voltar} fechar={() => setConcluido(false)} />}
         </main>
 
         <aside className="fc-ajustes" aria-label="Ajustes">

@@ -306,3 +306,55 @@ li[data-estado="agora"] .ps-n {
 .pl-resumo b {
   font-variant-numeric: tabular-nums;
 }
+
+/* Passo 2: com o fundo da seção em volta, o recorte tem o próprio arredondado */
+.ps-recorte[data-pronto] {
+  border-radius: 18px;
+}
+
+/* Passo 3: a página de verdade, com a janela aberta por cima */
+.ps-tela {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+}
+.ps-tela-caixa {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--b-painel);
+  box-shadow: 0 0 0 1px var(--b-linha-forte), 0 24px 50px -24px rgba(0, 0, 0, 0.55);
+}
+.ps-tela-caixa iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  border: 0;
+  transform-origin: 0 0;
+  background: transparent;
+}
+
+/* Concluir: o aviso de sucesso */
+.ps-ok {
+  text-align: center;
+}
+.ps-ok-ic {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background: var(--b-acento);
+  color: #fff;
+  box-shadow: 0 0 0 6px var(--b-acento-suave);
+}
+.ps-ok .pl-resumo {
+  justify-content: center;
+  padding: 0;
+  list-style: none;
+}
+.ps-ok .cfm-acoes {
+  justify-content: center;
+}
