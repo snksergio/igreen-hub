@@ -668,7 +668,7 @@
 /* Formulários das telas internas (convite, inscrições) */
 .app-field {
   display: grid;
-  gap: 6px;
+  gap: 8px;
   font-weight: 600;
   font-size: 13px;
 }

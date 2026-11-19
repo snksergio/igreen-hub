@@ -1,0 +1,146 @@
+/* Campo com lista de opções (licenciado, responsáveis). Tokens do app (--b-*), claro e escuro. */
+.ac {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.ac-rot {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--b-texto);
+}
+.ac-caixa {
+  position: relative;
+}
+.app .ac-caixa input {
+  width: 100%;
+  height: 40px;
+  padding: 0 40px 0 36px;
+  border: 1px solid var(--b-linha-forte);
+  border-radius: var(--b-r-p);
+  background: var(--b-painel);
+  color: var(--b-texto);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  outline: none;
+}
+.app .ac-caixa input:focus {
+  border-color: var(--b-acento-forte);
+  box-shadow: 0 0 0 3px var(--b-acento-suave);
+}
+.ac-ic {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  color: var(--b-fraco);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.ac-seta {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--b-apoio);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+.ac-seta:hover {
+  background: var(--b-trilho);
+  color: var(--b-texto);
+}
+.ac-lista {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: grid;
+  gap: 2px;
+  max-height: 296px;
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--b-linha-forte);
+  border-radius: 14px;
+  background: var(--b-painel);
+  box-shadow: var(--b-sombra-pop);
+  list-style: none;
+  scrollbar-width: thin;
+}
+.ac-lista li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.ac-lista li[aria-selected="true"] {
+  background: var(--b-trilho);
+}
+.ac-lista li[aria-disabled="true"] {
+  cursor: default;
+  opacity: 0.55;
+}
+.ac-lista li.ac-vazio {
+  padding: 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--b-apoio);
+  cursor: default;
+}
+.ac-sigla {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--b-acento-suave);
+  color: var(--b-acento-forte);
+  font-size: 12px;
+  font-weight: 700;
+}
+.ac-txt {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.3;
+}
+.ac-txt b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--b-texto);
+}
+.ac-txt small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12.5px;
+  color: var(--b-apoio);
+}
+.ac-lista em {
+  flex: none;
+  font-size: 12px;
+  font-style: normal;
+  color: var(--b-fraco);
+}
+.ac-dica {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--b-fraco);
+}

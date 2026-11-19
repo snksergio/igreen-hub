@@ -8,6 +8,8 @@ import { slugify } from "../../lib/slug";
 import { appBaseUrl, go } from "../../router";
 import { Icone } from "../../ui/Icone";
 import { Bloco } from "../comum";
+import { Autocompletar, siglaDe } from "../../ui/Autocompletar";
+import { buscarPessoas } from "../../lib/equipe";
 import { BolhaWhats } from "../../form/Bolha";
 import type { Espaco } from "./tipos";
 import { StatusPublicacao } from "./Status";
@@ -46,6 +48,12 @@ export function Config({ d }: { d: Espaco }) {
   const root = (p: Partial<Root>) => setR((x) => ({ ...x, root: { ...x.root, ...p } }));
   const com = (p: Partial<Comunicacao>) => setR((x) => ({ ...x, com: { ...x.com, ...p } }));
   const resp = r.meta.responsaveis ?? [];
+  const pessoas = useMemo(() => buscarPessoas(novoResp, conhecidos), [novoResp, conhecidos]);
+  const adicionarResp = (nome: string) => {
+    const n = nome.trim();
+    if (n && !resp.includes(n)) meta({ responsaveis: [...resp, n] });
+    setNovoResp("");
+  };
 
   function salvar() {
     const statusAgora = metaDe(d.page).status;
@@ -198,36 +206,51 @@ export function Config({ d }: { d: Espaco }) {
       </Bloco>
 
       <Bloco titulo="Responsáveis" descricao="Quem cuida desta página. Aparece no painel, para filtrar e saber a quem perguntar.">
-        <div className="cf-resp">
-          {resp.map((n) => (
-            <span key={n} className="cf-chip">
-              {n}
-              <button aria-label={`Tirar ${n}`} onClick={() => meta({ responsaveis: resp.filter((x) => x !== n) })}>
-                <Icone nome="fechar" tamanho={13} />
-              </button>
-            </span>
-          ))}
-          <form
-            className="cf-resp-novo"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const n = novoResp.trim();
-              if (n && !resp.includes(n)) meta({ responsaveis: [...resp, n] });
-              setNovoResp("");
-            }}
-          >
-            <input list="cf-conhecidos" value={novoResp} onChange={(e) => setNovoResp(e.target.value)} placeholder="Nome de quem cuida da página" maxLength={60} aria-label="Adicionar responsável" />
-            <datalist id="cf-conhecidos">
-              {conhecidos.map((n) => (
-                <option key={n} value={n} />
-              ))}
-            </datalist>
-            <button className="bt bt-p" type="submit">
-              <Icone nome="mais" tamanho={15} />
-              Adicionar
-            </button>
-          </form>
-        </div>
+        <form
+          className="cf-resp-novo"
+          onSubmit={(e) => {
+            e.preventDefault();
+            adicionarResp(novoResp);
+          }}
+        >
+          <Autocompletar
+            rotulo="Adicionar responsável"
+            valor={novoResp}
+            muda={setNovoResp}
+            opcoes={pessoas.map((p) => ({
+              id: p.nome,
+              titulo: p.nome,
+              detalhe: p.area,
+              sigla: siglaDe(p.nome),
+              bloqueio: resp.includes(p.nome) ? "Já está na página" : undefined,
+            }))}
+            escolher={(o) => adicionarResp(o.titulo)}
+            placeholder="Busque na equipe ou digite um nome"
+            vazio={`Ninguém com esse nome na equipe. Clique em Adicionar (ou Enter) para incluir “${novoResp.trim()}”.`}
+            maxLength={60}
+          />
+          <button className="bt" type="submit" disabled={!novoResp.trim()}>
+            <Icone nome="mais" tamanho={16} />
+            Adicionar
+          </button>
+        </form>
+        {resp.length > 0 ? (
+          <div className="cf-resp" aria-label="Responsáveis desta página">
+            {resp.map((n) => (
+              <span key={n} className="cf-chip">
+                <span className="cf-chip-sigla" aria-hidden="true">
+                  {siglaDe(n)}
+                </span>
+                {n}
+                <button type="button" aria-label={`Tirar ${n}`} onClick={() => meta({ responsaveis: resp.filter((x) => x !== n) })}>
+                  <Icone nome="fechar" tamanho={13} />
+                </button>
+              </span>
+            ))}
+          </div>
+        ) : (
+          <p className="cf-ajuda">Ninguém ainda. Quem for adicionado aparece aqui.</p>
+        )}
       </Bloco>
 
       <Bloco

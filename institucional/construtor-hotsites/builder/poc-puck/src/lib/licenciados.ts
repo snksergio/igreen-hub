@@ -33,11 +33,10 @@ const simples = (s: string) =>
 
 /**
  * Busca por nome, código ou cidade, sem ligar para acento e maiúscula. Quem começa com o termo vem
- * antes de quem só o contém.
+ * antes de quem só o contém. Sem termo, vêm todos, em ordem de nome (a lista abre ao clicar no campo).
  */
-export function buscarLicenciados(termo: string, limite = 6): Licenciado[] {
+export function buscarLicenciados(termo: string, limite = Infinity): Licenciado[] {
   const t = simples(termo.trim());
-  if (!t) return [];
   const todos = new Map(LICENCIADOS.map((l) => [l.ref, l]));
   for (const l of todosOsLinks()) if (!todos.has(l.ref)) todos.set(l.ref, { ref: l.ref, nome: l.nome, cidade: l.cidade ?? "", whats: l.whats });
   const comeca = (l: Licenciado) => (simples(l.nome).startsWith(t) || simples(l.ref).startsWith(t) ? 0 : 1);
