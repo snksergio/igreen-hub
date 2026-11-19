@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Campo as CampoView } from "../../form/Campo";
-import { AoEnviar, NaPagina, NavPasso, Passos, secaoDoFormulario, type Passo } from "./Passos";
+import { AoEnviar, ListaNaPagina, NaPagina, NavPasso, Passos, ResumoConclusao, secaoDoFormulario, type Passo } from "./Passos";
+import { useConfirmar } from "../../ui/Confirmar";
 import "../../form/form.css";
 import {
   ACEITA,
@@ -90,10 +91,11 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
   const paginaDaPrevia = f ? [pagina, ...usam].find((p) => secaoDoFormulario(p, f.id)) : undefined;
   const voltar =
     query.get("voltar") === "editor" && paginaId
-      ? { href: `#/editar/${paginaId}`, rotulo: "Voltar ao construtor da página" }
+      ? { href: `#/editar/${paginaId}`, rotulo: "Voltar ao construtor da página", fim: "Concluir e voltar ao construtor" }
       : paginaId
-        ? { href: `#/pagina/${paginaId}`, rotulo: "Voltar à página" }
-        : { href: "#/formularios", rotulo: "Formulários" };
+        ? { href: `#/pagina/${paginaId}`, rotulo: "Voltar à página", fim: "Concluir e voltar à página" }
+        : { href: "#/formularios", rotulo: "Formulários", fim: "Concluir e ver os formulários" };
+  const { pedir, dialogo } = useConfirmar();
 
   // Salva sozinho, como o construtor de página. Ao sair da tela antes do intervalo, salva na hora.
   const pendente = useRef<Formulario | null>(null);
@@ -236,7 +238,11 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
       )}
 
       <div className="fc">
-        <aside className="fc-paleta" aria-label="Tipos de campo">
+        <aside className="fc-paleta" aria-label={vista === "pagina" ? "Perguntas na página" : "Tipos de campo"}>
+          {vista === "pagina" ? (
+            <ListaNaPagina f={f} pagina={paginaDaPrevia} muda={(id, v) => mudarCampo(id, { naPagina: v })} />
+          ) : (
+            <>
           {PALETA.map((g) => (
             <section key={g.grupo}>
               <h2>{g.grupo}</h2>
@@ -254,6 +260,8 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
             </section>
           ))}
           <p className="fc-dica">O campo novo entra logo abaixo do campo escolhido.</p>
+            </>
+          )}
         </aside>
 
         <main className="fc-meio" ref={meio}>
@@ -261,7 +269,21 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
           {vista === "montagem" && <Montagem f={f} sel={sel} escolher={escolher} mover={mover} duplicar={duplicar} apagar={apagar} />}
           {vista === "pagina" && <NaPagina f={f} pagina={paginaDaPrevia} />}
           {vista === "enviar" && <AoEnviar f={f} pagina={paginaDaPrevia} />}
-          <NavPasso atual={vista} ir={irPara} />
+          <NavPasso
+            atual={vista}
+            ir={irPara}
+            concluir={() =>
+              pedir({
+                titulo: "Concluir o formulário?",
+                texto: <ResumoConclusao f={f} pagina={paginaDaPrevia} />,
+                confirmar: voltar.fim,
+                aoConfirmar: () => {
+                  location.hash = voltar.href;
+                },
+              })
+            }
+          />
+          {dialogo}
         </main>
 
         <aside className="fc-ajustes" aria-label="Ajustes">

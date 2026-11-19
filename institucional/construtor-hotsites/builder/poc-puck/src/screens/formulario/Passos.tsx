@@ -4,7 +4,7 @@ import { Conversa, valorDeTeste } from "../../form/Conversa";
 import { Fluxo } from "../../form/Fluxo";
 import "../../form/conversa.css";
 import "../../form/form.css";
-import { camposNaPagina, type AjusteSecao, type Formulario } from "../../lib/formularios";
+import { camposNaPagina, dividirEtapas, podeFicarNaPagina, ROTULO_TIPO, type AjusteSecao, type Campo, type Formulario } from "../../lib/formularios";
 import type { PageRecord } from "../../lib/pages";
 import type { Respostas } from "../../lib/submissions";
 import { enderecoPrevia } from "../../ui/Aparelho";
@@ -20,12 +20,12 @@ export const PASSOS: { id: Passo; titulo: string; texto: string }[] = [
   {
     id: "montagem",
     titulo: "Montagem",
-    texto: "Todas as perguntas do formulário, na ordem em que são feitas. Ligue “Mostrar na página” nas que ficam na seção de inscrição.",
+    texto: "Todas as perguntas do formulário, na ordem em que são feitas. No próximo passo você escolhe quais aparecem na página.",
   },
   {
     id: "pagina",
     titulo: "Na página",
-    texto: "O cartão de inscrição como aparece na página, com as perguntas marcadas para ficar nela. As outras são feitas depois de enviar.",
+    texto: "Escolha à esquerda quais perguntas aparecem no cartão da página. Ao lado, o cartão como fica. As outras são feitas depois de enviar.",
   },
   {
     id: "enviar",
@@ -59,8 +59,8 @@ export function Passos({ atual, ir, naPagina }: { atual: Passo; ir: (p: Passo) =
   );
 }
 
-/** Voltar e seguir, no fim de cada passo. */
-export function NavPasso({ atual, ir }: { atual: Passo; ir: (p: Passo) => void }) {
+/** Voltar e seguir, no fim de cada passo. No último, concluir. */
+export function NavPasso({ atual, ir, concluir }: { atual: Passo; ir: (p: Passo) => void; concluir: () => void }) {
   const i = PASSOS.findIndex((p) => p.id === atual);
   const antes = PASSOS[i - 1];
   const depois = PASSOS[i + 1];
@@ -74,10 +74,15 @@ export function NavPasso({ atual, ir }: { atual: Passo; ir: (p: Passo) => void }
       ) : (
         <span />
       )}
-      {depois && (
+      {depois ? (
         <button type="button" className="bt bt-pri" onClick={() => ir(depois.id)}>
           Próximo: {depois.titulo}
           <Icone nome="chevDir" tamanho={15} />
+        </button>
+      ) : (
+        <button type="button" className="bt bt-pri" onClick={concluir}>
+          <Icone nome="check" tamanho={15} />
+          Concluir formulário
         </button>
       )}
     </nav>
@@ -272,5 +277,101 @@ export function AoEnviar({ f, pagina }: { f: Formulario; pagina: PageRecord | un
         </div>
       </div>
     </div>
+  );
+}
+
+/* ---------- Passo 2: a lista de perguntas, para mostrar ou esconder na página ---------- */
+
+const naoPergunta = (c: Campo) => c.tipo === "etapa" || c.tipo === "oculto" || c.tipo === "info";
+
+/** Nome curto: o aceite e o texto informativo têm rótulos longos. */
+function nomeDoCampo(c: Campo | undefined) {
+  if (!c) return "outra pergunta";
+  if (c.tipo === "lgpd") return "Aceite de privacidade";
+  const r = (c.rotulo || ROTULO_TIPO[c.tipo]).trim();
+  return r.length > 44 ? `${r.slice(0, 42).trimEnd()}…` : r;
+}
+
+/**
+ * No lugar dos tipos de campo (não é hora de incluir nem tirar perguntas): as perguntas que o
+ * formulário já tem, cada uma com o botão de mostrar no cartão da página ou deixar para depois.
+ */
+export function ListaNaPagina({ f, pagina, muda }: { f: Formulario; pagina: PageRecord | undefined; muda: (id: string, naPagina: boolean) => void }) {
+  const ajuste = secaoDoFormulario(pagina, f.id)?.props.camposSecao;
+  const ficam = new Set(camposNaPagina(f).map((c) => c.id));
+  const etapas = dividirEtapas(f.campos)
+    .map((e) => ({ ...e, campos: e.campos.filter(podeFicarNaPagina) }))
+    .filter((e) => e.campos.length);
+  const aqui = f.campos.filter((c) => ficam.has(c.id) && !naoPergunta(c)).length;
+  const depois = f.campos.filter((c) => !ficam.has(c.id) && !naoPergunta(c)).length;
+  const sempreDepois = f.campos.some((c) => c.tipo === "ingresso" || c.tipo === "oculto");
+
+  return (
+    <div className="pl">
+      <div className="pl-topo">
+        <h2>Perguntas na página</h2>
+        <p>Ligue as que aparecem no cartão. As desligadas são feitas depois de enviar.</p>
+      </div>
+      {etapas.map((e, i) => (
+        <section key={i} className="pl-grupo" aria-label={e.titulo}>
+          {etapas.length > 1 && <h3>{e.titulo}</h3>}
+          {e.campos.map((c) => {
+            const marcado = Boolean(c.naPagina);
+            const fica = ficam.has(c.id);
+            const pai = c.condicao?.campo ? f.campos.find((x) => x.id === c.condicao!.campo) : undefined;
+            const estado = fica ? "No cartão da página" : marcado ? `Depois de enviar: depende de “${nomeDoCampo(pai)}”` : "Depois de enviar";
+            const naSecao = ajuste?.[c.id];
+            return (
+              <label key={c.id} className="fc-liga pl-item" data-fora={!fica || undefined}>
+                <input type="checkbox" role="switch" checked={marcado} onChange={(ev) => muda(c.id, ev.target.checked)} />
+                <span className="fc-trilho" aria-hidden="true" />
+                <span className="fc-liga-txt pl-txt">
+                  <b>{nomeDoCampo(c)}</b>
+                  <small>{estado}</small>
+                  {naSecao !== undefined && <em>Nesta página, a seção {naSecao ? "mostra" : "esconde"}</em>}
+                </span>
+              </label>
+            );
+          })}
+        </section>
+      ))}
+      <p className="pl-conta">
+        <b>{aqui}</b> no cartão · <b>{depois}</b> depois de enviar
+      </p>
+      <p className="fc-dica">
+        {sempreDepois ? "Ingresso e campos ocultos ficam sempre para depois de enviar. " : ""}Para incluir ou tirar perguntas, volte à Montagem.
+      </p>
+    </div>
+  );
+}
+
+/** O resumo no "Concluir formulário". */
+export function ResumoConclusao({ f, pagina }: { f: Formulario; pagina: PageRecord | undefined }) {
+  const total = f.campos.filter((c) => !naoPergunta(c)).length;
+  const noCartao = camposNaPagina(f).filter((c) => !naoPergunta(c)).length;
+  return (
+    <>
+      <p>Tudo o que você fez já está salvo. Ao concluir, você volta para onde estava.</p>
+      <ul className="pl-resumo">
+        <li>
+          <b>{total}</b> {total === 1 ? "pergunta" : "perguntas"} no formulário
+        </li>
+        <li>
+          <b>{noCartao}</b> no cartão da página
+        </li>
+        <li>
+          <b>{total - noCartao}</b> depois de enviar
+        </li>
+      </ul>
+      <p>
+        {pagina ? (
+          <>
+            Aparece na página <b>{pagina.title}</b>.
+          </>
+        ) : (
+          "Ainda não está em nenhuma página: escolha este formulário no bloco de inscrição de uma página."
+        )}
+      </p>
+    </>
   );
 }
