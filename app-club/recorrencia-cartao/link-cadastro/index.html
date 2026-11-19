@@ -141,6 +141,14 @@
   .lista li + li { box-shadow: inset 0 1px 0 var(--border-muted); }
   /* a lista da oferta (Sergio, 13/11): os ícones brancos no verde cheio, e o +2% em primeiro, sublinhado */
   .lista .ic.forte { background: var(--bg-primary); box-shadow: none; color: #fff; }
+  /* o +2% do título num selo verde-limão, como o da faixa (Calebe, 18/11): entra com um pop, depois do título */
+  /* o selo do +2% no título (Sergio, 18/11): mais baixo que a linha, para não encostar, e no mesmo verde do "no Pix da energia" */
+.selo2 { position: relative; display: inline-block; padding: calc(0.1em + 1.5px) 0.36em; border-radius: 0.4em; background: var(--fg-primary); color: #fff; font-size: 0.82em; line-height: 1.1; vertical-align: 0.1em; animation: seloTitulo 0.6s 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; }
+/* no computador o título é maior (24 px): o selo perde um pouco do respiro interno para não encher a linha */
+@media (min-width: 769px) { .selo2 { padding-top: calc(0.05em + 1.5px); padding-bottom: calc(0.05em + 1.5px); } }
+/* as vantagens da recorrência (Sergio, 18/11): todas em uma linha só */
+.lista .linha { display: block; white-space: nowrap; }
+  @keyframes seloTitulo { from { opacity: 0; transform: scale(0.5); } }
   .highlight.sublinhado { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
   .lista .ic { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--bg-primary-subtle); box-shadow: inset 0 0 0 1px var(--border-primary-subtle); color: var(--fg-primary); }
 
@@ -556,6 +564,8 @@
     refresh: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg>',
     sino: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.451 2.344a1 1 0 0 1 1.41 -.099a12.05 12.05 0 0 1 3.048 4.064a1 1 0 1 1 -1.818 .836a10.05 10.05 0 0 0 -2.54 -3.39a1 1 0 0 1 -.1 -1.41z"/><path d="M5.136 2.245a1 1 0 0 1 1.312 1.51a10.05 10.05 0 0 0 -2.54 3.39a1 1 0 1 1 -1.817 -.835a12.05 12.05 0 0 1 3.045 -4.065z"/><path d="M14.235 19c.865 0 1.322 1.024 .745 1.668a3.992 3.992 0 0 1 -2.98 1.332a3.992 3.992 0 0 1 -2.98 -1.332c-.552 -.616 -.158 -1.579 .634 -1.661l.11 -.006h4.471z"/><path d="M12 2c1.358 0 2.506 .903 2.875 2.141l.046 .171l.008 .043a8.013 8.013 0 0 1 4.024 6.069l.028 .287l.019 .289v2.931l.021 .136a3 3 0 0 0 1.143 1.847l.167 .117l.162 .099c.86 .487 .56 1.766 -.377 1.864l-.116 .006h-16c-1.028 0 -1.387 -1.364 -.493 -1.87a3 3 0 0 0 1.472 -2.063l.021 -.143l.001 -2.97a8 8 0 0 1 3.821 -6.454l.248 -.146l.01 -.043a3.003 3.003 0 0 1 2.562 -2.29l.182 -.017l.176 -.004z"/></svg>',
   };
+  // check cheio (Tabler circle-check) nos 16% garantidos (Sergio, 18/11)
+  TB.check = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"/></svg>';
   const dsIc = (d, s = 20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="${d}"/></svg>`;
   // os tipos de cartão, os mesmos da folha "Qual o tipo do cartão?" do app (fase 1); os vales ainda não chegaram
   const TIPOS = [
@@ -573,9 +583,13 @@
   // da energia, também para quem escolheu a economia na conta. No débito não tem
   const MAIS = 2;
   const comMais = () => E.tipo !== 'debito';
+  // Calebe (18/11): o benefício que vende é o +2% no Pix da energia, só no cartão de crédito; os 16% ficam em segundo plano.
+  // Sergio (18/11): o texto diz que é ativando a recorrência, e os 16% vão para a lista de vantagens
+  // só o +2% no selo (Sergio escolheu a opção A entre as duas, 18/11)
+  const tituloOferta = `Ganhe <span class="selo2">+${MAIS}%</span> <span class="highlight">no Pix da energia</span>`;
   const textos = () => pix()
-    ? { titulo: `Receba <span class="highlight">${TAXA}% no Pix</span> todo mês`, feito: `${TAXA}% de volta no Pix garantidos` }
-    : { titulo: `Garanta <span class="highlight">${TAXA}% de desconto</span> todo mês`, feito: `${TAXA}% de desconto garantido` };
+    ? { titulo: tituloOferta, sub: `Exclusivo para quem ativa a recorrência no <b class="strong">cartão de crédito</b>.`, item16: `Seus ${TAXA}% de volta no Pix garantidos`, feito: `${TAXA}% de volta no Pix garantidos` }
+    : { titulo: tituloOferta, sub: `Exclusivo para quem ativa a recorrência no <b class="strong">cartão de crédito</b>.`, item16: `Seus ${TAXA}% de desconto garantidos`, feito: `${TAXA}% de desconto garantido` };
 
   // ---------- regras do cartão (as mesmas do mob: src/cadastroSimplificado/oferta.ts)
   const so = s => String(s).replace(/\D/g, '');
@@ -679,19 +693,19 @@
         <span class="mais2" aria-hidden="true"><span class="anel"></span><span class="caixa"><b>+${MAIS}%</b><small>no Pix da energia</small></span></span>
       </div>
       <div class="corpo flush">
-        <div class="titleRow tituloOferta sobe" style="--d: 0.25s"><h2 class="t-modal-title" id="modalTitulo">${t.titulo}</h2><p class="t-page-subtitle subtitle">Cadastre o cartão de crédito e suas faturas são pagas sozinhas, sempre antes de vencer.</p></div>
-        <div class="labeled sobe" style="--d: 0.35s"><p class="t-label groupLabel">COMO FUNCIONA A RECORRÊNCIA</p>
+        <div class="titleRow tituloOferta sobe" style="--d: 0.25s"><h2 class="t-modal-title" id="modalTitulo">${t.titulo}</h2><p class="t-page-subtitle subtitle">${t.sub}</p></div>
+        <div class="labeled sobe" style="--d: 0.35s"><p class="t-label groupLabel">VANTAGENS DA RECORRÊNCIA</p>
           <ul class="lista">
-            <li><span class="ic forte">${TB.desconto}</span><span class="t-body-lg-semibold">Ganhe <span class="highlight sublinhado">+${MAIS}% no Pix da energia</span> com o cartão de crédito</span></li>
-            <li><span class="ic forte">${TB.refresh}</span><span class="t-body-lg-semibold">Paga sozinha, sem você precisar lembrar</span></li>
-            <li><span class="ic forte">${TB.sino}</span><span class="t-body-lg-semibold">Aviso 2 dias antes de cada cobrança</span></li>
+            <li><span class="ic forte">${TB.desconto}</span><span class="t-body-lg-semibold"><span class="linha"><span class="highlight sublinhado">+${MAIS}% em toda fatura</span> paga no crédito</span></span></li>
+            <li><span class="ic forte">${TB.refresh}</span><span class="t-body-lg-semibold"><span class="linha">Fatura paga automaticamente</span></span></li>
+            <li><span class="ic forte">${TB.check}</span><span class="t-body-lg-semibold"><span class="linha">${t.item16}</span></span></li>
           </ul>
         </div>
         <div class="flag flagMuted flagCompacta sobe" style="--d: 0.45s"><span class="iconeBranco">${svg(ic.cadeado, 16)}</span><div class="flagText"><p class="t-body-md-semibold strong">Nada é cobrado agora</p><p class="t-caption mainText">A primeira cobrança só acontece quando a sua primeira fatura chegar.</p></div></div>
       </div>
     </div>
     <div class="botoes">
-      <button type="button" class="btn primary t-button-md" data-acao="quero">Quero garantir os ${TAXA}%</button>
+      <button type="button" class="btn primary t-button-md" data-acao="quero">Garantir benefícios exclusivos</button>
       <button type="button" class="linkBtn t-body-md-semibold" data-acao="agora-nao">Agora não, vou pagar manualmente</button>
     </div>`;
   }
