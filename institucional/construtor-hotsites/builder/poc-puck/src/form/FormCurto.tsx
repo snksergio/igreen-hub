@@ -1,6 +1,6 @@
-import { useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import { registrarUmaVez } from "../lib/eventos";
-import { camposNaPagina, validarCampos, type AjusteSecao, type Formulario } from "../lib/formularios";
+import { camposNaPagina, validarCampos, visivel, type AjusteSecao, type Formulario } from "../lib/formularios";
 import type { Respostas } from "../lib/submissions";
 import { usePageCtx } from "../puck/context";
 import { abrirFormulario } from "./abrir";
@@ -36,6 +36,18 @@ export function FormCurto({
   const [erros, setErros] = useState<Record<string, string>>({});
   const ref = useRef<HTMLFormElement>(null);
   const campos = camposNaPagina(form, ajuste);
+
+  // Cada campo desenhado leva o id da pergunta (data-campo): a prévia do construtor usa para
+  // saber em qual pergunta a pessoa clicou. Os escondidos pela lógica não são desenhados.
+  useLayoutEffect(() => {
+    const linhas = ref.current?.querySelector(".fm-linhas");
+    if (!linhas) return;
+    const desenhados = campos.filter((c) => visivel(c, r));
+    [...linhas.children].forEach((el, i) => {
+      const c = desenhados[i];
+      if (c) (el as HTMLElement).dataset.campo = c.id;
+    });
+  });
 
   const muda = (id: string, v: string | string[] | undefined) => {
     setR((x) => {

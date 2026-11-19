@@ -1045,3 +1045,59 @@
 .fm-pagina[data-tema="live"] select {
   color-scheme: dark;
 }
+
+/* ---------- Opções (escolha única e múltipla) dentro dos cartões da página ---------- */
+/* A bolinha do rádio e o quadradinho usam os tokens --fm-*, que só existiam dentro da janela.
+   No cartão da página eles ficavam vazios e a marcação sumia. Cada pele ganha os seus. */
+.lv .fm-linhas[data-pele="live"] {
+  --fm-fundo: #06110a;
+  --fm-texto: var(--texto);
+  --fm-fraco: rgba(243, 246, 236, 0.4);
+  --fm-campo: rgba(1, 7, 2, 0.6);
+  --fm-campo-borda: rgba(243, 246, 236, 0.3);
+  --fm-acento: var(--lima);
+  --fm-sobre: #06180d;
+}
+.lv .fm-linhas[data-pele="live"] .fm-opcao {
+  padding: 14px 16px;
+  font-size: 15px;
+}
+.lv .fm-linhas[data-pele="live"] .fm-opcao:hover {
+  border-color: rgba(243, 246, 236, 0.26);
+}
+.lv .fm-linhas[data-pele="live"] .fm-opcao[data-marcado] {
+  border-color: var(--lima);
+  background: rgba(168, 255, 53, 0.08);
+}
+.hs-form .fm-linhas[data-pele="hs"] {
+  --fm-fundo: #ffffff;
+  --fm-texto: var(--texto);
+  --fm-fraco: var(--muted);
+  --fm-campo: #ffffff;
+  --fm-campo-borda: #b9c7b3;
+  --fm-acento: var(--verde-escuro);
+  --fm-sobre: #ffffff;
+}
+/* "label" do kit claro vira grade com texto em negrito: nas opções, volta a ser linha normal */
+.hs-form .fm-linhas[data-pele="hs"] .fm-opcao {
+  display: flex;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+}
+.hs-form .fm-linhas[data-pele="hs"] .fm-opcao[data-marcado] {
+  background: #f1f8e9;
+}
+/* O título da pergunta de escolha igual ao rótulo dos outros campos do cartão */
+.lv .fm-linhas[data-pele="live"] .fm-grupo legend {
+  margin-bottom: 8px;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: rgba(243, 246, 236, 0.6);
+}
+.hs-form .fm-linhas[data-pele="hs"] .fm-grupo legend {
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--texto);
+}

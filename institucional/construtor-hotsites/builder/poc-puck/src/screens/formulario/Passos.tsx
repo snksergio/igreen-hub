@@ -26,7 +26,7 @@ export const PASSOS: { id: Passo; titulo: string; texto: string }[] = [
   },
   {
     id: "pagina",
-    titulo: "Na página",
+    titulo: "Visualização na página",
     texto: "Escolha à esquerda quais perguntas aparecem no cartão da página. Ao lado, o cartão como fica. As outras são feitas depois de enviar.",
   },
   {
@@ -37,7 +37,7 @@ export const PASSOS: { id: Passo; titulo: string; texto: string }[] = [
 ];
 
 /** Os três passos no topo da coluna do meio, ligados por uma linha. */
-export function Passos({ atual, ir, naPagina }: { atual: Passo; ir: (p: Passo) => void; naPagina: number }) {
+export function Passos({ atual, ir }: { atual: Passo; ir: (p: Passo) => void }) {
   const i = PASSOS.findIndex((p) => p.id === atual);
   return (
     <div className="ps">
@@ -48,10 +48,7 @@ export function Passos({ atual, ir, naPagina }: { atual: Passo; ir: (p: Passo) =
               <span className="ps-n" aria-hidden="true">
                 {n + 1}
               </span>
-              <span className="ps-nome">
-                {p.titulo}
-                {p.id === "pagina" && <small> · {naPagina === 1 ? "1 pergunta" : `${naPagina} perguntas`}</small>}
-              </span>
+              <span className="ps-nome">{p.titulo}</span>
             </button>
           </li>
         ))}
@@ -101,26 +98,33 @@ export function secaoDoFormulario(p: PageRecord | undefined, formId: string) {
 
 /* ---------- Passo 2: o cartão na página ---------- */
 
-const LARGURA = 390; // a página desenhada como num celular
+const LARGURA = 470; // a página desenhada como num celular grande (um pouco mais larga, para não achatar)
 const MARGEM = 32; // onde o cartão fica, a partir do topo da tela da página
 const VOLTA = 18; // quanto do fundo da seção aparece em volta do cartão
 
+type Alvo = { id: string; x: number; y: number; w: number; h: number };
+type Menu = { id: string; x: number; y: number };
+
 /**
  * O cartão do formulário recortado da página de verdade (desenhada na largura de um celular), com
- * um pouco do fundo da seção em volta, como no site. A altura acompanha o cartão: muda quando uma
- * pergunta entra ou sai da página.
+ * um pouco do fundo da seção em volta, como no site. A altura acompanha o cartão. Cada pergunta
+ * do cartão pode ser clicada (ou clicada com o botão direito) para tirar da página ou editar.
  */
-function RecorteDoCartao({ src }: { src: string }) {
+function RecorteDoCartao({ src, f, tirar, editar }: { src: string; f: Formulario; tirar: (id: string) => void; editar: (id: string) => void }) {
   const frame = useRef<HTMLIFrameElement>(null);
   const [caixa, setCaixa] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+  const [alvos, setAlvos] = useState<Alvo[]>([]);
+  const [menu, setMenu] = useState<Menu | null>(null);
+  const caixaMenu = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setCaixa(null);
+    setAlvos([]);
     let ultimo = "";
     const t = window.setInterval(() => {
-      const f = frame.current;
-      const w = f?.contentWindow;
-      const d = f?.contentDocument;
+      const fr = frame.current;
+      const w = fr?.contentWindow;
+      const d = fr?.contentDocument;
       const alvo = d?.querySelector<HTMLElement>("[data-form-inscricao]");
       if (!w || !d || !alvo) return;
       if (!d.getElementById("ps-recorte")) {
@@ -135,26 +139,98 @@ function RecorteDoCartao({ src }: { src: string }) {
       const x = Math.max(0, Math.round(r.left) - VOLTA);
       const y = Math.max(0, Math.round(r.top) - VOLTA);
       const n = { x, y, w: Math.min(LARGURA, Math.round(r.right) + VOLTA) - x, h: Math.ceil(r.bottom) + VOLTA - y };
-      const chave = JSON.stringify(n);
+      const campos: Alvo[] = [...alvo.querySelectorAll<HTMLElement>("[data-campo]")].map((el) => {
+        const b = el.getBoundingClientRect();
+        return { id: el.dataset.campo!, x: Math.round(b.left) - x, y: Math.round(b.top) - y, w: Math.round(b.width), h: Math.round(b.height) };
+      });
+      const chave = JSON.stringify([n, campos]);
       if (chave !== ultimo) {
         ultimo = chave;
         setCaixa(n);
+        setAlvos(campos);
       }
     }, 250);
     return () => window.clearInterval(t);
   }, [src]);
 
+  // O menu fecha com Esc ou clicando fora dele.
+  useEffect(() => {
+    if (!menu) return;
+    caixaMenu.current?.querySelector("button")?.focus();
+    const tecla = (e: KeyboardEvent) => e.key === "Escape" && setMenu(null);
+    const fora = (e: MouseEvent) => !caixaMenu.current?.contains(e.target as Node) && setMenu(null);
+    document.addEventListener("keydown", tecla);
+    document.addEventListener("mousedown", fora);
+    return () => {
+      document.removeEventListener("keydown", tecla);
+      document.removeEventListener("mousedown", fora);
+    };
+  }, [menu]);
+
   const altura = Math.max(844, (caixa?.h ?? 0) + MARGEM * 2);
+  const campo = (id: string) => f.campos.find((c) => c.id === id);
   return (
-    <div className="ps-recorte" data-pronto={caixa ? "" : undefined} style={caixa ? { width: caixa.w, height: caixa.h } : { width: LARGURA, height: 460 }} inert>
-      <iframe
-        ref={frame}
-        src={src}
-        title="Prévia do cartão de inscrição na página"
-        tabIndex={-1}
-        style={{ width: LARGURA, height: altura, transform: caixa ? `translate(${-caixa.x}px, ${-caixa.y}px)` : undefined }}
-      />
-      {!caixa && <span className="ps-carregando">Carregando a prévia…</span>}
+    <div className="ps-recorte-area" style={caixa ? { width: caixa.w, height: caixa.h } : { width: LARGURA, height: 460 }}>
+      <div className="ps-recorte" data-pronto={caixa ? "" : undefined}>
+        <iframe
+          ref={frame}
+          src={src}
+          title="Prévia do cartão de inscrição na página"
+          tabIndex={-1}
+          aria-hidden="true"
+          style={{ width: LARGURA, height: altura, transform: caixa ? `translate(${-caixa.x}px, ${-caixa.y}px)` : undefined }}
+        />
+        {!caixa && <span className="ps-carregando">Carregando a prévia…</span>}
+      </div>
+      {caixa &&
+        alvos.map((a) => (
+          <button
+            key={a.id}
+            type="button"
+            className="ps-alvo"
+            data-aberto={menu?.id === a.id || undefined}
+            style={{ left: a.x - 6, top: a.y - 6, width: a.w + 12, height: a.h + 12 }}
+            aria-label={`${nomeDoCampo(campo(a.id))}: tirar da página ou editar`}
+            aria-haspopup="menu"
+            onClick={() => setMenu({ id: a.id, x: a.x + a.w - 4, y: a.y + 8 })}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              const b = e.currentTarget.parentElement!.getBoundingClientRect();
+              setMenu({ id: a.id, x: e.clientX - b.left, y: e.clientY - b.top });
+            }}
+          >
+            <span className="ps-alvo-dica" aria-hidden="true">
+              Clique para tirar
+            </span>
+          </button>
+        ))}
+      {menu && (
+        <div className="ps-menu" role="menu" ref={caixaMenu} style={{ left: menu.x, top: menu.y }}>
+          <p className="ps-menu-tit">{nomeDoCampo(campo(menu.id))}</p>
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => {
+              tirar(menu.id);
+              setMenu(null);
+            }}
+          >
+            <Icone nome="olho" tamanho={15} />
+            Tirar da página
+          </button>
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => {
+              editar(menu.id);
+              setMenu(null);
+            }}
+          >
+            <Icone nome="lapis" tamanho={15} />
+            Editar pergunta
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -183,7 +259,7 @@ function CartaoPadrao({ f }: { f: Formulario }) {
   );
 }
 
-export function NaPagina({ f, pagina }: { f: Formulario; pagina: PageRecord | undefined }) {
+export function NaPagina({ f, pagina, tirar, editar }: { f: Formulario; pagina: PageRecord | undefined; tirar: (id: string) => void; editar: (id: string) => void }) {
   const secao = secaoDoFormulario(pagina, f.id);
   if (!pagina || !secao?.props.id)
     return (
@@ -198,10 +274,10 @@ export function NaPagina({ f, pagina }: { f: Formulario; pagina: PageRecord | un
   const ajustada = Boolean(secao.props.camposSecao && Object.keys(secao.props.camposSecao).length);
   return (
     <div className="ps-palco">
-      <RecorteDoCartao src={enderecoPrevia(pagina.slug, { bloco: secao.props.id })} />
+      <RecorteDoCartao src={enderecoPrevia(pagina.slug, { bloco: secao.props.id })} f={f} tirar={tirar} editar={editar} />
       <p className="ps-legenda">
         <span>
-          Seção de inscrição de <b>{pagina.title}</b>, no celular
+          Seção de inscrição de <b>{pagina.title}</b>. Clique numa pergunta para tirar da página.
         </span>
         <a href={`#/ver/${pagina.slug}`} target="_blank" rel="noopener">
           Ver a página inteira
@@ -220,7 +296,8 @@ export function NaPagina({ f, pagina }: { f: Formulario; pagina: PageRecord | un
 
 /* ---------- Passo 3: a janela que abre ao enviar ---------- */
 
-const TELA = { largura: 880, altura: 820 }; // a página como numa tela de notebook pequena
+/** Página do kit Live: a janela de inscrição dela é escura. */
+const ehLive = (p: PageRecord | undefined) => Boolean(p?.data.content?.some((b) => b.type.startsWith("Live")));
 
 /** O que a pessoa já teria digitado no cartão da página (valores de teste). */
 function respostasDaPagina(f: Formulario, ajuste: AjusteSecao | undefined): Respostas {
@@ -234,108 +311,18 @@ function respostasDaPagina(f: Formulario, ajuste: AjusteSecao | undefined): Resp
 }
 
 /**
- * A página de verdade com a janela de inscrição aberta por cima, como no site: o mesmo desenho,
- * o mesmo tema e a página escurecida atrás. Dá para responder e testar; nada é gravado.
+ * A janela de inscrição com o desenho do site (clara, ou escura no kit Live), parada sobre um
+ * fundo verde padrão. Não carrega a página: fica leve e não depende do que a página tiver.
  */
-function JanelaNoSite({ f, src, ajuste, direto, rodada }: { f: Formulario; src: string; ajuste: AjusteSecao | undefined; direto: boolean; rodada: number }) {
-  const frame = useRef<HTMLIFrameElement>(null);
-  const palco = useRef<HTMLDivElement>(null);
-  const [largura, setLargura] = useState(760);
-  // Mudou o formulário (perguntas, estilo, textos): reabre a janela já com o que mudou.
-  const assinatura = JSON.stringify([f.campos, f.estilo, f.botaoFinal, f.regras]);
-
-  useEffect(() => {
-    const el = palco.current;
-    if (!el) return;
-    const medir = () => setLargura(el.clientWidth);
-    medir();
-    const ro = new ResizeObserver(medir);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const fr = frame.current;
-    if (!fr) return;
-    let timer = 0;
-    let tentativas = 0;
-    const abrir = () => {
-      window.clearTimeout(timer);
-      const w = fr.contentWindow as (Window & typeof globalThis) | null;
-      const d = fr.contentDocument;
-      if (!w || !d?.querySelector("[data-form-inscricao]")) {
-        if (++tentativas < 80) timer = window.setTimeout(abrir, 150);
-        return;
-      }
-      // Fecha a que estiver aberta e abre de novo, do começo.
-      d.dispatchEvent(new w.KeyboardEvent("keydown", { key: "Escape" }));
-      timer = window.setTimeout(() => {
-        const pedido = { formId: f.id, completo: direto, iniciais: direto ? {} : respostasDaPagina(f, ajuste), ajuste };
-        d.dispatchEvent(new w.CustomEvent("igreen:formulario", { detail: pedido }));
-      }, 80);
-    };
-    // Espera o construtor salvar (e a página da prévia receber) antes de reabrir.
-    timer = window.setTimeout(abrir, 450);
-    const aoCarregar = () => {
-      tentativas = 0;
-      abrir();
-    };
-    fr.addEventListener("load", aoCarregar);
-    return () => {
-      window.clearTimeout(timer);
-      fr.removeEventListener("load", aoCarregar);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [src, direto, rodada, assinatura]);
-
-  const escala = Math.min(1, largura / TELA.largura);
-  return (
-    <div className="ps-tela" ref={palco}>
-      <div className="ps-tela-caixa" style={{ width: TELA.largura * escala, height: TELA.altura * escala }}>
-        <iframe
-          ref={frame}
-          src={src}
-          title="Prévia da janela de inscrição na página"
-          style={{ width: TELA.largura, height: TELA.altura, transform: `scale(${escala})` }}
-        />
-      </div>
-    </div>
-  );
-}
-
-/** Sem página ligada: a janela com o desenho do site, parada aqui. */
-function JanelaSemPagina({ f, direto, rodada, recomecar }: { f: Formulario; direto: boolean; rodada: number; recomecar: () => void }) {
-  const ctx = { page: undefined, pageId: "", pageSlug: "", origem: "direto", previa: true };
-  const chave = `${direto}-${rodada}-${f.estilo}-${f.atualizadoEm}`;
-  const iniciais = direto ? {} : respostasDaPagina(f, undefined);
-  return (
-    <div className="fm-fundo ps-janela" data-tema="claro">
-      <div className="fm-modal" role="dialog" aria-label="Prévia da janela de inscrição">
-        <header className="fm-modal-topo">
-          <span className="fm-modal-evento">Inscrição</span>
-          <button type="button" className="fm-fechar" onClick={recomecar} aria-label="Fechar (recomeça a prévia)">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          </button>
-        </header>
-        <div className="fm-modal-corpo">
-          {f.estilo === "formulario" ? (
-            <Fluxo key={chave} form={f} completo={direto} iniciais={iniciais} ctx={ctx} />
-          ) : (
-            <Conversa key={chave} form={f} completo={direto} iniciais={iniciais} ctx={ctx} fechar={recomecar} />
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function AoEnviar({ f, pagina }: { f: Formulario; pagina: PageRecord | undefined }) {
   const [direto, setDireto] = useState(false);
   const [rodada, setRodada] = useState(0);
-  const secao = secaoDoFormulario(pagina, f.id);
+  const ajuste = secaoDoFormulario(pagina, f.id)?.props.camposSecao;
+  const tema = ehLive(pagina) ? "live" : "claro";
+  const iniciais = direto ? {} : respostasDaPagina(f, ajuste);
+  const ctx = { page: pagina, pageId: pagina?.id ?? "", pageSlug: pagina?.slug ?? "", origem: "direto", previa: true };
   const recomecar = () => setRodada((n) => n + 1);
+  const chave = `${direto}-${rodada}-${f.estilo}-${f.atualizadoEm}-${JSON.stringify(f.campos).length}`;
 
   return (
     <div className="ps-palco ps-palco-largo">
@@ -353,24 +340,25 @@ export function AoEnviar({ f, pagina }: { f: Formulario; pagina: PageRecord | un
           Recomeçar
         </button>
       </div>
-      {pagina && secao?.props.id ? (
-        <>
-          <JanelaNoSite f={f} src={enderecoPrevia(pagina.slug)} ajuste={secao.props.camposSecao} direto={direto} rodada={rodada} />
-          <p className="ps-legenda">
-            <span>
-              Assim fica em <b>{pagina.title}</b>. Se fechar a janela, use “Recomeçar” para abrir de novo.
-            </span>
-          </p>
-        </>
-      ) : (
-        <>
-          <p className="ps-aviso">
-            <Icone nome="alerta" tamanho={15} />
-            Este formulário ainda não está em nenhuma página. A janela aparece aqui com o desenho claro do site.
-          </p>
-          <JanelaSemPagina f={f} direto={direto} rodada={rodada} recomecar={recomecar} />
-        </>
-      )}
+      <div className="fm-fundo ps-janela" data-tema={tema}>
+        <div className="fm-modal" role="dialog" aria-label="Prévia da janela de inscrição">
+          <header className="fm-modal-topo">
+            <span className="fm-modal-evento">{pagina?.title ?? "Inscrição"}</span>
+            <button type="button" className="fm-fechar" onClick={recomecar} aria-label="Fechar (recomeça a prévia)">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
+          </header>
+          <div className="fm-modal-corpo">
+            {f.estilo === "formulario" ? (
+              <Fluxo key={chave} form={f} completo={direto} ajuste={ajuste} iniciais={iniciais} ctx={ctx} />
+            ) : (
+              <Conversa key={chave} form={f} completo={direto} ajuste={ajuste} iniciais={iniciais} ctx={ctx} fechar={recomecar} />
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

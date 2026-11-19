@@ -358,3 +358,103 @@ li[data-estado="agora"] .ps-n {
 .ps-ok .cfm-acoes {
   justify-content: center;
 }
+
+/* ---------- Passo 2: perguntas clicáveis no cartão ---------- */
+.ps-recorte-area {
+  position: relative;
+}
+.ps-recorte-area > .ps-recorte {
+  width: 100%;
+  height: 100%;
+}
+.app .ps-alvo {
+  position: absolute;
+  z-index: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+}
+.app .ps-alvo:hover,
+.app .ps-alvo:focus-visible,
+.app .ps-alvo[data-aberto] {
+  background: rgba(0, 168, 89, 0.08);
+  outline: 2px solid var(--b-acento-vivo);
+  outline-offset: 0;
+}
+.ps-alvo-dica {
+  position: absolute;
+  top: -11px;
+  right: 10px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--b-acento);
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+}
+.ps-alvo:hover .ps-alvo-dica,
+.ps-alvo:focus-visible .ps-alvo-dica {
+  opacity: 1;
+}
+.ps-alvo[data-aberto] .ps-alvo-dica {
+  opacity: 0;
+}
+.ps-menu {
+  position: absolute;
+  z-index: 5;
+  display: grid;
+  gap: 2px;
+  min-width: 200px;
+  padding: 6px;
+  border: 1px solid var(--b-linha-forte);
+  border-radius: 12px;
+  background: var(--b-painel);
+  box-shadow: var(--b-sombra-pop);
+}
+.ps-menu-tit {
+  overflow: hidden;
+  max-width: 240px;
+  margin: 0;
+  padding: 6px 10px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--b-apoio);
+}
+.app .ps-menu button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--b-texto);
+  font-size: 13.5px;
+  text-align: left;
+  cursor: pointer;
+}
+.app .ps-menu button:hover,
+.app .ps-menu button:focus-visible {
+  background: var(--b-trilho);
+  outline: none;
+}
+
+/* ---------- Passo 3: fundo verde padrão (malha de degradês), sem carregar a página ---------- */
+.fc-meio .ps-palco .fm-fundo.ps-janela,
+.fc-meio .ps-palco .fm-fundo.ps-janela[data-tema="live"] {
+  background:
+    radial-gradient(55% 45% at 12% 18%, rgba(168, 255, 53, 0.42), transparent 62%),
+    radial-gradient(45% 40% at 88% 14%, rgba(0, 168, 89, 0.7), transparent 66%),
+    radial-gradient(60% 55% at 78% 92%, rgba(0, 122, 61, 0.75), transparent 70%),
+    radial-gradient(55% 55% at 8% 88%, rgba(76, 212, 148, 0.4), transparent 66%),
+    linear-gradient(160deg, #0b4a26 0%, #06301a 55%, #031a0e 100%);
+}

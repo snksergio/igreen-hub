@@ -264,9 +264,9 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
         </aside>
 
         <main className="fc-meio" ref={meio}>
-          <Passos atual={vista} ir={irPara} naPagina={camposNaPagina(f).length} />
+          <Passos atual={vista} ir={irPara} />
           {vista === "montagem" && <Montagem f={f} sel={sel} escolher={escolher} mover={mover} duplicar={duplicar} apagar={apagar} />}
-          {vista === "pagina" && <NaPagina f={f} pagina={paginaDaPrevia} />}
+          {vista === "pagina" && <NaPagina f={f} pagina={paginaDaPrevia} tirar={(id) => mudarCampo(id, { naPagina: false })} editar={escolher} />}
           {vista === "enviar" && <AoEnviar f={f} pagina={paginaDaPrevia} />}
           <NavPasso
             atual={vista}
