@@ -1346,6 +1346,10 @@ img {
 .lv .campo input::placeholder { color: rgba(243, 246, 236, 0.3); }
 .lv .campo input:hover { border-color: rgba(243, 246, 236, 0.18); }
 .lv .campo input:focus { border-color: rgba(168, 255, 53, 0.55); box-shadow: 0 0 0 4px rgba(168, 255, 53, 0.09); background: #041007; }
+/* Preenchimento automático do navegador (Chrome): o campo continua escuro, com o texto claro */
+.lv .campo :is(input, select):-webkit-autofill,
+.lv .campo :is(input, select):-webkit-autofill:hover { -webkit-text-fill-color: var(--texto); caret-color: var(--texto); box-shadow: inset 0 0 0 100px #08110b; transition: background-color 600000s 0s, color 600000s 0s; }
+.lv .campo :is(input, select):-webkit-autofill:focus { box-shadow: inset 0 0 0 100px #041007, 0 0 0 4px rgba(168, 255, 53, 0.09); }
 .lv .aceite {
   position: relative; display: flex; gap: 12px; align-items: center; margin-top: 16px; padding: 13px 16px; border-radius: 14px;
   background: rgba(243, 246, 236, 0.03); box-shadow: inset 0 0 0 1px rgba(243, 246, 236, 0.09);

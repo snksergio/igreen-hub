@@ -796,8 +796,13 @@
   border-color: rgba(168, 255, 53, 0.55);
   box-shadow: 0 0 0 4px rgba(168, 255, 53, 0.09);
 }
+/* A lista da UF também no escuro, com as cores do campo */
+.lv .campo select {
+  color-scheme: dark;
+}
 .lv .campo select option {
-  color: #111;
+  background: #0d1510;
+  color: #f3f6ec;
 }
 .lv .campo .fm-input[aria-invalid="true"] {
   border-color: rgba(255, 180, 163, 0.7);
@@ -994,4 +999,34 @@
   border-color: rgba(243, 246, 236, 0.16);
   background: rgba(1, 7, 2, 0.6);
   color: var(--texto);
+}
+
+/* ---------- Preenchimento automático do navegador ----------
+   O Chrome pinta o campo preenchido de azul-claro/branco e força o texto escuro. Aqui o campo mantém
+   o fundo dele (o fundo do autopreenchimento fica "parado" na transição) e o texto na cor certa. */
+:is(.fm-fundo, .fm-pagina, .hs-form) :is(input, select, textarea):-webkit-autofill,
+:is(.fm-fundo, .fm-pagina, .hs-form) :is(input, select, textarea):-webkit-autofill:hover,
+:is(.fm-fundo, .fm-pagina, .hs-form) :is(input, select, textarea):-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--fm-texto, #17181c);
+  caret-color: var(--fm-texto, #17181c);
+  transition: background-color 600000s 0s, color 600000s 0s;
+}
+.fm-campo .fm-input:-webkit-autofill,
+.fm-cupom .fm-input:-webkit-autofill {
+  box-shadow: inset 0 0 0 100px var(--fm-campo);
+}
+.fm-fundo[data-tema="live"] .fm-campo .fm-input:-webkit-autofill,
+.fm-pagina[data-tema="live"] .fm-campo .fm-input:-webkit-autofill {
+  box-shadow: inset 0 0 0 100px #08110b;
+}
+/* Na conversa: a caixa de escrever e a correção usam as cores neutras dela */
+.cv :is(.cv-in, .cv-campo input):-webkit-autofill {
+  -webkit-text-fill-color: var(--cv-texto);
+  caret-color: var(--cv-texto);
+  box-shadow: inset 0 0 0 100px var(--cv-painel);
+}
+/* Listas (UF) no tema escuro abrem no escuro */
+.fm-fundo[data-tema="live"] select,
+.fm-pagina[data-tema="live"] select {
+  color-scheme: dark;
 }

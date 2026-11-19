@@ -101,6 +101,7 @@ export function CartaoIngresso({ sub, page, espera = false, previa = false }: { 
   const cidade = [ev.cidade, ev.uf].filter(Boolean).join("/");
   return (
     <article className="tk" data-estado={espera ? "espera" : pendente ? "pendente" : "ok"} aria-label={`Ingresso de ${sub.nome} para ${page?.title ?? "o evento"}`}>
+      <span className="tk-ilhos-sombra" aria-hidden="true" />
       <span className="tk-ilhos" aria-hidden="true" />
       <header className="tk-cab">
         <LogoIGreen className="tk-logo" />
@@ -124,7 +125,10 @@ export function CartaoIngresso({ sub, page, espera = false, previa = false }: { 
       </div>
       <div className="tk-arte" aria-hidden="true">
         <span className="tk-arte-luz" />
-        <Brilho className="tk-arte-brilho" />
+        <span className="tk-arte-holo" />
+        <span className="tk-selo-holo">
+          <Brilho />
+        </span>
         <strong>{page?.title ?? sub.pageSlug}</strong>
         <LogoIGreen className="tk-arte-logo" titulo="" />
         <span className="tk-arte-ano">{ano}</span>
