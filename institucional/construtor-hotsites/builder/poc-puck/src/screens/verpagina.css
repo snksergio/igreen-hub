@@ -1,66 +1,25 @@
-/* Ver página: a página em tamanhos de tela diferentes ou lado a lado. Tokens do app (--b-*). */
+/* Ver página: a página em tela inteira (computador) ou em telas de aparelho, com uma barra
+   flutuante por cima. A barra é escura nos dois temas: fica legível sobre qualquer página. */
 .vp {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  position: relative;
   height: 100vh;
-  min-height: 0;
+  height: 100dvh;
   overflow: hidden;
 }
-.vp-topo {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
-  gap: 16px;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--b-linha);
-  background: var(--b-painel);
-}
-.vp-lado {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
-.vp-dir {
-  justify-content: flex-end;
-  gap: 8px;
-}
-.vp-titulo {
-  display: grid;
-  min-width: 0;
-  line-height: 1.25;
-}
-.vp-titulo b {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 14px;
-  font-weight: 600;
-}
-.vp-titulo small {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 12px;
-  color: var(--b-apoio);
-}
-.app .vp-modos {
-  flex-wrap: nowrap;
-}
-.app .vp-modos > button {
-  flex: 0 0 auto;
-}
-.vp-div {
-  align-self: center;
-  width: 1px;
-  height: 18px;
-  margin: 0 4px;
-  background: var(--b-linha-forte);
+.vp-cheia {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #fff;
 }
 .vp-area {
   display: grid;
   place-items: center;
-  min-height: 0;
+  box-sizing: border-box;
+  height: 100%;
   overflow: auto;
 }
 .vp-telas {
@@ -68,21 +27,116 @@
   align-items: flex-start;
   justify-content: center;
 }
-@media (max-width: 1100px) {
-  .vp-some {
-    display: none;
-  }
-  .vp-titulo small {
-    display: none;
+
+/* ---------- Barra flutuante ---------- */
+.vp-barra,
+.vp-mini {
+  position: fixed;
+  z-index: 1000;
+  bottom: 20px;
+  color: #f3f4f6;
+  background: rgba(20, 21, 24, 0.86);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 12px 32px rgba(0, 0, 0, 0.35),
+    0 2px 6px rgba(0, 0, 0, 0.25);
+}
+.vp-barra {
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  max-width: calc(100vw - 24px);
+  padding: 5px;
+  border-radius: 14px;
+  transform: translateX(-50%);
+  animation: vp-entra 0.18s ease-out;
+}
+.vp-modos {
+  display: flex;
+  gap: 2px;
+}
+.vp-sep {
+  flex: none;
+  width: 1px;
+  height: 20px;
+  margin: 0 4px;
+  background: rgba(255, 255, 255, 0.14);
+}
+.app .vp-bt {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(243, 244, 246, 0.72);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+.app .vp-bt:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+.app .vp-bt[aria-pressed="true"] {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+.app .vp-bt:focus-visible,
+.app .vp-mini:focus-visible {
+  outline: 2px solid #00a859;
+  outline-offset: 2px;
+}
+/* Só a opção escolhida mostra o nome: a barra fica curta e ainda diz onde você está. */
+.vp-nome {
+  display: none;
+}
+.vp-modo[aria-pressed="true"] .vp-nome {
+  display: inline;
+}
+
+/* ---------- Recolhida: só um botão pequeno no canto ---------- */
+.app .vp-mini {
+  left: 20px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0.8;
+  animation: vp-entra 0.18s ease-out;
+}
+.app .vp-mini:hover {
+  opacity: 1;
+}
+
+@keyframes vp-entra {
+  from {
+    opacity: 0;
+    translate: 0 8px;
   }
 }
-@media (max-width: 720px) {
-  .vp-topo {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 8px;
-    padding: 8px 10px;
+@media (prefers-reduced-motion: reduce) {
+  .vp-barra,
+  .vp-mini {
+    animation: none;
   }
-  .vp-titulo {
+}
+@media (max-width: 560px) {
+  .vp-modo[aria-pressed="true"] .vp-nome {
     display: none;
   }
 }

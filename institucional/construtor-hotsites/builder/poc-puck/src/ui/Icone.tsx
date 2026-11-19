@@ -57,6 +57,12 @@ const DESENHOS = {
       <path d="M11 18h2" />
     </>
   ),
+  notebook: (
+    <>
+      <rect x="4" y="4.5" width="16" height="11" rx="2" />
+      <path d="M2 19.5h20" />
+    </>
+  ),
   monitor: (
     <>
       <rect x="2" y="3.5" width="20" height="13" rx="2.5" />

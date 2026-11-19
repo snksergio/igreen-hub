@@ -4,9 +4,9 @@ import "./aparelho.css";
 export type IdAparelho = "computador" | "notebook" | "tablet" | "celular";
 
 /** Tamanhos de tela da prévia (largura × altura da área visível, em px). */
-export const APARELHOS: Record<IdAparelho, { nome: string; largura: number; altura: number; icone: "monitor" | "tablet" | "celular" }> = {
+export const APARELHOS: Record<IdAparelho, { nome: string; largura: number; altura: number; icone: "monitor" | "notebook" | "tablet" | "celular" }> = {
   computador: { nome: "Computador", largura: 1440, altura: 900, icone: "monitor" },
-  notebook: { nome: "Notebook", largura: 1280, altura: 800, icone: "monitor" },
+  notebook: { nome: "Notebook", largura: 1280, altura: 800, icone: "notebook" },
   tablet: { nome: "Tablet", largura: 768, altura: 1024, icone: "tablet" },
   celular: { nome: "Celular", largura: 390, altura: 844, icone: "celular" },
 };
