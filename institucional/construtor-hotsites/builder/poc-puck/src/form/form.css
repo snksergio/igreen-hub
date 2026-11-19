@@ -104,6 +104,7 @@
   font-weight: 600;
   color: var(--fm-apoio);
 }
+/* O mesmo X da conversa: discreto, ganha fundo só ao passar o mouse */
 .fm-fechar {
   display: grid;
   place-items: center;
@@ -111,10 +112,15 @@
   width: 36px;
   height: 36px;
   border: 0;
-  border-radius: 50%;
-  background: var(--fm-suave);
-  color: var(--fm-texto);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--cv-apoio, var(--fm-apoio));
   cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.fm-fechar:hover {
+  background: var(--cv-suave, var(--fm-suave));
+  color: var(--cv-texto, var(--fm-texto));
 }
 .fm-fechar svg {
   width: 18px;

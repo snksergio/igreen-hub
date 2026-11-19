@@ -1041,244 +1041,572 @@ textarea.cv-in {
   }
 }
 
-/* ---------- Tela final: ingresso (crachá) à esquerda, parabéns à direita ---------- */
+/* ---------- Tela final: o ingresso pendurado à esquerda, a confirmação à direita ----------
+   No jeito de um app de ingressos: fundo neutro (o mesmo da conversa), um ingresso de papel preso
+   por uma alça no alto do modal e a confirmação centrada, com selo, evento, data e um botão escuro.
+   O ingresso cai do alto, estica a alça e balança até parar, como o crachá do rodapé do kit Live. */
+.fm-fundo:has(.fm-sucesso) {
+  background: rgba(10, 12, 14, 0.42);
+}
+.fm-fundo[data-tema="live"]:has(.fm-sucesso) {
+  background: rgba(0, 0, 0, 0.58);
+}
 .fm-modal:has(.fm-sucesso) {
-  width: min(860px, 100%);
+  position: relative;
+  width: min(900px, 100%);
+  border: 1px solid var(--cv-linha-forte);
+  border-radius: 26px;
+  background: var(--cv-painel);
+  box-shadow: 0 30px 70px -20px rgba(17, 19, 24, 0.35), 0 8px 22px rgba(17, 19, 24, 0.08);
 }
-.fm-sucesso {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: 32px;
-  padding: 28px;
-  border-radius: 20px;
-  background: var(--fm-suave);
+.fm-fundo[data-tema="live"] .fm-modal:has(.fm-sucesso) {
+  box-shadow: 0 30px 80px -16px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
-@media (max-width: 720px) {
-  .fm-sucesso {
-    grid-template-columns: minmax(0, 1fr);
-    justify-items: center;
-    gap: 22px;
-    padding: 20px;
-  }
-}
-.fm-sucesso-txt {
-  display: grid;
-  gap: 12px;
-  justify-items: start;
-  min-width: 0;
-}
-.fm-sucesso-tit {
-  margin: 0;
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.025em;
-  color: var(--fm-texto);
-}
-.fm-sucesso-sub {
-  margin: -4px 0 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--fm-acento-forte);
-}
-.fm-sucesso-txt .fm-texto {
-  margin: 0;
-}
-.fm-passos-ok {
-  display: grid;
-  gap: 8px;
-  margin: 2px 0;
+/* Sem cabeçalho: só o X, no canto */
+.fm-modal:has(.fm-sucesso) > .fm-modal-topo {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
   padding: 0;
-  list-style: none;
-  font-size: 14px;
-  color: var(--fm-apoio);
+  border: 0;
 }
-.fm-passos-ok li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.fm-modal:has(.fm-sucesso) .fm-modal-evento {
+  display: none;
 }
-.fm-passos-ok li::before {
-  content: "";
-  flex: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--fm-linha);
-}
-.fm-passos-ok li[data-ok] {
-  color: var(--fm-texto);
-}
-.fm-passos-ok li[data-ok]::before {
-  background: var(--fm-acento)
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E")
-    center / 13px no-repeat;
-}
-.fm-fundo[data-tema="live"] .fm-passos-ok li[data-ok]::before,
-.fm-pagina[data-tema="live"] .fm-passos-ok li[data-ok]::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2306180d' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E");
-}
-.fm-sucesso-txt .fm-agenda {
-  width: 100%;
-}
-.fm-msg {
-  width: 100%;
-}
-.fm-msg summary {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--fm-acento-forte);
-  cursor: pointer;
-}
-.fm-msg[open] summary {
-  margin-bottom: 10px;
+.fm-modal-corpo:has(> .fm-sucesso) {
+  padding: 0;
 }
 
-/* O crachá */
-.tk {
-  position: relative;
-  width: 296px;
-  max-width: 100%;
-  border-radius: 22px;
-  background: var(--fm-fundo);
-  color: var(--fm-texto);
-  box-shadow: 0 18px 40px rgba(10, 30, 18, 0.16), 0 0 0 1px var(--fm-linha);
-  transform: rotate(-1.5deg);
-  animation: tk-chega 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-@keyframes tk-chega {
-  from {
-    opacity: 0;
-    transform: rotate(-6deg) translateY(16px) scale(0.96);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .tk {
-    animation: none;
-  }
-}
-.tk-topo {
-  position: relative;
+.fm-sucesso {
+  --tk-fundo: var(--cv-painel);
   display: grid;
-  gap: 3px;
-  padding: 18px 20px 22px;
-  border-radius: 22px 22px 0 0;
-  background: radial-gradient(130% 120% at 100% 0%, rgba(127, 227, 107, 0.55), transparent 55%), linear-gradient(150deg, #003d1f, #00803f 70%);
-  color: #fff;
+  grid-template-columns: minmax(300px, 44%) minmax(0, 1fr);
+  min-height: min(640px, calc(100dvh - 40px));
+  color: var(--cv-texto);
+}
+.fm-sucesso-ingresso {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-bottom: 44px;
   overflow: hidden;
 }
-.tk-topo::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1.4px);
-  background-size: 12px 12px;
-  mask-image: linear-gradient(200deg, #000, transparent 60%);
-  pointer-events: none;
-}
-.fm-fundo[data-tema="live"] .tk-topo,
-.fm-pagina[data-tema="live"] .tk-topo {
-  background: radial-gradient(130% 120% at 100% 0%, rgba(168, 255, 53, 0.5), transparent 55%), linear-gradient(150deg, #04130a, #0d3a1b 75%);
-}
-.tk-marca {
-  display: inline-flex;
+.fm-sucesso-txt {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 700;
+  justify-content: center;
+  padding: 56px 48px 48px 24px;
+  text-align: center;
 }
-.tk-marca svg {
-  width: 16px;
-  height: 16px;
+.fm-sucesso-selo svg {
+  display: block;
+  width: 58px;
+  height: 58px;
+}
+.fm-sucesso-selo-fundo {
+  fill: var(--cv-acento);
+}
+.fm-sucesso-selo-sinal {
   fill: none;
-  stroke: currentColor;
+  stroke: #fff;
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.tk-tipo {
-  position: absolute;
-  top: 16px;
-  right: 18px;
-  padding: 3px 9px;
-  border: 1px solid rgba(255, 255, 255, 0.45);
+.fm-sucesso[data-tom="aviso"] .fm-sucesso-selo-fundo {
+  fill: #e0a100;
+}
+.fm-sucesso-tit {
+  margin: 16px 0 6px;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--cv-acento-forte);
+}
+.fm-sucesso[data-tom="aviso"] .fm-sucesso-tit {
+  color: #8a5a00;
+}
+.fm-fundo[data-tema="live"] .fm-sucesso[data-tom="aviso"] .fm-sucesso-tit,
+.fm-pagina[data-tema="live"] .fm-sucesso[data-tom="aviso"] .fm-sucesso-tit {
+  color: #ffcf6b;
+}
+.fm-sucesso-sub {
+  max-width: 360px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--cv-apoio);
+}
+.fm-sucesso-sub b {
+  font-weight: 500;
+  color: var(--cv-texto);
+}
+.fm-sucesso-linha {
+  width: min(100%, 340px);
+  margin: 26px 0 22px;
+  border: 0;
+  border-top: 1px solid var(--cv-linha);
+}
+.fm-sucesso-quando {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  font-size: 16px;
+}
+.fm-sucesso-quando i {
+  font-style: normal;
+  color: var(--cv-fraco);
+}
+.fm-sucesso-tipo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 14px 5px 10px;
   border-radius: 999px;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  background: var(--cv-texto);
+  color: var(--cv-painel);
+  font-size: 12.5px;
+  font-weight: 600;
 }
-.tk-evento {
-  margin-top: 18px;
-  font-size: 21px;
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.015em;
+.fm-sucesso-tipo svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
 }
-.tk-quando,
-.tk-onde {
-  font-size: 13px;
-  opacity: 0.88;
+.fm-sucesso-acoes {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  width: min(100%, 340px);
+  margin-top: 30px;
 }
-/* Picote: linha tracejada com dois recortes nas laterais, na cor do fundo atrás do crachá */
-.tk-picote {
+.fm-sucesso-bt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 52px;
+  border-radius: 999px;
+  background: var(--cv-texto);
+  color: var(--cv-painel);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.fm-sucesso-bt:hover {
+  opacity: 0.9;
+}
+.fm-sucesso-bt:active {
+  transform: scale(0.98);
+}
+.fm-sucesso-agenda {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--cv-apoio);
+}
+.fm-sucesso-agenda a,
+.fm-sucesso-agenda button,
+.fm-sucesso-nota button,
+.fm-sucesso-extra a {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--cv-texto);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--cv-linha-hover);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.fm-sucesso-nota {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  max-width: 360px;
+  margin: 22px 0 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--cv-apoio);
+  text-align: left;
+}
+.fm-sucesso-nota svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+.fm-sucesso-msg {
+  width: min(100%, 380px);
+  margin-top: 14px;
+  text-align: left;
+}
+.fm-sucesso-extra {
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  color: var(--cv-fraco);
+}
+.fm-sucesso-bt:focus-visible,
+.fm-sucesso-agenda :is(a, button):focus-visible,
+.fm-sucesso-nota button:focus-visible {
+  outline: 2px solid var(--cv-acento);
+  outline-offset: 3px;
+}
+/* Depois que o ingresso cai, o selo aparece e o texto sobe de leve */
+.fm-sucesso-txt > * {
+  animation: fm-sucesso-entra 0.5s 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.fm-sucesso-txt > .fm-sucesso-selo {
+  animation: fm-sucesso-selo 0.6s 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes fm-sucesso-entra {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes fm-sucesso-selo {
+  from {
+    opacity: 0;
+    transform: scale(0.5) rotate(-20deg);
+  }
+}
+
+/* ---------- O ingresso pendurado ---------- */
+.tk-pendurado {
+  animation: tk-cai 0.95s 0.08s cubic-bezier(0.32, 0.72, 0.2, 1) both;
+}
+@keyframes tk-cai {
+  0% {
+    transform: translateY(-112%);
+  }
+  55% {
+    transform: translateY(2.5%);
+  }
+  76% {
+    transform: translateY(-1%);
+  }
+  100% {
+    transform: none;
+  }
+}
+/* Gira em volta do ponto de cima da alça; a sombra segue o recorte do papel */
+.tk-balanco {
   position: relative;
-  height: 0;
-  margin: 0 18px;
-  border-top: 2px dashed var(--fm-linha);
+  display: grid;
+  justify-items: center;
+  transform-origin: 50% 0;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  filter: drop-shadow(0 20px 22px rgba(10, 20, 15, 0.22)) drop-shadow(0 2px 3px rgba(10, 20, 15, 0.12));
 }
-.tk-picote::before,
-.tk-picote::after {
-  content: "";
+.tk-balanco[data-arrastando] {
+  cursor: grabbing;
+}
+.tk-alca {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 64px;
+  height: 96px;
+  margin-bottom: -22px;
+  overflow: visible;
+}
+.tk-alca path {
+  fill: none;
+  stroke: #2a2c31;
+  stroke-width: 3.4;
+  stroke-linecap: round;
+}
+.fm-fundo[data-tema="live"] .tk-alca path,
+.fm-pagina[data-tema="live"] .tk-alca path {
+  stroke: #5b5f68;
+}
+/* Pendurado, o papel ganha a borda de baixo picotada */
+.tk-balanco .tk {
+  box-shadow: none;
+  -webkit-mask: linear-gradient(#000 0 0) top / 100% calc(100% - 6px) no-repeat, radial-gradient(circle 4px at 50% 100%, #0000 97%, #000 100%) bottom / 12px 6px repeat-x;
+  mask: linear-gradient(#000 0 0) top / 100% calc(100% - 6px) no-repeat, radial-gradient(circle 4px at 50% 100%, #0000 97%, #000 100%) bottom / 12px 6px repeat-x;
+}
+
+/* ---------- O ingresso de papel ---------- */
+.tk {
+  --tk-papel: #f3f1eb;
+  --tk-tinta: #18191d;
+  --tk-apoio: #6b6d73;
+  --tk-linha: rgba(24, 25, 29, 0.24);
+  --tk-mono: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  position: relative;
+  width: 268px;
+  max-width: 100%;
+  border-radius: 12px;
+  background: var(--tk-papel);
+  color: var(--tk-tinta);
+  font-family: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  text-align: left;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 22px 40px -18px rgba(10, 20, 15, 0.45);
+}
+/* O furo da alça, com o ilhós */
+.tk-furo {
   position: absolute;
-  top: -12px;
-  width: 22px;
-  height: 22px;
+  top: 12px;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin-left: -9px;
   border-radius: 50%;
-  background: var(--fm-suave);
+  background: var(--tk-fundo, #fff);
+  box-shadow: 0 0 0 3.5px #2a2c31, inset 0 1px 2px rgba(0, 0, 0, 0.3);
 }
-.tk-picote::before {
-  left: -30px;
-}
-.tk-picote::after {
-  right: -30px;
-}
-.tk-corpo {
+.tk-cab {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 12px;
-  padding: 16px 18px 18px 20px;
+  padding: 42px 18px 14px;
 }
-.tk-pessoa {
+.tk-marca {
   display: grid;
-  gap: 1px;
-  min-width: 0;
+  justify-items: start;
+  gap: 7px;
 }
-.tk-pessoa strong {
-  margin-bottom: 8px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 16px;
+.tk-marca b {
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.035em;
 }
-.tk-pessoa strong:last-child {
-  margin-bottom: 0;
+.tk-selo {
+  padding: 2px 9px;
+  border: 1.2px solid var(--tk-tinta);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.tk-logo {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #00843f 0%, #00a859 55%, #6fdc66 100%);
+}
+.tk-logo svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* Picote: linha tracejada com dois recortes nas laterais, na cor do fundo atrás do ingresso */
+.tk-corte {
+  position: relative;
+  height: 0;
+  margin: 0 12px;
+  border-top: 1.5px dashed var(--tk-linha);
+}
+.tk-corte::before,
+.tk-corte::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--tk-fundo, #fff);
+}
+.tk-corte::before {
+  left: -20px;
+}
+.tk-corte::after {
+  right: -20px;
 }
 .tk-rot {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  margin-bottom: 3px;
+  font-family: var(--tk-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--fm-fraco);
+  color: var(--tk-apoio);
+}
+.tk-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 12px 18px;
+}
+.tk-info > div {
+  display: grid;
+  align-content: start;
+  gap: 1px;
+  min-width: 0;
+  font-family: var(--tk-mono);
+  font-size: 10.5px;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+.tk-info > div + div {
+  padding-left: 12px;
+  border-left: 1px solid var(--tk-linha);
+}
+/* A arte do evento, nas cores da marca */
+.tk-arte {
+  position: relative;
+  height: 152px;
+  margin: 0 12px 12px;
+  padding: 12px;
+  border-radius: 6px;
+  background: #0e1512;
+  color: #fff;
+  overflow: hidden;
+}
+.tk-arte strong {
+  position: relative;
+  z-index: 1;
+  display: -webkit-box;
+  max-width: 62%;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+.tk-arte-pe {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  z-index: 1;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1.15;
+  opacity: 0.9;
+}
+.tk-arte i {
+  position: absolute;
+  display: block;
+}
+.tk-f1 {
+  top: 0;
+  right: 0;
+  width: 78px;
+  height: 78px;
+  border-radius: 0 0 0 78px;
+  background: #a8ff35;
+}
+.tk-f2 {
+  right: 44px;
+  bottom: 0;
+  width: 38px;
+  height: 92px;
+  border-radius: 19px 19px 0 0;
+  background: #00a859;
+}
+.tk-f3 {
+  right: 0;
+  bottom: 0;
+  width: 40px;
+  height: 118px;
+  border-radius: 40px 0 0 0;
+  background: #0b6b3a;
+}
+.tk-f4 {
+  left: 64px;
+  bottom: -18px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #d8f6e3;
+}
+.tk-dados {
+  display: grid;
+  grid-template-columns: 0.9fr 1fr 1.25fr;
+  margin: 0;
+  padding: 12px 16px;
+}
+.tk-dados > div {
+  min-width: 0;
+}
+.tk-dados > div + div {
+  margin-left: 10px;
+  padding-left: 10px;
+  border-left: 1px solid var(--tk-linha);
+}
+.tk-dados dt {
+  margin-bottom: 3px;
+  font-family: var(--tk-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tk-apoio);
+}
+.tk-dados dd {
+  margin: 0;
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 .tk-codigo {
-  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 18px;
-  letter-spacing: 0.14em;
+  font-family: var(--tk-mono);
+  letter-spacing: 0.06em;
+}
+.tk-pe {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px 18px 14px;
 }
 .tk-qr .fm-qr {
   display: block;
+  border-radius: 4px;
+}
+.tk-pe-txt {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+  font-family: var(--tk-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.tk-pe-txt .tk-rot {
+  margin: 0;
+  color: var(--tk-tinta);
+}
+.tk-url {
+  color: var(--tk-apoio);
+}
+.tk-seta {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--tk-tinta);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .tk[data-estado="espera"] .tk-qr,
 .tk[data-estado="pendente"] .tk-qr {
@@ -1287,16 +1615,51 @@ textarea.cv-in {
 }
 .tk-carimbo {
   position: absolute;
-  right: 14px;
-  bottom: 70px;
-  padding: 5px 10px;
-  border: 2px solid var(--fm-aviso);
+  top: 54%;
+  left: 50%;
+  z-index: 3;
+  padding: 6px 12px;
+  border: 2.5px solid #b77900;
   border-radius: 8px;
-  background: var(--fm-fundo);
-  color: var(--fm-aviso);
-  font-size: 11.5px;
+  background: rgba(243, 241, 235, 0.94);
+  color: #8a5a00;
+  font-size: 12.5px;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  transform: rotate(-8deg);
+  white-space: nowrap;
+  transform: translate(-50%, -50%) rotate(-10deg);
+}
+.tk[data-estado="ok"] .tk-carimbo {
+  border-color: #6b6d73;
+  color: #4a4c52;
+}
+
+@media (max-width: 720px) {
+  .fm-modal:has(.fm-sucesso) {
+    border-width: 1px 0 0;
+    border-radius: 24px 24px 0 0;
+  }
+  .fm-sucesso {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+  /* No celular o ingresso fica menor, para a confirmação aparecer sem rolar muito */
+  .fm-sucesso-ingresso {
+    padding-bottom: 6px;
+    zoom: 0.8;
+  }
+  .tk-alca {
+    height: 72px;
+  }
+  .fm-sucesso-txt {
+    padding: 18px 24px 32px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tk-pendurado,
+  .fm-sucesso-txt > *,
+  .fm-sucesso-txt > .fm-sucesso-selo {
+    animation: none;
+  }
 }

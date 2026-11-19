@@ -355,6 +355,6 @@
   border-radius: 20px;
   background: var(--fm-suave);
 }
-.ig-cracha .tk {
-  transform: none;
+.ig-cracha {
+  --tk-fundo: var(--fm-suave);
 }
