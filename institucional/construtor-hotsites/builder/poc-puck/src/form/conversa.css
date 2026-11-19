@@ -1,76 +1,90 @@
-/* Inscrição em conversa e a tela final com o ingresso (crachá) e o parabéns. Usa as variáveis do
-   form.css (--fm-*) e as daqui (--cv-*), então vale no tema claro e no escuro do kit iGreen Live.
-   A conversa segue o painel do assistente do construtor: vidro, brilho verde atrás, esfera da marca. */
+/* Inscrição em conversa e a tela final com o ingresso (crachá) e o parabéns.
+   A conversa segue o chat do assistente do construtor: cores neutras (branco e cinzas), a esfera
+   da marca falando sem balão e o verde só no que é ação principal. Não tenta casar com o template
+   da página: no kit Live ela só fica no escuro neutro. */
 
 .fm-fundo,
 .fm-pagina {
-  --cv-vidro: rgba(250, 252, 251, 0.82);
-  --cv-bolha: rgba(255, 255, 255, 0.86);
-  --cv-bolha-borda: rgba(15, 30, 22, 0.08);
-  --cv-eu: #dcf3e6;
-  --cv-eu-texto: #0b3520;
-  --cv-eu-apoio: #44705a;
-  --cv-chip: rgba(255, 255, 255, 0.78);
-  --cv-chip-borda: rgba(0, 140, 72, 0.34);
-  --cv-chip-texto: #00703a;
-  --cv-trilho: rgba(15, 30, 22, 0.09);
-  --cv-reflexo: rgba(255, 255, 255, 0.75);
-  --cv-sombra: 0 1px 2px rgba(10, 30, 18, 0.05), 0 8px 18px -12px rgba(10, 30, 18, 0.24);
+  --cv-vidro: rgba(255, 255, 255, 0.94);
+  --cv-painel: #ffffff;
+  --cv-texto: #17181c;
+  --cv-apoio: #6d717a;
+  --cv-fraco: #9da1a9;
+  --cv-linha: #ededf0;
+  --cv-linha-forte: #e1e2e6;
+  --cv-linha-hover: #d3d5da;
+  --cv-suave: #f5f5f7;
+  --cv-eu: #ebebef;
+  --cv-eu-hover: #e1e1e6;
+  --cv-acento: #00a859;
+  --cv-acento-forte: #007a3d;
+  --cv-acento-suave: #e8f6ef;
+  --cv-acento-borda: #a7dbbf;
+  --cv-verde: linear-gradient(135deg, #00843f 0%, #00a859 55%, #6fdc66 100%);
+  --cv-sombra: 0 1px 2px rgba(17, 19, 24, 0.04), 0 8px 24px -12px rgba(17, 19, 24, 0.16);
 }
 .fm-fundo[data-tema="live"],
 .fm-pagina[data-tema="live"] {
-  --cv-vidro: rgba(8, 20, 13, 0.82);
-  --cv-bolha: rgba(243, 246, 236, 0.07);
-  --cv-bolha-borda: rgba(243, 246, 236, 0.09);
-  --cv-eu: rgba(168, 255, 53, 0.15);
-  --cv-eu-texto: #f1fbe4;
-  --cv-eu-apoio: rgba(214, 255, 160, 0.68);
-  --cv-chip: rgba(243, 246, 236, 0.05);
-  --cv-chip-borda: rgba(168, 255, 53, 0.38);
-  --cv-chip-texto: #c6ff7a;
-  --cv-trilho: rgba(243, 246, 236, 0.1);
-  --cv-reflexo: rgba(255, 255, 255, 0.06);
-  --cv-sombra: 0 10px 22px -14px rgba(0, 0, 0, 0.7);
+  --cv-vidro: rgba(26, 27, 31, 0.95);
+  --cv-painel: #1f2024;
+  --cv-texto: #ececf0;
+  --cv-apoio: #a3a7b0;
+  --cv-fraco: #767a84;
+  --cv-linha: #2a2c32;
+  --cv-linha-forte: #363940;
+  --cv-linha-hover: #474a52;
+  --cv-suave: #232429;
+  --cv-eu: #2a2c31;
+  --cv-eu-hover: #33353b;
+  --cv-acento-forte: #4cd494;
+  --cv-acento-suave: rgba(0, 168, 89, 0.16);
+  --cv-acento-borda: rgba(0, 168, 89, 0.5);
+  --cv-sombra: 0 10px 26px -14px rgba(0, 0, 0, 0.6);
+}
+/* No Live, o ingresso, o anexo e o pagamento dentro da conversa também ficam no escuro neutro */
+.fm-fundo[data-tema="live"] .cv,
+.fm-pagina[data-tema="live"] .cv {
+  --fm-fundo: #1f2024;
+  --fm-texto: #ececf0;
+  --fm-apoio: #a3a7b0;
+  --fm-fraco: #767a84;
+  --fm-linha: #2a2c32;
+  --fm-campo: #18191c;
+  --fm-campo-borda: #363940;
+  --fm-acento: #00a859;
+  --fm-acento-forte: #4cd494;
+  --fm-sobre: #ffffff;
+  --fm-suave: #26272c;
+  --fm-ok-fundo: rgba(0, 168, 89, 0.16);
 }
 
-/* ---------- O modal vira vidro quando a conversa está nele ---------- */
+/* ---------- O modal da conversa: maior, neutro, com vidro leve ---------- */
 /* Sem desfoque no fundo escuro: um filtro ali isolaria o vidro do modal, que deixaria de desfocar a página */
 .fm-fundo:has(.cv) {
-  background: rgba(6, 12, 9, 0.36);
+  padding: 20px;
+  background: rgba(10, 12, 14, 0.42);
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
 .fm-fundo[data-tema="live"]:has(.cv) {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.55);
 }
 .fm-modal:has(> .fm-modal-corpo > .cv) {
   position: relative;
   isolation: isolate;
   grid-template-rows: minmax(0, 1fr);
-  width: min(580px, 100%);
-  height: min(720px, calc(100dvh - 32px));
-  border-radius: 26px;
+  width: min(780px, 100%);
+  height: min(880px, calc(100dvh - 40px));
+  max-height: none;
+  border: 1px solid var(--cv-linha-forte);
+  border-radius: 24px;
   background: var(--cv-vidro);
-  -webkit-backdrop-filter: blur(30px) saturate(1.7);
-  backdrop-filter: blur(30px) saturate(1.7);
-  box-shadow: 0 32px 80px -20px rgba(0, 32, 16, 0.5), 0 8px 24px rgba(10, 20, 15, 0.14), inset 0 1px 0 var(--cv-reflexo);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+  backdrop-filter: blur(28px) saturate(1.4);
+  box-shadow: 0 30px 70px -20px rgba(17, 19, 24, 0.35), 0 8px 22px rgba(17, 19, 24, 0.08);
 }
-/* Borda que puxa para o verde no canto de cima, como no painel do assistente */
-.fm-modal:has(> .fm-modal-corpo > .cv)::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  padding: 1px;
-  border-radius: inherit;
-  background: linear-gradient(165deg, rgba(0, 168, 89, 0.5), rgba(0, 168, 89, 0) 36%, rgba(15, 30, 22, 0.12) 100%);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-  pointer-events: none;
-}
-.fm-fundo[data-tema="live"] .fm-modal:has(> .fm-modal-corpo > .cv)::before {
-  background: linear-gradient(165deg, rgba(168, 255, 53, 0.42), rgba(168, 255, 53, 0) 36%, rgba(243, 246, 236, 0.1) 100%);
+.fm-fundo[data-tema="live"] .fm-modal:has(> .fm-modal-corpo > .cv) {
+  box-shadow: 0 30px 80px -16px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 /* O cabeçalho da conversa (com o X) substitui o do modal */
 .fm-modal:has(> .fm-modal-corpo > .cv) > .fm-modal-topo {
@@ -83,18 +97,22 @@
 }
 .fa-caixa .cv,
 .fc-cartao .cv {
-  height: min(680px, 80vh);
+  height: min(720px, 82vh);
   margin: -8px -4px -4px;
 }
 .fa-caixa .cv-aura,
 .fc-cartao .cv-aura {
   display: none;
 }
-@media (max-width: 560px) {
+@media (max-width: 600px) {
+  .fm-fundo:has(.cv) {
+    padding: 0;
+  }
   .fm-modal:has(> .fm-modal-corpo > .cv) {
     width: 100%;
     height: 94dvh;
-    border-radius: 24px 24px 0 0;
+    border-width: 1px 0 0;
+    border-radius: 22px 22px 0 0;
   }
 }
 
@@ -105,38 +123,29 @@
   grid-template-rows: auto minmax(0, 1fr) auto;
   min-height: 0;
   overflow: hidden;
+  color: var(--cv-texto);
+  /* a conversa fica numa coluna de leitura no meio, como nos chats de IA */
+  --cv-coluna: max(20px, calc((100% - 620px) / 2));
 }
-/* Brilhos verdes atrás do conteúdo: é o que faz o vidro das bolhas aparecer */
+/* Um brilho verde bem leve no canto, o mesmo do painel do assistente */
 .cv-aura {
   position: absolute;
-  top: -170px;
-  right: -130px;
+  top: -200px;
+  right: -160px;
   z-index: -1;
-  width: 380px;
-  height: 380px;
+  width: 420px;
+  height: 420px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(0, 168, 89, 0.22), rgba(127, 227, 107, 0.08) 45%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 168, 89, 0.12), rgba(127, 227, 107, 0.05) 45%, transparent 70%);
   pointer-events: none;
 }
-.cv-aura-2 {
-  top: auto;
-  right: auto;
-  bottom: 70px;
-  left: -180px;
-  width: 340px;
-  height: 340px;
-  background: radial-gradient(circle, rgba(127, 227, 107, 0.16), rgba(0, 168, 89, 0.05) 50%, transparent 70%);
-}
 .fm-fundo[data-tema="live"] .cv-aura {
-  background: radial-gradient(circle, rgba(168, 255, 53, 0.16), rgba(60, 125, 18, 0.08) 45%, transparent 70%);
-}
-.fm-fundo[data-tema="live"] .cv-aura-2 {
-  background: radial-gradient(circle, rgba(168, 255, 53, 0.08), transparent 65%);
+  opacity: 0.7;
 }
 
 /* ---------- A esfera da marca (a mesma do assistente) ---------- */
 .cv-orbe {
-  --t: 26px;
+  --t: 24px;
   --sombra-orbe: inset 0 0 0 1px rgba(255, 255, 255, 0.3), inset 0 calc(var(--t) * -0.14) calc(var(--t) * 0.28) rgba(0, 48, 24, 0.38),
     0 calc(var(--t) * 0.16) calc(var(--t) * 0.46) calc(var(--t) * -0.16) rgba(0, 150, 75, 0.55);
   position: relative;
@@ -162,14 +171,8 @@
   border-radius: 50%;
   background: radial-gradient(circle at 34% 24%, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0) 26%);
 }
-.fm-fundo[data-tema="live"] .cv-orbe,
-.fm-pagina[data-tema="live"] .cv-orbe {
-  --sombra-orbe: inset 0 0 0 1px rgba(255, 255, 255, 0.25), inset 0 calc(var(--t) * -0.14) calc(var(--t) * 0.28) rgba(20, 50, 0, 0.45),
-    0 calc(var(--t) * 0.16) calc(var(--t) * 0.46) calc(var(--t) * -0.16) rgba(168, 255, 53, 0.45);
-  background: radial-gradient(circle at 50% 88%, #d4ff8f 0%, #8ee02c 42%, #2f6b0c 100%);
-}
 .cv-orbe-g {
-  --t: 40px;
+  --t: 34px;
 }
 .cv-orbe-ativo {
   animation: cv-orbe-respira 2.4s ease-in-out infinite;
@@ -195,49 +198,43 @@
   }
 }
 
-/* ---------- Cabeçalho: quem fala, o status e o progresso por etapas ---------- */
+/* ---------- Cabeçalho: quem fala e uma linha fina de progresso ---------- */
 .cv-topo {
-  display: grid;
-  gap: 14px;
-  padding: 16px 16px 14px 18px;
-  border-bottom: 1px solid var(--cv-trilho);
-}
-.cv-quem {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
-  min-width: 0;
+  padding: 14px 14px 14px 20px;
+  border-bottom: 1px solid var(--cv-linha);
 }
-.cv-quem-txt {
+.cv-quem {
   display: grid;
   flex: 1;
   gap: 1px;
   min-width: 0;
+  line-height: 1.25;
 }
-.cv-quem-txt strong {
+.cv-quem strong {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 15.5px;
-  font-weight: 650;
+  font-size: 15px;
+  font-weight: 600;
   letter-spacing: -0.01em;
-  color: var(--fm-texto);
 }
-.cv-quem-txt span {
+.cv-quem span {
   font-size: 12.5px;
-  color: var(--fm-apoio);
-}
-.cv-quem-txt span[data-vivo] {
-  color: var(--cv-chip-texto);
+  color: var(--cv-apoio);
 }
 .cv-previa {
   flex: none;
   padding: 3px 10px;
   border-radius: 999px;
-  background: var(--fm-aviso-fundo);
-  color: var(--fm-aviso);
+  background: var(--cv-suave);
+  box-shadow: inset 0 0 0 1px var(--cv-linha-forte);
+  color: var(--cv-apoio);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
 }
 .cv-fechar {
   display: grid;
@@ -245,97 +242,99 @@
   flex: none;
   width: 36px;
   height: 36px;
-  border: 1px solid var(--cv-bolha-borda);
-  border-radius: 50%;
-  background: var(--cv-chip);
-  color: var(--fm-texto);
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--cv-apoio);
   cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.cv-fechar:hover {
+  background: var(--cv-suave);
+  color: var(--cv-texto);
 }
 .cv-fechar svg {
-  width: 17px;
-  height: 17px;
+  width: 18px;
+  height: 18px;
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
   stroke-linecap: round;
 }
-.cv-prog {
-  display: grid;
-  grid-auto-columns: minmax(0, 1fr);
-  grid-auto-flow: column;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.cv-prog li {
-  display: grid;
-  gap: 6px;
-  min-width: 0;
-}
-.cv-prog-barra {
-  position: relative;
-  height: 4px;
-  border-radius: 999px;
-  background: var(--cv-trilho);
-  overflow: hidden;
-}
-.cv-prog-barra i {
+/* O progresso não fala: é só a borda de baixo do cabeçalho se enchendo */
+.cv-linha-prog {
   position: absolute;
-  inset: 0 auto 0 0;
-  border-radius: inherit;
-  background: var(--fm-acento);
-  transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  pointer-events: none;
 }
-.cv-prog-rot {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 11.5px;
-  font-weight: 500;
-  color: var(--fm-fraco);
-}
-.cv-prog li[data-estado="feito"] .cv-prog-rot {
-  color: var(--fm-apoio);
-}
-.cv-prog li[aria-current="step"] .cv-prog-rot {
-  color: var(--fm-texto);
-  font-weight: 650;
-}
-.cv-prog[data-um] .cv-prog-rot {
-  display: none;
-}
-@media (max-width: 420px) {
-  .cv-prog li:not([aria-current="step"]) .cv-prog-rot {
-    visibility: hidden;
-  }
+.cv-linha-prog i {
+  display: block;
+  height: 100%;
+  border-radius: 0 2px 2px 0;
+  background: var(--cv-acento);
+  transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* ---------- A conversa ---------- */
 .cv-log {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 18px 16px 16px;
+  gap: 18px;
+  padding: 28px var(--cv-coluna) 24px;
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: var(--cv-trilho) transparent;
+  scrollbar-color: var(--cv-linha-forte) transparent;
 }
 .cv-par {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 18px;
 }
-.cv-linha {
+/* Fala do assistente: esfera ao lado, texto sem balão */
+.cv-fala {
   display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  animation: cv-entra 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  align-items: flex-start;
+  gap: 12px;
+  animation: cv-entra 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
-.cv-linha[data-de="eu"] {
-  align-items: center;
-  justify-content: flex-end;
+.cv-fala > .cv-orbe {
+  margin-top: 1px;
+}
+.cv-fala-txt {
+  display: grid;
+  flex: 1;
+  gap: 8px;
+  min-width: 0;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.cv-fala-txt p {
+  margin: 0;
+}
+.cv-fala-txt b {
+  font-weight: 600;
+}
+.cv-fala[data-alerta] .cv-fala-txt > p:first-child {
+  color: var(--cv-texto);
+  font-weight: 500;
+}
+.cv-ajuda {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--cv-apoio);
+}
+.cv-termo {
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--cv-suave);
+  box-shadow: inset 0 0 0 1px var(--cv-linha);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--cv-apoio);
 }
 @keyframes cv-entra {
   from {
@@ -343,81 +342,17 @@
     transform: translateY(6px);
   }
 }
-/* Mensagens seguidas do assistente: a esfera aparece só na última, como nos apps de conversa. */
-.cv-linha[data-de="bot"]:has(+ .cv-linha[data-de="bot"]) .cv-orbe {
-  visibility: hidden;
-}
-.cv-bolha {
-  max-width: min(82%, 430px);
-  padding: 10px 14px;
-  border-radius: 18px;
-  font-size: 14.5px;
-  line-height: 1.45;
-  overflow-wrap: anywhere;
-}
-.cv-bolha p {
-  margin: 0;
-}
-.cv-bolha p + p {
-  margin-top: 6px;
-}
-.cv-bolha b {
-  font-weight: 600;
-}
-.cv-linha[data-de="bot"] .cv-bolha {
-  border: 1px solid var(--cv-bolha-borda);
-  border-bottom-left-radius: 6px;
-  background: var(--cv-bolha);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  box-shadow: var(--cv-sombra);
-  color: var(--fm-texto);
-}
-.cv-linha[data-de="eu"] .cv-bolha {
-  border-bottom-right-radius: 6px;
-  background: var(--cv-eu);
-  color: var(--cv-eu-texto);
-}
-.cv-bolha[data-alerta] {
-  border-color: color-mix(in srgb, var(--fm-aviso) 25%, transparent) !important;
-  background: var(--fm-aviso-fundo) !important;
-  color: var(--fm-aviso) !important;
-  font-weight: 500;
-}
-.cv-linha[data-editando] .cv-bolha {
-  box-shadow: 0 0 0 2px var(--fm-acento);
-}
-.cv-ajuda {
-  font-size: 12.5px;
-  color: var(--fm-apoio);
-}
-.cv-etapa {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 10px 0 2px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--fm-fraco);
-}
-.cv-etapa::before,
-.cv-etapa::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--cv-trilho);
-}
 .cv-digitando {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 13px 15px;
+  height: 24px;
 }
 .cv-digitando i {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: var(--fm-fraco);
+  background: var(--cv-fraco);
   animation: cv-pulo 1s ease-in-out infinite;
 }
 .cv-digitando i:nth-child(2) {
@@ -426,53 +361,81 @@
 .cv-digitando i:nth-child(3) {
   animation-delay: 0.3s;
 }
-.cv-digitando span {
-  margin-left: 8px;
-  font-size: 13.5px;
-  color: var(--fm-apoio);
-}
 @keyframes cv-pulo {
   0%,
   60%,
   100% {
     transform: none;
-    opacity: 0.45;
+    opacity: 0.4;
   }
   30% {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
     opacity: 1;
   }
 }
 
-/* Lápis para corrigir uma resposta */
-.cv-lapis {
-  position: relative;
+/* Resposta da pessoa: balão cinza à direita. Tocar nele corrige. */
+.cv-eu {
+  display: flex;
+  justify-content: flex-end;
+  animation: cv-entra 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.cv-eu-bolha {
+  max-width: min(80%, 460px);
+  padding: 10px 16px;
+  border-radius: 20px 20px 6px 20px;
+  background: var(--cv-eu);
+  color: var(--cv-texto);
+  font-size: 15px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  transition: background 0.15s ease;
+}
+.cv-eu-bt {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.cv-eu-bt .cv-eu-bolha {
+  max-width: min(100%, 460px);
+}
+.cv-eu-bt:hover .cv-eu-bolha {
+  background: var(--cv-eu-hover);
+}
+/* O lápis aparece ao passar o mouse; no celular fica sempre, bem discreto */
+.cv-eu-ic {
   display: grid;
   place-items: center;
   flex: none;
-  width: 30px;
-  height: 30px;
-  padding: 0;
-  border: 1px solid var(--cv-bolha-borda);
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: var(--cv-chip);
-  color: var(--fm-apoio);
-  cursor: pointer;
-  opacity: 0.8;
-  transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  color: var(--cv-apoio);
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
 }
-/* Área de toque maior que o desenho */
-.cv-lapis::before {
-  content: "";
-  position: absolute;
-  inset: -7px;
-}
-.cv-lapis:hover {
+.cv-eu-bt:hover .cv-eu-ic,
+.cv-eu-bt:focus-visible .cv-eu-ic,
+.cv-dado:hover .cv-eu-ic,
+.cv-dado:focus-visible .cv-eu-ic {
   opacity: 1;
-  border-color: var(--cv-chip-borda);
-  color: var(--cv-chip-texto);
+  background: var(--cv-suave);
 }
-.cv-lapis svg {
+@media (hover: none) {
+  .cv-eu-ic {
+    opacity: 0.6;
+  }
+}
+.cv-lapis {
   width: 14px;
   height: 14px;
   fill: none;
@@ -482,60 +445,128 @@
   stroke-linejoin: round;
 }
 
-/* O que veio da página: cartão do lado da pessoa, uma linha por dado */
+/* O que veio da página: o mesmo cinza da pessoa, uma linha por dado; tocar na linha corrige */
 .cv-dados {
   display: grid;
-  width: min(86%, 360px);
-  margin: 0;
-  padding: 4px 8px 4px 16px;
-  border-radius: 18px 18px 6px 18px;
+  width: min(86%, 400px);
+  padding: 4px;
+  border-radius: 20px 20px 6px 20px;
   background: var(--cv-eu);
-  color: var(--cv-eu-texto);
 }
 .cv-dado {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  position: relative;
+  display: flex;
   align-items: center;
-  column-gap: 10px;
-  padding: 9px 0;
-  border-top: 1px solid color-mix(in srgb, var(--cv-eu-texto) 10%, transparent);
+  gap: 10px;
+  width: 100%;
+  padding: 9px 8px 9px 14px;
+  border: 0;
+  border-radius: 14px;
+  background: none;
+  color: var(--cv-texto);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
 }
-.cv-dado:first-child {
-  border-top: 0;
+.cv-dado:disabled {
+  cursor: default;
 }
-.cv-dado dt {
-  grid-column: 1;
-  font-size: 11.5px;
-  color: var(--cv-eu-apoio);
+.cv-dado:hover:not(:disabled) {
+  background: var(--cv-eu-hover);
 }
-.cv-dado dd {
-  grid-column: 1;
-  margin: 0;
-  font-size: 14.5px;
-  font-weight: 500;
+/* Linha entre os dados, sem encostar nas bordas */
+.cv-dado + .cv-dado::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 14px;
+  right: 14px;
+  height: 1px;
+  background: color-mix(in srgb, var(--cv-texto) 8%, transparent);
+}
+.cv-dado:hover + .cv-dado::before,
+.cv-dado + .cv-dado:hover::before {
+  opacity: 0;
+}
+.cv-dado-txt {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+.cv-dado-rot {
+  font-size: 12px;
+  color: var(--cv-apoio);
+}
+.cv-dado-val {
+  font-size: 15px;
   overflow-wrap: anywhere;
 }
-.cv-dado .cv-lapis {
-  grid-row: 1 / span 2;
-  grid-column: 2;
-  border-color: color-mix(in srgb, var(--cv-eu-texto) 16%, transparent);
-  background: transparent;
-  color: var(--cv-eu-apoio);
-}
-.cv-dado[data-editando] {
-  margin-inline: -8px;
-  padding-inline: 8px;
-  border-radius: 12px;
-  box-shadow: inset 0 0 0 2px var(--fm-acento);
+.cv-dado-edita {
+  display: grid;
+  gap: 8px;
+  cursor: default;
+  background: var(--cv-painel);
+  box-shadow: 0 0 0 1px var(--cv-linha-forte) !important;
 }
 
-/* ---------- Respostas rápidas: embaixo da pergunta, dentro da conversa ---------- */
+/* Correção no lugar da resposta */
+.cv-corrige {
+  display: grid;
+  gap: 10px;
+  width: min(100%, 460px);
+  padding: 14px;
+  border: 1px solid var(--cv-linha-forte);
+  border-radius: 18px;
+  background: var(--cv-painel);
+  box-shadow: var(--cv-sombra);
+}
+.cv-corrige-tit {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--cv-apoio);
+}
+.cv-inline {
+  display: grid;
+  gap: 10px;
+}
+.cv-inline-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.cv-campo {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 46px;
+  padding: 0 6px 0 14px;
+  border: 1px solid var(--cv-linha-forte);
+  border-radius: 12px;
+  background: var(--cv-painel);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.cv-campo:focus-within {
+  border-color: var(--cv-acento-borda);
+  box-shadow: 0 0 0 4px var(--cv-acento-suave);
+}
+.cv-campo[data-erro] {
+  border-color: var(--fm-erro);
+}
+
+/* ---------- Respostas rápidas e botões ---------- */
 .cv-rapidas {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
-  padding-left: 34px;
-  animation: cv-entra 0.32s 0.06s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  margin-top: 4px;
+  animation: cv-entra 0.3s 0.05s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.cv-rapidas-fim {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 .cv-chip {
   display: inline-flex;
@@ -543,83 +574,109 @@
   gap: 6px;
   min-height: 40px;
   padding: 8px 16px;
-  border: 1px solid var(--cv-chip-borda);
+  border: 1px solid var(--cv-linha-forte);
   border-radius: 999px;
-  background: var(--cv-chip);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  box-shadow: var(--cv-sombra);
-  color: var(--cv-chip-texto);
+  background: var(--cv-painel);
+  color: var(--cv-texto);
   font: inherit;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.25;
   text-align: left;
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
 }
 .cv-chip:hover:not(:disabled) {
-  border-color: var(--fm-acento);
-  background: color-mix(in srgb, var(--fm-acento) 12%, var(--cv-chip));
+  border-color: var(--cv-linha-hover);
+  background: var(--cv-suave);
 }
 .cv-chip:active:not(:disabled) {
   transform: scale(0.97);
 }
 .cv-chip[aria-pressed="true"] {
-  border-color: var(--fm-acento);
-  background: var(--cv-eu);
-  color: var(--cv-eu-texto);
-}
-.cv-chip-pri {
-  border-color: transparent;
-  background: var(--fm-acento);
-  color: var(--fm-sobre);
-}
-.cv-chip-pri:hover:not(:disabled) {
-  border-color: transparent;
-  background: var(--fm-acento-forte);
+  border-color: var(--cv-acento-borda);
+  background: var(--cv-acento-suave);
 }
 .cv-chip-leve {
   border-color: transparent;
   background: transparent;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  box-shadow: none;
-  color: var(--fm-apoio);
-  font-weight: 500;
+  color: var(--cv-apoio);
 }
 .cv-chip-leve:hover:not(:disabled) {
-  border-color: var(--cv-trilho);
-  background: var(--cv-chip);
-}
-.cv-chip:disabled {
-  cursor: not-allowed;
-  opacity: 0.45;
-  box-shadow: none;
+  border-color: transparent;
+  background: var(--cv-suave);
+  color: var(--cv-texto);
 }
 .cv-check {
   width: 15px;
   height: 15px;
   fill: none;
-  stroke: currentColor;
+  stroke: var(--cv-acento-forte);
   stroke-width: 2.6;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-/* Ingresso, anexo e pagamento: um cartão de vidro dentro da conversa */
+/* Ação principal: o verde da marca, igual ao "Aplicar mudanças" do assistente */
+.cv-bt-pri {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--cv-verde);
+  color: #fff;
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  box-shadow: 0 8px 18px -8px rgba(0, 168, 89, 0.6);
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+}
+.cv-bt-pri:hover:not(:disabled) {
+  box-shadow: 0 10px 22px -8px rgba(0, 168, 89, 0.75);
+}
+.cv-bt-pri:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.cv-bt-pri:disabled {
+  opacity: 0.4;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.cv-bt-p {
+  min-height: 36px;
+  padding: 0 16px;
+  font-size: 13.5px;
+}
+.cv-bt-leve {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--cv-apoio);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.cv-bt-leve:hover {
+  background: var(--cv-suave);
+  color: var(--cv-texto);
+}
+/* Ingresso, anexo e pagamento: um cartão neutro dentro da fala */
 .cv-cartao {
-  margin-left: 34px;
   padding: 16px;
-  border: 1px solid var(--cv-bolha-borda);
-  border-radius: 18px;
-  background: var(--cv-bolha);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
+  border: 1px solid var(--cv-linha-forte);
+  border-radius: 16px;
+  background: var(--cv-painel);
   box-shadow: var(--cv-sombra);
-  animation: cv-entra 0.32s 0.06s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: cv-entra 0.3s 0.05s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 .cv-pag {
-  padding: 18px;
+  padding: 20px;
 }
 .cv-ing .fm-ing {
   padding: 0;
@@ -627,12 +684,9 @@
   background: none;
 }
 
-/* ---------- Onde a pessoa escreve ---------- */
+/* ---------- Onde a pessoa escreve (a mesma caixa do assistente) ---------- */
 .cv-compor {
-  display: grid;
-  gap: 10px;
-  padding: 12px 14px 14px;
-  border-top: 1px solid var(--cv-trilho);
+  padding: 12px var(--cv-coluna) 18px;
 }
 .cv-escrever {
   display: grid;
@@ -642,46 +696,47 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  min-height: 52px;
-  padding: 5px 5px 5px 18px;
-  border: 1px solid var(--cv-bolha-borda);
-  border-radius: 26px;
-  background: var(--cv-bolha);
-  box-shadow: var(--cv-sombra), inset 0 1px 0 var(--cv-reflexo);
+  min-height: 56px;
+  padding: 6px 8px 6px 18px;
+  border: 1px solid var(--cv-linha-forte);
+  border-radius: 20px;
+  background: var(--cv-painel);
+  box-shadow: var(--cv-sombra);
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 .cv-caixa:focus-within {
-  border-color: var(--fm-acento);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--fm-acento) 16%, transparent);
+  border-color: var(--cv-acento-borda);
+  box-shadow: 0 0 0 4px var(--cv-acento-suave), var(--cv-sombra);
 }
 .cv-caixa[data-erro] {
   border-color: var(--fm-erro);
 }
 .cv-escrever[data-parado] .cv-caixa {
-  background: color-mix(in srgb, var(--cv-bolha) 45%, transparent);
+  background: var(--cv-suave);
   box-shadow: none;
 }
 .cv-in {
   flex: 1 1 auto;
   min-width: 0;
-  height: 40px;
+  height: 42px;
   padding: 0;
   border: 0;
   background: none;
-  color: var(--fm-texto);
+  color: var(--cv-texto);
   font: inherit;
   font-size: 15px;
   outline: none;
 }
 textarea.cv-in {
   height: auto;
-  max-height: 120px;
+  max-height: 140px;
   padding: 10px 0;
+  line-height: 1.45;
   resize: none;
   field-sizing: content;
 }
 .cv-in::placeholder {
-  color: var(--fm-fraco);
+  color: var(--cv-fraco);
 }
 .cv-in:disabled {
   cursor: default;
@@ -689,15 +744,15 @@ textarea.cv-in {
 .cv-uf {
   flex: 0 0 78px;
   padding: 0 26px 0 12px;
-  border-left: 1px solid var(--cv-trilho);
+  border-left: 1px solid var(--cv-linha);
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='%238b8f97' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='%239da1a9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-position: right 8px center;
   background-repeat: no-repeat;
   cursor: pointer;
 }
 .cv-uf[data-vazio] {
-  color: var(--fm-fraco);
+  color: var(--cv-fraco);
 }
 .cv-uf option {
   color: #17181c;
@@ -706,24 +761,23 @@ textarea.cv-in {
   display: grid;
   place-items: center;
   flex: none;
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border: 0;
   border-radius: 50%;
-  background: var(--fm-acento);
-  color: var(--fm-sobre);
+  background: var(--cv-verde);
+  color: #fff;
+  box-shadow: 0 6px 14px -6px rgba(0, 168, 89, 0.7);
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease;
-}
-.cv-enviar:hover:not(:disabled) {
-  background: var(--fm-acento-forte);
+  transition: transform 0.15s ease, opacity 0.15s ease;
 }
 .cv-enviar:active:not(:disabled) {
   transform: scale(0.94);
 }
 .cv-enviar:disabled {
-  background: var(--cv-trilho);
-  color: var(--fm-fraco);
+  background: var(--cv-linha-forte);
+  color: var(--cv-fraco);
+  box-shadow: none;
   cursor: default;
 }
 .cv-enviar svg {
@@ -736,96 +790,47 @@ textarea.cv-in {
   stroke-linejoin: round;
 }
 .cv-erro {
-  margin: 0 0 0 18px;
+  margin: 0 0 0 4px;
   font-size: 13px;
   font-weight: 500;
   color: var(--fm-erro);
 }
-/* Faixa de correção, em cima da caixa de escrever (como responder/editar nos apps de mensagem) */
-.cv-edita {
-  display: grid;
-  gap: 10px;
-  padding: 10px 12px 12px 14px;
-  border: 1px solid var(--cv-chip-borda);
-  border-radius: 18px;
-  background: color-mix(in srgb, var(--fm-acento) 7%, var(--cv-bolha));
-  animation: cv-entra 0.24s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-.cv-edita-topo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  font-size: 13px;
-  color: var(--fm-apoio);
-}
-.cv-edita-topo > span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.cv-edita-topo b {
-  font-weight: 600;
-  color: var(--fm-texto);
-}
-.cv-edita-topo svg {
-  flex: none;
-  width: 15px;
-  height: 15px;
-  fill: none;
-  stroke: var(--cv-chip-texto);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.cv-edita-sair {
-  flex: none;
-  margin-left: auto;
-  padding: 6px 4px;
-  border: 0;
-  background: none;
-  color: var(--cv-chip-texto);
-  font: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-}
-.cv-edita .cv-rapidas {
-  padding-left: 0;
-}
-.cv-edita .cv-cartao {
-  margin-left: 0;
+.cv-escrever .cv-erro {
+  margin-left: 18px;
 }
 .cv-enviar:focus-visible,
 .cv-chip:focus-visible,
-.cv-lapis:focus-visible,
-.cv-fechar:focus-visible,
-.cv-edita-sair:focus-visible {
-  outline: 2px solid var(--fm-acento);
+.cv-bt-pri:focus-visible,
+.cv-bt-leve:focus-visible,
+.cv-eu-bt:focus-visible,
+.cv-dado:focus-visible,
+.cv-fechar:focus-visible {
+  outline: 2px solid var(--cv-acento);
   outline-offset: 2px;
 }
-@media (max-width: 420px) {
+@media (max-width: 600px) {
+  .cv {
+    --cv-coluna: 16px;
+  }
   .cv-log {
-    padding-inline: 12px;
+    padding-top: 22px;
   }
-  .cv-bolha {
-    max-width: 88%;
-  }
-  .cv-cartao {
-    margin-left: 0;
+  .cv-fala-txt,
+  .cv-eu-bolha {
+    font-size: 15px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .cv-linha,
+  .cv-fala,
+  .cv-eu,
   .cv-rapidas,
   .cv-cartao,
-  .cv-edita,
   .cv-orbe-ativo,
   .cv-orbe-ativo .cv-orbe-cor,
   .cv-digitando i {
     animation: none;
   }
-  .cv-prog-barra i {
+  .cv-linha-prog i {
     transition: none;
   }
 }
