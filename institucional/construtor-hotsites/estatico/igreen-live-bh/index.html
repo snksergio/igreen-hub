@@ -877,6 +877,16 @@ img {
 .hs-livre__conteudo > * + * {
   margin-top: 16px;
 }
+
+/* Dentro do cartão de inscrição (uma grade com espaço entre as linhas), as margens do título e do
+   texto somavam com esse espaço e abriam um vão grande entre os dois. */
+.hs-form > .hs-h2,
+.hs-form > p {
+  margin: 0;
+}
+.hs-form > .hs-h2 + p {
+  margin-top: -6px;
+}
 /*
  * Kit iGreen Live: o visual da landing premium (mockups/landing-evento.html) para as peças Live*.
  * Gerado a partir do CSS da landing com escopo .lv: cada peça do kit vive dentro de <div class="lv">,
