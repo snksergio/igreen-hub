@@ -127,7 +127,20 @@ export function Numero({ rotulo, valor, apoio }: { rotulo: string; valor: ReactN
 }
 
 /** Caixa com título, para agrupar um assunto dentro das abas. */
-export function Bloco({ titulo, acao, children, className = "" }: { titulo?: ReactNode; acao?: ReactNode; children: ReactNode; className?: string }) {
+export function Bloco({
+  titulo,
+  descricao,
+  acao,
+  children,
+  className = "",
+}: {
+  titulo?: ReactNode;
+  /** Para que serve a seção, numa frase, embaixo do título. */
+  descricao?: ReactNode;
+  acao?: ReactNode;
+  children: ReactNode;
+  className?: string;
+}) {
   return (
     <section className={`bl ${className}`}>
       {(titulo || acao) && (
@@ -136,6 +149,7 @@ export function Bloco({ titulo, acao, children, className = "" }: { titulo?: Rea
           {acao}
         </header>
       )}
+      {descricao && <p className="bl-desc">{descricao}</p>}
       {children}
     </section>
   );

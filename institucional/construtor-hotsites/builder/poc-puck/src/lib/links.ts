@@ -23,6 +23,9 @@ function load(): LinkLicenciado[] {
   return Array.isArray(v) ? v.filter((l) => l && typeof l === "object" && typeof l.ref === "string" && typeof l.pageId === "string") : [];
 }
 
+/** Todos os links, de todas as páginas (a busca de licenciado usa). */
+export const todosOsLinks = (): LinkLicenciado[] => load();
+
 export function listarLinks(pageId: string): LinkLicenciado[] {
   return load()
     .filter((l) => l.pageId === pageId)

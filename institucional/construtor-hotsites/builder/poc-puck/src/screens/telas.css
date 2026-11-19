@@ -475,3 +475,39 @@
     display: none;
   }
 }
+
+/* ---------- Topo dentro de uma página: o caminho (Páginas › nome) no lugar das seções ---------- */
+.app .app-migalha {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: min(52vw, 560px);
+  font-size: 14px;
+}
+.app .app-migalha a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  padding: 6px 8px;
+  border-radius: 8px;
+  color: var(--b-apoio);
+  font-weight: 500;
+  text-decoration: none;
+}
+.app .app-migalha a:hover {
+  background: var(--b-trilho);
+  color: var(--b-texto);
+}
+.app .app-migalha-sep {
+  flex: none;
+  color: var(--b-fraco);
+}
+.app .app-migalha [aria-current="page"] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--b-texto);
+}

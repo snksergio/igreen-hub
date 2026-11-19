@@ -1,6 +1,7 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useId, useMemo, useState, type FormEvent, type KeyboardEvent } from "react";
 import { resumir } from "../../lib/eventos";
-import { criarLink, removerLink, type LinkLicenciado } from "../../lib/links";
+import { buscarLicenciados, type Licenciado } from "../../lib/licenciados";
+import { criarLink, linkPorRef, removerLink, type LinkLicenciado } from "../../lib/links";
 import { buildInviteLink } from "../../lib/persona";
 import { appBaseUrl } from "../../router";
 import { Icone } from "../../ui/Icone";
@@ -105,10 +106,12 @@ export function Links({ d }: { d: Espaco }) {
       <aside className="ep-col ep-lado">
         <Bloco titulo="Gerar link">
           <form className="fm-app" onSubmit={gerar}>
-            <label className="app-field">
-              <span>Nome do licenciado</span>
-              <input value={v.nome} onChange={(e) => setV({ ...v, nome: e.target.value })} maxLength={80} required />
-            </label>
+            <BuscaLicenciado
+              valor={v.nome}
+              pageId={d.page.id}
+              muda={(nome) => setV({ ...v, nome })}
+              escolher={(l) => setV({ nome: l.nome, ref: l.ref, cidade: l.cidade, whats: l.whats ?? "" })}
+            />
             <label className="app-field">
               <span>Código do licenciado</span>
               <input value={v.ref} onChange={(e) => setV({ ...v, ref: e.target.value.toUpperCase() })} maxLength={20} placeholder="Ex.: LIC123" required />
@@ -139,6 +142,111 @@ export function Links({ d }: { d: Espaco }) {
           </ul>
         </Bloco>
       </aside>
+    </div>
+  );
+}
+
+const iniciais = (nome: string) =>
+  nome
+    .split(/s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((p) => p[0].toUpperCase())
+    .join("");
+
+/**
+ * Nome do licenciado com busca: digitando o nome, o código ou a cidade, aparece a lista de
+ * licenciados; escolher um preenche código, cidade e WhatsApp. Dá para digitar um nome que não
+ * está na lista. Teclado: setas, Enter escolhe, Esc fecha.
+ */
+function BuscaLicenciado({ valor, pageId, muda, escolher }: { valor: string; pageId: string; muda: (v: string) => void; escolher: (l: Licenciado) => void }) {
+  const id = useId();
+  const [aberto, setAberto] = useState(false);
+  const [ativo, setAtivo] = useState(0);
+  const sugestoes = useMemo(() => buscarLicenciados(valor), [valor]);
+  const temLink = (l: Licenciado) => Boolean(linkPorRef(pageId, l.ref));
+  const mostra = aberto && sugestoes.length > 0;
+
+  const pegar = (l: Licenciado) => {
+    if (temLink(l)) return;
+    escolher(l);
+    setAberto(false);
+  };
+  const tecla = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      setAberto(true);
+      if (!sugestoes.length) return;
+      setAtivo((a) => (a + (e.key === "ArrowDown" ? 1 : sugestoes.length - 1)) % sugestoes.length);
+    } else if (e.key === "Enter" && mostra) {
+      e.preventDefault();
+      pegar(sugestoes[ativo]);
+    } else if (e.key === "Escape") {
+      setAberto(false);
+    }
+  };
+
+  return (
+    <div className="app-field lk-busca">
+      <label htmlFor={`${id}-in`}>Licenciado</label>
+      <div className="lk-busca-caixa">
+        <Icone nome="busca" tamanho={16} className="lk-busca-ic" />
+        <input
+          id={`${id}-in`}
+          role="combobox"
+          aria-expanded={mostra}
+          aria-controls={`${id}-lista`}
+          aria-autocomplete="list"
+          aria-activedescendant={mostra ? `${id}-op-${ativo}` : undefined}
+          autoComplete="off"
+          value={valor}
+          onChange={(e) => {
+            muda(e.target.value);
+            setAtivo(0);
+            setAberto(true);
+          }}
+          onFocus={() => setAberto(true)}
+          onBlur={() => setAberto(false)}
+          onKeyDown={tecla}
+          placeholder="Busque pelo nome, código ou cidade"
+          maxLength={80}
+          required
+        />
+        {mostra && (
+          <ul className="lk-sugestoes" id={`${id}-lista`} role="listbox" aria-label="Licenciados">
+            {sugestoes.map((l, i) => {
+              const ja = temLink(l);
+              return (
+                <li
+                  key={l.ref}
+                  id={`${id}-op-${i}`}
+                  role="option"
+                  aria-selected={i === ativo}
+                  aria-disabled={ja || undefined}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    pegar(l);
+                  }}
+                  onMouseEnter={() => setAtivo(i)}
+                >
+                  <span className="lk-av" aria-hidden="true">
+                    {iniciais(l.nome)}
+                  </span>
+                  <span className="lk-sug-txt">
+                    <b>{l.nome}</b>
+                    <small>
+                      {l.ref}
+                      {l.cidade && ` · ${l.cidade}`}
+                    </small>
+                  </span>
+                  {ja && <em>Já tem link</em>}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
+      <small className="lk-busca-dica">Ao escolher da lista, código, cidade e WhatsApp vêm preenchidos.</small>
     </div>
   );
 }

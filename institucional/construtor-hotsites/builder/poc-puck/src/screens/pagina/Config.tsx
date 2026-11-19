@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { formularioDaPagina, listarFormularios } from "../../lib/formularios";
 import { quandoLembrete, textoConfirmacao, textoLembrete } from "../../lib/mensagens";
-import { comunicacaoDe, type Comunicacao, type MetaPagina, type StatusPagina } from "../../lib/meta";
+import { comunicacaoDe, type Comunicacao, type MetaPagina } from "../../lib/meta";
 import { metaDe } from "../../lib/painel";
 import { atualizarPagina, atualizarPecas, deletePage, listPages, setMeta, setSlug } from "../../lib/pages";
 import { slugify } from "../../lib/slug";
@@ -10,6 +10,8 @@ import { Icone } from "../../ui/Icone";
 import { Bloco } from "../comum";
 import { BolhaWhats } from "../../form/Bolha";
 import type { Espaco } from "./tipos";
+import { StatusPublicacao } from "./Status";
+import { useConfirmar } from "../../ui/Confirmar";
 
 type Root = { titulo?: string; descricao?: string; imagemCompartilhamento?: string; indexar?: boolean };
 type Rascunho = { title: string; slug: string; root: Root; meta: MetaPagina; com: Comunicacao; formularioId: string };
@@ -34,6 +36,7 @@ export function Config({ d }: { d: Espaco }) {
   const [r, setR] = useState(base);
   const [salvo, setSalvo] = useState(false);
   const [novoResp, setNovoResp] = useState("");
+  const { pedir, dialogo } = useConfirmar();
   const forms = useMemo(() => listarFormularios(), []);
   const conhecidos = useMemo(() => [...new Set(listPages().flatMap((p) => metaDe(p).responsaveis ?? []))].sort(), []);
   const temPecaInscricao = (d.page.data.content ?? []).some((c) => PECAS_INSCRICAO.has(c.type));
@@ -45,7 +48,9 @@ export function Config({ d }: { d: Espaco }) {
   const resp = r.meta.responsaveis ?? [];
 
   function salvar() {
-    setMeta(d.page.id, { ...r.meta, comunicacao: r.com, publicarEm: r.meta.publicarEm || undefined, encerrarEm: r.meta.encerrarEm || undefined, vagas: Number(r.meta.vagas) || undefined });
+    const statusAgora = metaDe(d.page).status;
+    const status = r.meta.publicarEm && statusAgora === "rascunho" ? "publicada" : statusAgora;
+    setMeta(d.page.id, { ...r.meta, status, comunicacao: r.com, publicarEm: r.meta.publicarEm || undefined, encerrarEm: r.meta.encerrarEm || undefined, vagas: Number(r.meta.vagas) || undefined });
     atualizarPagina(d.page.id, { title: r.title, root: { ...r.root } });
     if (r.slug !== d.page.slug) setSlug(d.page.id, r.slug);
     if (r.formularioId !== base.formularioId)
@@ -72,7 +77,29 @@ export function Config({ d }: { d: Espaco }) {
 
   return (
     <div className="cf">
-      <Bloco titulo="Nome e endereço">
+      <Bloco titulo="Publicação" descricao="Em que situação a página está e quem consegue ver. Mudar a situação vale na hora, depois de confirmar.">
+        <StatusPublicacao
+          d={d}
+          aoMudar={(m) => {
+            // o rascunho das configurações acompanha a mudança (senão o "Salvar" desfaria)
+            setR((x) => ({ ...x, meta: { ...x.meta, ...m } }));
+            setBase((x) => ({ ...x, meta: { ...x.meta, ...m } }));
+          }}
+        />
+        <div className="cf-grade cf-agenda">
+          <label className="app-field">
+            <span>Agendar: entra no ar sozinha em (Brasília)</span>
+            <input type="datetime-local" value={r.meta.publicarEm ?? ""} onChange={(e) => meta({ publicarEm: e.target.value })} />
+          </label>
+          <label className="app-field">
+            <span>Encerrar as inscrições sozinha em (Brasília)</span>
+            <input type="datetime-local" value={r.meta.encerrarEm ?? ""} onChange={(e) => meta({ encerrarEm: e.target.value })} />
+          </label>
+        </div>
+        <p className="cf-ajuda">As datas valem depois de salvar. Quem tem acesso ao construtor publica direto, sem aprovação (decisão 0.4).</p>
+      </Bloco>
+
+      <Bloco titulo="Nome e endereço" descricao="Como a página aparece no painel e o endereço que você divulga.">
         <div className="cf-grade">
           <label className="app-field">
             <span>Nome da página (no painel)</span>
@@ -89,28 +116,7 @@ export function Config({ d }: { d: Espaco }) {
         <p className="cf-ajuda">Mudar o endereço quebra o link que já foi divulgado. Na POC, as inscrições continuam presas à página.</p>
       </Bloco>
 
-      <Bloco titulo="Publicação">
-        <div className="seg cf-seg" role="group" aria-label="Status">
-          {(["rascunho", "publicada", "encerrada"] as StatusPagina[]).map((s) => (
-            <button key={s} aria-pressed={r.meta.status === s || (s === "rascunho" && r.meta.status === "arquivada")} onClick={() => meta({ status: s })}>
-              {s === "rascunho" ? "Rascunho" : s === "publicada" ? "Publicada" : "Inscrições encerradas"}
-            </button>
-          ))}
-        </div>
-        <div className="cf-grade">
-          <label className="app-field">
-            <span>Agendar: entra no ar em (Brasília)</span>
-            <input type="datetime-local" value={r.meta.publicarEm ?? ""} onChange={(e) => meta({ publicarEm: e.target.value, status: e.target.value ? "publicada" : r.meta.status })} />
-          </label>
-          <label className="app-field">
-            <span>Encerrar as inscrições sozinha em (Brasília)</span>
-            <input type="datetime-local" value={r.meta.encerrarEm ?? ""} onChange={(e) => meta({ encerrarEm: e.target.value })} />
-          </label>
-        </div>
-        <p className="cf-ajuda">Quem tem acesso ao construtor publica direto, sem aprovação (decisão 0.4). Com data de publicação, a página fica agendada até lá.</p>
-      </Bloco>
-
-      <Bloco titulo="Inscrições">
+      <Bloco titulo="Inscrições" descricao="Qual formulário a peça de inscrição usa e quantas vagas o evento tem.">
         <div className="cf-grade">
           <label className="app-field">
             <span>Formulário</span>
@@ -149,7 +155,7 @@ export function Config({ d }: { d: Espaco }) {
         {!temPecaInscricao && <p className="cf-ajuda">A página não tem peça de inscrição. Coloque uma no construtor para escolher o formulário.</p>}
       </Bloco>
 
-      <Bloco titulo="Aparência ao compartilhar">
+      <Bloco titulo="Aparência ao compartilhar" descricao="Como o link aparece quando alguém compartilha no WhatsApp, nas redes ou quando a página aparece no Google.">
         <div className="cf-compartilhar">
           <div className="cf-campos">
             <label className="app-field">
@@ -191,7 +197,7 @@ export function Config({ d }: { d: Espaco }) {
         </fieldset>
       </Bloco>
 
-      <Bloco titulo="Responsáveis">
+      <Bloco titulo="Responsáveis" descricao="Quem cuida desta página. Aparece no painel, para filtrar e saber a quem perguntar.">
         <div className="cf-resp">
           {resp.map((n) => (
             <span key={n} className="cf-chip">
@@ -224,7 +230,10 @@ export function Config({ d }: { d: Espaco }) {
         </div>
       </Bloco>
 
-      <Bloco titulo="Comunicação com o participante (simulada)">
+      <Bloco
+        titulo="Comunicação com o participante (simulada)"
+        descricao="As mensagens que o participante recebe: a confirmação logo depois de se inscrever e o lembrete antes do evento. Na POC nada é enviado."
+      >
         <div className="seg cf-seg" role="group" aria-label="Canal">
           {(
             [
@@ -277,7 +286,7 @@ export function Config({ d }: { d: Espaco }) {
         )}
       </Bloco>
 
-      <Bloco titulo="Medição">
+      <Bloco titulo="Medição" descricao="Códigos para acompanhar visitas e inscrições no Google Analytics e nos anúncios da Meta.">
         <div className="cf-grade">
           <label className="app-field">
             <span>Google Analytics 4 (ID de medição)</span>
@@ -292,16 +301,28 @@ export function Config({ d }: { d: Espaco }) {
         <p className="cf-ajuda">Na POC os códigos só ficam guardados. No projeto real entram na página publicada.</p>
       </Bloco>
 
-      <Bloco titulo="Apagar">
+      <Bloco titulo="Apagar" descricao="Para tirar a página do painel sem perder nada (arquivar) ou apagar de vez.">
         <div className="cf-perigo">
           <p className="app-muted">Arquivar tira a página do painel e encerra as inscrições, sem perder nada. Apagar não tem volta.</p>
           <button
             className="bt mn-perigo-bt"
-            onClick={() => {
-              if (!confirm(`Apagar "${d.page.title}"? Não dá para desfazer.`)) return;
-              deletePage(d.page.id);
-              go("/");
-            }}
+            onClick={() =>
+              pedir({
+                titulo: `Apagar "${d.page.title}"?`,
+                texto: (
+                  <>
+                    <p>A página, os links de licenciado e os resultados somem do painel. Não dá para desfazer.</p>
+                    <p>Se a ideia é só tirar do painel, arquive pela visão geral: nada é apagado.</p>
+                  </>
+                ),
+                confirmar: "Apagar página",
+                perigo: true,
+                aoConfirmar: () => {
+                  deletePage(d.page.id);
+                  go("/");
+                },
+              })
+            }
           >
             <Icone nome="lixo" tamanho={16} />
             Apagar página
@@ -327,6 +348,7 @@ export function Config({ d }: { d: Espaco }) {
           </>
         )}
       </div>
+      {dialogo}
     </div>
   );
 }

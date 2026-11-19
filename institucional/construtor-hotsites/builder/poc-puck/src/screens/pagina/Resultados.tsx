@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Icone } from "../../ui/Icone";
 import { resumir, rotuloOrigem } from "../../lib/eventos";
 import { cobra } from "../../lib/formularios";
 import { Bloco, Numero } from "../comum";
@@ -233,18 +234,25 @@ export function Resultados({ d }: { d: Espaco }) {
         <Numero rotulo="Terminaram o formulário" valor={`${pct(total.inscricoes, total.comecaram).toLocaleString("pt-BR")}%`} apoio={`de ${nf(total.comecaram)} que começaram`} />
       </div>
 
+      {/* Como ver (gráficos ou tabela) à esquerda; o período à direita. Os dois no mesmo controle. */}
       <div className="rs-filtro">
-        <div className="seg" role="group" aria-label="Período dos gráficos">
+        <div className="seg rs-vista" role="group" aria-label="Como ver os resultados">
+          <button aria-pressed={!tabela} onClick={() => setTabela(false)}>
+            <Icone nome="grafico" tamanho={15} />
+            Gráficos
+          </button>
+          <button aria-pressed={tabela} onClick={() => setTabela(true)}>
+            <Icone nome="lista" tamanho={15} />
+            Tabela
+          </button>
+        </div>
+        <div className="seg" role="group" aria-label="Período">
           {[7, 14, 21, 30].map((n) => (
             <button key={n} aria-pressed={dias === n} onClick={() => setDias(n)}>
               {n} dias
             </button>
           ))}
         </div>
-        <label className="rs-tabela-liga">
-          <input type="checkbox" checked={tabela} onChange={(e) => setTabela(e.target.checked)} />
-          Ver em tabela
-        </label>
       </div>
 
       {tabela ? (

@@ -9,9 +9,11 @@ import { duplicatePage, getPage, getPageBySlug, setMeta, type PageRecord } from 
 import { listSubmissions, ocupaVaga, statusDe } from "../../lib/submissions";
 import { appBaseUrl, go, type AbaPagina } from "../../router";
 import { Icone } from "../../ui/Icone";
+import { useConfirmar } from "../../ui/Confirmar";
 import { baixarQr, Bloco, ChipInscricao, ChipStatus, Copiar, Numero, QrCode, Vagas } from "../comum";
 import { NaoEncontrada, Shell } from "../Shell";
 import "../espaco.css";
+import { StatusPublicacao } from "./Status";
 import type { Espaco as Dados } from "./tipos";
 
 const Inscritos = lazy(() => import("./Inscritos").then((m) => ({ default: m.Inscritos })));
@@ -57,12 +59,8 @@ export function Espaco({ id, aba }: { id: string; aba: AbaPagina }) {
   ];
 
   return (
-    <Shell ativo="paginas">
+    <Shell ativo="paginas" pagina={page.title}>
       <div className="ep-topo">
-        <a className="ep-voltar" href="#/">
-          <Icone nome="voltar" tamanho={16} />
-          Páginas
-        </a>
         <div className="ep-cab">
           <div className="ep-cab-txt">
             <div className="ep-titulo-linha">
@@ -180,6 +178,7 @@ function VisaoGeral({ d }: { d: Dados }) {
   const ultimas = subs.slice(0, 5);
   const aba = (a: AbaPagina) => `#/pagina/${page.id}/${a}`;
 
+  const { pedir, dialogo } = useConfirmar();
   const mudarStatus = (meta: Parameters<typeof setMeta>[1]) => {
     setMeta(page.id, meta);
     d.recarregar();
@@ -234,38 +233,16 @@ function VisaoGeral({ d }: { d: Dados }) {
       </div>
 
       <aside className="ep-col ep-lado">
-        <Bloco titulo="Status">
-          <div className="ep-status">
-            <ChipStatus status={status} />
-            <span className="app-muted">
-              {status === "agendada" && `Entra no ar ${dataPorExtenso(d.meta.publicarEm)}.`}
-              {status === "publicada" && (d.meta.encerrarEm ? `Inscrições fecham ${dataPorExtenso(d.meta.encerrarEm)}.` : "No ar, recebendo inscrições.")}
-              {status === "rascunho" && "Ainda não está no ar."}
-              {status === "encerrada" && "No ar, com as inscrições encerradas."}
-              {status === "arquivada" && "Fora do painel principal e com as inscrições encerradas."}
-            </span>
-          </div>
-          <div className="ep-status-acoes">
-            {(status === "rascunho" || status === "agendada") && (
-              <button className="bt bt-pri bt-p" onClick={() => mudarStatus({ status: "publicada", publicarEm: undefined })}>
-                Publicar agora
-              </button>
-            )}
-            {status === "publicada" && (
-              <button className="bt bt-p" onClick={() => confirm("Encerrar as inscrições agora? A página continua no ar.") && mudarStatus({ status: "encerrada" })}>
-                Encerrar inscrições
-              </button>
-            )}
-            {(status === "encerrada" || status === "arquivada") && (
-              <button className="bt bt-p" onClick={() => mudarStatus({ status: "publicada", encerrarEm: undefined })}>
-                Reabrir inscrições
-              </button>
-            )}
+        <Bloco
+          titulo="Publicação"
+          acao={
             <a className="bt bt-p" href={aba("config")}>
               <Icone nome="relogio" tamanho={15} />
               Agendar
             </a>
-          </div>
+          }
+        >
+          <StatusPublicacao d={d} compacto />
         </Bloco>
 
         <Bloco titulo="Link da página">
@@ -318,7 +295,19 @@ function VisaoGeral({ d }: { d: Dados }) {
             </button>
             <button
               className="bt bt-p"
-              onClick={() => mudarStatus({ status: status === "arquivada" ? "rascunho" : "arquivada" })}
+              onClick={() =>
+                pedir({
+                  titulo: status === "arquivada" ? "Desarquivar a página?" : "Arquivar a página?",
+                  texto:
+                    status === "arquivada" ? (
+                      <p>A página volta para o painel principal como rascunho. Para receber inscrições de novo, publique depois.</p>
+                    ) : (
+                      <p>A página sai do painel principal e as inscrições são encerradas. Nada é apagado e dá para desarquivar depois.</p>
+                    ),
+                  confirmar: status === "arquivada" ? "Desarquivar" : "Arquivar",
+                  aoConfirmar: () => mudarStatus({ status: status === "arquivada" ? "rascunho" : "arquivada" }),
+                })
+              }
             >
               <Icone nome="arquivar" tamanho={15} />
               {status === "arquivada" ? "Desarquivar" : "Arquivar"}
@@ -330,6 +319,7 @@ function VisaoGeral({ d }: { d: Dados }) {
           </div>
         </Bloco>
       </aside>
+      {dialogo}
     </div>
   );
 }

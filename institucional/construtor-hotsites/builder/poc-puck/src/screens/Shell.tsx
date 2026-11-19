@@ -7,7 +7,16 @@ import { BotaoTema } from "../ui/tema";
 export const TITULO_POC = "POC · Construtor de hotsites iGreen";
 
 /** Moldura das telas internas da POC (painel, convite, inscrições). */
-export function Shell({ ativo, children }: { ativo: "paginas" | "formularios" | "inscricoes" | "convite"; children: ReactNode }) {
+export function Shell({
+  ativo,
+  pagina,
+  children,
+}: {
+  ativo: "paginas" | "formularios" | "inscricoes" | "convite";
+  /** Dentro de uma página: o topo mostra o caminho (Páginas › nome), não as seções do app. */
+  pagina?: string;
+  children: ReactNode;
+}) {
   useEffect(() => {
     document.title = TITULO_POC;
   }, []);
@@ -21,6 +30,18 @@ export function Shell({ ativo, children }: { ativo: "paginas" | "formularios" | 
           Hotsites iGreen
           <span className="app-tag">POC</span>
         </a>
+        {pagina ? (
+          <nav className="app-migalha" aria-label="Você está em">
+            <a href="#/">
+              <Icone nome="pagina" tamanho={15} />
+              Páginas
+            </a>
+            <Icone nome="chevDir" tamanho={14} className="app-migalha-sep" />
+            <span aria-current="page" title={pagina}>
+              {pagina}
+            </span>
+          </nav>
+        ) : (
         <nav className="seg app-nav" aria-label="Seções">
           <a href="#/" aria-current={ativo === "paginas" || ativo === "convite" ? "page" : undefined}>
             <Icone nome="pagina" tamanho={16} />
@@ -31,6 +52,7 @@ export function Shell({ ativo, children }: { ativo: "paginas" | "formularios" | 
             Formulários
           </a>
         </nav>
+        )}
         <div className="app-top-dir">
           <span>Os dados ficam neste navegador</span>
           <BotaoTema />

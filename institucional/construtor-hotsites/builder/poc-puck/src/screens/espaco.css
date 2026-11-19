@@ -1186,3 +1186,294 @@
     flex-wrap: wrap;
   }
 }
+
+/* ---------- Explicação da seção, embaixo do título ---------- */
+.bl-desc {
+  margin: -6px 0 2px;
+  max-width: 640px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--b-apoio);
+}
+
+/* ---------- Publicação: a situação em destaque, as ações e as etapas ---------- */
+.pb {
+  display: grid;
+  gap: 16px;
+}
+.pb-atual {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 16px;
+  padding: 16px;
+  border: 1px solid var(--b-linha);
+  border-radius: 14px;
+  background: var(--b-suave);
+}
+.pb-atual[data-tom="publicada"] {
+  border-color: var(--b-acento-borda);
+  background: var(--b-acento-suave);
+}
+.pb-atual[data-tom="agendada"] {
+  border-color: color-mix(in srgb, var(--b-info) 30%, transparent);
+  background: var(--b-info-suave);
+}
+.pb-atual[data-tom="encerrada"] {
+  border-color: color-mix(in srgb, var(--b-aviso) 30%, transparent);
+  background: var(--b-aviso-suave);
+}
+.pb-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: var(--b-painel);
+  box-shadow: inset 0 0 0 1px var(--b-linha);
+  color: var(--b-apoio);
+}
+.pb-atual[data-tom="publicada"] .pb-ic {
+  background: var(--b-acento);
+  box-shadow: none;
+  color: #fff;
+}
+.pb-atual[data-tom="agendada"] .pb-ic {
+  color: var(--b-info);
+}
+.pb-atual[data-tom="encerrada"] .pb-ic {
+  color: var(--b-aviso);
+}
+.pb-atual-txt {
+  display: grid;
+  flex: 1 1 260px;
+  gap: 2px;
+  min-width: 0;
+}
+.pb-rot {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--b-apoio);
+}
+.pb-atual-txt strong {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.pb-atual[data-tom="publicada"] .pb-atual-txt strong {
+  color: var(--b-acento-forte);
+}
+.pb-atual-txt > span:last-child {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--b-apoio);
+}
+.pb-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.app .pb-tirar {
+  border-color: color-mix(in srgb, var(--b-erro) 35%, var(--b-linha-forte));
+  color: var(--b-erro);
+}
+.app .pb-tirar:hover {
+  background: var(--b-erro-suave);
+}
+/* Compacto (visão geral): ações embaixo, ocupando a largura */
+.pb[data-compacto] .pb-atual {
+  align-items: flex-start;
+}
+.pb[data-compacto] .pb-acoes {
+  flex-basis: 100%;
+}
+.pb[data-compacto] .pb-atual-txt {
+  flex: 1 1 0;
+}
+.pb-etapas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pb-etapas li {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 3px;
+  padding-top: 22px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--b-apoio);
+}
+/* A linha que liga as etapas, com o ponto de cada uma */
+.pb-etapas li::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 0;
+  right: -12px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--b-linha);
+}
+.pb-etapas li:last-child::before {
+  right: 0;
+}
+.pb-etapas li[data-estado="feito"]::before {
+  background: var(--b-acento);
+}
+.pb-ponto {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--b-painel);
+  box-shadow: inset 0 0 0 2px var(--b-linha-forte);
+}
+.pb-etapas li[data-estado="feito"] .pb-ponto {
+  background: var(--b-acento);
+  box-shadow: none;
+}
+.pb-etapas li[data-estado="agora"] .pb-ponto {
+  background: var(--b-painel);
+  box-shadow: inset 0 0 0 3px var(--b-acento), 0 0 0 4px var(--b-acento-suave);
+}
+.pb-etapas b {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--b-texto);
+}
+.pb-etapas li[data-estado="falta"] b {
+  color: var(--b-apoio);
+}
+.pb-etapas em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--b-info);
+}
+.cf-agenda {
+  margin-top: 4px;
+}
+@media (max-width: 640px) {
+  .pb-etapas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pb-etapas li::before {
+    display: none;
+  }
+}
+
+/* ---------- Barra de salvar flutuante: um pouco mais larga ---------- */
+.cf-barra {
+  justify-content: space-between;
+  width: min(560px, calc(100vw - 32px));
+  padding: 12px 12px 12px 20px;
+  border-radius: 16px;
+  font-size: 14px;
+}
+.cf-barra > span:first-child {
+  margin-right: auto;
+}
+
+/* ---------- Links: busca do licenciado com sugestões ---------- */
+.lk-busca {
+  position: relative;
+}
+.lk-busca-caixa {
+  position: relative;
+}
+.lk-busca-caixa input {
+  width: 100%;
+  padding-left: 36px;
+}
+.lk-busca-ic {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  color: var(--b-fraco);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.lk-sugestoes {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 6px;
+  border: 1px solid var(--b-linha-forte);
+  border-radius: 14px;
+  background: var(--b-painel);
+  box-shadow: var(--b-sombra-pop);
+  list-style: none;
+  font-weight: 400;
+}
+.lk-sugestoes li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.lk-sugestoes li[aria-selected="true"] {
+  background: var(--b-trilho);
+}
+.lk-sugestoes li[aria-disabled="true"] {
+  cursor: default;
+  opacity: 0.55;
+}
+.lk-av {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--b-acento-suave);
+  color: var(--b-acento-forte);
+  font-size: 12px;
+  font-weight: 700;
+}
+.lk-sug-txt {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.3;
+}
+.lk-sug-txt b {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--b-texto);
+}
+.lk-sug-txt small {
+  font-size: 12.5px;
+  color: var(--b-apoio);
+}
+.lk-sugestoes em {
+  flex: none;
+  font-size: 12px;
+  font-style: normal;
+  color: var(--b-fraco);
+}
+.lk-busca-dica {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--b-fraco);
+}
+
+/* ---------- Resultados: abas (gráficos ou tabela) à esquerda, período à direita ---------- */
+.rs-vista button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
