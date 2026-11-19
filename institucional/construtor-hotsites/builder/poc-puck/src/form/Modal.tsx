@@ -116,7 +116,7 @@ function Modal({ pedido, doc, fechar }: { pedido: PedidoFormulario; doc: Documen
               return form.estilo === "formulario" ? (
                 <Fluxo form={form} completo={pedido.completo} iniciais={pedido.iniciais} ctx={contexto} />
               ) : (
-                <Conversa form={form} completo={pedido.completo} iniciais={pedido.iniciais} ctx={contexto} />
+                <Conversa form={form} completo={pedido.completo} iniciais={pedido.iniciais} ctx={contexto} fechar={fechar} />
               );
             })()
           )}

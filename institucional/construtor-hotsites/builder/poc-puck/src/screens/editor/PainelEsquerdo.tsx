@@ -8,7 +8,7 @@ import { Icone, type NomeIcone } from "../../ui/Icone";
 import { setAba, useAba, type Aba } from "./contexto";
 import { abrirMenuPeca } from "./MenuPeca";
 import { separarRotulo } from "../../ui/Ajuda";
-import { destacarNaPrevia, EVENTO_CAMPO, focarCampo, limparDestaqueNaPrevia, mostrarNaPrevia, pegarCampoPedido, tituloNoPainel, ZONA } from "./navegar";
+import { destacarNaPrevia, EVENTO_CAMPO, focarCampo, limparDestaqueNaPrevia, marcarCampo, mostrarNaPrevia, pegarCampoPedido, tituloNoPainel, ZONA } from "./navegar";
 
 /** Campos do botão que não aparecem como texto: o destaque cai no próprio botão. */
 const CAMPOS_DO_BOTAO = new Set(["destino", "link", "mensagemWhats"]);
@@ -98,6 +98,9 @@ function Estrutura() {
     return () => window.clearTimeout(t);
   }, [campoAtivo, content]);
   useEffect(() => () => limparDestaqueNaPrevia(), []);
+  // O assistente acompanha o item marcado (sai junto quando a Estrutura fecha).
+  useEffect(() => marcarCampo(campoAtivo), [campoAtivo]);
+  useEffect(() => () => marcarCampo(null), []);
 
   // Clique num texto ou botão da prévia escolhe o campo dele (CliqueNaPrevia pede; aqui marca).
   useEffect(() => {
@@ -105,7 +108,8 @@ function Estrutura() {
     if (pedido) setCampoAtivo(pedido);
     const ouvir = (e: Event) => {
       pegarCampoPedido();
-      setCampoAtivo((e as CustomEvent<string>).detail);
+      // Pedido vazio: clique na seção, fora de qualquer item. A seção inteira fica selecionada.
+      setCampoAtivo((e as CustomEvent<string>).detail || null);
     };
     window.addEventListener(EVENTO_CAMPO, ouvir);
     return () => window.removeEventListener(EVENTO_CAMPO, ouvir);
@@ -176,7 +180,15 @@ function Estrutura() {
                 >
                   <Icone nome={aberto ? "chev" : "chevDir"} tamanho={13} />
                 </button>
-                <button className="ar-no" aria-current={atual || undefined} onClick={() => selecionar(i, id)}>
+                <button
+                  className="ar-no"
+                  aria-current={atual || undefined}
+                  onClick={() => {
+                    // Clicar na seção com um item dela marcado volta para a seção inteira.
+                    setCampoAtivo(null);
+                    selecionar(i, id);
+                  }}
+                >
                   <Icone nome={item.type === "SecaoLivre" ? "codigo" : "secao"} tamanho={15} className="ar-glifo" />
                   <span className="ar-nome">{nomeDa(item.type)}</span>
                   <span className="ar-tec">{tecnicoDa(item.type)}</span>

@@ -10,6 +10,8 @@ const DESENHOS = {
   voltar: <path d="M15 18l-6-6 6-6" />,
   mais: <path d="M12 5v14M5 12h14" />,
   fechar: <path d="M6 6l12 12M18 6L6 18" />,
+  expandir: <path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" />,
+  recolher: <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />,
   codigo: <path d="M16 18l6-6-6-6M8 6l-6 6 6 6" />,
   brilho: <path d="M11 3l1.8 5.2L18 10l-5.2 1.8L11 17l-1.8-5.2L4 10l5.2-1.8zM19 14v6M16 17h6" />,
   imagem: (

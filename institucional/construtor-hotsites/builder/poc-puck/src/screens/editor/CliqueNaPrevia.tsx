@@ -36,9 +36,13 @@ export function CliqueNaPrevia() {
       const campos = camposDe(item.type);
       const chave = campoPeloClique(bloco, sob, item.props as Record<string, unknown>, campos.map((c) => c.chave));
       const campo = campos.find((c) => c.chave === chave);
-      if (!campo) return;
-      // Espera o Puck trocar a peça selecionada (isso limpa o campo marcado) antes de marcar este.
       window.clearTimeout(espera);
+      if (!campo) {
+        // Fora de qualquer item: fica a seção inteira (tira o item que estava marcado).
+        espera = window.setTimeout(() => pedirCampo(""), 140);
+        return;
+      }
+      // Espera o Puck trocar a peça selecionada (isso limpa o campo marcado) antes de marcar este.
       espera = window.setTimeout(() => {
         setAba("estrutura");
         pedirCampo(`${id}:${campo.chave}`);

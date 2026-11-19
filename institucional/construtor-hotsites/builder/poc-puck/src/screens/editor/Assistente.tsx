@@ -1,7 +1,9 @@
 import { createUsePuck } from "@puckeditor/core";
-import { useEffect, useLayoutEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent, type PointerEvent as EventoPonteiro, type ReactNode } from "react";
 import { CATALOGO, type PecaId } from "../../puck/catalogo";
 import { Icone, type NomeIcone } from "../../ui/Icone";
+import { useCampoMarcado } from "./navegar";
+import { camposDe } from "./PainelEsquerdo";
 import "./assistente.css";
 
 const usePuck = createUsePuck();
@@ -12,7 +14,30 @@ const usePuck = createUsePuck();
 
 type Mudanca = { tipo: "adicionar" | "editar" | "visual" | "ordem"; titulo: string; onde: string };
 type Proposta = { abertura: string; mudancas: Mudanca[]; refinos: string[] };
-type Msg = { id: number; de: "eu"; texto: string; anexo?: string } | { id: number; de: "ia"; proposta: Proposta; segundos: number };
+type Msg = { id: number; de: "eu"; texto: string; anexo?: string; ref?: string } | { id: number; de: "ia"; proposta: Proposta; segundos: number };
+/** Onde o pedido vale: o rótulo da referência ("Abertura Live › Título") e a frase para o texto. */
+type Alvo = { rotulo: string; frase: string };
+const PAGINA: Alvo = { rotulo: "página inteira", frase: "a página inteira" };
+
+/* Tamanho do painel: normal, expandido ou o que a pessoa puxou pelo canto (fica guardado). */
+type Tam = { w: number; h: number };
+const CHAVE_TAM = "igreen-ia-tamanho";
+function lerTam(): Tam | null {
+  try {
+    const t = JSON.parse(localStorage.getItem(CHAVE_TAM) ?? "null");
+    return t && typeof t.w === "number" && typeof t.h === "number" ? t : null;
+  } catch {
+    return null;
+  }
+}
+function guardarTam(t: Tam | null) {
+  try {
+    if (t) localStorage.setItem(CHAVE_TAM, JSON.stringify(t));
+    else localStorage.removeItem(CHAVE_TAM);
+  } catch {
+    /* sem armazenamento: o tamanho só não fica guardado */
+  }
+}
 
 const SUGESTOES: { icone: NomeIcone; titulo: string; detalhe: string; pedido: string }[] = [
   { icone: "pagina", titulo: "Montar uma página de evento", detalhe: "Abertura, agenda, local e inscrição", pedido: "Monte uma página de evento presencial em BH" },
@@ -25,7 +50,8 @@ const ICONE_MUDANCA: Record<Mudanca["tipo"], NomeIcone> = { adicionar: "mais", e
 const ROTULO_MUDANCA: Record<Mudanca["tipo"], string> = { adicionar: "Nova seção", editar: "Texto", visual: "Visual", ordem: "Ordem" };
 
 /** O que o assistente faria com o pedido (simulação). */
-function proporPara(pedido: string, onde: string, temAnexo: boolean): Proposta {
+function proporPara(pedido: string, alvo: Alvo, temAnexo: boolean): Proposta {
+  const onde = alvo.rotulo;
   const p = pedido.toLowerCase();
   const m: Mudanca[] = [];
   if (/pergunt|faq|d[uú]vida/.test(p)) m.push({ tipo: "adicionar", titulo: "Perguntas frequentes com 5 respostas sobre ingresso, horário e local", onde: "antes da Inscrição" });
@@ -43,16 +69,16 @@ function proporPara(pedido: string, onde: string, temAnexo: boolean): Proposta {
       { tipo: "adicionar", titulo: "Programação e Local, com o mapa", onde: "meio" },
       { tipo: "adicionar", titulo: "Inscrição com o formulário da biblioteca", onde: "fim" }
     );
-  if (!m.length) m.push({ tipo: "editar", titulo: `Ajustar ${onde} conforme o pedido`, onde });
+  if (!m.length) m.push({ tipo: "editar", titulo: `Ajustar ${alvo.frase} conforme o pedido`, onde });
   if (temAnexo) m.push({ tipo: "visual", titulo: "Usar o print enviado como referência de cor e espaçamento", onde });
   return {
-    abertura: `Olhei ${onde === "página inteira" ? "a página inteira" : `a seção ${onde}`} e preparei ${m.length === 1 ? "esta mudança" : `estas ${m.length} mudanças`}. Nada é aplicado sem você aprovar.`,
+    abertura: `Olhei ${alvo.frase} e preparei ${m.length === 1 ? "esta mudança" : `estas ${m.length} mudanças`}. Nada é aplicado sem você aprovar.`,
     mudancas: m,
     refinos: ["Mais curto", "Tom mais formal", "Me mostre outra opção"],
   };
 }
 
-const PASSOS = (onde: string) => [`Lendo ${onde === "página inteira" ? "a página" : onde}`, "Escolhendo peças do design system", "Montando a proposta"];
+const PASSOS = (frase: string) => [`Lendo ${frase}`, "Escolhendo peças do design system", "Montando a proposta"];
 
 /**
  * A esfera do assistente, no jeito das esferas de voz: sempre redonda, com a cor fluindo por dentro.
@@ -79,11 +105,26 @@ export function Assistente() {
   const fim = useRef<HTMLDivElement>(null);
   const campo = useRef<HTMLTextAreaElement>(null);
   const seq = useRef(0);
+  const [tam, setTam] = useState<Tam | null>(lerTam);
+  const [puxando, setPuxando] = useState(false);
+  const painel = useRef<HTMLElement>(null);
   const selecionada = usePuck((s) => s.selectedItem);
+  const marcado = useCampoMarcado();
   const nomeSecao = selecionada ? CATALOGO[selecionada.type as PecaId]?.nome ?? selecionada.type : null;
-  const onde = usarSelecao && nomeSecao ? nomeSecao : "página inteira";
+  // O item marcado dentro da seção selecionada (na Estrutura ou com clique na prévia) entra na referência.
+  const idSecao = (selecionada?.props as { id?: string } | undefined)?.id;
+  const nomeCampo =
+    selecionada && marcado?.startsWith(`${idSecao}:`) ? camposDe(selecionada.type).find((c) => c.chave === marcado.slice(marcado.indexOf(":") + 1))?.curto : undefined;
+  const referencia: Alvo | null = nomeSecao
+    ? nomeCampo
+      ? { rotulo: `${nomeSecao} › ${nomeCampo}`, frase: `o item ${nomeCampo} da seção ${nomeSecao}` }
+      : { rotulo: nomeSecao, frase: `a seção ${nomeSecao}` }
+    : null;
+  const alvo = usarSelecao && referencia ? referencia : PAGINA;
+  const onde = alvo.rotulo;
 
-  useEffect(() => setUsarSelecao(true), [nomeSecao]);
+  // Selecionou outra coisa: a referência volta a valer.
+  useEffect(() => setUsarSelecao(true), [referencia?.rotulo]);
   useEffect(() => {
     fim.current?.scrollIntoView({ block: "end", behavior: "smooth" });
   }, [msgs, pensando]);
@@ -112,11 +153,11 @@ export function Assistente() {
     const t = pedido.trim();
     if (!t || pensando !== null) return;
     const comAnexo = Boolean(anexo);
-    setMsgs((m) => [...m, { id: ++seq.current, de: "eu", texto: t, anexo: anexo?.url }]);
+    setMsgs((m) => [...m, { id: ++seq.current, de: "eu", texto: t, anexo: anexo?.url, ref: alvo === PAGINA ? undefined : alvo.rotulo }]);
     setTexto("");
     setAnexo(null);
     setPensando(0);
-    const ondeAgora = onde;
+    const ondeAgora = alvo;
     window.setTimeout(() => {
       setPensando(null);
       setMsgs((m) => [...m, { id: ++seq.current, de: "ia", proposta: proporPara(t, ondeAgora, comAnexo), segundos: 2 }]);
@@ -129,6 +170,47 @@ export function Assistente() {
   };
   const vazio = msgs.length === 0 && pensando === null;
 
+  // Puxar pelo canto de cima à esquerda (o painel fica preso embaixo à direita).
+  function puxar(e: EventoPonteiro<HTMLSpanElement>) {
+    const el = painel.current;
+    if (!el || e.button !== 0) return;
+    e.preventDefault();
+    const r = el.getBoundingClientRect();
+    const inicio = { x: e.clientX, y: e.clientY, w: r.width, h: r.height };
+    const limite = { w: r.right - 16, h: r.bottom - 64 };
+    let ultimo: Tam = { w: r.width, h: r.height };
+    setPuxando(true);
+    const mover = (ev: PointerEvent) => {
+      ultimo = {
+        w: Math.round(Math.min(limite.w, Math.max(360, inicio.w + inicio.x - ev.clientX))),
+        h: Math.round(Math.min(limite.h, Math.max(420, inicio.h + inicio.y - ev.clientY))),
+      };
+      setTam(ultimo);
+    };
+    const soltar = () => {
+      window.removeEventListener("pointermove", mover);
+      window.removeEventListener("pointerup", soltar);
+      setPuxando(false);
+      guardarTam(ultimo);
+    };
+    window.addEventListener("pointermove", mover);
+    window.addEventListener("pointerup", soltar);
+  }
+
+  function alternarTamanho() {
+    const el = painel.current;
+    if (tam || !el) {
+      setTam(null);
+      guardarTam(null);
+      return;
+    }
+    const r = el.getBoundingClientRect();
+    // Expandido: mais largo e da altura toda, sem cobrir a prévia inteira (dá para puxar pelo canto).
+    const grande = { w: Math.round(Math.min(600, r.right - 16)), h: Math.round(Math.min(900, r.bottom - 64)) };
+    setTam(grande);
+    guardarTam(grande);
+  }
+
   return (
     <>
       {!aberto && (
@@ -139,14 +221,21 @@ export function Assistente() {
         </button>
       )}
       {aberto && (
-        <section className="ia" role="dialog" aria-label="Assistente de IA">
+        <section
+          ref={painel}
+          className={`ia${puxando ? " ia-puxando" : ""}`}
+          style={tam ? { width: tam.w, height: tam.h } : undefined}
+          role="dialog"
+          aria-label="Assistente de IA"
+        >
+          <span className="ia-canto" onPointerDown={puxar} title="Arraste para mudar o tamanho" aria-hidden="true" />
           <span className="ia-aura" aria-hidden="true" />
           <span className="ia-aura ia-aura-2" aria-hidden="true" />
           <header className="ia-topo">
             <Orbe ativo={pensando !== null} />
             <div className="ia-tit">
               <strong>Assistente</strong>
-              <span>Com Claude · segue o design system iGreen</span>
+              <span>Criação visual da página</span>
             </div>
             <button
               type="button"
@@ -160,6 +249,15 @@ export function Assistente() {
               }}
             >
               <Icone nome="lapis" tamanho={16} />
+            </button>
+            <button
+              type="button"
+              className="ia-ic"
+              onClick={alternarTamanho}
+              aria-label={tam ? "Voltar ao tamanho normal" : "Expandir o assistente"}
+              title={tam ? "Tamanho normal" : "Expandir"}
+            >
+              <Icone nome={tam ? "recolher" : "expandir"} tamanho={16} />
             </button>
             <button type="button" className="ia-ic" onClick={() => setAberto(false)} aria-label="Fechar o assistente" title="Fechar">
               <Icone nome="fechar" tamanho={16} />
@@ -193,6 +291,12 @@ export function Assistente() {
                 {msgs.map((m) =>
                   m.de === "eu" ? (
                     <div key={m.id} className="ia-eu">
+                      {m.ref && (
+                        <span className="ia-eu-ref">
+                          <Icone nome={m.ref.includes("›") ? "texto" : "secao"} tamanho={12} />
+                          {m.ref}
+                        </span>
+                      )}
                       {m.anexo && <img src={m.anexo} alt="Imagem enviada" className="ia-eu-img" />}
                       <p>{m.texto}</p>
                     </div>
@@ -200,7 +304,7 @@ export function Assistente() {
                     <Resposta key={m.id} m={m} ultima={m.id === msgs[msgs.length - 1]?.id} refinar={enviar} />
                   )
                 )}
-                {pensando !== null && <Pensando passo={pensando} onde={onde} />}
+                {pensando !== null && <Pensando passo={pensando} onde={alvo.frase} />}
               </>
             )}
             <div ref={fim} />
@@ -244,17 +348,37 @@ export function Assistente() {
                 />
                 <Icone nome="imagem" tamanho={16} />
               </label>
-              <button
-                type="button"
-                className="ia-contexto"
-                aria-pressed={onde !== "página inteira"}
-                onClick={() => nomeSecao && setUsarSelecao((u) => !u)}
-                title={nomeSecao ? "Alternar entre a seção selecionada e a página inteira" : "Selecione uma seção na prévia para focar nela"}
-              >
-                <Icone nome={onde === "página inteira" ? "pagina" : "secao"} tamanho={14} />
-                {onde === "página inteira" ? "Página inteira" : onde}
-              </button>
-              <span className="ia-dica">{texto.length > 600 ? `${800 - texto.length} caracteres` : "Enter envia"}</span>
+              <span className="ia-ref">
+                <button
+                  type="button"
+                  className="ia-contexto"
+                  aria-pressed={alvo !== PAGINA}
+                  aria-describedby="ia-ref-dica"
+                  onClick={() => referencia && setUsarSelecao((u) => !u)}
+                >
+                  <Icone nome={alvo === PAGINA ? "pagina" : nomeCampo ? "texto" : "secao"} tamanho={14} />
+                  {alvo === PAGINA ? (
+                    <span className="ia-contexto-txt">Página inteira</span>
+                  ) : (
+                    <span className="ia-contexto-txt">
+                      {nomeSecao}
+                      {nomeCampo && (
+                        <>
+                          <span className="ia-contexto-sep">›</span>
+                          <b>{nomeCampo}</b>
+                        </>
+                      )}
+                    </span>
+                  )}
+                </button>
+                <span role="tooltip" id="ia-ref-dica" className="ia-ref-dica">
+                  <b>{alvo === PAGINA ? "O assistente olha a página inteira." : `O assistente mexe só em ${alvo.rotulo}.`}</b>
+                  {referencia
+                    ? " Para trocar, selecione outra seção ou um item dela na Estrutura, à esquerda, ou clique na prévia. Clicar aqui alterna com a página inteira."
+                    : " Para focar numa parte, selecione uma seção ou um item dela na Estrutura, à esquerda, ou clique nele na prévia."}
+                </span>
+              </span>
+              {texto.length > 600 && <span className="ia-dica">{800 - texto.length} caracteres</span>}
               <button type="submit" className="ia-enviar" disabled={!texto.trim() || pensando !== null} aria-label="Enviar pedido">
                 <Icone nome="cima" tamanho={18} />
               </button>

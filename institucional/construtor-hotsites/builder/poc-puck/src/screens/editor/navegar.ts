@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from "react";
 import { config } from "../../puck/config";
 import { separarRotulo } from "../../ui/Ajuda";
 
@@ -250,4 +251,26 @@ export function destacarNaPrevia(id: string, valores: unknown[], nome: string, r
   marca = { caixa, quadro: 0, win };
   posiciona();
   if (rolar) win.setTimeout(() => alvos[0].scrollIntoView({ block: "center", behavior: "smooth" }), 80);
+}
+
+/* ---------- Campo marcado ----------
+   O item escolhido dentro da seção (na Estrutura ou com clique na prévia). O assistente usa como
+   referência do pedido: "Abertura Live › Título". */
+let campoMarcado: string | null = null;
+const ouvintesCampo = new Set<() => void>();
+
+export function marcarCampo(idChave: string | null) {
+  if (campoMarcado === idChave) return;
+  campoMarcado = idChave;
+  ouvintesCampo.forEach((f) => f());
+}
+
+export function useCampoMarcado(): string | null {
+  return useSyncExternalStore(
+    (f) => {
+      ouvintesCampo.add(f);
+      return () => ouvintesCampo.delete(f);
+    },
+    () => campoMarcado
+  );
 }

@@ -886,3 +886,146 @@
 .ia-caixa {
   margin-bottom: 12px;
 }
+
+/* ---------- Tamanho: expandir e puxar pelo canto ---------- */
+.ia {
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 64px);
+  transition: width 0.24s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.ia-puxando {
+  transition: none;
+  user-select: none;
+}
+/* Canto de cima à esquerda: o painel fica preso embaixo à direita, então cresce para cima e para a esquerda */
+.ia-canto {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  width: 22px;
+  height: 22px;
+  cursor: nwse-resize;
+  touch-action: none;
+}
+.ia-canto::before {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  width: 9px;
+  height: 9px;
+  border-top: 2px solid var(--b-fraco);
+  border-left: 2px solid var(--b-fraco);
+  border-top-left-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.ia:hover .ia-canto::before,
+.ia-puxando .ia-canto::before {
+  opacity: 0.8;
+}
+
+/* ---------- Referência do pedido (seção ou item selecionado) ---------- */
+.ia-ref {
+  position: relative;
+  display: flex;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.ia-contexto {
+  max-width: 100%;
+}
+.ia-contexto > svg {
+  flex: none;
+}
+.ia-contexto-txt {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ia-contexto-txt b {
+  font-weight: 600;
+}
+.ia-contexto-sep {
+  margin: 0 5px;
+  opacity: 0.6;
+}
+.ia-ref-dica {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: -2px;
+  z-index: 6;
+  width: 264px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #17181c;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 12.5px;
+  line-height: 1.45;
+  box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s linear 0.15s;
+  pointer-events: none;
+}
+.ia-ref-dica b {
+  color: #fff;
+  font-weight: 600;
+}
+.ia-ref-dica::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 18px;
+  border: 6px solid transparent;
+  border-top-color: #17181c;
+}
+.ia-ref:hover .ia-ref-dica,
+.ia-ref:has(:focus-visible) .ia-ref-dica {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0.25s, 0.25s, 0s;
+}
+:root[data-tema="escuro"] .ia-ref-dica {
+  background: #2a2c31;
+  box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+:root[data-tema="escuro"] .ia-ref-dica::after {
+  border-top-color: #2a2c31;
+}
+/* Sem a dica "Enter envia", o botão de enviar vai para a ponta */
+.ia-enviar {
+  margin-left: auto;
+}
+.ia-dica + .ia-enviar {
+  margin-left: 8px;
+}
+/* A referência que valeu para o pedido, em cima do balão de quem pediu */
+.ia-eu-ref {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  padding: 2px 9px;
+  border: 1px solid var(--b-acento-borda);
+  border-radius: 999px;
+  background: var(--b-acento-suave);
+  color: var(--b-acento-forte);
+  font-size: 11.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ia-eu-ref svg {
+  flex: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ia,
+  .ia-ref-dica {
+    transition: none;
+  }
+}
