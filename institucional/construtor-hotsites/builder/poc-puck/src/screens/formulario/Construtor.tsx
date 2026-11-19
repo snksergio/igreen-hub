@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Campo as CampoView } from "../../form/Campo";
-import { FormNoEstilo } from "../FormAvulso";
-import { Maquete } from "./Maquete";
+import { AoEnviar, NaPagina, NavPasso, Passos, secaoDoFormulario, type Passo } from "./Passos";
 import "../../form/form.css";
 import {
   ACEITA,
@@ -75,12 +74,20 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
   const [f, setF] = useState<Formulario | undefined>(() => getFormulario(id));
   const [sel, setSel] = useState<string | null>(null);
   const [lado, setLado] = useState<"campo" | "form">("form");
-  const [vista, setVista] = useState<"montagem" | "pagina" | "modal">("montagem");
+  const [vista, setVista] = useState<Passo>("montagem");
+  const meio = useRef<HTMLElement>(null);
+  // Trocar de passo volta ao topo da coluna do meio.
+  const irPara = (p: Passo) => {
+    setVista(p);
+    meio.current?.scrollTo({ top: 0 });
+  };
   const [salvo, setSalvo] = useState(true);
   const ultimo = useRef(f);
   const usam = useMemo(() => (f ? paginasQueUsam(f.id, listPages()) : []), [f?.id]);
   const paginaId = query.get("pagina");
   const pagina = paginaId ? getPage(paginaId) : usam[0];
+  // A página das prévias: a que veio no endereço, se mostra este formulário; senão, a primeira que mostra.
+  const paginaDaPrevia = f ? [pagina, ...usam].find((p) => secaoDoFormulario(p, f.id)) : undefined;
   const voltar =
     query.get("voltar") === "editor" && paginaId
       ? { href: `#/editar/${paginaId}`, rotulo: "Voltar ao construtor da página" }
@@ -249,26 +256,12 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
           <p className="fc-dica">O campo novo entra logo abaixo do campo escolhido.</p>
         </aside>
 
-        <main className="fc-meio">
-          <div className="seg fc-vistas" role="group" aria-label="Ver">
-            <button aria-pressed={vista === "montagem"} onClick={() => setVista("montagem")}>
-              Montagem
-            </button>
-            <button aria-pressed={vista === "pagina"} onClick={() => setVista("pagina")}>
-              Na página ({camposNaPagina(f).length})
-            </button>
-            <button aria-pressed={vista === "modal"} onClick={() => setVista("modal")}>
-              No modal
-            </button>
-          </div>
-          {vista === "montagem" && (
-            <div className="fc-mont">
-              <Montagem f={f} sel={sel} escolher={escolher} mover={mover} duplicar={duplicar} apagar={apagar} />
-              <Maquete f={f} paginas={usam} preferida={pagina} semPagina={<NaPagina f={f} />} />
-            </div>
-          )}
-          {vista === "pagina" && <NaPagina f={f} />}
-          {vista === "modal" && <NoModal f={f} paginaId={pagina?.id} />}
+        <main className="fc-meio" ref={meio}>
+          <Passos atual={vista} ir={irPara} naPagina={camposNaPagina(f).length} />
+          {vista === "montagem" && <Montagem f={f} sel={sel} escolher={escolher} mover={mover} duplicar={duplicar} apagar={apagar} />}
+          {vista === "pagina" && <NaPagina f={f} pagina={paginaDaPrevia} />}
+          {vista === "enviar" && <AoEnviar f={f} pagina={paginaDaPrevia} />}
+          <NavPasso atual={vista} ir={irPara} />
         </main>
 
         <aside className="fc-ajustes" aria-label="Ajustes">
@@ -367,61 +360,6 @@ function Montagem(p: { f: Formulario; sel: string | null; escolher: (id: string)
         );
       })}
     </ol>
-  );
-}
-
-/** A versão curta como aparece na peça de inscrição. */
-function NaPagina({ f }: { f: Formulario }) {
-  const [r, setR] = useState<Respostas>({});
-  const campos = camposNaPagina(f);
-  return (
-    <div className="fc-palco">
-      <div className="fc-cartao fm-pagina">
-        <p className="fc-palco-tit">Na peça de inscrição</p>
-        {campos.length === 0 ? (
-          <p className="fm-texto">Nenhum campo marcado “Mostrar na página”. A peça mostra só o botão, que abre o formulário inteiro no modal.</p>
-        ) : (
-          <div className="fm-linhas">
-            {campos.map((c) => (
-              <CampoView key={c.id} campo={c} r={r} erros={{}} muda={(id, v) => setR((x) => ({ ...x, [id]: v ?? "" }))} pele="fm" form={f} pageId="" />
-            ))}
-          </div>
-        )}
-        <div className="fm-acoes">
-          <button className="fm-bt fm-bt-pri" type="button" disabled>
-            {f.botaoPagina || "Continuar"}
-          </button>
-        </div>
-        <p className="fm-ajuda">Ao enviar, abre o modal com o resto, já com o que foi digitado. Veja em “No modal”.</p>
-      </div>
-    </div>
-  );
-}
-
-/** O modal de verdade, em prévia: dá para clicar, passar pelas etapas e pelo pagamento simulado. */
-function NoModal({ f, paginaId }: { f: Formulario; paginaId?: string }) {
-  const [completo, setCompleto] = useState(false);
-  const page = paginaId ? getPage(paginaId) : undefined;
-  return (
-    <div className="fc-palco">
-      <div className="seg fc-vistas fc-vistas-p" role="group" aria-label="Como o modal abre">
-        <button aria-pressed={!completo} onClick={() => setCompleto(false)}>
-          Depois da versão curta
-        </button>
-        <button aria-pressed={completo} onClick={() => setCompleto(true)}>
-          Direto, por um botão
-        </button>
-      </div>
-      <div className="fc-cartao fm-pagina">
-        <FormNoEstilo
-          key={`${completo}-${f.estilo}-${JSON.stringify(f.campos).length}-${f.atualizadoEm}`}
-          form={f}
-          completo={completo}
-          iniciais={completo ? {} : { nome: "Ana Souza", whats: "(31) 9 9999-0000", email: "ana@exemplo.com", cidade: "Belo Horizonte/MG" }}
-          ctx={{ page, pageId: paginaId ?? "", pageSlug: page?.slug ?? "", origem: "direto", previa: true }}
-        />
-      </div>
-    </div>
   );
 }
 

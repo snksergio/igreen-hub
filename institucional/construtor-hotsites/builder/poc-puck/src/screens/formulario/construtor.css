@@ -676,3 +676,8 @@
 .fc-previa .fm-linhas > [data-meia] {
   grid-column: 1 / -1;
 }
+
+/* ---------- Montagem: mais respiro antes de cada etapa nova ---------- */
+.fc-lista > .fc-etapa:not(.fc-etapa-1) {
+  margin-top: 30px;
+}

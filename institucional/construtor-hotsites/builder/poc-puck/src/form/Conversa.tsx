@@ -213,7 +213,7 @@ function Resposta({ id, texto, rotulo, editar }: { id?: string; texto: string; r
 }
 
 /** Resposta de teste para cada tipo de campo (botão "Simular fluxo feliz"). */
-function valorDeTeste(c: Campo): Valor {
+export function valorDeTeste(c: Campo): Valor {
   switch (c.tipo) {
     case "texto":
       return c.base === "nome" || c.validacao === "nome-completo" ? "Ana Teste" : "Teste";
