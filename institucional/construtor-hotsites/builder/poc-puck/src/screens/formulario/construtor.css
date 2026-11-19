@@ -310,7 +310,7 @@
 .app .fc-ferr .bt:hover:not(:disabled) {
   border-color: var(--b-linha-forte);
 }
-/* A prévia mostra o campo como na página pública (clara), mesmo com o construtor no tema escuro. */
+/* A prévia do campo segue o tema do construtor: clara no claro, grafite no escuro (ver o fim do arquivo). */
 .fc-previa {
   padding: 12px 14px 14px;
   border-radius: 10px;
@@ -628,4 +628,51 @@
   .fc-paleta .fc-tipos {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
+}
+
+/* ---------- Tema escuro: as prévias dos campos acompanham o construtor ---------- */
+:root[data-tema="escuro"] :is(.fc-previa, .fc-cartao) {
+  --fm-fundo: #1f2024;
+  --fm-texto: #ececf0;
+  --fm-apoio: #a3a7b0;
+  --fm-fraco: #767a84;
+  --fm-linha: #2a2c32;
+  --fm-campo: #16171a;
+  --fm-campo-borda: #3a3d44;
+  --fm-acento: #00a859;
+  --fm-acento-forte: #4cd494;
+  --fm-sobre: #ffffff;
+  --fm-suave: #26272c;
+  --fm-erro: #ffb4a3;
+  --fm-aviso: #ffd98a;
+  --fm-aviso-fundo: rgba(255, 214, 102, 0.1);
+  --fm-ok-fundo: rgba(0, 168, 89, 0.16);
+  --fm-sombra: 0 24px 60px -18px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  color-scheme: dark;
+}
+:root[data-tema="escuro"] .fc-previa {
+  background: var(--b-suave);
+  box-shadow: inset 0 0 0 1px var(--b-linha);
+}
+
+/* ---------- Ferramentas do campo por cima do cartão (não empurram a prévia para baixo) ---------- */
+.fc-item {
+  position: relative;
+}
+.fc-item .fc-ferr {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  padding: 2px;
+  border-radius: 10px;
+  background: var(--b-painel);
+  box-shadow: var(--b-sombra-seg, 0 0 0 1px var(--b-linha));
+}
+.fc-item .fc-item-topo {
+  min-height: 0;
+}
+/* Um campo sozinho na prévia: o de meia largura ocupa a linha toda. */
+.fc-previa .fm-linhas > [data-meia] {
+  grid-column: 1 / -1;
 }

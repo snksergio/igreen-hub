@@ -76,7 +76,7 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
   const [lado, setLado] = useState<"campo" | "form">("form");
   const [vista, setVista] = useState<"montagem" | "pagina" | "modal">("montagem");
   const [salvo, setSalvo] = useState(true);
-  const primeira = useRef(true);
+  const ultimo = useRef(f);
   const usam = useMemo(() => (f ? paginasQueUsam(f.id, listPages()) : []), [f?.id]);
   const paginaId = query.get("pagina");
   const pagina = paginaId ? getPage(paginaId) : usam[0];
@@ -90,15 +90,14 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
   // Salva sozinho, como o construtor de página. Ao sair da tela antes do intervalo, salva na hora.
   const pendente = useRef<Formulario | null>(null);
   useEffect(() => {
-    if (!f) return;
-    if (primeira.current) {
-      primeira.current = false;
-      return;
-    }
+    // Só salva o que mudou de fato: abrir a tela não conta como alteração (nem no modo de
+    // desenvolvimento, em que o React roda o efeito duas vezes).
+    if (!f || f === ultimo.current) return;
     setSalvo(false);
     pendente.current = f;
     const t = setTimeout(() => {
       salvarFormulario(f);
+      ultimo.current = f;
       pendente.current = null;
       setSalvo(true);
     }, 350);
