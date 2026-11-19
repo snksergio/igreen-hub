@@ -12,7 +12,7 @@ body { overflow: hidden; background: #1F2120; color: #F0F2F1; -webkit-user-selec
 #vista { position: fixed; inset: 0; overflow: hidden; cursor: grab; touch-action: none }
 #vista.arrastando { cursor: grabbing }
 #mundo { position: absolute; left: 0; top: 0; transform-origin: 0 0 }
-.quadro { position: absolute; box-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 32px rgba(0,0,0,0.35); background: #EEF0EF }
+.quadro { position: absolute; box-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 32px rgba(0,0,0,0.35); background: transparent }
 .rotulo { position: absolute; left: 4px; bottom: 100%; margin-bottom: 12px; max-width: calc(100% - 8px); font-size: 18px; line-height: 24px; font-weight: 600; color: #A7ABA9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none }
 .titulo-linha { position: absolute; margin: 0; font-size: 72px; line-height: 84px; font-weight: 800; letter-spacing: -0.02em; color: #ECEEED; white-space: nowrap; pointer-events: none }
 .topo { position: fixed; z-index: 5; left: 12px; right: 12px; top: 12px; display: flex; align-items: center; gap: 10px; pointer-events: none }
@@ -37,7 +37,7 @@ body { overflow: hidden; background: #1F2120; color: #F0F2F1; -webkit-user-selec
 </head>
 <body>
 <div id="vista"><div id="mundo"></div></div>
-<div class="topo"><span class="marca">Nova home · reestruturação</span><nav class="abas" aria-label="Páginas do canvas"><a href="index.html">1 · Topo da home · estilos</a><a href="home.html" aria-current="page">2 · Proposta de nova home</a><a href="produtos.html">3 · Tela de Produtos e banners</a></nav></div>
+<div class="topo"><span class="marca">Nova home · reestruturação</span><nav class="abas" aria-label="Páginas do canvas"><a href="index.html">1 · Topo da home · estilos</a><a href="home.html" aria-current="page">2 · Proposta de nova home</a><a href="produtos.html">3 · Tela de Produtos e banners</a><a href="escuro.html">4 · Proposta de tema escuro</a></nav></div>
 <div class="barra" role="toolbar" aria-label="Zoom e navegação">
 <button type="button" id="menos" aria-label="Diminuir o zoom">−</button>
 <span class="nivel" id="nivel">100%</span>

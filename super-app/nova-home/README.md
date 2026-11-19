@@ -6,6 +6,7 @@ As páginas:
 - **1 · Topo da home · estilos:** cinco jeitos de desenhar o topo da home, com a mesma conta e o mesmo conteúdo.
 - **2 · Proposta de nova home:** a home com o topo escolhido, vista por cada aba do cartão (Pay, Cashback e Eletroposto), dois jeitos de mostrar um aviso importante e o convite para quem ainda não tem o produto. A primeira tela mostra a home inteira; as outras, só a altura do celular.
 - **3 · Tela de Produtos e banners:** a tela de Produtos inteira e, embaixo, dez estilos para o banner do topo, todos com o exemplo do Seguro auto e a mesma tela embaixo.
+- **4 · Proposta de tema escuro:** a home no modo escuro em três temas (carvão com brilho verde, preto absoluto e aurora verde) e o tema 1 com dois outros fundos.
 
 Valores, nomes e placas são fictícios.
 
@@ -18,6 +19,7 @@ Cada página mostra as telas nas posições do canvas, em fundo escuro: arraste 
 | 1 · Topo da home · estilos | https://igreen-hub.pages.dev/super-app/nova-home/index.html |
 | 2 · Proposta de nova home | https://igreen-hub.pages.dev/super-app/nova-home/home.html |
 | 3 · Tela de Produtos e banners | https://igreen-hub.pages.dev/super-app/nova-home/produtos.html |
+| 4 · Proposta de tema escuro | https://igreen-hub.pages.dev/super-app/nova-home/escuro.html |
 
 `banners.html` era a antiga página 4 (os estilos de banner, hoje dentro da página 3) e só leva para eles, para os links já compartilhados continuarem abrindo.
 

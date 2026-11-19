@@ -1,6 +1,6 @@
 {
   "nome": "Nova home · reestruturação",
-  "descricao": "Propostas para validar a nova home do app: estilos do topo da home, a home aberta por aba (Pay, Cashback e Eletroposto), a tela de Produtos e dez estilos de banner para ela.",
+  "descricao": "Propostas para validar a nova home do app: estilos do topo, a home por aba (Pay, Cashback e Eletroposto), a tela de Produtos com dez estilos de banner e três temas escuros.",
   "tipo": "proposta",
   "atualizado": "2026-11-19",
   "paginas": [
@@ -15,6 +15,10 @@
     {
       "nome": "3 · Tela de Produtos e banners",
       "arquivo": "produtos.html"
+    },
+    {
+      "nome": "4 · Proposta de tema escuro",
+      "arquivo": "escuro.html"
     }
   ],
   "tags": [
@@ -26,6 +30,8 @@
     "cashback",
     "eletroposto",
     "seguro",
-    "club"
+    "club",
+    "tema escuro",
+    "modo escuro"
   ]
 }
