@@ -1880,3 +1880,11 @@ textarea.cv-in {
     animation: none;
   }
 }
+
+/* Anexo na conversa: a área de enviar já tem a própria borda, sem o cartão em volta */
+.cv-cartao:has(> .fm-anexo) {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}

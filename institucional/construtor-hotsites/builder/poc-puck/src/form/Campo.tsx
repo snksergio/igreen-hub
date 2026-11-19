@@ -230,47 +230,98 @@ export function Campo({ campo: c, r, erros, muda, pele, form, pageId }: Props) {
  * Anexo: escolhe o arquivo e confere tipo e tamanho. Na POC fica guardado só o nome e o tamanho;
  * o arquivo em si iria para o servidor no projeto real.
  */
+/** Pasta com a seta para cima: "enviar um arquivo". */
+const IconeEnviar = () => (
+  <svg viewBox="0 0 48 48" aria-hidden="true">
+    <path className="fm-anexo-pasta" d="M6 15a4 4 0 0 1 4-4h9l4 4h15a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4z" />
+    <path className="fm-anexo-seta" d="M24 32V21M19 25.5l5-5 5 5" />
+  </svg>
+);
+
+const IconeArquivo = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5" />
+  </svg>
+);
+
+/**
+ * Anexo: uma área para soltar o arquivo ou clicar e escolher, com a pasta e a seta de enviar.
+ * Escolhido, vira a linha do arquivo (nome e tamanho) com Trocar e Tirar.
+ */
 export function Anexo({ c, valor, muda }: { c: TCampo; valor: string; muda: (v: string | undefined) => void }) {
   const [erro, setErro] = useState("");
+  const [arrastando, setArrastando] = useState(false);
   const regra = ACEITA[c.aceita ?? "pdf-imagem"];
+  const limite = `${regra.rotulo} · até ${c.maxMb ?? 5} MB`;
+  const pegar = (arq: File | undefined) => {
+    if (!arq) return;
+    const problema = checarArquivo(c, arq);
+    setErro(problema ?? "");
+    if (!problema) muda(`${arq.name} · ${tamanhoLegivel(arq.size)}`);
+  };
+  const entrada = (
+    <input
+      type="file"
+      accept={regra.accept || undefined}
+      aria-label={valor ? `Trocar o arquivo de ${c.rotulo}` : `Escolher o arquivo de ${c.rotulo}`}
+      onChange={(e) => {
+        const arq = e.target.files?.[0];
+        e.target.value = "";
+        pegar(arq);
+      }}
+    />
+  );
+  const [nome, tamanho] = valor.includes(" · ") ? [valor.slice(0, valor.lastIndexOf(" · ")), valor.slice(valor.lastIndexOf(" · ") + 3)] : [valor, ""];
+
   return (
     <div className="fm-anexo" data-cheio={valor ? "" : undefined}>
       {valor ? (
-        <>
+        <div className="fm-anexo-arquivo">
           <span className="fm-anexo-ic" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5" />
-            </svg>
+            <IconeArquivo />
           </span>
-          <span className="fm-anexo-nome">{valor}</span>
-          <button type="button" className="fm-link" onClick={() => muda(undefined)}>
+          <span className="fm-anexo-txt">
+            <b className="fm-anexo-nome">{nome}</b>
+            {tamanho && <small>{tamanho}</small>}
+          </span>
+          <label className="fm-anexo-acao">
+            {entrada}
+            Trocar
+          </label>
+          <button type="button" className="fm-anexo-acao" onClick={() => muda(undefined)}>
             Tirar
           </button>
-        </>
+        </div>
       ) : (
-        <label className="fm-anexo-escolher">
-          <input
-            type="file"
-            accept={regra.accept || undefined}
-            onChange={(e) => {
-              const arq = e.target.files?.[0];
-              e.target.value = "";
-              if (!arq) return;
-              const problema = checarArquivo(c, arq);
-              setErro(problema ?? "");
-              if (!problema) muda(`${arq.name} · ${tamanhoLegivel(arq.size)}`);
-            }}
-          />
-          <span className="fm-anexo-ic" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 16V4M7 9l5-5 5 5M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
-            </svg>
+        <label
+          className="fm-anexo-escolher"
+          data-arrastando={arrastando || undefined}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setArrastando(true);
+          }}
+          onDragLeave={() => setArrastando(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setArrastando(false);
+            pegar(e.dataTransfer.files?.[0]);
+          }}
+        >
+          {entrada}
+          <span className="fm-anexo-ilustra">
+            <IconeEnviar />
           </span>
-          <span>
-            <b>Escolher arquivo</b>
-            <small>
-              {regra.rotulo}, até {c.maxMb ?? 5} MB
-            </small>
+          <span className="fm-anexo-txt">
+            <b>
+              {arrastando ? (
+                "Solte o arquivo aqui"
+              ) : (
+                <>
+                  Arraste o arquivo ou <u>clique para escolher</u>
+                </>
+              )}
+            </b>
+            <small>{limite}</small>
           </span>
         </label>
       )}

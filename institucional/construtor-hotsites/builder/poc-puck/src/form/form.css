@@ -939,79 +939,160 @@
 }
 
 /* ---------- Anexo ---------- */
+/* Vazio: uma área tracejada com a pasta e a seta de enviar, para soltar o arquivo ou clicar.
+   Escolhido: a linha do arquivo, com Trocar e Tirar. */
 .fm-anexo {
   display: grid;
   gap: 6px;
 }
-.fm-anexo-escolher,
-.fm-anexo[data-cheio] {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 56px;
-  padding: 10px 14px;
-  border: 1.5px dashed var(--fm-campo-borda);
-  border-radius: 12px;
-  background: var(--fm-campo);
-  color: var(--fm-texto);
-  font-size: 14px;
-}
-.fm-anexo[data-cheio] {
-  border-style: solid;
-}
 .fm-anexo-escolher {
   position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 22px 18px 20px;
+  border: 1.5px dashed var(--fm-campo-borda);
+  border-radius: 14px;
+  background: var(--fm-campo);
+  color: var(--fm-texto);
+  text-align: center;
   cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
-.fm-anexo-escolher:hover {
+.fm-anexo-escolher:hover,
+.fm-anexo-escolher[data-arrastando] {
   border-color: var(--fm-acento);
+  background: color-mix(in srgb, var(--fm-acento) 6%, var(--fm-campo));
 }
-.fm-anexo-escolher:has(input:focus-visible) {
+.fm-anexo-escolher:has(input:focus-visible),
+.fm-anexo-acao:has(input:focus-visible) {
   outline: 2px solid var(--fm-acento);
   outline-offset: 2px;
 }
-.fm-anexo-escolher input {
+.fm-anexo :is(.fm-anexo-escolher, .fm-anexo-acao) input[type="file"] {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  border: 0;
   opacity: 0;
   cursor: pointer;
 }
-.fm-anexo-escolher > span:last-child {
+.fm-anexo-ilustra {
   display: grid;
-  gap: 1px;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--fm-acento) 12%, transparent);
+  transition: transform 0.2s ease;
 }
-.fm-anexo-escolher small {
+.fm-anexo-escolher:hover .fm-anexo-ilustra,
+.fm-anexo-escolher[data-arrastando] .fm-anexo-ilustra {
+  transform: translateY(-2px);
+}
+.fm-anexo-ilustra svg {
+  width: 32px;
+  height: 32px;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.fm-anexo-pasta {
+  fill: color-mix(in srgb, var(--fm-acento) 18%, transparent);
+  stroke: var(--fm-acento-forte);
+  stroke-width: 2.4;
+}
+.fm-anexo-seta {
+  stroke: var(--fm-acento-forte);
+  stroke-width: 2.6;
+}
+.fm-anexo-txt {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  line-height: 1.35;
+}
+.fm-anexo-txt b {
+  font-size: 14px;
+  font-weight: 600;
+}
+.fm-anexo-txt u {
+  color: var(--fm-acento-forte);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.fm-anexo-txt small {
   font-size: 12.5px;
+  font-weight: 400;
   color: var(--fm-apoio);
+}
+
+/* Arquivo escolhido */
+.fm-anexo-arquivo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 60px;
+  padding: 10px 10px 10px 12px;
+  border: 1px solid var(--fm-acento);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--fm-acento) 6%, var(--fm-campo));
+  color: var(--fm-texto);
 }
 .fm-anexo-ic {
   display: grid;
   place-items: center;
   flex: none;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 10px;
-  background: var(--fm-suave);
+  background: color-mix(in srgb, var(--fm-acento) 14%, transparent);
 }
 .fm-anexo-ic svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   fill: none;
   stroke: var(--fm-acento-forte);
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.fm-anexo-nome {
+.fm-anexo-arquivo .fm-anexo-txt {
   flex: 1;
-  min-width: 0;
+}
+.fm-anexo-nome {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.lv .fm-anexo-escolher,
-.lv .fm-anexo[data-cheio] {
-  border-color: rgba(243, 246, 236, 0.16);
+.fm-anexo-acao {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: 32px;
+  padding: 0 10px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--fm-apoio);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.fm-anexo-acao:hover {
+  background: color-mix(in srgb, var(--fm-texto) 8%, transparent);
+  color: var(--fm-texto);
+}
+
+/* Kit Live: no cartão escuro da página */
+.lv .fm-anexo-escolher {
+  border-color: rgba(243, 246, 236, 0.22);
   background: rgba(1, 7, 2, 0.6);
   color: var(--texto);
 }
@@ -1100,4 +1181,32 @@
   font-size: 15px;
   font-weight: 600;
   color: var(--texto);
+}
+
+/* O anexo e as cores que faltavam nos cartões da página (sem elas, a pasta de enviar sumia) */
+.lv .fm-linhas[data-pele="live"] {
+  --fm-suave: rgba(243, 246, 236, 0.06);
+  --fm-acento-forte: var(--lima);
+  --fm-apoio: rgba(243, 246, 236, 0.55);
+  --fm-linha: rgba(243, 246, 236, 0.1);
+}
+.hs-form .fm-linhas[data-pele="hs"] {
+  --fm-suave: #f1f6ec;
+  --fm-acento-forte: var(--verde-escuro);
+  --fm-apoio: var(--muted);
+  --fm-linha: var(--linha);
+}
+/* No kit claro, todo "label" vira grade com texto em negrito: no anexo, volta ao normal */
+.hs-form .fm-anexo-escolher {
+  gap: 10px;
+  font-weight: 400;
+}
+.hs-form .fm-anexo-acao {
+  display: inline-flex;
+  font-size: 13px;
+}
+/* Kit claro: o título do anexo em negrito, como os rótulos dos outros campos */
+.hs-form div.fm-campo-hs > span:first-child {
+  font-size: 15px;
+  font-weight: 600;
 }
