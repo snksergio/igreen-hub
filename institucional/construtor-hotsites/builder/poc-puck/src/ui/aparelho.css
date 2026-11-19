@@ -10,7 +10,9 @@
   position: relative;
   overflow: hidden;
   border-radius: 12px;
-  background: #fff;
+  /* Mesma cor da moldura: no arredondado e na sobra de meio pixel do encolhimento, o que
+     aparece por trás da página é a moldura, não um fio branco. */
+  background: var(--b-painel);
   box-shadow:
     0 0 0 1px var(--b-linha-forte),
     0 0 0 6px var(--b-painel),
@@ -30,7 +32,7 @@
   display: block;
   border: 0;
   transform-origin: 0 0;
-  background: #fff;
+  background: transparent;
 }
 .ap-rot {
   margin-top: 6px;

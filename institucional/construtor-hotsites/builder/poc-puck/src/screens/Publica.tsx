@@ -60,6 +60,15 @@ export function Publica({ slug, query }: { slug: string; query: URLSearchParams 
     return () => window.removeEventListener("storage", mudou);
   }, [previa]);
 
+  // Prévia: barra de rolagem fina e discreta, como no celular, em vez da clara padrão do navegador.
+  useEffect(() => {
+    if (!previa) return;
+    const estilo = document.createElement("style");
+    estilo.textContent = "html{scrollbar-width:thin;scrollbar-color:rgba(128,132,140,.5) transparent}";
+    document.head.appendChild(estilo);
+    return () => estilo.remove();
+  }, [previa]);
+
   // Ao abrir: volta ao topo e preenche o <head>. Só quando troca de página, não a cada atualização da prévia.
   const existe = Boolean(page);
   useEffect(() => {
