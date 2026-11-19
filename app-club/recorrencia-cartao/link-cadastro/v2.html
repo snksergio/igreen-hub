@@ -147,23 +147,34 @@
 /* no computador o título é maior (24 px): o selo perde um pouco do respiro interno para não encher a linha */
 @media (min-width: 769px) { .selo2 { padding-top: calc(0.05em + 1.5px); padding-bottom: calc(0.05em + 1.5px); } }
 /* ---------- V2 (Calebe, 19/11): o cartão de crédito é o herói da oferta ---------- */
-.heroV2 { position: relative; flex-shrink: 0; height: 214px; margin: 6px 6px 0; border-radius: 26px; overflow: hidden; isolation: isolate; background: radial-gradient(90% 120% at 72% 45%, #13803f 0%, #0a4a26 42%, #052311 100%); animation: bannerIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
-.heroV2::before { content: ''; position: absolute; z-index: -1; top: -20%; bottom: -20%; left: -30%; right: -30%; background: repeating-linear-gradient(115deg, rgba(198, 255, 110, 0) 0 34px, rgba(198, 255, 110, 0.07) 34px 36px); animation: riscosV2 6s linear infinite; }
+/* o fundo volta a ser a textura verde viva da faixa (Sergio, 19/11: mais vívida que o verde-escuro), com riscos em movimento */
+.heroV2 { position: relative; flex-shrink: 0; height: 214px; margin: 6px 6px 0; border-radius: 26px; overflow: hidden; isolation: isolate; background: var(--bg-primary) url(assets/faixa-fundo.jpg) left top / cover no-repeat; animation: bannerIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+.heroV2::before { content: ''; position: absolute; z-index: -1; top: -20%; bottom: -20%; left: -30%; right: -30%; background: repeating-linear-gradient(115deg, rgba(255, 255, 255, 0) 0 34px, rgba(255, 255, 255, 0.06) 34px 36px); animation: riscosV2 6s linear infinite; }
 @keyframes riscosV2 { to { transform: translateX(76px); } }
-/* "CRÉDITO" ao fundo preenchido, num degradê verde-limão que some para baixo (Sergio, 19/11: mais premium que o contorno) */
-.heroV2 .fundoTexto { position: absolute; left: -8px; bottom: -24px; font-family: var(--font-sans); font-size: 104px; line-height: 1; font-weight: 900; letter-spacing: -0.05em; white-space: nowrap; pointer-events: none; background: linear-gradient(180deg, rgba(198, 255, 110, 0.34) 0%, rgba(198, 255, 110, 0.1) 55%, rgba(198, 255, 110, 0.02) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.heroV2 .brilhoV2 { position: absolute; right: 0; top: 50%; width: 300px; height: 230px; margin-top: -100px; border-radius: 50%; background: radial-gradient(closest-side, rgba(198, 255, 110, 0.42), rgba(198, 255, 110, 0)); animation: pulsaV2 3s ease-in-out infinite; }
+/* "CRÉDITO" ao fundo preenchido, num degradê verde-escuro que some para baixo, como um relevo na textura */
+.heroV2 .fundoTexto { position: absolute; z-index: -1; left: -8px; bottom: -24px; font-family: var(--font-sans); font-size: 104px; line-height: 1; font-weight: 900; letter-spacing: -0.05em; white-space: nowrap; pointer-events: none; background: linear-gradient(180deg, rgba(3, 66, 30, 0.5) 0%, rgba(3, 66, 30, 0.2) 55%, rgba(3, 66, 30, 0.04) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.heroV2 .brilhoV2 { position: absolute; z-index: -1; right: 0; top: 50%; width: 300px; height: 230px; margin-top: -100px; border-radius: 50%; background: radial-gradient(closest-side, rgba(220, 255, 160, 0.55), rgba(198, 255, 110, 0)); animation: pulsaV2 3s ease-in-out infinite; }
+/* moedas 3D voando em volta do cartão, com entrada e flutuação */
+.heroV2 .moedaV2 { position: absolute; z-index: 3; pointer-events: none; filter: drop-shadow(0 8px 10px rgba(0, 40, 15, 0.35)); }
+.heroV2 .moedaV2 img { display: block; width: 100%; height: auto; }
+.heroV2 .m1 { width: 54px; right: 4px; top: 6px; animation: moedaEntraV2 0.8s 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) backwards, moedaFlutuaV2 3.6s 1.7s ease-in-out infinite; }
+.heroV2 .m2 { width: 28px; right: 258px; bottom: 8px; animation: moedaEntraV2 0.8s 1.15s cubic-bezier(0.34, 1.56, 0.64, 1) backwards, moedaFlutuaV2 4.2s 2s ease-in-out infinite reverse; }
+@keyframes moedaEntraV2 { from { opacity: 0; transform: scale(0.3) rotate(-40deg); } }
+@keyframes moedaFlutuaV2 { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-6px) rotate(10deg); } }
 @keyframes pulsaV2 { 50% { opacity: 0.6; transform: scale(0.92); } }
 .heroV2 .faisca { position: absolute; z-index: 2; width: 14px; height: 14px; color: #e7ffd0; animation: brilha 2.6s ease-in-out infinite; pointer-events: none; }
 .heroV2 .seloV2 { position: absolute; z-index: 3; left: 16px; top: 16px; display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px 0 10px; border-radius: var(--radius-full); background: #c6ff6e; color: #0a4a22; font-family: var(--font-inter); font-size: 13px; line-height: 16px; font-weight: 800; letter-spacing: 0.02em; white-space: nowrap; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25); animation: popInSelo 0.5s 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; }
 .heroV2 .cena { position: absolute; z-index: 2; right: 30px; top: 58px; width: 236px; height: 148px; perspective: 900px; }
-.cartaoV2 { position: absolute; inset: 0; border-radius: 16px; overflow: hidden; color: #fff; font-family: var(--font-inter); background: linear-gradient(135deg, #1c8248 0%, #0d522b 52%, #07311a 100%); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(198, 255, 110, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25); transform: rotateY(-18deg) rotateX(8deg) rotate(-8deg); animation: entraCartaoV2 0.9s 0.2s cubic-bezier(0.16, 1, 0.3, 1) backwards, flutuaCartaoV2 4.5s 1.1s ease-in-out infinite; }
-.cartaoV2::before { content: ''; position: absolute; right: -50px; top: -70px; width: 190px; height: 190px; border-radius: 50%; background: radial-gradient(closest-side, rgba(198, 255, 110, 0.35), rgba(198, 255, 110, 0)); }
+.cartaoV2 { position: absolute; inset: 0; border-radius: 16px; color: #fff; font-family: var(--font-inter); transform: rotateY(-18deg) rotateX(8deg) rotate(-8deg); animation: entraCartaoV2 0.9s 0.2s cubic-bezier(0.16, 1, 0.3, 1) backwards, flutuaCartaoV2 4.5s 1.1s ease-in-out infinite; }
+/* o cartão tem espessura (Sergio, 19/11): uma borda em degraus à direita e embaixo, o lado que vem para a frente com a inclinação,
+   clara onde a luz bate e escurecendo para dentro, como a lateral de um cartão de verdade */
+.cartaoV2 .faceV2 { position: absolute; inset: 0; border-radius: 16px; overflow: hidden; background: linear-gradient(135deg, #1c8248 0%, #0d522b 52%, #07311a 100%); box-shadow: inset 0 0 0 1px rgba(198, 255, 110, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.28), 1px 1px 0 #7fd99c, 2px 2px 0 #4fb377, 3px 3px 0 #33925b, 4px 4px 0 #237445, 5px 5px 0 #165833, 0 22px 40px rgba(0, 30, 12, 0.45); }
+.cartaoV2 .faceV2::before { content: ''; position: absolute; right: -50px; top: -70px; width: 190px; height: 190px; border-radius: 50%; background: radial-gradient(closest-side, rgba(198, 255, 110, 0.35), rgba(198, 255, 110, 0)); }
 @keyframes entraCartaoV2 { from { opacity: 0; transform: translateX(90px) rotateY(-70deg) rotateX(8deg) rotate(6deg); } }
 @keyframes flutuaCartaoV2 { 0%, 100% { transform: rotateY(-18deg) rotateX(8deg) rotate(-8deg) translateY(0); } 50% { transform: rotateY(-12deg) rotateX(6deg) rotate(-6deg) translateY(-6px); } }
 /* no cartão, só o nome iGreen escrito, e a logo grande ao fundo, como marca-d'água (Sergio, 19/11); o "CRÉDITO" no alto, à direita */
 .cartaoV2 .marcaV2 { position: absolute; left: 18px; top: 15px; font-size: 17px; line-height: 20px; font-weight: 800; letter-spacing: -0.02em; }
-.cartaoV2 .aguaV2 { position: absolute; right: 18px; bottom: -26px; width: auto; height: 150px; max-width: none; opacity: 0.1; transform: rotate(-12deg); pointer-events: none; }
+.cartaoV2 .aguaV2 { position: absolute; right: 14px; bottom: -16px; width: auto; height: 136px; max-width: none; opacity: 0.12; pointer-events: none; }
 .cartaoV2 .tipoV2 { position: absolute; right: 16px; top: 20px; font-size: 11px; line-height: 12px; font-weight: 800; letter-spacing: 0.18em; color: #c6ff6e; }
 .cartaoV2 .chip { position: absolute; left: 18px; top: 46px; width: 34px; height: 26px; border-radius: 6px; background: linear-gradient(135deg, #f6e08a, #c9a640 60%, #e9cf73); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15); }
 .cartaoV2 .chip::after { content: ''; position: absolute; inset: 5px 9px; border: 1px solid rgba(90, 70, 10, 0.45); border-radius: 3px; }
@@ -188,11 +199,13 @@
   .cartaoV2 .chip { top: 44px; width: 30px; height: 23px; }
   .cartaoV2 .nfc { top: 47px; left: 54px; }
   .cartaoV2 .marcaV2 { top: 13px; font-size: 16px; }
-  .cartaoV2 .aguaV2 { height: 130px; bottom: -22px; right: 14px; }
+  .cartaoV2 .aguaV2 { height: 118px; bottom: -14px; right: 12px; }
+  .heroV2 .m1 { width: 44px; right: 2px; top: 16px; }
+  .heroV2 .m2 { width: 22px; right: 216px; bottom: 6px; }
   .cartaoV2 .numV2 { font-size: 13px; bottom: 30px; }
   .cartaoV2 .nomeV2 { bottom: 12px; }
 }
-@media (prefers-reduced-motion: reduce) { .heroV2::before, .heroV2 .brilhoV2, .cartaoV2, .cartaoV2 .shineV2 { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .heroV2::before, .heroV2 .brilhoV2, .cartaoV2, .cartaoV2 .shineV2, .heroV2 .moedaV2 { animation: none; } }
 /* as vantagens da recorrência (Sergio, 18/11): todas em uma linha só */
 .lista .linha { display: block; white-space: nowrap; }
   @keyframes seloTitulo { from { opacity: 0; transform: scale(0.5); } }
@@ -744,14 +757,18 @@
         ${faisca('46%', '22%', 12, 0.4)}${faisca('8%', '70%', 10, 1.6)}
         <span class="seloV2">${IC_RAIO}SÓ NO CARTÃO DE CRÉDITO</span>
         <span class="cena"><span class="cartaoV2">
-          <img class="aguaV2" src="assets/logo.svg" alt="">
-          <span class="marcaV2">iGreen</span>
-          <span class="tipoV2">CRÉDITO</span>
-          <span class="chip"></span><span class="nfc">${IC_NFC}</span>
-          <span class="numV2">•••• •••• •••• 1290</span>
-          <span class="nomeV2">JULIANA MARTINS</span>
-          <span class="shineV2"></span>
+          <span class="faceV2">
+            <img class="aguaV2" src="assets/logo.svg" alt="">
+            <span class="marcaV2">iGreen</span>
+            <span class="tipoV2">CRÉDITO</span>
+            <span class="chip"></span><span class="nfc">${IC_NFC}</span>
+            <span class="numV2">•••• •••• •••• 1290</span>
+            <span class="nomeV2">JULIANA MARTINS</span>
+            <span class="shineV2"></span>
+          </span>
         </span></span>
+        <span class="moedaV2 m1"><img src="assets/moeda-v2.png" alt=""></span>
+        <span class="moedaV2 m2"><img src="assets/moeda-v2-lado.png" alt=""></span>
       </div>
       <div class="corpo flush">
         <div class="titleRow tituloOferta sobe" style="--d: 0.25s"><h2 class="t-modal-title" id="modalTitulo">Pague a luz no <span class="selo2">crédito</span></h2><p class="t-page-subtitle subtitle">Cadastre seu <b class="strong">cartão de crédito</b> e todas as faturas são pagas sozinhas, sem boleto.</p></div>
