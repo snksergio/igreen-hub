@@ -125,7 +125,7 @@
   overflow: hidden;
   color: var(--cv-texto);
   /* a conversa fica numa coluna de leitura no meio, como nos chats de IA */
-  --cv-coluna: max(20px, calc((100% - 620px) / 2));
+  --cv-coluna: max(28px, calc((100% - 700px) / 2));
 }
 /* Um brilho verde bem leve no canto, o mesmo do painel do assistente */
 .cv-aura {
@@ -282,17 +282,22 @@
 .cv-log {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  padding: 28px var(--cv-coluna) 24px;
+  gap: 32px;
+  padding: 24px var(--cv-coluna) 20px;
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-color: var(--cv-linha-forte) transparent;
 }
+/* A conversa começa de baixo, colada na caixa de escrever, como nos apps de mensagem */
+.cv-log > :first-child {
+  margin-top: auto;
+}
+/* Pergunta e resposta ficam juntas; entre um par e outro, mais respiro */
 .cv-par {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
 }
 /* Fala do assistente: esfera ao lado, texto sem balão */
 .cv-fala {
@@ -317,6 +322,23 @@
 }
 .cv-fala-txt b {
   font-weight: 600;
+}
+/* O que já passou fica mais apagado; a fala da vez fica em destaque */
+.cv-fala:not([data-agora]) .cv-fala-txt {
+  color: var(--cv-apoio);
+}
+.cv-liga {
+  color: var(--cv-apoio);
+}
+.cv-fala[data-agora] .cv-pergunta {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.012em;
+  color: var(--cv-texto);
+}
+.cv-fala[data-agora] > .cv-orbe {
+  margin-top: 2px;
 }
 .cv-fala[data-alerta] .cv-fala-txt > p:first-child {
   color: var(--cv-texto);
@@ -597,6 +619,10 @@
   border-color: var(--cv-acento-borda);
   background: var(--cv-acento-suave);
 }
+/* "Prefiro pular": mesmo formato das outras opções, com o texto mais apagado */
+.cv-chip-pular {
+  color: var(--cv-apoio);
+}
 .cv-chip-leve {
   border-color: transparent;
   background: transparent;
@@ -652,10 +678,10 @@
 }
 .cv-bt-leve {
   min-height: 36px;
-  padding: 0 14px;
-  border: 0;
+  padding: 0 16px;
+  border: 1px solid var(--cv-linha-forte);
   border-radius: 999px;
-  background: transparent;
+  background: var(--cv-painel);
   color: var(--cv-apoio);
   font: inherit;
   font-size: 13.5px;
@@ -757,6 +783,27 @@ textarea.cv-in {
 .cv-uf option {
   color: #17181c;
 }
+/* "Pular" dentro da caixa, ao lado de enviar: fica onde a pessoa já está olhando */
+.cv-pular {
+  flex: none;
+  height: 34px;
+  margin-right: 4px;
+  padding: 0 14px;
+  border: 1px solid var(--cv-linha-forte);
+  border-radius: 999px;
+  background: var(--cv-suave);
+  color: var(--cv-apoio);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.cv-pular:hover {
+  border-color: var(--cv-linha-hover);
+  background: var(--cv-eu);
+  color: var(--cv-texto);
+}
 .cv-enviar {
   display: grid;
   place-items: center;
@@ -799,6 +846,7 @@ textarea.cv-in {
   margin-left: 18px;
 }
 .cv-enviar:focus-visible,
+.cv-pular:focus-visible,
 .cv-chip:focus-visible,
 .cv-bt-pri:focus-visible,
 .cv-bt-leve:focus-visible,

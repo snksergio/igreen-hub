@@ -84,26 +84,21 @@ function ligacao(anterior: Campo | undefined, c: Campo, r: Respostas, i: number,
 /** Negrito com **asteriscos** (texto do aceite). */
 const rico = (t: string): ReactNode[] => t.split(/(\*\*[^*]+\*\*)/g).map((p, i) => (p.startsWith("**") && p.endsWith("**") ? <b key={i}>{p.slice(2, -2)}</b> : p));
 
+/** A pergunta vem em destaque; a frase de ligação antes dela, mais apagada. */
 function TextoDaPergunta({ c, liga }: { c: Campo; liga: string }) {
   if (c.tipo === "info") return <p>{c.rotulo}</p>;
-  if (c.tipo === "lgpd")
-    return (
-      <>
-        <p>{liga} Posso usar seus dados para a inscrição e para te mandar os avisos do evento?</p>
-        <p className="cv-termo">{rico(c.rotulo)}</p>
-      </>
-    );
-  const pergunta = c.tipo === "ingresso" ? "Agora, o seu ingresso. Qual você prefere?" : perguntaDe(c);
-  if (!liga) return <p>{pergunta}</p>;
-  return liga.length > 28 ? (
+  const pergunta =
+    c.tipo === "lgpd"
+      ? "Posso usar seus dados para a inscrição e para te mandar os avisos do evento?"
+      : c.tipo === "ingresso"
+        ? "Agora, o seu ingresso. Qual você prefere?"
+        : perguntaDe(c);
+  return (
     <>
-      <p>{liga}</p>
-      <p>{pergunta}</p>
+      {liga && <p className="cv-liga">{liga}</p>}
+      <p className="cv-pergunta">{pergunta}</p>
+      {c.tipo === "lgpd" && <p className="cv-termo">{rico(c.rotulo)}</p>}
     </>
-  ) : (
-    <p>
-      {liga} {pergunta}
-    </p>
   );
 }
 
@@ -118,9 +113,9 @@ function Orbe({ grande = false, ativo = false }: { grande?: boolean; ativo?: boo
 }
 
 /** Fala do assistente: esfera ao lado e texto sem balão, como no chat do construtor. */
-function Fala({ children, alerta = false }: { children: ReactNode; alerta?: boolean }) {
+function Fala({ children, alerta = false, agora = false }: { children: ReactNode; alerta?: boolean; agora?: boolean }) {
   return (
-    <div className="cv-fala" data-alerta={alerta || undefined}>
+    <div className="cv-fala" data-alerta={alerta || undefined} data-agora={agora || undefined}>
       <Orbe />
       <div className="cv-fala-txt">{children}</div>
     </div>
@@ -375,6 +370,7 @@ export function Conversa({
       </header>
 
       <div className="cv-log" ref={log} role="log" aria-live="polite" aria-label="Conversa da inscrição">
+        <div className="cv-par">
         <Fala>
           <p>
             Oi{nome ? `, ${nome}` : ""}! 👋{" "}
@@ -423,6 +419,7 @@ export function Conversa({
             </div>
           </div>
         )}
+        </div>
 
         {/* Respondidas e a pergunta da vez numa lista só: ao responder, a pergunta continua no lugar
             e só a resposta entra. */}
@@ -433,7 +430,7 @@ export function Conversa({
               {daVez && digitando ? (
                 <Digitando />
               ) : (
-                <Fala>
+                <Fala agora={daVez}>
                   <TextoDaPergunta c={c} liga={ligacao(lista[i - 1], c, r, i, daPagina.length > 0)} />
                   {daVez && c.ajuda && c.tipo !== "info" && <p className="cv-ajuda">{c.ajuda}</p>}
                   {daVez && ESCOLHA.has(c.tipo) && <Escolhas key={c.id} c={c} valor={r[c.id]} escolher={(v) => responder(c, v)} pular={!c.obrigatorio && c.tipo !== "lgpd"} agora />}
@@ -466,13 +463,6 @@ export function Conversa({
                       </div>
                     </>
                   )}
-                  {daVez && !SEM_TEXTO.has(c.tipo) && !c.obrigatorio && (
-                    <div className="cv-rapidas">
-                      <button type="button" className="cv-chip cv-chip-leve" onClick={() => responder(c, undefined)}>
-                        Prefiro pular
-                      </button>
-                    </div>
-                  )}
                 </Fala>
               )}
               {!daVez &&
@@ -498,9 +488,10 @@ export function Conversa({
 
         {/* Tudo respondido: a pessoa confere e confirma. Só aqui a inscrição é enviada. */}
         {!atual && !(digitando && fase.tipo === "conversa") && (
-          <>
-            <Fala>
-              <p>Pronto{nome ? `, ${nome}` : ""}! Dá uma conferida nas respostas aqui em cima. Se alguma estiver errada, é só tocar nela pra corrigir.</p>
+          <div className="cv-par">
+            <Fala agora={!confirmou && conversando}>
+              <p className="cv-pergunta">Pronto{nome ? `, ${nome}` : ""}! Dá uma conferida nas respostas aqui em cima.</p>
+              <p className="cv-liga">Se alguma estiver errada, é só tocar nela pra corrigir.</p>
               {!confirmou && conversando && (
                 <div className="cv-rapidas cv-agora">
                   <button type="button" className="cv-bt-pri" onClick={confirmar}>
@@ -510,12 +501,12 @@ export function Conversa({
               )}
             </Fala>
             {confirmou && <Resposta texto={cobra ? "Confirmar e ir para o pagamento" : "Confirmar inscrição"} />}
-          </>
+          </div>
         )}
         {enviando && <Digitando />}
         {aviso && conversando && (
-          <Fala alerta>
-            <p>{aviso.texto}</p>
+          <Fala alerta agora>
+            <p className="cv-pergunta">{aviso.texto}</p>
             <div className="cv-rapidas cv-agora">
               {aviso.campo && (
                 <button
@@ -541,8 +532,8 @@ export function Conversa({
           (digitando ? (
             <Digitando />
           ) : (
-            <Fala>
-              <p>Inscrição feita! 🎉 Agora é só pagar o ingresso pra garantir a sua vaga.</p>
+            <Fala agora>
+              <p className="cv-pergunta">Inscrição feita! 🎉 Agora é só pagar o ingresso pra garantir a sua vaga.</p>
               <div className="cv-cartao cv-pag">
                 <Pagamento
                   sub={fase.sub}
@@ -557,7 +548,13 @@ export function Conversa({
 
       <div className="cv-compor">
         {alvo && !SEM_TEXTO.has(alvo.tipo) ? (
-          <Entrada key={alvo.id} c={alvo} inicial={typeof r[alvo.id] === "string" ? (r[alvo.id] as string) : ""} enviar={(v) => responder(alvo, v)} />
+          <Entrada
+            key={alvo.id}
+            c={alvo}
+            inicial={typeof r[alvo.id] === "string" ? (r[alvo.id] as string) : ""}
+            enviar={(v) => responder(alvo, v)}
+            pular={alvo.obrigatorio ? undefined : () => responder(alvo, undefined)}
+          />
         ) : (
           <div className="cv-escrever" data-parado="">
             <div className="cv-caixa">
@@ -623,7 +620,7 @@ function Escolhas({
   const [lista, setLista] = useState<string[]>(Array.isArray(valor) ? valor : []);
   const cls = `cv-rapidas${agora ? " cv-agora" : ""}`;
   const botaoPular = pular && (
-    <button type="button" className="cv-chip cv-chip-leve" onClick={() => escolher(undefined)}>
+    <button type="button" className="cv-chip cv-chip-pular" onClick={() => escolher(undefined)}>
       Prefiro pular
     </button>
   );
@@ -697,7 +694,7 @@ function PerguntaAnexo({
           {acao}
         </button>
         {pular && (
-          <button type="button" className="cv-chip cv-chip-leve" onClick={() => enviar(undefined)}>
+          <button type="button" className="cv-chip cv-chip-pular" onClick={() => enviar(undefined)}>
             Prefiro pular
           </button>
         )}
@@ -710,7 +707,20 @@ function PerguntaAnexo({
  * Onde a pessoa escreve, com a máscara do tipo. Vazio em pergunta opcional = pular.
  * Com `cancelar`, vira a correção no lugar da resposta (campo + Cancelar e Salvar).
  */
-function Entrada({ c, inicial, enviar, cancelar }: { c: Campo; inicial: string; enviar: (v: string | undefined) => void; cancelar?: () => void }) {
+function Entrada({
+  c,
+  inicial,
+  enviar,
+  cancelar,
+  pular,
+}: {
+  c: Campo;
+  inicial: string;
+  enviar: (v: string | undefined) => void;
+  cancelar?: () => void;
+  /** Pergunta opcional: o botão "Pular" fica dentro da caixa, ao lado de enviar. */
+  pular?: () => void;
+}) {
   const mascara = c.tipo === "whats" ? mascaraWhats : c.tipo === "cpf" ? mascaraCpf : (s: string) => s;
   const [v, setV] = useState(() => mascara(inicial));
   const [erro, setErro] = useState("");
@@ -812,6 +822,11 @@ function Entrada({ c, inicial, enviar, cancelar }: { c: Campo; inicial: string; 
       )}
       <div className="cv-caixa" data-erro={erro ? "" : undefined}>
         {campo}
+        {pular && (
+          <button type="button" className="cv-pular" onClick={pular}>
+            Pular
+          </button>
+        )}
         <button type="submit" className="cv-enviar" aria-label="Enviar resposta">
           <Seta />
         </button>
