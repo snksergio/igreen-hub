@@ -24,24 +24,26 @@
   color: var(--fm-texto);
   -webkit-font-smoothing: antialiased;
 }
+/* Kit iGreen Live: o formulário fica no escuro neutro (grafite), com o verde do construtor, igual à
+   conversa e à confirmação. Não tenta casar com o verde-lima da página. */
 .fm-fundo[data-tema="live"],
 .fm-pagina[data-tema="live"] {
-  --fm-fundo: #0a1710;
-  --fm-texto: #f3f6ec;
-  --fm-apoio: rgba(243, 246, 236, 0.66);
-  --fm-fraco: rgba(243, 246, 236, 0.44);
-  --fm-linha: rgba(243, 246, 236, 0.1);
-  --fm-campo: rgba(1, 7, 2, 0.55);
-  --fm-campo-borda: rgba(243, 246, 236, 0.16);
-  --fm-acento: #a8ff35;
-  --fm-acento-forte: #c6ff7a;
-  --fm-sobre: #06180d;
-  --fm-suave: rgba(243, 246, 236, 0.05);
+  --fm-fundo: #1f2024;
+  --fm-texto: #ececf0;
+  --fm-apoio: #a3a7b0;
+  --fm-fraco: #767a84;
+  --fm-linha: #2a2c32;
+  --fm-campo: #18191c;
+  --fm-campo-borda: #363940;
+  --fm-acento: #00a859;
+  --fm-acento-forte: #4cd494;
+  --fm-sobre: #ffffff;
+  --fm-suave: #26272c;
   --fm-erro: #ffb4a3;
   --fm-aviso: #ffd98a;
   --fm-aviso-fundo: rgba(255, 214, 102, 0.1);
-  --fm-ok-fundo: rgba(168, 255, 53, 0.12);
-  --fm-sombra: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(243, 246, 236, 0.1);
+  --fm-ok-fundo: rgba(0, 168, 89, 0.16);
+  --fm-sombra: 0 30px 80px -16px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 .fm-fundo *,
 .fm-pagina * {
@@ -63,9 +65,10 @@
 .fm-modal {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  width: min(560px, 100%);
+  width: min(600px, 100%);
   max-height: calc(100dvh - 32px);
-  border-radius: 22px;
+  border: 1px solid var(--cv-linha-forte, var(--fm-linha));
+  border-radius: 24px;
   background: var(--fm-fundo);
   box-shadow: var(--fm-sombra);
   overflow: hidden;
@@ -93,16 +96,17 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 14px 16px 14px 24px;
+  padding: 14px 14px 14px 24px;
   border-bottom: 1px solid var(--fm-linha);
 }
 .fm-modal-evento {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
-  color: var(--fm-apoio);
+  letter-spacing: -0.01em;
+  color: var(--fm-texto);
 }
 /* O mesmo X da conversa: discreto, ganha fundo só ao passar o mouse */
 .fm-fechar {
@@ -177,8 +181,8 @@
   justify-content: center;
   gap: 8px;
   min-height: 48px;
-  padding: 0 20px;
-  border-radius: 12px;
+  padding: 0 22px;
+  border-radius: 999px;
   border: 1px solid transparent;
   font: inherit;
   font-size: 15px;
@@ -188,11 +192,12 @@
   transition: background 0.15s ease, border-color 0.15s ease, filter 0.15s ease;
 }
 .fm-bt-pri {
-  background: var(--fm-acento);
-  color: var(--fm-sobre);
+  background: linear-gradient(135deg, #00843f 0%, #00a859 55%, #6fdc66 100%);
+  color: #fff;
+  box-shadow: 0 8px 18px -8px rgba(0, 168, 89, 0.6);
 }
 .fm-bt-pri:hover {
-  filter: brightness(0.95);
+  box-shadow: 0 10px 22px -8px rgba(0, 168, 89, 0.75);
 }
 .fm-bt-sec {
   background: transparent;
@@ -335,8 +340,8 @@
 }
 .fm-campo .fm-input:focus,
 .fm-cupom .fm-input:focus {
-  border-color: var(--fm-acento);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--fm-acento) 18%, transparent);
+  border-color: color-mix(in srgb, var(--fm-acento) 60%, var(--fm-campo-borda));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--fm-acento) 16%, transparent);
 }
 .fm-campo .fm-input[aria-invalid="true"] {
   border-color: var(--fm-erro);
@@ -428,6 +433,10 @@
 .fm-opcao[data-marcado] .fm-marca {
   border-color: var(--fm-acento);
   background: var(--fm-acento);
+}
+/* O ✓ só aparece marcado (no escuro, o ✓ branco aparecia nas opções sem marcar) */
+.fm-opcao:not([data-marcado]) .fm-marca svg {
+  opacity: 0;
 }
 .fm-opcao[data-marcado] input[type="radio"] + .fm-marca {
   box-shadow: inset 0 0 0 4px var(--fm-fundo);

@@ -11,7 +11,7 @@
   background: var(--fm-suave);
 }
 .fa[data-tema="live"] {
-  background: radial-gradient(120% 60% at 50% 0%, rgba(168, 255, 53, 0.1), transparent 60%), #050d08;
+  background: #0e0f11;
 }
 .fa-caixa {
   width: min(600px, 100%);

@@ -278,6 +278,9 @@ export function Conversa({
   const [ingresso, setIngresso] = useState<Respostas>({});
   const [erroIngresso, setErroIngresso] = useState("");
   const [corpo, setCorpo] = useState<HTMLElement | null>(null);
+  // O botão "Simular fluxo feliz" é só para teste: aparece na prévia do construtor ou com ?teste=1
+  // no endereço (ex.: #/p/meu-evento?teste=1). Quem visita a página publicada não vê.
+  const [modoTeste] = useState(() => ctx.previa || (typeof window !== "undefined" && /[?&]teste=1(?:&|$)/.test(window.location.hash + window.location.search)));
   const raiz = useRef<HTMLDivElement>(null);
   const log = useRef<HTMLDivElement>(null);
   const enviado = useRef(false);
@@ -497,7 +500,7 @@ export function Conversa({
         <Orbe grande ativo={escrevendo || enviando} />
         <div className="cv-quem">
           <strong>{ctx.page?.title ?? "Inscrição"}</strong>
-          <span>{escrevendo || enviando ? "digitando…" : "Inscrição"}</span>
+          <span>{escrevendo || enviando ? "digitando…" : ctx.page ? "Inscrição" : "Assistente da iGreen"}</span>
         </div>
         {ctx.previa && (
           <span className="cv-previa" title="A inscrição não é gravada">
@@ -771,6 +774,7 @@ export function Conversa({
       {/* Botão de teste, fora da caixa do modal: faz o caminho feliz até a tela final */}
       {fechar &&
         corpo &&
+        modoTeste &&
         createPortal(
           <button type="button" className="cv-teste" onClick={fluxoFeliz}>
             <svg viewBox="0 0 24 24" aria-hidden="true">

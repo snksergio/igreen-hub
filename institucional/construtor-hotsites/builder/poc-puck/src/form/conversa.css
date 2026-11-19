@@ -120,7 +120,10 @@
   position: relative;
   isolation: isolate;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr) auto;
+  /* a conversa se ajusta à própria largura (modal, prévia do construtor, página avulsa) */
+  container-type: inline-size;
   min-height: 0;
   overflow: hidden;
   color: var(--cv-texto);
@@ -870,6 +873,41 @@ textarea.cv-in {
   .cv-fala-txt,
   .cv-eu-bolha {
     font-size: 15px;
+  }
+}
+/* Conversa estreita (prévia do construtor, celular): margens e textos menores */
+@container (max-width: 460px) {
+  .cv-log,
+  .cv-compor {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .cv-topo {
+    padding-left: 14px;
+  }
+  .cv-fala {
+    gap: 10px;
+  }
+  .cv-fala[data-agora] .cv-pergunta {
+    font-size: 16px;
+  }
+  .cv-dados {
+    width: 100%;
+  }
+  .cv-eu-bolha {
+    max-width: 88%;
+  }
+  .cv-resumo-linha {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 1px;
+  }
+  .cv-resumo-rot,
+  .cv-resumo-val {
+    grid-column: 1;
+  }
+  .cv-resumo-linha .cv-eu-ic {
+    grid-row: 1 / span 2;
+    grid-column: 2;
   }
 }
 @media (prefers-reduced-motion: reduce) {
