@@ -518,3 +518,201 @@ li[data-estado="agora"] .ps-n {
 .app .ps-barra .seg > button {
   white-space: normal;
 }
+
+/* ---------- Passo 2 (v2): fundo verde-escuro chapado e o cartão montado aqui ---------- */
+.ps-pagina {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  padding: 40px 24px;
+  border-radius: 20px;
+  background: #0b3a22;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+.ps-cartao-area {
+  position: relative;
+  width: min(500px, 100%);
+}
+.fm-pagina.ps-cartao {
+  display: grid;
+  gap: 20px;
+  padding: 24px;
+  border-radius: 20px;
+  background: var(--fm-fundo);
+  box-shadow: 0 24px 50px -20px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+.ps-cartao .fm-acoes {
+  margin: 0;
+}
+.ps-cartao .fm-bt-pri {
+  width: 100%;
+  opacity: 1;
+  cursor: default;
+}
+.ps-campo {
+  position: relative;
+  min-width: 0;
+}
+.ps-campo > .ps-alvo {
+  inset: -6px;
+}
+
+/* ---------- Concluir: confirmação e comemoração ---------- */
+.cfm.ps-fim {
+  width: min(460px, calc(100vw - 32px));
+}
+.ps-fim-corpo {
+  display: grid;
+  gap: 12px;
+  animation: ps-fim-entra 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.ps-fim-corpo > h2 {
+  margin: 0;
+}
+.ps-fim-corpo .cfm-txt p {
+  margin: 0 0 8px;
+}
+.ps-mudancas {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ps-mudancas li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  line-height: 1.45;
+}
+.ps-mudancas svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--b-acento-forte);
+}
+.ps-fim-pronto {
+  justify-items: center;
+  text-align: center;
+}
+.ps-fim-pronto .cfm-acoes {
+  justify-content: center;
+}
+.ps-fim-pronto > h2 {
+  animation: ps-fim-sobe 0.45s 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.ps-fim-pronto > p {
+  animation: ps-fim-sobe 0.45s 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.ps-fim-pronto > .cfm-acoes {
+  animation: ps-fim-sobe 0.45s 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* O check que salta, o anel que se espalha e os confetes saindo dele */
+.ps-festa {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  margin: 4px 0 6px;
+}
+.ps-festa .ps-ok-ic {
+  position: relative;
+  z-index: 1;
+  width: 64px;
+  height: 64px;
+  margin: 0;
+  animation: ps-salta 0.6s cubic-bezier(0.2, 1.5, 0.4, 1) both;
+}
+.ps-festa .ps-ok-ic::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  animation: ps-anel 0.9s 0.2s ease-out both;
+}
+.ps-festa .ps-ok-ic svg {
+  width: 30px;
+  height: 30px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ps-festa .ps-ok-ic path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: ps-risca 0.4s 0.3s ease-out forwards;
+}
+.ps-festa i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--w);
+  height: 6px;
+  margin: -3px 0 0 calc(var(--w) / -2);
+  border-radius: 2px;
+  background: var(--c);
+  opacity: 0;
+  animation: ps-confete 0.9s var(--s) cubic-bezier(0.15, 0.7, 0.3, 1) forwards;
+}
+@keyframes ps-fim-entra {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+@keyframes ps-fim-sobe {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes ps-salta {
+  from {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+}
+@keyframes ps-anel {
+  from {
+    box-shadow: 0 0 0 0 rgba(0, 168, 89, 0.55);
+  }
+  to {
+    box-shadow: 0 0 0 22px rgba(0, 168, 89, 0);
+  }
+}
+@keyframes ps-risca {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes ps-confete {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--a)) translateY(0) scale(0.6);
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(calc(var(--d) * -1)) rotate(140deg) scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ps-fim-corpo,
+  .ps-fim-pronto > *,
+  .ps-festa .ps-ok-ic,
+  .ps-festa .ps-ok-ic::after {
+    animation: none;
+  }
+  .ps-festa .ps-ok-ic path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .ps-festa i {
+    display: none;
+  }
+}

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Campo as CampoView } from "../../form/Campo";
-import { AoEnviar, Concluido, ListaNaPagina, NaPagina, NavPasso, Passos, secaoDoFormulario, type Passo } from "./Passos";
+import { AoEnviar, Concluir, ListaNaPagina, NaPagina, NavPasso, Passos, secaoDoFormulario, type Passo } from "./Passos";
 import "../../form/form.css";
 import {
   ACEITA,
@@ -83,6 +83,8 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
   };
   const [salvo, setSalvo] = useState(true);
   const ultimo = useRef(f);
+  // Como o formulário estava ao abrir (ou no último "Concluir"): base do resumo do que mudou.
+  const inicial = useRef(f);
   const usam = useMemo(() => (f ? paginasQueUsam(f.id, listPages()) : []), [f?.id]);
   const paginaId = query.get("pagina");
   const pagina = paginaId ? getPage(paginaId) : usam[0];
@@ -93,7 +95,7 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
       ? { href: `#/editar/${paginaId}`, rotulo: "Voltar ao construtor da página", fim: "Voltar ao construtor da página" }
       : paginaId
         ? { href: `#/pagina/${paginaId}`, rotulo: "Voltar à página", fim: "Voltar à página" }
-        : { href: "#/formularios", rotulo: "Formulários", fim: "Ver os formulários" };
+        : { href: "#/formularios", rotulo: "Formulários", fim: "Voltar para formulários" };
   const [concluido, setConcluido] = useState(false);
 
   // Salva sozinho, como o construtor de página. Ao sair da tela antes do intervalo, salva na hora.
@@ -273,7 +275,22 @@ export function Construtor({ id, query }: { id: string; query: URLSearchParams }
             ir={irPara}
             concluir={() => setConcluido(true)}
           />
-          {concluido && <Concluido f={f} pagina={paginaDaPrevia} voltar={voltar} fechar={() => setConcluido(false)} />}
+          {concluido && inicial.current && (
+            <Concluir
+              f={f}
+              inicial={inicial.current}
+              voltar={voltar}
+              salvar={() => {
+                // Grava agora (sem esperar o salvamento automático) e o resumo recomeça daqui.
+                salvarFormulario(f);
+                ultimo.current = f;
+                pendente.current = null;
+                setSalvo(true);
+                inicial.current = f;
+              }}
+              fechar={() => setConcluido(false)}
+            />
+          )}
         </main>
 
         <aside className="fc-ajustes" aria-label="Ajustes">

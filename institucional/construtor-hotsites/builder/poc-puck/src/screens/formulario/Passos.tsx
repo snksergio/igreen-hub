@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { Campo as CampoView } from "../../form/Campo";
 import { Conversa, valorDeTeste } from "../../form/Conversa";
@@ -8,7 +8,6 @@ import "../../form/form.css";
 import { camposNaPagina, dividirEtapas, podeFicarNaPagina, ROTULO_TIPO, type AjusteSecao, type Campo, type Formulario } from "../../lib/formularios";
 import type { PageRecord } from "../../lib/pages";
 import type { Respostas } from "../../lib/submissions";
-import { enderecoPrevia } from "../../ui/Aparelho";
 import { Icone } from "../../ui/Icone";
 import "../../ui/confirmar.css";
 import "./passos.css";
@@ -101,60 +100,18 @@ export function secaoDoFormulario(p: PageRecord | undefined, formId: string) {
 
 /* ---------- Passo 2: o cartão na página ---------- */
 
-const LARGURA = 580; // a página no layout de celular (vale até 640 px), larga o bastante para não achatar o cartão
-const MARGEM = 32; // onde o cartão fica, a partir do topo da tela da página
-const VOLTA = 18; // quanto do fundo da seção aparece em volta do cartão
-
-type Alvo = { id: string; x: number; y: number; w: number; h: number };
 type Menu = { id: string; x: number; y: number };
 
 /**
- * O cartão do formulário recortado da página de verdade (desenhada na largura de um celular), com
- * um pouco do fundo da seção em volta, como no site. A altura acompanha o cartão. Cada pergunta
- * do cartão pode ser clicada (ou clicada com o botão direito) para tirar da página ou editar.
+ * O cartão do formulário montado aqui mesmo (sem carregar a página): fundo verde-escuro chapado e
+ * o cartão sempre no mesmo desenho, para todo formulário. Muda na hora, sem pulo de tamanho.
+ * Cada pergunta pode ser clicada (ou clicada com o botão direito) para tirar da página ou editar.
  */
-function RecorteDoCartao({ src, f, tirar, editar }: { src: string; f: Formulario; tirar: (id: string) => void; editar: (id: string) => void }) {
-  const frame = useRef<HTMLIFrameElement>(null);
-  const [caixa, setCaixa] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
-  const [alvos, setAlvos] = useState<Alvo[]>([]);
+function CartaoNaPagina({ f, ajuste, tirar, editar }: { f: Formulario; ajuste: AjusteSecao | undefined; tirar: (id: string) => void; editar: (id: string) => void }) {
   const [menu, setMenu] = useState<Menu | null>(null);
+  const area = useRef<HTMLDivElement>(null);
   const caixaMenu = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setCaixa(null);
-    setAlvos([]);
-    let ultimo = "";
-    const t = window.setInterval(() => {
-      const fr = frame.current;
-      const w = fr?.contentWindow;
-      const d = fr?.contentDocument;
-      const alvo = d?.querySelector<HTMLElement>("[data-form-inscricao]");
-      if (!w || !d || !alvo) return;
-      if (!d.getElementById("ps-recorte")) {
-        const s = d.createElement("style");
-        s.id = "ps-recorte";
-        s.textContent = "html{overflow:hidden!important;scrollbar-width:none}";
-        d.head.appendChild(s);
-      }
-      const r = alvo.getBoundingClientRect();
-      const topo = r.top + w.scrollY;
-      if (Math.abs(r.top - MARGEM) > 1) w.scrollTo(0, Math.max(0, topo - MARGEM));
-      const x = Math.max(0, Math.round(r.left) - VOLTA);
-      const y = Math.max(0, Math.round(r.top) - VOLTA);
-      const n = { x, y, w: Math.min(LARGURA, Math.round(r.right) + VOLTA) - x, h: Math.ceil(r.bottom) + VOLTA - y };
-      const campos: Alvo[] = [...alvo.querySelectorAll<HTMLElement>("[data-campo]")].map((el) => {
-        const b = el.getBoundingClientRect();
-        return { id: el.dataset.campo!, x: Math.round(b.left) - x, y: Math.round(b.top) - y, w: Math.round(b.width), h: Math.round(b.height) };
-      });
-      const chave = JSON.stringify([n, campos]);
-      if (chave !== ultimo) {
-        ultimo = chave;
-        setCaixa(n);
-        setAlvos(campos);
-      }
-    }, 250);
-    return () => window.clearInterval(t);
-  }, [src]);
+  const campos = camposNaPagina(f, ajuste);
 
   // O menu fecha com Esc ou clicando fora dele.
   useEffect(() => {
@@ -170,93 +127,80 @@ function RecorteDoCartao({ src, f, tirar, editar }: { src: string; f: Formulario
     };
   }, [menu]);
 
-  const altura = Math.max(844, (caixa?.h ?? 0) + MARGEM * 2);
-  const campo = (id: string) => f.campos.find((c) => c.id === id);
-  return (
-    <div className="ps-recorte-area" style={caixa ? { width: caixa.w, height: caixa.h } : { width: LARGURA, height: 460 }}>
-      <div className="ps-recorte" data-pronto={caixa ? "" : undefined}>
-        <iframe
-          ref={frame}
-          src={src}
-          title="Prévia do cartão de inscrição na página"
-          tabIndex={-1}
-          aria-hidden="true"
-          style={{ width: LARGURA, height: altura, transform: caixa ? `translate(${-caixa.x}px, ${-caixa.y}px)` : undefined }}
-        />
-        {!caixa && <span className="ps-carregando">Carregando a prévia…</span>}
-      </div>
-      {caixa &&
-        alvos.map((a) => (
-          <button
-            key={a.id}
-            type="button"
-            className="ps-alvo"
-            data-aberto={menu?.id === a.id || undefined}
-            style={{ left: a.x - 6, top: a.y - 6, width: a.w + 12, height: a.h + 12 }}
-            aria-label={`${nomeDoCampo(campo(a.id))}: tirar da página ou editar`}
-            aria-haspopup="menu"
-            onClick={() => setMenu({ id: a.id, x: a.x + a.w - 4, y: a.y + 8 })}
-            onContextMenu={(e) => {
-              e.preventDefault();
-              const b = e.currentTarget.parentElement!.getBoundingClientRect();
-              setMenu({ id: a.id, x: e.clientX - b.left, y: e.clientY - b.top });
-            }}
-          >
-            <span className="ps-alvo-dica" aria-hidden="true">
-              Clique para tirar
-            </span>
-          </button>
-        ))}
-      {menu && (
-        <div className="ps-menu" role="menu" ref={caixaMenu} style={{ left: menu.x, top: menu.y }}>
-          <p className="ps-menu-tit">{nomeDoCampo(campo(menu.id))}</p>
-          <button
-            type="button"
-            role="menuitem"
-            onClick={() => {
-              tirar(menu.id);
-              setMenu(null);
-            }}
-          >
-            <Icone nome="olho" tamanho={15} />
-            Tirar da página
-          </button>
-          <button
-            type="button"
-            role="menuitem"
-            onClick={() => {
-              editar(menu.id);
-              setMenu(null);
-            }}
-          >
-            <Icone nome="lapis" tamanho={15} />
-            Editar pergunta
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
+  const abrir = (id: string, alvo: HTMLElement, ponto?: { x: number; y: number }) => {
+    const base = area.current!.getBoundingClientRect();
+    const r = alvo.getBoundingClientRect();
+    const x = ponto ? ponto.x - base.left : r.right - base.left - 214;
+    const y = ponto ? ponto.y - base.top : r.top - base.top + 10;
+    setMenu({ id, x: Math.max(8, Math.min(x, base.width - 220)), y });
+  };
 
-/** Sem página ligada: a versão curta numa peça padrão, só para ter uma ideia. */
-function CartaoPadrao({ f }: { f: Formulario }) {
-  const [r, setR] = useState<Respostas>({});
-  const campos = camposNaPagina(f);
   return (
-    <div className="fc-cartao fm-pagina ps-padrao">
-      {campos.length === 0 ? (
-        <p className="fm-texto">Nenhuma pergunta marcada “Mostrar na página”. A seção mostra só o botão, que abre o formulário inteiro.</p>
-      ) : (
-        <div className="fm-linhas">
-          {campos.map((c) => (
-            <CampoView key={c.id} campo={c} r={r} erros={{}} muda={(id, v) => setR((x) => ({ ...x, [id]: v ?? "" }))} pele="fm" form={f} pageId="" />
-          ))}
+    <div className="ps-pagina">
+      <div className="ps-cartao-area" ref={area}>
+        <div className="fm-pagina ps-cartao" data-tema="live">
+          {campos.length === 0 ? (
+            <p className="fm-texto">Nenhuma pergunta ligada para a página. O cartão mostra só o botão, que abre o formulário inteiro.</p>
+          ) : (
+            <div className="fm-linhas">
+              {campos.map((c) => (
+                <div key={c.id} className="ps-campo" data-meia={c.meia ? "" : undefined}>
+                  <div inert>
+                    <CampoView campo={{ ...c, condicao: undefined, meia: false }} r={{}} erros={{}} muda={() => {}} pele="fm" form={f} pageId="" />
+                  </div>
+                  <button
+                    type="button"
+                    className="ps-alvo"
+                    data-aberto={menu?.id === c.id || undefined}
+                    aria-label={`${nomeDoCampo(c)}: tirar da página ou editar`}
+                    aria-haspopup="menu"
+                    onClick={(e) => abrir(c.id, e.currentTarget)}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
+                      abrir(c.id, e.currentTarget, { x: e.clientX, y: e.clientY });
+                    }}
+                  >
+                    <span className="ps-alvo-dica" aria-hidden="true">
+                      Clique para tirar
+                    </span>
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="fm-acoes">
+            <button className="fm-bt fm-bt-pri" type="button" disabled>
+              {f.botaoPagina || "Continuar"}
+            </button>
+          </div>
         </div>
-      )}
-      <div className="fm-acoes">
-        <button className="fm-bt fm-bt-pri" type="button" disabled>
-          {f.botaoPagina || "Continuar"}
-        </button>
+        {menu && (
+          <div className="ps-menu" role="menu" ref={caixaMenu} style={{ left: menu.x, top: menu.y }}>
+            <p className="ps-menu-tit">{nomeDoCampo(f.campos.find((c) => c.id === menu.id))}</p>
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                tirar(menu.id);
+                setMenu(null);
+              }}
+            >
+              <Icone nome="olho" tamanho={15} />
+              Tirar da página
+            </button>
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                editar(menu.id);
+                setMenu(null);
+              }}
+            >
+              <Icone nome="lapis" tamanho={15} />
+              Editar pergunta
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -264,33 +208,30 @@ function CartaoPadrao({ f }: { f: Formulario }) {
 
 export function NaPagina({ f, pagina, tirar, editar }: { f: Formulario; pagina: PageRecord | undefined; tirar: (id: string) => void; editar: (id: string) => void }) {
   const secao = secaoDoFormulario(pagina, f.id);
-  if (!pagina || !secao?.props.id)
-    return (
-      <div className="ps-palco">
+  const ajuste = secao?.props.camposSecao;
+  const ajustada = Boolean(ajuste && Object.keys(ajuste).length);
+  return (
+    <div className="ps-palco ps-palco-largo">
+      <CartaoNaPagina f={f} ajuste={ajuste} tirar={tirar} editar={editar} />
+      <p className="ps-legenda">
+        <span>Clique numa pergunta para tirar da página.</span>
+        {pagina && (
+          <a href={`#/ver/${pagina.slug}`} target="_blank" rel="noopener">
+            Ver a página inteira
+            <Icone nome="externo" tamanho={13} />
+          </a>
+        )}
+      </p>
+      {!pagina && (
         <p className="ps-aviso">
           <Icone nome="alerta" tamanho={15} />
-          Este formulário ainda não está em nenhuma página. Quando estiver, aparece aqui o cartão de verdade. Por enquanto, uma peça padrão:
+          Este formulário ainda não está em nenhuma página. Para usar, escolha ele no bloco de inscrição de uma página.
         </p>
-        <CartaoPadrao f={f} />
-      </div>
-    );
-  const ajustada = Boolean(secao.props.camposSecao && Object.keys(secao.props.camposSecao).length);
-  return (
-    <div className="ps-palco">
-      <RecorteDoCartao src={enderecoPrevia(pagina.slug, { bloco: secao.props.id })} f={f} tirar={tirar} editar={editar} />
-      <p className="ps-legenda">
-        <span>
-          Seção de inscrição de <b>{pagina.title}</b>. Clique numa pergunta para tirar da página.
-        </span>
-        <a href={`#/ver/${pagina.slug}`} target="_blank" rel="noopener">
-          Ver a página inteira
-          <Icone nome="externo" tamanho={13} />
-        </a>
-      </p>
+      )}
       {ajustada && (
         <p className="ps-aviso">
           <Icone nome="ajustes" tamanho={15} />
-          Esta seção esconde ou traz perguntas só nela (no construtor da página, em “Campos nesta seção”). A prévia já mostra assim.
+          Na página {pagina?.title}, a seção esconde ou traz perguntas só nela (em “Campos nesta seção”). O cartão acima já mostra assim.
         </p>
       )}
     </div>
@@ -366,17 +307,69 @@ export function AoEnviar({ f, pagina }: { f: Formulario; pagina: PageRecord | un
   );
 }
 
-/* ---------- Concluir: aviso de que deu tudo certo ---------- */
+/* ---------- Concluir: confirma com o resumo do que mudou e comemora ---------- */
+
+const TEXTOS_DO_FORM: (keyof Formulario)[] = ["nome", "regras", "botaoPagina", "botaoFinal", "estilo"];
+const lista = (nomes: string[]) => (nomes.length <= 3 ? nomes.join(", ") : `${nomes.slice(0, 3).join(", ")} e mais ${nomes.length - 3}`);
+
+/** O que mudou no formulário desde que a tela foi aberta, em frases curtas. */
+export function resumoDasMudancas(antes: Formulario, agora: Formulario): string[] {
+  const idsAntes = new Map(antes.campos.map((c) => [c.id, c]));
+  const idsAgora = new Map(agora.campos.map((c) => [c.id, c]));
+  const nome = (c: Campo) => (c.tipo === "etapa" ? `etapa “${c.rotulo}”` : nomeDoCampo(c));
+  const novas = agora.campos.filter((c) => !idsAntes.has(c.id)).map(nome);
+  const tiradas = antes.campos.filter((c) => !idsAgora.has(c.id)).map(nome);
+  const semPagina = (c: Campo) => JSON.stringify({ ...c, naPagina: undefined });
+  const editadas = agora.campos.filter((c) => idsAntes.has(c.id) && semPagina(c) !== semPagina(idsAntes.get(c.id)!)).map(nome);
+  const entrou = agora.campos.filter((c) => idsAntes.has(c.id) && Boolean(c.naPagina) && !idsAntes.get(c.id)!.naPagina).map(nome);
+  const saiu = agora.campos.filter((c) => idsAntes.has(c.id) && !c.naPagina && Boolean(idsAntes.get(c.id)!.naPagina)).map(nome);
+  const ficaram = agora.campos.filter((c) => idsAntes.has(c.id)).map((c) => c.id);
+  const ordem = ficaram.join() !== antes.campos.filter((c) => idsAgora.has(c.id)).map((c) => c.id).join();
+  const textos = TEXTOS_DO_FORM.some((k) => JSON.stringify(antes[k]) !== JSON.stringify(agora[k]));
+
+  const frases: string[] = [];
+  if (novas.length) frases.push(`${novas.length === 1 ? "Pergunta nova" : `${novas.length} perguntas novas`}: ${lista(novas)}`);
+  if (tiradas.length) frases.push(`${tiradas.length === 1 ? "Pergunta tirada" : `${tiradas.length} perguntas tiradas`}: ${lista(tiradas)}`);
+  if (editadas.length) frases.push(`${editadas.length === 1 ? "Pergunta editada" : `${editadas.length} perguntas editadas`}: ${lista(editadas)}`);
+  if (entrou.length) frases.push(`Passou a aparecer na página: ${lista(entrou)}`);
+  if (saiu.length) frases.push(`Saiu da página: ${lista(saiu)}`);
+  if (ordem) frases.push("A ordem das perguntas mudou");
+  if (textos) frases.push("Regras e textos do formulário (botões, vagas, prazos ou estilo)");
+  return frases;
+}
+
+/** Pedacinhos que saem do check quando conclui (cor, ângulo, distância, atraso). */
+const CONFETES = Array.from({ length: 18 }, (_, i) => ({
+  a: `${(360 / 18) * i + (i % 2 ? 8 : -6)}deg`,
+  d: `${70 + (i % 3) * 22}px`,
+  c: ["#00a859", "#a8ff35", "#4cd494", "#d8ffa6", "#007a3d"][i % 5],
+  s: `${(i % 4) * 0.03}s`,
+  w: i % 3 === 0 ? "10px" : "6px",
+}));
 
 /**
- * Depois de "Concluir formulário": confirma que está tudo salvo, mostra o resumo e leva de volta.
- * Esc ou "Continuar editando" fecham.
+ * "Concluir formulário": primeiro pergunta se salva e conclui, mostrando o que mudou; no sim,
+ * salva, comemora e oferece continuar editando ou voltar. Esc ou clicar fora fecham.
  */
-export function Concluido({ f, pagina, voltar, fechar }: { f: Formulario; pagina: PageRecord | undefined; voltar: { href: string; fim: string }; fechar: () => void }) {
-  const botao = useRef<HTMLAnchorElement>(null);
+export function Concluir({
+  f,
+  inicial,
+  voltar,
+  salvar,
+  fechar,
+}: {
+  f: Formulario;
+  inicial: Formulario;
+  voltar: { href: string; fim: string };
+  salvar: () => void;
+  fechar: () => void;
+}) {
+  const [fase, setFase] = useState<"confirmar" | "pronto">("confirmar");
+  const caixa = useRef<HTMLDivElement>(null);
+  const [mudancas] = useState(() => resumoDasMudancas(inicial, f));
+
   useEffect(() => {
     const anterior = document.activeElement as HTMLElement | null;
-    botao.current?.focus();
     const tecla = (e: KeyboardEvent) => e.key === "Escape" && fechar();
     document.addEventListener("keydown", tecla);
     return () => {
@@ -384,26 +377,77 @@ export function Concluido({ f, pagina, voltar, fechar }: { f: Formulario; pagina
       anterior?.focus?.();
     };
   }, [fechar]);
+  // O foco vai para o botão principal de cada fase.
+  useEffect(() => {
+    caixa.current?.querySelector<HTMLElement>("[data-principal]")?.focus();
+  }, [fase]);
+
   const alvo = document.querySelector(".app") ?? document.body;
   return createPortal(
     <div className="cfm-fundo" onMouseDown={(e) => e.target === e.currentTarget && fechar()}>
-      <div className="cfm ps-ok" role="dialog" aria-modal="true" aria-labelledby="ps-ok-tit">
-        <span className="ps-ok-ic" aria-hidden="true">
-          <Icone nome="check" tamanho={22} />
-        </span>
-        <h2 id="ps-ok-tit">Formulário concluído</h2>
-        <div className="cfm-txt">
-          <ResumoConclusao f={f} pagina={pagina} />
-        </div>
-        <div className="cfm-acoes">
-          <button type="button" className="bt" onClick={fechar}>
-            Continuar editando
-          </button>
-          <a ref={botao} className="bt bt-pri" href={voltar.href}>
-            {voltar.fim}
-            <Icone nome="chevDir" tamanho={15} />
-          </a>
-        </div>
+      <div className="cfm ps-fim" role="dialog" aria-modal="true" aria-labelledby="ps-fim-tit" data-fase={fase} ref={caixa}>
+        {fase === "confirmar" ? (
+          <div className="ps-fim-corpo" key="confirmar">
+            <h2 id="ps-fim-tit">Salvar e concluir o formulário?</h2>
+            <div className="cfm-txt">
+              {mudancas.length ? (
+                <>
+                  <p>O que você mudou desde que abriu:</p>
+                  <ul className="ps-mudancas">
+                    {mudancas.map((m) => (
+                      <li key={m}>
+                        <Icone nome="check" tamanho={14} />
+                        {m}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <p>Nenhuma mudança desde que você abriu. Pode concluir.</p>
+              )}
+            </div>
+            <div className="cfm-acoes">
+              <button type="button" className="bt" onClick={fechar}>
+                Continuar editando
+              </button>
+              <button
+                type="button"
+                className="bt bt-pri"
+                data-principal=""
+                onClick={() => {
+                  salvar();
+                  setFase("pronto");
+                }}
+              >
+                Sim, salvar e concluir
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="ps-fim-corpo ps-fim-pronto" key="pronto" role="status">
+            <div className="ps-festa" aria-hidden="true">
+              {CONFETES.map((p, i) => (
+                <i key={i} style={{ "--a": p.a, "--d": p.d, "--c": p.c, "--s": p.s, "--w": p.w } as CSSProperties} />
+              ))}
+              <span className="ps-ok-ic">
+                <svg viewBox="0 0 24 24">
+                  <path pathLength={1} d="M5 12.5l4.5 4.5L19 7.5" />
+                </svg>
+              </span>
+            </div>
+            <h2 id="ps-fim-tit">Formulário concluído com sucesso</h2>
+            <p className="cfm-txt">As alterações foram salvas.</p>
+            <div className="cfm-acoes">
+              <button type="button" className="bt" onClick={fechar}>
+                Continuar editando
+              </button>
+              <a className="bt bt-pri" href={voltar.href} data-principal="">
+                {voltar.fim}
+                <Icone nome="chevDir" tamanho={15} />
+              </a>
+            </div>
+          </div>
+        )}
       </div>
     </div>,
     alvo
@@ -472,36 +516,5 @@ export function ListaNaPagina({ f, pagina, muda }: { f: Formulario; pagina: Page
         {sempreDepois ? "Ingresso e campos ocultos ficam sempre para depois de enviar. " : ""}Para incluir ou tirar perguntas, volte à Montagem.
       </p>
     </div>
-  );
-}
-
-/** O resumo no "Concluir formulário". */
-export function ResumoConclusao({ f, pagina }: { f: Formulario; pagina: PageRecord | undefined }) {
-  const total = f.campos.filter((c) => !naoPergunta(c)).length;
-  const noCartao = camposNaPagina(f).filter((c) => !naoPergunta(c)).length;
-  return (
-    <>
-      <p>Alterações salvas com sucesso.</p>
-      <ul className="pl-resumo">
-        <li>
-          <b>{total}</b> {total === 1 ? "pergunta" : "perguntas"} no formulário
-        </li>
-        <li>
-          <b>{noCartao}</b> no cartão da página
-        </li>
-        <li>
-          <b>{total - noCartao}</b> depois de enviar
-        </li>
-      </ul>
-      <p>
-        {pagina ? (
-          <>
-            Aparece na página <b>{pagina.title}</b>.
-          </>
-        ) : (
-          "Ainda não está em nenhuma página: escolha este formulário no bloco de inscrição de uma página."
-        )}
-      </p>
-    </>
   );
 }
