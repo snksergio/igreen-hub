@@ -353,7 +353,7 @@ body.real .camada > .rolagem { overscroll-behavior-y: auto; }
 <body>
 <main class="palco">
 <button id="irFluxos" type="button" aria-label="Ver a lista de fluxos"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"></path></svg><span>Fluxos</span></button>
-<nav class="lateral esq" aria-label="Fluxos do protótipo"><div class="marca"><h1>Recorrência do pagamento no cartão · padrão do app</h1><p>No visual do app em produção (Figma APP V1). O cliente cadastra o cartão uma vez e as faturas são cobradas nele: a recorrência fica no próprio cartão, ativada na fatura, no cadastro do cartão, depois de um pagamento ou em Perfil › Pagamentos. A fatura em aberto entra e não atrasa. Cobrança todo dia 8, 3 dias antes do vencimento, com aviso 2 dias antes. Com a recorrência no cartão de crédito, o cliente ganha 2% extra, à parte do benefício dele (que muda de cliente para cliente). Regras fictícias, do benchmark de 12/11.</p></div><div class="benef"><span class="benef-rot" id="benefRot">Benefício do cliente</span><div class="benef-seg" role="radiogroup" aria-labelledby="benefRot"><button type="button" role="radio" aria-checked="true" data-benef="desc">Com desconto</button><button type="button" role="radio" aria-checked="false" data-benef="normal">Pix da energia</button></div></div><div class="benef" hidden><span class="benef-rot" id="banRot">Banner das faturas</span><div class="benef-seg" role="radiogroup" aria-labelledby="banRot"><button type="button" role="radio" aria-checked="false" data-banner="1">1</button><button type="button" role="radio" aria-checked="false" data-banner="2">2</button><button type="button" role="radio" aria-checked="false" data-banner="7">7</button><button type="button" role="radio" aria-checked="false" data-banner="11">11</button><button type="button" role="radio" aria-checked="false" data-banner="13">13</button><button type="button" role="radio" aria-checked="false" data-banner="15">15</button><button type="button" role="radio" aria-checked="true" data-banner="23">23</button></div><span class="ban-nome" id="banNome"></span></div><div class="benef"><span class="benef-rot" id="paRot">Pix Automático no Copiar Pix</span><div class="benef-seg" role="radiogroup" aria-labelledby="paRot"><button type="button" role="radio" aria-checked="true" data-pa-ver="">Sem</button><button type="button" role="radio" aria-checked="false" data-pa-ver="1">Versão 1</button><button type="button" role="radio" aria-checked="false" data-pa-ver="2">Versão 2</button></div><span class="ban-nome" id="paNome"></span></div><div class="abas-lat" role="tablist" aria-label="Fluxos ou testes"><button type="button" role="tab" aria-selected="true" data-aba="fluxos">Fluxos</button><button type="button" role="tab" aria-selected="false" data-aba="testes">Testes automáticos</button></div><div id="fluxos"></div><div id="testes" hidden></div></nav>
+<nav class="lateral esq" aria-label="Fluxos do protótipo"><div class="marca"><h1>Recorrência do pagamento no cartão · padrão do app</h1><p>No visual do app em produção (Figma APP V1). O cliente cadastra o cartão uma vez e as faturas são cobradas nele: a recorrência fica no próprio cartão, ativada na fatura, no cadastro do cartão, depois de um pagamento ou em Perfil › Pagamentos. A fatura em aberto entra e não atrasa. Cobrança todo dia 8, 3 dias antes do vencimento, com aviso 2 dias antes. Com a recorrência no cartão de crédito, o cliente ganha 5% extra na próxima fatura, à parte do benefício dele (que muda de cliente para cliente). Regras fictícias, do benchmark de 12/11.</p></div><div class="benef"><span class="benef-rot" id="benefRot">Benefício do cliente</span><div class="benef-seg" role="radiogroup" aria-labelledby="benefRot"><button type="button" role="radio" aria-checked="true" data-benef="desc">Com desconto</button><button type="button" role="radio" aria-checked="false" data-benef="normal">Pix da energia</button></div></div><div class="benef" hidden><span class="benef-rot" id="banRot">Banner das faturas</span><div class="benef-seg" role="radiogroup" aria-labelledby="banRot"><button type="button" role="radio" aria-checked="false" data-banner="1">1</button><button type="button" role="radio" aria-checked="false" data-banner="2">2</button><button type="button" role="radio" aria-checked="false" data-banner="7">7</button><button type="button" role="radio" aria-checked="false" data-banner="11">11</button><button type="button" role="radio" aria-checked="false" data-banner="13">13</button><button type="button" role="radio" aria-checked="false" data-banner="15">15</button><button type="button" role="radio" aria-checked="true" data-banner="23">23</button></div><span class="ban-nome" id="banNome"></span></div><div class="benef"><span class="benef-rot" id="paRot">Pix Automático no Copiar Pix</span><div class="benef-seg" role="radiogroup" aria-labelledby="paRot"><button type="button" role="radio" aria-checked="true" data-pa-ver="">Sem</button><button type="button" role="radio" aria-checked="false" data-pa-ver="1">Versão 1</button><button type="button" role="radio" aria-checked="false" data-pa-ver="2">Versão 2</button></div><span class="ban-nome" id="paNome"></span></div><div class="abas-lat" role="tablist" aria-label="Fluxos ou testes"><button type="button" role="tab" aria-selected="true" data-aba="fluxos">Fluxos</button><button type="button" role="tab" aria-selected="false" data-aba="testes">Testes automáticos</button></div><div id="fluxos"></div><div id="testes" hidden></div></nav>
 <div class="centro">
 <div class="moldura" id="moldura">
 <div class="celular">
@@ -1195,21 +1195,24 @@ const chev = (cor = '#8B9094') => svg(P.direita, 18, 2.2).replace('stroke="curre
 // +2% extra por ter a recorrência no cartão de crédito (Calebe, 23/11): o cartão não tem nada a ver com o Pix da energia nem com o
 // desconto do cliente, que muda de um para outro (10% em Minas, 16, 20, 24, 28). Os textos da recorrência falam só dos 2% extras
 // (antes, 13/11: "+2% no Pix da energia", à parte dos 16%)
-const EXTRA_CARTAO = 2;
+// Calebe via Sergio (23/11, à noite): em vez de +2% todo mês, +5% numa fatura só, a próxima depois de ativar. Depois que ela é
+// paga pela recorrência, o card diz só "Recorrência ativa", sem bônus. A palavra é "fatura", não "boleto"
+const EXTRA_CARTAO = 5;
+const bonusUsado = est => !!est.auto && !noAutoOut(est) && !!(contasDe(est).out || {}).auto;
 const pixCartao = (id = 'out') => descEm(id, EXTRA_CARTAO);
 const mais2 = () => `<span style="flex-shrink: 0; display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border-radius: 10px; background: #338449; color: #FFFFFF; font-size: 11px; line-height: 20px; font-weight: 700; white-space: nowrap">+${EXTRA_CARTAO}%</span>`;
 // a pílula de fora a fora: o selo +2%, o que ele é e, com a fatura conhecida, quanto dá
 // (dentro de uma opção, que fica verde quando escolhida, ela é branca com borda e, com o valor, só "extra nesta fatura")
-const pilula2 = (v = '', mt = 8, branca = false) => `<span data-mov="surgir" style="margin-top: ${mt}px; min-height: 30px; box-sizing: border-box; border-radius: 15px; background: ${branca ? '#FFFFFF; border: 1px solid #B4CFBE' : '#EBF3ED'}; padding: ${branca ? '4px 11px 4px 4px' : '5px 12px 5px 5px'}; display: flex; align-items: center; gap: 8px; font-size: 12px; line-height: 16px; font-weight: 600; color: #276638; text-align: left; white-space: normal">${mais2()}<span style="flex-grow: 1; min-width: 0; text-wrap: pretty">${branca && v ? 'extra nesta fatura' : 'extra no cartão de crédito'}</span>${v ?`<span style="flex-shrink: 0; font-weight: 700; font-variant-numeric: tabular-nums">${v}</span>` : ''}</span>`;
-const kvMais2 = i => kvRec('Bônus do cartão','<span style="color: #276638">+2% extra</span>', i);
+const pilula2 = (v = '', mt = 8, branca = false) => `<span data-mov="surgir" style="margin-top: ${mt}px; min-height: 30px; box-sizing: border-box; border-radius: 15px; background: ${branca ? '#FFFFFF; border: 1px solid #B4CFBE' : '#EBF3ED'}; padding: ${branca ? '4px 11px 4px 4px' : '5px 12px 5px 5px'}; display: flex; align-items: center; gap: 8px; font-size: 12px; line-height: 16px; font-weight: 600; color: #276638; text-align: left; white-space: normal">${mais2()}<span style="flex-grow: 1; min-width: 0; text-wrap: pretty">na próxima fatura</span>${v ?`<span style="flex-shrink: 0; font-weight: 700; font-variant-numeric: tabular-nums">${v}</span>` : ''}</span>`;
+const kvMais2 = (i, est) => (est && bonusUsado(est) ? '' : kvRec('Bônus do cartão', `<span style="color: #276638">+${EXTRA_CARTAO}% extra</span>`, i));
 // o que ele ganha com a recorrência (Calebe, 23/11): só os 2% extras do cartão de crédito, igual para todo cliente, com
 // desconto ou Pix da energia, e a fatura paga sozinha. Nada de "16% garantidos" (antes: o desconto que não se perde)
-const ganhoCurto = () => `Ganhe +${EXTRA_CARTAO}% extra no cartão de crédito`;
-const ganhoAtivo = () => `+${EXTRA_CARTAO}% extra no cartão de crédito`;
+const ganhoCurto = () => `Ganhe +${EXTRA_CARTAO}% na próxima fatura`;
+const ganhoAtivo = est => (est && bonusUsado(est) ? '' : `+${EXTRA_CARTAO}% na próxima fatura`);
 const forteV = t => `<span style="font-weight: 600; color: #0D0F0F">${t}</span>`;
 const ganhoSub = () => `A fatura é paga sozinha no ${forteV('cartão de crédito')}, antes de vencer.`;
-const ganhoFrase = () => `Você não esquece a conta e ganha ${EXTRA_CARTAO}% extra.`;
-const garantia = () => `continuar com os ${EXTRA_CARTAO}% extras`;
+const ganhoFrase = () => `Você não esquece a conta e ganha ${EXTRA_CARTAO}% extra na próxima fatura.`;
+const garantia = () => `garantir os ${EXTRA_CARTAO}% desta fatura`;
 // the pieces
 const rowInfo = (ic, rot, val, dir = '', i = 0) => `<div style="min-height: 64px; box-sizing: border-box;${i ? ' border-top: 1px solid #EFF1F2;' : ''} padding: 12px 0; display: flex; align-items: center; gap: 12px">${U.circulo(svg(ic, 18, 2), { bg: '#EFF1F2', cor: '#3D4246', s: 40 })}<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; line-height: 18px; font-weight: 500; color: #6A6E71">${rot}</span><span style="font-size: 14px; line-height: 20px; font-weight: 600; text-wrap: pretty">${val}</span></span>${dir}</div>`;
 const kvRec = (k, v, i) => `<div style="min-height: 48px; box-sizing: border-box;${i ? ' border-top: 1px solid #EFF1F2;' : ''} display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 14px; line-height: 20px"><span style="color: #6A6E71; font-weight: 500; white-space: nowrap">${k}</span><span style="font-weight: 600; text-align: right; font-variant-numeric: tabular-nums">${v}</span></div>`;
@@ -1280,9 +1283,9 @@ const statusFatura = (tom, t, d) => { const ok = tom === 'ok'; return `<div role
 // a confirmação com a recorrência recém-ativada: só informa (sem interruptor, sem botão)
 function cardRecInfo(est) {
   const a = est.auto;
-  const sb = `Próximas faturas com +${EXTRA_CARTAO}% extra`;
+  const sb = ganhoAtivo(est);
   return cartaoVerde(`<div style="padding: 14px 12px; display: flex; align-items: center; gap: 10px">${U.circulo(svg(IC_CARTAO_OK, 18, 2.2), { bg: '#338449', cor: '#FFFFFF', s: 36 })}<span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 20px; font-weight: 600; white-space: nowrap">Recorrência ativada</span><span style="font-size: 13px; line-height: 18px; font-weight: 600; color: #276638; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">${sb}</span></span></div>
-<div style="margin: 0 4px 4px; border-radius: 12px; background: #FFFFFF; padding: 0 14px">${kvRec('Cartão', nomeCartao(a.cartao), 0)}${kvRec('Próxima cobrança', proxCob(est), 1)}${kvMais2(1)}</div>`);
+<div style="margin: 0 4px 4px; border-radius: 12px; background: #FFFFFF; padding: 0 14px">${kvRec('Cartão', nomeCartao(a.cartao), 0)}${kvRec('Próxima cobrança', proxCob(est), 1)}${kvMais2(1, est)}</div>`);
 }
 // nas faturas pagas, a cobrada pela recorrência leva um selo verde com a seta da recorrência no canto de cima do ícone (como
 // um selo de notificação, sem mais texto na linha)
@@ -1314,23 +1317,23 @@ const ordemCartoes = est => { const ct = cartDe(est), uso = ct.uso || {}; return
 // gain in a line with a "?". On, green as "Usando R$ 9,20 de cashback", with what it gains and its switch to turn it off
 function cardRec(est) {
   const a = est.auto, cob = cobDe(est), ruim = cob === 'recusada' || cob === 'bloqueado';
-  const topo = (ic, icBg, icCor, titulo, sub, subCor, subPeso, on) => `<div data-rec-card style="padding: 14px 12px; display: flex; align-items: center; gap: 10px">${U.circulo(svg(ic, 18, 2.2), { bg: icBg, cor: icCor, s: 36 })}<button data-rec-abrir style="flex-grow: 1; min-width: 0; border: 0; background: transparent; padding: 0; color: #0D0F0F; text-align: left; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 20px; font-weight: 600; white-space: nowrap">${titulo}</span><span style="font-size: 13px; line-height: 18px; font-weight: ${subPeso}; color: ${subCor}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">${sub}</span></button>${sw3(on, ' data-rec-sw aria-label="Recorrência do pagamento"')}</div>`;
+  const topo = (ic, icBg, icCor, titulo, sub, subCor, subPeso, on) => `<div data-rec-card style="padding: 14px 12px; display: flex; align-items: center; gap: 10px">${U.circulo(svg(ic, 18, 2.2), { bg: icBg, cor: icCor, s: 36 })}<button data-rec-abrir style="flex-grow: 1; min-width: 0; border: 0; background: transparent; padding: 0; color: #0D0F0F; text-align: left; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 20px; font-weight: 600; white-space: nowrap">${titulo}</span>${sub ? `<span style="font-size: 13px; line-height: 18px; font-weight: ${subPeso}; color: ${subCor}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">${sub}</span>` : ''}</button>${sw3(on, ' data-rec-sw aria-label="Recorrência do pagamento"')}</div>`;
   if (!a) return AJ.cartao(`<div data-rec-como style="cursor: pointer">${topo(IC_AUTO, '#EBF3ED', K.VERDE_TXT, 'Recorrência do pagamento', 'Pagamento automático', '#6A6E71', 500, false).replace('<button data-rec-abrir', '<button data-rec-como')}<div style="border-top: 1px solid #EFF1F2; padding: 12px"><div style="display: flex; align-items: center; justify-content: space-between; gap: 12px"><span style="min-width: 0; font-size: 13px; line-height: 18px; font-weight: 500; color: #3D4246; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">${ganhoLinha()}</span>${ajuda(' data-rec-como aria-label="Como funciona a recorrência"')}</div>${pilula2('', 4)}</div></div>`);
   // the link under the panel: "Ver a recorrência" when all is fine; with a failed charge, the action that fixes it
   const link = (t, attrs, cor) => `<button${attrs} style="width: 100%; min-height: 44px; box-sizing: border-box; border: 0; border-top: 1px solid #EFF1F2; background: transparent; color: ${cor}; padding: 0; display: flex; align-items: center; justify-content: space-between; font-size: 13px; line-height: 18px; font-weight: 600">${t}${svg(P.direita, 16, 2.2)}</button>`;
-  const painel = `<div style="margin: 0 4px 4px; border-radius: 12px; background: #FFFFFF; padding: 0 14px">${kvRec('Cartão', nomeCartao(a.cartao), 0)}${ruim ? kvRec(cob === 'recusada' ? 'Nova tentativa' : 'Vence em', `${cob === 'recusada' ? '09/10' : COB.venc} · ${brl(DEF.out.valor)}`, 1) : kvRec('Próxima cobrança', proxCob(est), 1) + kvMais2(1)}${ruim ? link('Trocar o cartão', ' data-auto-trocar-agora', '#C25400') : link('Ver a recorrência', ' data-auto-detalhe', K.VERDE_TXT)}</div>`;
+  const painel = `<div style="margin: 0 4px 4px; border-radius: 12px; background: #FFFFFF; padding: 0 14px">${kvRec('Cartão', nomeCartao(a.cartao), 0)}${ruim ? kvRec(cob === 'recusada' ? 'Nova tentativa' : 'Vence em', `${cob === 'recusada' ? '09/10' : COB.venc} · ${brl(DEF.out.valor)}`, 1) : kvRec('Próxima cobrança', proxCob(est), 1) + kvMais2(1, est)}${ruim ? link('Trocar o cartão', ' data-auto-trocar-agora', '#C25400') : link('Ver a recorrência', ' data-auto-detalhe', K.VERDE_TXT)}</div>`;
   // a failed charge: the same active card, in orange, as an alert: what happened and why on top, the switch orange (still on,
   // it can turn it off), the panel in black as usual, and under "Trocar o cartão" a strip on orange with the consequence
   if (ruim) {
     const rec = cob === 'recusada';
-    const perde = `perderá os ${EXTRA_CARTAO}% extras`;
+    const perde = `perderá os ${EXTRA_CARTAO}% desta fatura`;
     // the strip is an action too: a tap anywhere on it opens the swap, as the link does
     const aviso = `<div role="note" data-mov="alerta" data-auto-trocar-agora style="margin: 0 4px 4px; border-radius: 12px; background: #F46D00; padding: 10px 14px 10px 12px; display: flex; align-items: center; gap: 10px; font-size: 12px; line-height: 18px; font-weight: 600; color: #FFFFFF; text-wrap: pretty; cursor: pointer"><span style="width: 24px; height: 24px; flex-shrink: 0; border-radius: 12px; background: #FFFFFF; color: #F46D00; display: flex; align-items: center; justify-content: center">${svg(P.alerta, 14, 2.6)}</span><span style="min-width: 0">${rec ? `Sem limite até lá, troque o cartão ou você ${perde}.` : `Troque o cartão até ${COB.venc} ou você ${perde}.`}</span></div>`;
     return AJ.cartao(topo(P.alerta, '#F46D00', '#FFFFFF', rec ? 'Cobrança recusada' : 'Cartão bloqueado', rec ? 'Falta de limite no cartão' : 'Não aceita mais cobranças', '#C25400', 600, true) + painel + aviso)
       .replace('background: #FFFFFF; border: 1px solid #EFF1F2', 'background: #FFF2E9; border: 1px solid #F9B98A')
       .replace('background: #338449; display: flex; justify-content: flex-end', 'background: #F46D00; display: flex; justify-content: flex-end');
   }
-  return cartaoVerde(topo(IC_CARTAO_OK, '#338449', '#FFFFFF', 'Recorrência ativa', ganhoAtivo(), '#276638', 600, true) + painel);
+  return cartaoVerde(topo(IC_CARTAO_OK, '#338449', '#FFFFFF', 'Recorrência ativa', ganhoAtivo(est), '#276638', 600, true) + painel);
 }
 // the invoices: the recurrence's card on top when it is on (orange when the charge failed). Off, a banner sells the +2% in its
 // place (Calebe, 18/11), and the card goes into the bill, next to the cards. Seven banners (the canvas picks), switched by
@@ -1387,10 +1390,11 @@ ${btnBanner('Ativar recorrência', 'position: absolute; left: 16px; bottom: 16px
   '23': () => raizBanner('height: 140px; box-sizing: border-box; border-radius: 20px; background: radial-gradient(120% 140% at 85% 60%, #1F6B3F 0%, #134629 50%, #0C2E1B 100%); color: #FFFFFF; box-shadow: 0 8px 20px rgba(12,46,27,0.24)',
     `<span aria-hidden="true" style="position: absolute; left: 14px; right: 14px; top: 10px; display: flex; gap: 4px"><span class="bn23-barra bn23-b1"><span></span></span><span class="bn23-barra bn23-b2"><span></span></span><span class="bn23-barra bn23-b3"><span></span></span></span>
 <span style="position: absolute; left: 0; right: 0; top: 18px; bottom: 56px">${[
-      ['bn23-q1', '__ILU_BN_SELO__', 'Ganhe <span style="color: #C6FF6E">+2%</span> extra', 'Ativando a recorrência no cartão'],
+      ['bn23-q1', '__ILU_BN_SELO__', 'Ganhe <span style="color: #C6FF6E">+5%</span> extra', 'Ativando a recorrência no cartão'],
       ['bn23-q2', '__ILU_BN_CALENDARIO__', 'Fatura paga todo dia 8', 'Sem boleto e sem atraso'],
-      ['bn23-q3', '__ILU_BN_COFRINHO__', '2% a mais todo mês', 'Só por pagar no cartão de crédito'],
-    ].map(([c, img, t, s]) => `<span class="bn23-quadro ${c}"><span class="bn23-ilu"><img src="${img}" alt=""></span><span style="position: absolute; left: 16px; top: 12px; font-size: 16px; line-height: 22px; font-weight: 700; white-space: nowrap">${t}</span><span style="position: absolute; left: 16px; top: 36px; font-size: 13px; line-height: 18px; font-weight: 500; color: rgba(255,255,255,0.74); white-space: nowrap">${s}</span></span>`).join('')}</span>
+      // Sergio (23/11): +5% na próxima fatura ("fatura", como no resto do app); em 15px, para não encostar na ilustração no S23 (360)
+      ['bn23-q3', '__ILU_BN_COFRINHO__', 'Tenha +5% na sua próxima fatura', 'Só por pagar no cartão de crédito', 15],
+    ].map(([c, img, t, s, fs = 16]) => `<span class="bn23-quadro ${c}"><span class="bn23-ilu"><img src="${img}" alt=""></span><span style="position: absolute; left: 16px; top: 12px; font-size: ${fs}px; line-height: 22px; font-weight: 700; white-space: nowrap">${t}</span><span style="position: absolute; left: 16px; top: 36px; font-size: 13px; line-height: 18px; font-weight: 500; color: rgba(255,255,255,0.74); white-space: nowrap">${s}</span></span>`).join('')}</span>
 ${btnBanner('Ativar recorrência', 'position: absolute; left: 16px; right: 16px; bottom: 14px; height: 38px; border-radius: 19px; background: #FFFFFF; color: #1B5E33')}`),
 };
 function topoRec(est) {
@@ -1401,8 +1405,9 @@ function topoRec(est) {
 // October's card says what happens to it, in the plan card's pill
 // na recorrência (agendada), o card de outubro mostra o benefício dele como sempre e, embaixo, os 2% extras do cartão com o valor
 // (Calebe, 23/11: o cartão não tem nada a ver com o desconto; antes, 13/11, os dois ganhos juntos, "pela recorrência, em dia")
-const linhaGanho = (ic, nome, sub, v, i) => `<div style="${i ? 'border-top: 1px solid #D3E5D8; padding-top: 10px; margin-top: 10px; ' : ''}display: flex; align-items: center; gap: 10px"><span style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 16px; background: #FFFFFF; color: #338449; display: flex; align-items: center; justify-content: center">${ic}</span><span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column"><span style="display: flex; align-items: center; gap: 6px; font-size: 14px; line-height: 20px; font-weight: 600; color: #0D0F0F">${nome}</span><span style="font-size: 12px; line-height: 16px; font-weight: 600; color: #276638">${sub}</span></span><span style="flex-shrink: 0; font-size: 14px; line-height: 20px; font-weight: 600; color: #338449; font-variant-numeric: tabular-nums; white-space: nowrap">${v}</span></div>`;
-const ganhosRec = () => `${linhaBeneficio('out')}<div data-mov="surgir" style="margin-top: 10px; border-radius: 14px; background: #EBF3ED; padding: 10px 12px 10px 10px">${linhaGanho(svg(IC_CARTAO, 16, 2.2), `Extra do cartão${mais2()}`, 'Pela recorrência no cartão', '+' + brl(pixCartao()), 0)}</div>`;
+const linhaGanho = (ic, nome, sub, v, i) => `<div style="${i ? 'border-top: 1px solid #D3E5D8; padding-top: 10px; margin-top: 10px; ' : ''}display: flex; align-items: center; gap: 8px"><span style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 14px; background: #FFFFFF; color: #338449; display: flex; align-items: center; justify-content: center">${ic}</span><span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column"><span style="display: flex; align-items: center; gap: 6px; font-size: 14px; line-height: 20px; font-weight: 600; color: #0D0F0F">${nome}</span><span style="font-size: 12px; line-height: 16px; font-weight: 600; color: #276638">${sub}</span></span><span style="flex-shrink: 0; font-size: 14px; line-height: 20px; font-weight: 600; color: #338449; font-variant-numeric: tabular-nums; white-space: nowrap">${v}</span></div>`;
+// (23/11, à noite: com o valor dos 5%, mais largo, o ícone ficou em 28 e os espaços em 8, para "Extra do cartão" caber numa linha em 360)
+const ganhosRec = () => `${linhaBeneficio('out')}<div data-mov="surgir" style="margin-top: 10px; border-radius: 14px; background: #EBF3ED; padding: 10px">${linhaGanho(svg(IC_CARTAO, 16, 2.2), `Extra do cartão${mais2()}`, 'Pela recorrência no cartão', '+' + brl(pixCartao()), 0)}</div>`;
 function cardAuto(est, h) {
   const cob = cobDe(est);
   if (!cob) return paCard(est, h);
@@ -1423,7 +1428,7 @@ function recNoPrincipal(est, k) {
   // com um método já escolhido, a fatura não oferece ativar (a folha antes de pagar oferece); ativa, a linha informa
   const a = est.auto;
   if (!a || a.cartao !== k) return '';
-  return `<div style="border-top: 1px solid #EFF1F2; padding: 14px 0; display: flex; align-items: center; gap: 12px"><span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 20px; font-weight: 600">Recorrência ativa</span><span style="font-size: 12px; line-height: 18px; font-weight: 600; color: #276638">${ganhoAtivo()}</span></span>${sw3(true, ' data-rec-sw aria-label="Recorrência do pagamento"')}</div>`;
+  return `<div style="border-top: 1px solid #EFF1F2; padding: 14px 0; display: flex; align-items: center; gap: 12px"><span style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 20px; font-weight: 600">Recorrência ativa</span>${ganhoAtivo(est) ? `<span style="font-size: 12px; line-height: 18px; font-weight: 600; color: #276638">${noAutoOut(est) ? `+${EXTRA_CARTAO}% nesta fatura` : ganhoAtivo(est)}</span>` : ''}</span>${sw3(true, ' data-rec-sw aria-label="Recorrência do pagamento"')}</div>`;
 }
 function cartoesFatura(est, metodo, opcao) {
   const ct = cartDe(est), ord = ordemCartoes(est), a = est.auto;
@@ -1472,7 +1477,7 @@ function alertaAuto(est, id) {
 function folhaAntesPagar(est) {
   const ct = cartDe(est), pg = est.pg || {}, k = pg.metodo, id = pg.conta || 'out', princ = ct.principal === k, op = est.antesOp || 'rec';
   const ops = [
-    { k: 'rec', t: 'Ativar recorrência', s: ganhoOpcao(id) + pilula2(id ? '+' + brl(pixCartao(DEF[id] ? id : 'out')) : '', 8, true), rec: true },
+    { k: 'rec', t: 'Ativar recorrência', s: ganhoOpcao(id) + pilula2('', 8, true), rec: true },
     princ ? null : { k: 'fav', t: 'Só usar como principal', s: 'Você continua pagando manualmente.' },
     { k: 'nada', t: 'Só pagar esta fatura', s: 'Nada muda nos próximos pagamentos.' },
   ].filter(Boolean);
@@ -1486,14 +1491,14 @@ function recConfirmado(est, x, h) {
   if (x.forma !== 'cartao' || !h.includes(OFERTA_ANCORA)) return h;
   const card = `<div data-mov="surgir" style="margin: 16px 16px 0">${est.auto ? cardRecInfo(est) : cardRec(est).replace('<div data-rec-card', est.recVista ? '<div data-rec-card' : '<div data-rec-card data-auto-abrir')}</div>`;
   // pago no cartão com a recorrência ativa (Sergio, 13/11): embaixo do que ele economizou, o bônus que o cartão gerou, no mesmo
-  // desenho: os 2% extras do cartão, com o valor (23/11: antes "no Pix da energia")
+  // desenho: o bônus do cartão (23/11, à noite: +5% na próxima fatura, sem valor, porque ela ainda não existe; antes, os 2% com o
+  // valor desta fatura)
   if (est.auto) for (const id of Object.keys(DEF)) {
     const n = notaEco(id); if (!h.includes(n)) continue;
-    const v = `<span style="font-weight: 600">${dinheiro(pixCartao(id))}</span>`;
     // as duas notas viram linhas de uma caixa só: o CSS da base pinta o último bloco do card (a margem e o fundo verde), então a
     // caixa é esse bloco e as linhas perdem o próprio fundo; um divisor separa o economizado do bônus
     const linha = n.replace('<div role="note" data-mov="surgir" style="border-radius: 12px; background: #EBF3ED; padding: 12px 14px;', '<div role="note" style="padding: 0;');
-    const bonus = `${linha.slice(0, linha.indexOf('<span style="width: 24px;')).replace('style="padding: 0;', 'style="padding: 10px 0 0; border-top: 1px solid #D3E5D8;')}<span style="width: 24px; height: 24px; flex-shrink: 0; border-radius: 12px; background: #338449; color: #FFFFFF; display: flex; align-items: center; justify-content: center">${svg(IC_CARTAO, 13, 2.4)}</span><span style="min-width: 0; text-wrap: pretty">Bônus de +2% do cartão: ${v} extra nesta fatura</span></div>`;
+    const bonus = `${linha.slice(0, linha.indexOf('<span style="width: 24px;')).replace('style="padding: 0;', 'style="padding: 10px 0 0; border-top: 1px solid #D3E5D8;')}<span style="width: 24px; height: 24px; flex-shrink: 0; border-radius: 12px; background: #338449; color: #FFFFFF; display: flex; align-items: center; justify-content: center">${svg(IC_CARTAO, 13, 2.4)}</span><span style="min-width: 0; text-wrap: pretty">Bônus de +${EXTRA_CARTAO}% do cartão na próxima fatura</span></div>`;
     h = h.split(n).join(`<div data-mov="surgir" style="display: flex; flex-direction: column; gap: 10px">${linha}${bonus}</div>`);
     break;
   }
@@ -1513,7 +1518,7 @@ function folhaRec(est, arg) {
   const aberto = !!est.comoAberto;
   const como = `<div style="margin-top: 12px; border-radius: 14px; background: #FFFFFF; border: 1px solid #EFF1F2; box-shadow: 0 1px 2px rgba(0,66,110,0.10); overflow: hidden"><button data-como aria-expanded="${aberto}" style="width: 100%; min-height: 52px; box-sizing: border-box; border: 0; background: transparent; color: #0D0F0F; padding: 0 16px; display: flex; align-items: center; gap: 12px; text-align: left">${svg(IC_AJUDA, 20, 2).replace('stroke="currentColor"', `stroke="${K.VERDE_TXT}"`)}<span style="flex-grow: 1; font-size: 14px; line-height: 20px; font-weight: 600">Veja como funciona</span>${svg(aberto ? IC_CIMA : IC_BAIXO, 18, 2.2).replace('stroke="currentColor"', 'stroke="#8B9094"')}</button>${aberto ? `<div data-mov="surgir" style="margin: 0 12px 12px; border-radius: 12px; background: #F7F8F8; padding: 16px 12px">${passosRec()}</div>` : ''}</div>`;
   const rodape = `${btnVerde(k ? 'Ativar recorrência' : 'Adicionar cartão e ativar', k ? ' data-rec-ativar' : ' data-rec-add')}${btnLink('Agora não', ' data-rec-nao')}`;
-  return folhaCentro({ titulo: 'Ative a recorrência', sub: ganhoSub(), ilu: iluRec(88), corpo: `${est.recCtx ? destaqueValor(est.recCtx, 16) : ''}${pilula2(est.recCtx ? '+' + brl(pixCartao(DEF[est.recCtx] ? est.recCtx : 'out')) : '', est.recCtx ? 8 : 16)}<span style="display: block; margin: 20px 4px 10px; font-size: 14px; line-height: 20px; font-weight: 600; text-align: left">Cobrar no cartão</span>
+  return folhaCentro({ titulo: 'Ative a recorrência', sub: ganhoSub(), ilu: iluRec(88), corpo: `${est.recCtx ? destaqueValor(est.recCtx, 16) : ''}${pilula2('', est.recCtx ? 8 : 16)}<span style="display: block; margin: 20px 4px 10px; font-size: 14px; line-height: 20px; font-weight: 600; text-align: left">Cobrar no cartão</span>
 ${lista}
 ${como}`, rodape });
 }
@@ -6856,7 +6861,7 @@ CONT_PRONTO.then(({ CONT, M }) => {
       ['Escolhe o Elo', 'FaturaDetalhe:out', pg('out', 'elo')],
       ['Gerenciar cartões', 'Pagamentos'],
     ] },
-    { id: 'rec-perfil', titulo: 'Em Perfil › Pagamentos', desc: 'A casa fica no topo, no mesmo seletor das faturas, e a recorrência ganha um card só dela: o mesmo das faturas, com os 2% extras do cartão. Ligar abre a folha com o cartão.', passos: [
+    { id: 'rec-perfil', titulo: 'Em Perfil › Pagamentos', desc: 'A casa fica no topo, no mesmo seletor das faturas, e a recorrência ganha um card só dela: o mesmo das faturas, com os 5% do cartão na próxima fatura. Ligar abre a folha com o cartão.', passos: [
       ['Pagamentos: recorrência desligada', 'Pagamentos', { ...LIMPO, ...SET_PAGO, cart: C3 }],
       ['Ligar: escolher o cartão', 'Pagamentos+F:Recorrencia', { recSel: 'visa' }],
       ['Veja como funciona, aberto', 'Pagamentos+F:Recorrencia', { comoAberto: true }],
@@ -6865,7 +6870,7 @@ CONT_PRONTO.then(({ CONT, M }) => {
       ['Ver a recorrência', 'AutoDetalhe'],
     ] },
     { id: 'rec-como', titulo: 'Como funciona', desc: 'O banner das faturas abre como funciona: a ilustração, o ganho no título e os passos. O botão do banner liga a recorrência. Na fatura, o "?" do card faz o mesmo.', passos: [
-      ['Faturas: o banner do +2%', 'Faturas:casa', { ...LIMPO, ...SET_PAGO, cart: C1 }],
+      ['Faturas: o banner do +5%', 'Faturas:casa', { ...LIMPO, ...SET_PAGO, cart: C1 }],
       ['Como funciona', 'Faturas:casa+F:Recorrencia:info'],
     ] },
     { grupo: 'Com a recorrência ativa', id: 'rec-aviso', titulo: 'Fatura em aberto na recorrência', desc: 'A fatura de outubro, em aberto, entra na recorrência e não atrasa. No card dela, em cima do botão, só "Pagamento automático ativado", e o botão vira "Adiantar pagamento". Dois dias antes, a notificação traz o valor. Cobrada, ela vai para as pagas com uma bolinha da recorrência no ícone do cartão.', passos: [
@@ -6875,7 +6880,7 @@ CONT_PRONTO.then(({ CONT, M }) => {
       ['Cobrada em 08/10: nas pagas, com o selo', 'Faturas:casa', { contas: { out: { fase: 'pago', forma: 'cartao', cb: 0, auto: true } } }, { t: () => `Outubro paga: ${brl(DEF.out.valor)} no Visa •••• 1290.`, alvo: 'Faturas:casa' }],
       ['A recorrência', 'AutoDetalhe'],
     ] },
-    { id: 'rec-recusa', titulo: 'Cartão recusado: sem limite', desc: 'Recusa temporária, em destaque: tentamos de novo em 09/10 e 10/10, antes do vencimento. "Trocar cartão e pagar" cobra na hora e mantém os 2% extras.', passos: [
+    { id: 'rec-recusa', titulo: 'Cartão recusado: sem limite', desc: 'Recusa temporária, em destaque: tentamos de novo em 09/10 e 10/10, antes do vencimento. "Trocar cartão e pagar" cobra na hora e mantém os 5% desta fatura.', passos: [
       ['Notificação e faturas', 'Faturas:casa', { ...LIMPO, ...SET_PAGO, ...AUTO_ON, cob: 'recusada' }, { t: 'O Visa •••• 1290 recusou outubro. Tentamos amanhã.', alvo: 'FaturaDetalhe:out' }],
       ['Energia: o alerta na fatura', 'Energia'],
       ['Fatura: nova tentativa em 09/10', 'FaturaDetalhe:out', pg('out', '')],

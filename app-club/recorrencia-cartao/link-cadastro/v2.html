@@ -653,6 +653,8 @@
   // +2% no Pix da energia por pagar no cartão de crédito (Calebe via Sergio, 13/11): um benefício à parte dos 16%, sempre em Pix
   // da energia, também para quem escolheu a economia na conta. No débito não tem
   const MAIS = 2;
+  // a oferta do modal (Sergio, 23/11): em vez de +2% todos os meses, +5% no primeiro boleto
+  const PRIMEIRO = 5;
   const comMais = () => E.tipo !== 'debito';
   // Calebe (18/11): o benefício que vende é o +2% no Pix da energia, só no cartão de crédito; os 16% ficam em segundo plano.
   // Sergio (18/11): o texto diz que é ativando a recorrência, e os 16% vão para a lista de vantagens
@@ -776,17 +778,17 @@
             <span class="shineV2"></span>
           </span>
         </span></span>
-        <span class="maisV2"><span class="anel"></span><span class="caixa"><b>+${MAIS}%</b><small>no cartão de crédito</small></span></span>
+        <span class="maisV2"><span class="anel"></span><span class="caixa"><b>+${PRIMEIRO}%</b><small>no primeiro boleto</small></span></span>
         <span class="moedaV2 m1"><img src="assets/moeda-v2.png" alt=""></span>
         <span class="moedaV2 m2"><img src="assets/moeda-v2-lado.png" alt=""></span>
       </div>
       <div class="corpo flush ofertaV2">
-        <div class="titleRow tituloOferta sobe" style="--d: 0.25s"><h2 class="t-modal-title" id="modalTitulo">Cadastre o cartão e ganhe <span class="selo2">+${MAIS}%</span></h2><p class="t-page-subtitle subtitle">Com o <b class="strong">cartão de crédito recorrente</b>, você ganha ${MAIS}% extra no seu benefício contratado.</p></div>
+        <div class="titleRow tituloOferta sobe" style="--d: 0.25s"><h2 class="t-modal-title" id="modalTitulo">Cadastre o cartão e ganhe <span class="selo2">+${PRIMEIRO}%</span></h2><p class="t-page-subtitle subtitle">Com o <b class="strong">cartão de crédito recorrente</b>, você ganha ${PRIMEIRO}% extra no seu primeiro boleto.</p></div>
         <div class="alertaInfo sobe" style="--d: 0.35s">${svg(ic.cadeado, 18)}<p class="t-caption">A primeira cobrança só acontece quando a sua primeira fatura chegar.</p></div>
       </div>
     </div>
     <div class="botoes">
-      <button type="button" class="btn primary t-button-md btnCartaoV2" data-acao="quero">${IC_CARTAO}Cadastrar cartão e ganhar +${MAIS}%</button>
+      <button type="button" class="btn primary t-button-md btnCartaoV2" data-acao="quero">${IC_CARTAO}Cadastrar cartão e ganhar +${PRIMEIRO}%</button>
       <button type="button" class="linkBtn t-body-md-semibold" data-acao="agora-nao">Agora não, vou pagar manualmente</button>
     </div>`;
   }

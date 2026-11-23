@@ -1,6 +1,6 @@
 {
   "nome": "Recorrência no cartão",
-  "descricao": "A fatura paga sozinha no cartão salvo, com +2% extra no cartão de crédito, e o Pix Automático no Copiar Pix em duas versões. No app e no link de cadastro, com testes automáticos.",
+  "descricao": "A fatura paga sozinha no cartão salvo, com +5% na próxima fatura, e o Pix Automático no Copiar Pix em duas versões. No app e no link de cadastro, com testes automáticos.",
   "tipo": "tarefa",
   "atualizado": "2026-11-23",
   "paginas": [
