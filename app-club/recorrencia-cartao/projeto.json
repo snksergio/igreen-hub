@@ -1,6 +1,6 @@
 {
   "nome": "Recorrência no cartão",
-  "descricao": "A fatura paga sozinha no cartão salvo, com +2% no Pix da energia: no app, os banners das faturas, ativar, trocar, desativar e o cartão recusado, com testes automáticos; no link, a oferta e o cadastro do cartão.",
+  "descricao": "A fatura paga sozinha no cartão salvo, com +2% extra no cartão de crédito, e o Pix Automático no Copiar Pix em duas versões: no app, o banner das faturas, ativar, trocar, desativar, o cartão recusado e o Pix Automático, com testes automáticos; no link, a oferta e o cadastro do cartão.",
   "tipo": "tarefa",
   "atualizado": "2026-11-23",
   "paginas": [
@@ -9,5 +9,5 @@
     { "nome": "Link de cadastro V2: cartão de crédito em destaque", "arquivo": "link-cadastro/v2.html" },
     { "nome": "Banners: os 7 escolhidos e outros exemplos (Eletroposto)", "arquivo": "banners/index.html" }
   ],
-  "tags": ["recorrência", "cartão", "pagamento automático", "fatura", "cartão recusado", "cadastro de cartão", "link de indicação", "teste automático", "Pix da energia", "banner"]
+  "tags": ["recorrência", "cartão", "pagamento automático", "Pix Automático", "fatura", "cartão recusado", "cadastro de cartão", "link de indicação", "teste automático", "banner"]
 }
