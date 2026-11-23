@@ -868,10 +868,17 @@
       if (depois) depois();
     });
   }
-  function sombra() { const r = rol(), b = modal.querySelector('.botoes'); if (!r || !b) return; b.classList.toggle('sombra', r.scrollHeight - r.clientHeight - r.scrollTop > 2); }
+  // a sombra mede a altura do conteúdo pela posição no layout (offsetTop e offsetHeight não contam transform): os 12 px
+  // que cada .sobe desce ao entrar contam no scrollHeight e acendiam a sombra na abertura da oferta, sem nada para rolar
+  // (Sergio, 23/11). Ao fim de cada entrada ela é medida de novo
+  function sombra() {
+    const r = rol(), b = modal.querySelector('.botoes'); if (!r || !b) return;
+    let alto = r.scrollHeight;
+    const ult = r.lastElementChild;
+    if (ult) { const base = ult.offsetParent === r ? 0 : r.offsetTop; alto = Math.min(alto, ult.offsetTop - base + ult.offsetHeight + (parseFloat(getComputedStyle(ult).marginBottom) || 0)); }
+    b.classList.toggle('sombra', alto - r.clientHeight - r.scrollTop > 2);
+  }
   modal.addEventListener('scroll', sombra, { capture: true, passive: true });
-  // a entrada (.sobe) empurra o conteúdo alguns px para baixo; com a oferta mais justa (23/11) isso deixava a sombra
-  // presa no rodapé, sem nada rolando. Ao fim de cada entrada, a sombra é medida de novo
   modal.addEventListener('animationend', sombra, true);
   window.addEventListener('resize', () => { sombra(); if (E.realce) realce(E.realce); });
   // rola só o necessário para o elemento ficar à vista, com folga acima do rodapé (alvo absoluto: chamadas repetidas não somam)
