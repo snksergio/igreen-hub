@@ -187,14 +187,16 @@
 .cartaoV2 .nomeV2 { position: absolute; left: 18px; bottom: 14px; font-size: 10px; line-height: 12px; font-weight: 700; letter-spacing: 0.14em; color: rgba(255, 255, 255, 0.75); }
 .cartaoV2 .shineV2 { position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.32) 50%, transparent 65%); transform: translateX(-120%); animation: shineV2 4s 1.4s ease-in-out infinite; }
 @keyframes shineV2 { 0%, 55% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
-/* o +2% e os 16% em dois blocos lado a lado, com o número grande e o ícone maior (Sergio, 19/11: mais destaque) */
-.v2Ganhos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.v2Ganho { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 12px; border-radius: 16px; background: #eaf7ee; box-shadow: inset 0 0 0 1px rgba(0, 168, 89, 0.22); }
-.v2GanhoIc { flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px; background: var(--fg-primary); color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0, 120, 60, 0.25); }
-.v2GanhoIc svg { width: 22px; height: 22px; }
-.v2GanhoTxt { min-width: 0; display: flex; flex-direction: column; font-family: var(--font-inter); }
-.v2GanhoTxt b { font-size: 24px; line-height: 26px; font-weight: 800; letter-spacing: -0.03em; color: var(--fg-primary); }
-.v2GanhoTxt small { font-size: 12px; line-height: 15px; font-weight: 600; color: var(--fg-strong); }
+/* Calebe (22/11): sem o quadro "Seus ganhos no crédito" (+2% e 16%); a oferta fala só do cartão de crédito recorrente */
+/* alerta informativo sem título (Sergio, 23/11): só o ícone e o texto, nas cores do nosso alerta cinza
+   (fundo bg-muted, ícone e texto em fg-main) e com o texto pequeno da descrição antiga (12 px) */
+.alertaInfo { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; border-radius: var(--radius-xl-flag); background: var(--bg-muted); color: var(--fg-main); }
+.alertaInfo svg { flex-shrink: 0; }
+.alertaInfo p { flex: 1 0 0; min-width: 1px; margin: 0; }
+/* espaços da oferta mais justos (Sergio, 23/11): o título 4 px mais perto da faixa e menos branco entre o subtítulo,
+   o alerta e o botão. Só nesta oferta: o .corpo das outras telas continua igual */
+.corpo.flush.ofertaV2 { padding-top: 28px; gap: 20px; padding-bottom: 8px; }
+@media (max-width: 560px) { .corpo.flush.ofertaV2 { padding-top: 20px; gap: 16px; padding-bottom: 8px; } }
 .btnCartaoV2 { display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
 @media (max-width: 560px) {
   .heroV2 { height: 188px; border-radius: 18px; }
@@ -755,7 +757,6 @@
     const faisca = (x, y, s, d) => `<span class="faisca" style="left: ${x}; top: ${y}; width: ${s}px; height: ${s}px; animation-delay: ${d}s">${svg(ic.faisca, s, 24)}</span>`;
     // V2 (Calebe, 19/11): pegada mais agressiva no cartão de crédito. O cartão é o herói da oferta; o Pix da energia,
     // o desconto e os percentuais vão para segundo plano, como "e você ainda ganha"
-    const ganho16 = pix() ? `${TAXA}% de volta no Pix garantido` : `${TAXA}% de desconto garantido`;
     const IC_NFC = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8.5 8.5a5 5 0 0 1 0 7"/><path d="M12 6a8.5 8.5 0 0 1 0 12"/><path d="M15.5 3.5a12 12 0 0 1 0 17"/></svg>';
     const IC_RAIO = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>';
     const IC_CARTAO = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>';
@@ -779,15 +780,9 @@
         <span class="moedaV2 m1"><img src="assets/moeda-v2.png" alt=""></span>
         <span class="moedaV2 m2"><img src="assets/moeda-v2-lado.png" alt=""></span>
       </div>
-      <div class="corpo flush">
-        <div class="titleRow tituloOferta sobe" style="--d: 0.25s"><h2 class="t-modal-title" id="modalTitulo">Cadastre o cartão e ganhe <span class="selo2">+${MAIS}%</span></h2><p class="t-page-subtitle subtitle">Exclusivo para quem ativa a recorrência no <b class="strong">cartão de crédito</b>.</p></div>
-        <div class="labeled sobe" style="--d: 0.35s"><p class="t-label groupLabel">SEUS GANHOS NO CRÉDITO</p>
-          <div class="v2Ganhos">
-            <div class="v2Ganho"><span class="v2GanhoIc">${TB.desconto}</span><span class="v2GanhoTxt"><b>+${MAIS}%</b><small>no Pix da energia</small></span></div>
-            <div class="v2Ganho"><span class="v2GanhoIc">${TB.check}</span><span class="v2GanhoTxt"><b>${TAXA}%</b><small>${ganho16.replace(`${TAXA}% `, '')}</small></span></div>
-          </div>
-        </div>
-        <div class="flag flagMuted flagCompacta sobe" style="--d: 0.45s"><span class="iconeBranco">${svg(ic.cadeado, 16)}</span><div class="flagText"><p class="t-body-md-semibold strong">Nada é cobrado agora</p><p class="t-caption mainText">A primeira cobrança só acontece quando a sua primeira fatura chegar.</p></div></div>
+      <div class="corpo flush ofertaV2">
+        <div class="titleRow tituloOferta sobe" style="--d: 0.25s"><h2 class="t-modal-title" id="modalTitulo">Cadastre o cartão e ganhe <span class="selo2">+${MAIS}%</span></h2><p class="t-page-subtitle subtitle">Com o <b class="strong">cartão de crédito recorrente</b>, você ganha ${MAIS}% extra no seu benefício contratado.</p></div>
+        <div class="alertaInfo sobe" style="--d: 0.35s">${svg(ic.cadeado, 18)}<p class="t-caption">A primeira cobrança só acontece quando a sua primeira fatura chegar.</p></div>
       </div>
     </div>
     <div class="botoes">
@@ -875,6 +870,9 @@
   }
   function sombra() { const r = rol(), b = modal.querySelector('.botoes'); if (!r || !b) return; b.classList.toggle('sombra', r.scrollHeight - r.clientHeight - r.scrollTop > 2); }
   modal.addEventListener('scroll', sombra, { capture: true, passive: true });
+  // a entrada (.sobe) empurra o conteúdo alguns px para baixo; com a oferta mais justa (23/11) isso deixava a sombra
+  // presa no rodapé, sem nada rolando. Ao fim de cada entrada, a sombra é medida de novo
+  modal.addEventListener('animationend', sombra, true);
   window.addEventListener('resize', () => { sombra(); if (E.realce) realce(E.realce); });
   // rola só o necessário para o elemento ficar à vista, com folga acima do rodapé (alvo absoluto: chamadas repetidas não somam)
   function mostrar(el, folga = 24) {
