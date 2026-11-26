@@ -1,8 +1,8 @@
 {
   "nome": "Nova home · reestruturação",
-  "descricao": "Propostas para validar a nova home do app: estilos do topo, a home por aba (Pay, Cashback e Eletroposto), a tela de Produtos com dez estilos de banner e três temas escuros.",
+  "descricao": "Propostas para validar a nova home do app: estilos do topo, a home por aba (Pay, Cashback e Eletroposto), a tela de Produtos com um banner para cada produto e três temas escuros.",
   "tipo": "proposta",
-  "atualizado": "2026-11-19",
+  "atualizado": "2026-11-26",
   "paginas": [
     {
       "nome": "1 · Topo da home · estilos",
