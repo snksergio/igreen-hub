@@ -164,6 +164,15 @@ Olhe a capa antes de subir. Se pegou tela de carregamento ou animação de entra
 
 ### Subir um projeto novo
 
+**Antes do passo 1: a pergunta de medição.** Se o projeto mexe com pelo menos um destes pontos, pergunte ao usuário, numa linha, se ele quer registrar o que deve mudar e como vai medir:
+
+- dinheiro: pagamento, cobrança, desconto, cashback;
+- conversão: cadastro, adesão, ativação;
+- um fluxo usado por boa parte da base;
+- algo difícil de desfazer depois de lançado.
+
+A resposta não trava a subida: se for "depois", siga o pipeline e lembre a pendência na resposta final (passo 8). O registro mora fora do hub. Aqui não entram número, meta, taxa nem dado interno (seção 7).
+
 1. **Decida categoria, slug, nome e tipo** olhando o projeto, e mostre ao usuário antes de subir, junto com a `descricao`, as `tags` e o nome de cada página (seção 3). Se a categoria ou o objetivo do projeto não forem óbvios, pergunte; não invente.
 2. **Clone esparso** numa pasta temporária fora do projeto atual. Ele baixa só os arquivos da raiz, `scripts/` e a pasta do projeto, nunca o repositório inteiro:
    ```bash
@@ -199,6 +208,8 @@ Não crie pastas paralelas para versões. Se a versão anterior precisa continua
 Projeto com `builder/`: edite o estudo em `builder/index.html`, gere o output de novo com o gerador do builder e só então refaça os prints, valide e publique. Nunca edite o output à mão. A versão que sai do output e só serve de registro vai para `builder/historico/` e entra na tabela do README do builder.
 
 Um projeto é um assunto. Telas de assuntos diferentes, mesmo que nasçam no mesmo repositório, viram projetos separados, cada um com sua ficha. Já as variações de partes do mesmo projeto (as opções de hero, de rodapé, de um componente) ficam no `acervo` da mesma ficha: um card na vitrine, os grupos na aba da ficha.
+
+**Projeto com registro de medição.** Se o projeto tem registro fora do hub, pergunte numa linha o que mudou, por quê e quem decidiu, e devolva a resposta como uma linha para esse registro. Ela não entra no repositório.
 
 ### Mudar um projeto de categoria ou de nome
 
