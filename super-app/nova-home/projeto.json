@@ -19,6 +19,10 @@
     {
       "nome": "4 · Proposta de tema escuro",
       "arquivo": "escuro.html"
+    },
+    {
+      "nome": "5 · Protótipo navegável da home",
+      "arquivo": "prototipo.html"
     }
   ],
   "tags": [
@@ -32,6 +36,8 @@
     "seguro",
     "club",
     "tema escuro",
-    "modo escuro"
+    "modo escuro",
+    "protótipo",
+    "animação"
   ]
 }

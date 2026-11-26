@@ -7,6 +7,7 @@ As páginas:
 - **2 · Proposta de nova home:** a home com o topo escolhido, vista por cada aba do cartão (Pay, Cashback e Eletroposto), dois jeitos de mostrar um aviso importante e o convite para quem ainda não tem o produto. A primeira tela mostra a home inteira; as outras, só a altura do celular.
 - **3 · Tela de Produtos e banners:** o modelo escolhido da tela de Produtos, inteiro (os produtos separados em "Seus produtos" e "Contrate também"), e embaixo um banner para cada produto: Seguro, Energia, Pay, Eletroposto, Celular, Club, Cashback e Saúde.
 - **4 · Proposta de tema escuro:** a home no modo escuro em três temas (carvão com brilho verde, preto absoluto e aurora verde) e o tema 1 com dois outros fundos.
+- **5 · Protótipo navegável da home:** a home aprovada num celular que funciona: as abas Pay, Cashback e Eletroposto trocam o cartão, os avisos, os Serviços, os destaques e o Club deslizam, e as animações de entrada, dos números e do topo ao rolar seguem as da home da Vibra.
 
 Valores, nomes e placas são fictícios.
 
@@ -20,6 +21,9 @@ Cada página mostra as telas nas posições do canvas, em fundo escuro: arraste 
 | 2 · Proposta de nova home | https://igreen-hub.pages.dev/super-app/nova-home/home.html |
 | 3 · Tela de Produtos e banners | https://igreen-hub.pages.dev/super-app/nova-home/produtos.html |
 | 4 · Proposta de tema escuro | https://igreen-hub.pages.dev/super-app/nova-home/escuro.html |
+| 5 · Protótipo navegável da home | https://igreen-hub.pages.dev/super-app/nova-home/prototipo.html |
+
+O protótipo (`prototipo.html`) é um arquivo só, gerado por `_fontes/home-produtos/prototipo/home-motion.js` a partir das mesmas peças do canvas; não é uma cópia de página do canvas.
 
 `banners.html` era a antiga página 4 (os estilos de banner, hoje dentro da página 3) e só leva para eles, para os links já compartilhados continuarem abrindo.
 
